@@ -1,0 +1,23 @@
+# Core Deep Learning
+torch>=2.2.0
+torchvision
+torchaudio
+
+# Hugging Face Ecosystem
+transformers>=4.40.0
+datasets>=2.18.0
+tokenizers>=0.19.0
+accelerate>=0.28.0
+peft>=0.10.0
+trl>=0.8.0
+
+# Vector Search & RAG
+sentence-transformers>=2.6.0
+faiss-cpu>=1.8.0
+
+# Utilities & Visualization
+tqdm
+numpy
+pandas
+matplotlib
+jupyter

@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+
+# Jupyter & Colab
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Model Weights & Checkpoints (Do NOT commit heavy weights)
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.onnx
+checkpoints/
+output/
+runs/
+wandb/
+
+# Data & Datasets
+data/
+dataset/
+*.jsonl
+*.parquet
+*.csv
+
+# OS & IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
