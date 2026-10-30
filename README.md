@@ -18,7 +18,8 @@
         ├─ Lab 07: Entropy-Gated Dual-Brain (最弱字元信心閘門自動切換「肌肉記憶」與「意念觸類旁通」+ 熟能生巧固化)
         └─ Lab 08: 知識密度與智商大對決 (5.46M 迷你雙腦模型以 9.56 倍知識密度越級擊敗 30.03M 原版 AR/Diffusion)
           ↓
-[階段 2: 工業級對齊實戰 (Qwen2.5-0.5B + HuggingFace TRL)]  🔜 下一步
+[階段 2: 工業級預訓練模型嫁接與對齊實戰 (Qwen2.5-0.5B)]  🔥 進行中！
+   ├─ Lab 01: 微創雙腦嫁接大對決 (`Dual-Brain Qwen2.5-0.5B [86%]` vs `Qwen2.5-0.5B + 標準 LoRA [48%]`，未知系統零樣本推演 7/8 vs 0/8！)
    ├─ SFTTrainer + Chat Template 工業標準格式化
    └─ DPOTrainer 偏好對齊 + FlashAttention-2 / SDPA 顯存優化
           ↓
@@ -46,6 +47,14 @@
 | **07** | **信心閘門雙腦與記憶固化** | [`07_entropy_gated_dual_brain_minimind.ipynb`](notebooks/01_stage1_minimind/07_entropy_gated_dual_brain_minimind.ipynb) | `entropy_dual_brain_minimind_512.pth` (`63.9 MB`) | 電話號碼 `99.2%` 信心走肌肉記憶 (100% 精準)；未知醫學題 `31.1%` 信心自動轉意念層零樣本推導，練習後固化為 `91.8%` 肌肉記憶 |
 | **08** | **知識密度與智商大對決** | [`08_knowledge_density_iq_benchmark.ipynb`](notebooks/01_stage1_minimind/08_knowledge_density_iq_benchmark.ipynb) | `tiny_dual_brain_256.pth` (`11.0 MB`) | **`5.46M` 迷你雙腦模型** 在 4 大未知領域類比與 6 組死背號碼拿 **12/12 滿分**，知識密度達 `30M` 原版模型的 **9.56 倍**！ |
 | **09** | **40題非飽和極限壓力測試** | [`09_non_saturated_stress_benchmark.ipynb`](notebooks/01_stage1_minimind/09_non_saturated_stress_benchmark.ipynb) | *(壓力極限測試套件)* | 打破滿分飽和！拉開 `Dual-Brain (68%)` vs `Pure-Thought LCM (40%)` vs `Pure-Diffusion (10%)` 差距，並找出 `5.46M` 臨界甜蜜點与 RAG 需求邊界 |
+
+---
+
+## 🚀 Stage 2 工業級預訓練模型嫁接與對決成果 (Qwen2.5-0.5B on Colab L4)
+
+| 編號 | 實驗主題 | Notebook 連結 | 本地備份權重 (`checkpoints/stage2_qwen/`) | 核心實測突破指標 (NVIDIA L4) |
+| :---: | :--- | :--- | :--- | :--- |
+| **01** | **Qwen2.5-0.5B 微創雙腦嫁接 PK** | [`01_qwen25_vs_dual_brain_qwen_pk.ipynb`](notebooks/02_stage2_alignment/01_qwen25_vs_dual_brain_qwen_pk.ipynb) | `dual_brain_qwen25_05b_head.pth` (`41.6 MB`) | 100% 凍結 `Qwen2.5-0.5B` (494M)，嫁接 `896->128` 窄瓶頸正交意念漏斗與謙遜閘門；在 8 大未知系統零樣本推演拿下 **`7/8 (87.5%)`**，完勝標準 `Qwen2.5-0.5B + LoRA` 的 **`0/8 (0%)`**（總分 **86% vs 48%**）！ |
 
 ---
 
