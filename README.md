@@ -55,6 +55,7 @@
 - 📌 **[Issue #1：無監督野生語料的「自動結構與意念對齊」](https://github.com/EndeavorYen/LLM-learning/issues/1)** *(Unsupervised Structural Alignment in the Wild)*
 - 📌 **[Issue #2：多層次意念的「動態顆粒度伸縮」](https://github.com/EndeavorYen/LLM-learning/issues/2)** *(Dynamic & Hierarchical Thought Granularity)*
 - 📌 **[Issue #3：超長聯想鏈的「腦波流形飄移與錨點校準」](https://github.com/EndeavorYen/LLM-learning/issues/3)** *(Latent Drift in Long-Horizon Thought Chains)*
+- 📌 **[Issue #4：資訊瓶頸效應與高維度意念空間抗噪校準（為何 5.5M 小雙腦擊敗 32M 大雙腦？）](https://github.com/EndeavorYen/LLM-learning/issues/4)** *(Information Bottleneck & Dimensional Noise Scaling)*
 
 ---
 
