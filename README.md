@@ -55,6 +55,7 @@
 | 編號 | 實驗主題 | Notebook 連結 | 本地備份權重 (`checkpoints/stage2_qwen/`) | 核心實測突破指標 (NVIDIA L4) |
 | :---: | :--- | :--- | :--- | :--- |
 | **01** | **Qwen2.5-0.5B 微創雙腦嫁接 PK** | [`01_qwen25_vs_dual_brain_qwen_pk.ipynb`](notebooks/02_stage2_alignment/01_qwen25_vs_dual_brain_qwen_pk.ipynb) | `dual_brain_qwen25_05b_head.pth` (`41.6 MB`) | 100% 凍結 `Qwen2.5-0.5B` (494M)，嫁接 `896->128` 窄瓶頸正交意念漏斗與謙遜閘門；在 8 大未知系統零樣本推演拿下 **`7/8 (87.5%)`**，完勝標準 `Qwen2.5-0.5B + LoRA` 的 **`0/8 (0%)`**（總分 **86% vs 48%**）！ |
+| **02** | **Mini Open-LLM Leaderboard 公開基準擂台** | [`02_mini_open_llm_leaderboard_mmlu_arc_gsm8k.ipynb`](notebooks/02_stage2_alignment/02_mini_open_llm_leaderboard_mmlu_arc_gsm8k.ipynb) | `dual_brain_qwen25_open_llm_cribnote.pth` (`4.06 MB`) | 實測 140 題官方 `MMLU + ARC-Challenge + GSM8K`：雙腦小抄版在 **`ARC-Challenge` 科學推理暴增 `+8.0%` (`46% -> 54%`)** 且 **`MMLU` 0% 遺忘 (`40%`)**；標準 LoRA 則嚴重災難性遺忘 (`MMLU 30%`, `GSM8K 崩潰至 5%`)！ |
 
 ---
 
