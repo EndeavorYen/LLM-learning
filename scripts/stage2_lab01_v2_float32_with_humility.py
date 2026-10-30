@@ -492,7 +492,11 @@ with torch.no_grad():  # [audit #7]
         return _p7_keys[i], float(cos[i].item())
 
     p7 = dict(A1=0, A1_law=0, A1_stage=0, A2=0, A2_law=0, A2_stage=0, D1=0, D2=0, B1=0, B2=0, B1s=0, B2s=0)
-    p7_lora = dict(B1=0, B2=0, B1n=0, B2n=0)
+    p7_lora = dict(B1=0, B2=0, B1n=0, B2n=0, B1h=0, B2h=0)
+    # [audit #7, post-hoc] held-out 4-way set: stage-2/3 of both laws. In the 8-way set LoRA picked only the
+    # stage-0/1 sentences, which are the premise itself and were trained on, so it is unfair to any LM.
+    _P7_HELD = [(0, 2), (0, 3), (1, 2), (1, 3)]
+    p7.update(B1h=0, B2h=0, B1hs=0, B2hs=0)
     _p7_rows = []
 
     def _p7_lora_ll_cand_mean(premise, cand):  # [audit #7, post-hoc] mean log-prob over the candidate tokens only
@@ -550,6 +554,10 @@ with torch.no_grad():  # [audit #7]
             b1s, b2s = pick(sc2), pick(sc3)
             p7['B1'] += int(b1 == (law_id, 2)); p7['B2'] += int(b2 == (law_id, 3))
             p7['B1s'] += int(b1s == (law_id, 2)); p7['B2s'] += int(b2s == (law_id, 3))
+            _hidx = [cand_keys.index(k) for k in _P7_HELD]  # [audit #7, post-hoc]
+            pick_h = lambda sc: cand_keys[max(_hidx, key=lambda i: float(sc[i]))]
+            p7['B1h'] += int(pick_h(sc2 + cos_d) == (law_id, 2)); p7['B2h'] += int(pick_h(sc3 + cos_d) == (law_id, 3))
+            p7['B1hs'] += int(pick_h(sc2) == (law_id, 2)); p7['B2hs'] += int(pick_h(sc3) == (law_id, 3))
 
             # --- Competitor A (LoRA): rank the same 8 candidates by total LL of premise+candidate ---
             set_lora_enabled(True)
@@ -567,6 +575,11 @@ with torch.no_grad():  # [audit #7]
             ln3 = [_p7_lora_ll_cand_mean(prem3, t) for t in cand_txts]
             lb2n = cand_keys[max(range(8), key=lambda i: ln3[i])]
             p7_lora['B1n'] += int(lb1n == (law_id, 2)); p7_lora['B2n'] += int(lb2n == (law_id, 3))
+            hidx = [cand_keys.index(k) for k in _P7_HELD]  # [audit #7, post-hoc] held-out 4-way, normalised
+            lb1h = cand_keys[max(hidx, key=lambda i: ln2[i])]
+            ln3h = [_p7_lora_ll_cand_mean(premise + laws_d[lb1h[0]][lb1h[1]], t) for t in cand_txts]
+            lb2h = cand_keys[max(hidx, key=lambda i: ln3h[i])]
+            p7_lora['B1h'] += int(lb1h == (law_id, 2)); p7_lora['B2h'] += int(lb2h == (law_id, 3))
             set_lora_enabled(False)
 
             _p7_rows.append((f"{d_name}-規律{law_id+1}",
@@ -590,15 +603,17 @@ print("--- Qwen2.5-0.5B + LoRA (Competitor A), total log-likelihood of premise+c
 print(f"  B1  {p7_lora['B1']}/{_p7_n} (chance 1/8)", flush=True)
 print(f"  B2  {p7_lora['B2']}/{_p7_n} (chance 1/8) [conditioned on LoRA's own B1 pick]", flush=True)
 print(f"  [post-hoc] length-normalised B1 / B2: {p7_lora['B1n']}/{_p7_n} / {p7_lora['B2n']}/{_p7_n} (chance 1/8)", flush=True)
+print(f"  [post-hoc] held-out 4-way B1h / B2h (LoRA, normalised): {p7_lora['B1h']}/{_p7_n} / {p7_lora['B2h']}/{_p7_n} (chance 1/4)", flush=True)
+print(f"  [post-hoc] held-out 4-way B1h / B2h (Dual, s+d): {p7['B1h']}/{_p7_n} / {p7['B2h']}/{_p7_n} | s-only {p7['B1hs']}/{_p7_n} / {p7['B2hs']}/{_p7_n} (chance 1/4)", flush=True)
 print("--- Per-item nearest anchor / pick (✓ = expected) ---", flush=True)
 for tag, anc, picks in _p7_rows:
     print(f"  [{tag}]", flush=True)
     print("    " + " | ".join(f"{nm}->{_p7_lbl(*got)} cos={cv:.3f}{' ✓' if got == exp else ''}" for nm, got, cv, exp in anc), flush=True)
     print("    " + " | ".join(f"{nm}={_p7_lbl(*got)}{' ✓' if got == exp else ''}" for nm, got, exp in picks), flush=True)
 print(f"PROBE_RESULT seed={SEED} model=dual_brain A1={p7['A1']} A2={p7['A2']} D1={p7['D1']}/16 D2={p7['D2']} "
-      f"B1={p7['B1']} B2={p7['B2']} B1s={p7['B1s']} B2s={p7['B2s']}", flush=True)
+      f"B1={p7['B1']} B2={p7['B2']} B1s={p7['B1s']} B2s={p7['B2s']} B1h={p7['B1h']} B2h={p7['B2h']} B1hs={p7['B1hs']} B2hs={p7['B2hs']}", flush=True)
 print(f"PROBE_RESULT seed={SEED} model=qwen_lora A1=-1 A2=-1 D1=-1/16 D2=-1 "
-      f"B1={p7_lora['B1']} B2={p7_lora['B2']} B1s=-1 B2s=-1 B1n={p7_lora['B1n']} B2n={p7_lora['B2n']}", flush=True)
+      f"B1={p7_lora['B1']} B2={p7_lora['B2']} B1s=-1 B2s=-1 B1n={p7_lora['B1n']} B2n={p7_lora['B2n']} B1h={p7_lora['B1h']} B2h={p7_lora['B2h']}", flush=True)
 
 os.makedirs('/content/out', exist_ok=True)
 torch.save(dual_head.half().state_dict(), '/content/out/dual_brain_qwen25_05b_head.pth')

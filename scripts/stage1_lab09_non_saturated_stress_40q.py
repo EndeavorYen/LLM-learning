@@ -715,6 +715,14 @@ def p7_diff_score_norm(prem, cand):  # mean log-prob over the candidate's real t
     tgt, val = tgt[0], val[0].bool()
     return lp[torch.arange(SLOT_LEN, device='cuda'), tgt][val].mean().item()
 
+# [audit #7, post-hoc] Held-out-only candidate set. In the 8-way set the stage-0/1 candidates are the
+# premise sentences themselves (seen in training and in the prompt), so every language model ranks them
+# first (LoRA/AR picked only stage 0/1 on every seed). Restricting to the 4 never-trained stage-2/3
+# sentences of both laws gives a fair 4-way choice (chance 1/4) for every model.
+P7_HELD = [0 * 4 + 2, 0 * 4 + 3, 1 * 4 + 2, 1 * 4 + 3]
+def p7_argmax_in(scores, idx):
+    return max(idx, key=lambda i: scores[i])
+
 def p7_argmax(scores):  # [audit #7]
     return max(range(len(scores)), key=lambda i: scores[i])
 
@@ -724,11 +732,12 @@ with torch.no_grad():
     for nm7, mod7 in P7_ALL_MODELS:
         mod7.eval()
         r = dict(A1=-1, A2=-1, A1law=-1, A1stage=-1, A2law=-1, A2stage=-1, D1=-1, D2=-1,
-                 B1=0, B2=0, B1s=-1, B2s=-1, B2direct=-1, B1n=-1, B2n=-1)
+                 B1=0, B2=0, B1s=-1, B2s=-1, B2direct=-1, B1n=-1, B2n=-1,
+                 B1h=0, B2h=0, B1hs=-1, B2hs=-1)  # [audit #7, post-hoc] held-out 4-way
         is_thought = isinstance(mod7, StressDualBrainModel)
         if is_thought:
             anchors = p7_anchors(mod7)
-            for k in ("A1", "A2", "A1law", "A1stage", "A2law", "A2stage", "D1", "D2", "B1s", "B2s"): r[k] = 0
+            for k in ("A1", "A2", "A1law", "A1stage", "A2law", "A2stage", "D1", "D2", "B1s", "B2s", "B1hs", "B2hs"): r[k] = 0
         else:
             r["B2direct"] = 0
             r["B1n"] = 0; r["B2n"] = 0  # [audit #7, post-hoc]
@@ -756,6 +765,8 @@ with torch.no_grad():
                     full = [p7_cos(s_hat, sc) + p7_cos(d_prem, dc) for dc, sc in enc_c]
                     sonly = [p7_cos(s_hat, sc) for _, sc in enc_c]
                     r[kf] += int(p7_argmax(full) == gold); r[ks] += int(p7_argmax(sonly) == gold)
+                    r[kf + "h"] += int(p7_argmax_in(full, P7_HELD) == gold)   # [audit #7, post-hoc]
+                    r[kf + "hs"] += int(p7_argmax_in(sonly, P7_HELD) == gold)
                     b_picks.append(p7_lbl(p7_argmax(full)))
                 if nm7 == P7_INSPECT:
                     p7_inspect_rows.append((d_name, law_id, p7_lbl(n0), p7_lbl(n1), p7_lbl(n2), p7_lbl(n3), p7_lbl(nc2), b_picks))
@@ -779,6 +790,11 @@ with torch.no_grad():
                 r["B1n"] += int(pick2n == gold2)
                 prem3n = (prem + cands[pick2n][0]) if mod7 is m_ar else (clauses[1] + cands[pick2n][0])
                 r["B2n"] += int(p7_argmax([score_n(prem3n, c) for c, _ in cands]) == gold3)
+                # [audit #7, post-hoc] held-out 4-way choice, length-normalised score, own-pick conditioning
+                pick2h = p7_argmax_in(sn2, P7_HELD)
+                r["B1h"] += int(pick2h == gold2)
+                prem3h = (prem + cands[pick2h][0]) if mod7 is m_ar else (clauses[1] + cands[pick2h][0])
+                r["B2h"] += int(p7_argmax_in([score_n(prem3h, c) for c, _ in cands], P7_HELD) == gold3)
         p7_results[nm7] = r
 
 print("\n" + "=" * 150, flush=True)
@@ -807,4 +823,6 @@ for d_name, law_id, l0, l1, l2, l3, lc2, bp in p7_inspect_rows:
 for nm7, _ in P7_ALL_MODELS:
     r = p7_results[nm7]
     d1 = f"{r['D1']}/16" if r["D1"] >= 0 else "-1"
-    print(f"PROBE_RESULT seed={SEED} model={nm7} A1={r['A1']} A2={r['A2']} D1={d1} D2={r['D2']} B1={r['B1']} B2={r['B2']} B1s={r['B1s']} B2s={r['B2s']} B1n={r['B1n']} B2n={r['B2n']}", flush=True)
+    print(f"  [post-hoc] {nm7} held-out 4-way B1h / B2h: {r['B1h']}/8 / {r['B2h']}/8 (chance 1/4)"
+          + (f" | s-only {r['B1hs']}/8 / {r['B2hs']}/8" if r['B1hs'] >= 0 else ""), flush=True)
+    print(f"PROBE_RESULT seed={SEED} model={nm7} A1={r['A1']} A2={r['A2']} D1={d1} D2={r['D2']} B1={r['B1']} B2={r['B2']} B1s={r['B1s']} B2s={r['B2s']} B1n={r['B1n']} B2n={r['B2n']} B1h={r['B1h']} B2h={r['B2h']} B1hs={r['B1hs']} B2hs={r['B2hs']}", flush=True)
