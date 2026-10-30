@@ -1,5 +1,18 @@
 # LLM Learning: 從零白盒解剖到後 Transformer 原創實驗的實戰路徑
 
+> [!WARNING]
+> **稽核中，以下成果數據待重跑驗證（2026-10-30）。** 原始腳本補上後的程式碼稽核發現，多項結論目前不被證據支持：
+>
+> | 宣稱 | 問題 | 追蹤 |
+> | :--- | :--- | :--- |
+> | 未知領域零樣本推演 100%（Stage 1 / 2） | 未知領域的答案句在解碼頭訓練資料中，實為「階段分類 + 查表」 | [#14](https://github.com/EndeavorYen/LLM-learning/issues/14) |
+> | 5.46M 小雙腦知識密度 9.56 倍、Lab 09 臨界質量 | 建立在上述洩漏、AR 輸出長度被截斷、`SLOT_LEN` 截斷答案之上 | [#13](https://github.com/EndeavorYen/LLM-learning/issues/13) [#16](https://github.com/EndeavorYen/LLM-learning/issues/16) |
+> | MMLU 0% 遺忘 / ARC +8% | MMLU 依任務標籤寫死退回原版；ARC 只對雙腦組加計分項 | [#15](https://github.com/EndeavorYen/LLM-learning/issues/15) |
+> | 逆向克漏字 6/6 vs 0/6、AR 基線 0 分 | 對照組的評測協定讓它不可能答對；前 5 字比對過寬 | [#16](https://github.com/EndeavorYen/LLM-learning/issues/16) |
+> | 速度 10.36x / 4.24x / 14.23x / 8.11x | 未在同等品質下量測或比較對象不對等 | [#12](https://github.com/EndeavorYen/LLM-learning/issues/12) |
+>
+> 修正進度見 [#18](https://github.com/EndeavorYen/LLM-learning/issues/18)。在重跑完成前，下方數字請視為**未經驗證的初步紀錄**。
+
 本專案以 **Google Colab (NVIDIA L4 GPU)** 為雲端算力引擎，結合本地權重管理與 GitHub 版本控制，從最底層的隨機初始化權重（Pre-training）出發，不僅完整實作現代主流 LLM 四大訓練階段（Pretrain / SFT / LoRA / DPO），更在 **Stage 1 白盒沙盒** 中針對自迴歸 Transformer 的底層限制展開了 **5 輪後 Transformer 架構演進實驗（Diffusion LLM $\rightarrow$ Block Diffusion & 局部修圖 $\rightarrow$ 意念球量化與聯想 $\rightarrow$ 信心閘門雙腦與高知識密度架構）**。
 
 📄 **完整研究報告與 Benchmark 對決總表**：
@@ -39,6 +52,8 @@
 
 ## 📊 Stage 1 核心實驗成果摘要 (Colab L4 實測)
 
+> ⚠️ **待重跑**：本表數字來自原始一次性執行，受 [#13](https://github.com/EndeavorYen/LLM-learning/issues/13)–[#16](https://github.com/EndeavorYen/LLM-learning/issues/16) 的問題影響，尚未驗證。
+
 | 編號 | 實驗主題 | Notebook 連結 | 本地備份權重 (`checkpoints/stage1_minimind/`) | 核心實測突破指標 (NVIDIA L4) |
 | :---: | :--- | :--- | :--- | :--- |
 | **01** | **Pre-training 預訓練** | [`01_minimind_pretrain_colab.ipynb`](notebooks/01_stage1_minimind/01_minimind_pretrain_colab.ipynb) | `pretrain_512.pth` (`66.6 MB`) | 30.03M 參數從隨機雜訊學中文語感，Loss `8.80 -> 6.04` |
@@ -54,6 +69,8 @@
 ---
 
 ## 🚀 Stage 2 工業級預訓練模型嫁接與對決成果 (Qwen2.5-0.5B on Colab L4)
+
+> ⚠️ **待重跑**：本表數字來自原始一次性執行，受 [#13](https://github.com/EndeavorYen/LLM-learning/issues/13)–[#16](https://github.com/EndeavorYen/LLM-learning/issues/16) 的問題影響，尚未驗證。
 
 | 編號 | 實驗主題 | Notebook 連結 | 本地備份權重 (`checkpoints/stage2_qwen/`) | 核心實測突破指標 (NVIDIA L4) |
 | :---: | :--- | :--- | :--- | :--- |

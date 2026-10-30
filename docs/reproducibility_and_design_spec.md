@@ -6,6 +6,8 @@
 
 ## 1. 原始執行程式碼索引（對應 Issue #5）
 
+> **[稽核更新 #13 #17]** `scripts/` 已依稽核修正長度截斷、寫死字串與未固定版本等問題，下表行號對應**修正後**的腳本。修正前、從對話紀錄逐字擷取的原始版本保留在 commit `684a82a`（分支 [`archive/original-scripts`](https://github.com/EndeavorYen/LLM-learning/tree/archive/original-scripts/scripts)）。
+
 所有在對話過程中實際送入 Colab L4 執行之原始 Python 腳本，已從系統底層對話紀錄（`transcript_full.jsonl`）透過 AST 原樣提取至 [`scripts/`](../scripts/) 目錄（**零遺失、零事後重寫**）：
 
 | 階段與實驗 | 原始執行腳本路徑 (`scripts/`) | Transcript Step | 原始 Colab Session 名稱 | 包含之關鍵類別 / 函式與行號 |
@@ -16,14 +18,14 @@
 | **Stage 1 Lab 04** (Diffusion vs AR) | [`scripts/stage1_lab04_diffusion_vs_ar.py`](../scripts/stage1_lab04_diffusion_vs_ar.py) | `Step 288` | `stage1_diff_v2` | `is_causal = False`, 雙向遮罩去噪與克漏字對決 |
 | **Stage 1 Lab 05** (Block Diffusion) | [`scripts/stage1_lab05_block_diffusion.py`](../scripts/stage1_lab05_block_diffusion.py) | `Step 310` | `stage1_block_diff_v2` | `SLOT_PAD_ID=4`, 互補遮罩 `m1 ∪ ~m1`, 局部文字修圖 |
 | **Stage 1 Lab 06** (Associative Thought) | [`scripts/stage1_lab06_associative_thought.py`](../scripts/stage1_lab06_associative_thought.py) | `Step 339` | `stage1_thought_assoc_v3` | `AssociativeThoughtMiniMind`, `encode_thought`, `forward_thought_hop` |
-| **Stage 1 Lab 07** (Entropy-Gated Dual-Brain) | [`scripts/stage1_lab07_entropy_gated_dual_brain.py`](../scripts/stage1_lab07_entropy_gated_dual_brain.py) | `Step 385` | `stage1_entropy_dual_brain_v3` | **`EntropyGatedDualBrainMiniMind`** (L28), `forward_fast_muscle_memory` (L60), `encode_thought` (L67), `forward_struct_hop` (L76), `solve_via_thought_analogy` (L128), `consolidate_to_muscle_memory` (L143) |
-| **Stage 1 Lab 08** (12題知識密度對決) | [`scripts/stage1_lab08_knowledge_density_12q.py`](../scripts/stage1_lab08_knowledge_density_12q.py) | `Step 397` | `stage1_iq_density_bench` | `PureDiffusionMiniMind` (L106), `DualBrainMiniMind` (L142), 5模型訓練與12題評測 |
-| **Stage 1 Lab 09** (40題非飽和極限壓測) | [`scripts/stage1_lab09_non_saturated_stress_40q.py`](../scripts/stage1_lab09_non_saturated_stress_40q.py) | `Step 418` | `stage1_stress_bench` | `StressDualBrainModel` (L157), 6模型訓練與 Tier 1~4 共40題壓測 |
-| **Stage 2 Lab 01 v1** (初版 `bfloat16` 無謙遜閘門) | [`scripts/stage2_lab01_v1_bfloat16_no_humility.py`](../scripts/stage2_lab01_v1_bfloat16_no_humility.py) | `Step 451` | `stage2_qwen_pk` | `LoRALinear` (L103), **`DualBrainGraftedQwen`** (L164), **`domain_funnel`** (L172), **`struct_funnel`** (L173), **`law_brain`** (L177), **`extract_ds`** (L195), **`hop_law`** (L200) |
-| **Stage 2 Lab 01 v2** (進階 `float32` + 謙遜閘門) | [`scripts/stage2_lab01_v2_float32_with_humility.py`](../scripts/stage2_lab01_v2_float32_with_humility.py) | `Step 458` | `stage2_qwen_pk_v2` | 同上 + **謙遜閘門正則化 `loss_humility`** (L239-244) |
-| **Stage 2 Lab 02 v1** (150題 4選1 LogProb 初版) | [`scripts/stage2_lab02_v1_logprob_150q.py`](../scripts/stage2_lab02_v1_logprob_150q.py) | `Step 484` | `stage2_open_llm_leaderboard` | `DualBrainCribNoteQwen` (L181), `reasoning_router` (L210) |
-| **Stage 2 Lab 02 v2** (140題標準 MC + 生成式 GSM8K) | [`scripts/stage2_lab02_v2_authentic_140q.py`](../scripts/stage2_lab02_v2_authentic_140q.py) | `Step 488` | `stage2_open_llm_authentic` | `DualBrainCribNoteQwen` (L206), `make_crib_note` (L231), 端到端 `loss_crib_lm` (L286-305) |
-| **Stage 2 Lab 03** (三合一完整體 Full-Trinity) | [`scripts/stage2_lab03_full_trinity_24q.py`](../scripts/stage2_lab03_full_trinity_24q.py) | `Step 512` | `stage2_full_trinity_qwen_v2` | **`FullTrinityBlockDiffusionQwen`** (L156), `bidirectional_denoiser` (L179), `denoise_block` (L193), `iterative_block_generate` (L212) |
+| **Stage 1 Lab 07** (Entropy-Gated Dual-Brain) | [`scripts/stage1_lab07_entropy_gated_dual_brain.py`](../scripts/stage1_lab07_entropy_gated_dual_brain.py) | `Step 385` | `stage1_entropy_dual_brain_v3` | **`EntropyGatedDualBrainMiniMind`** (L30), `forward_fast_muscle_memory` (L62), `encode_thought` (L69), `forward_struct_hop` (L78), `solve_via_thought_analogy` (L126), `consolidate_to_muscle_memory` (L143) |
+| **Stage 1 Lab 08** (12題知識密度對決) | [`scripts/stage1_lab08_knowledge_density_12q.py`](../scripts/stage1_lab08_knowledge_density_12q.py) | `Step 397` | `stage1_iq_density_bench` | `PureDiffusionMiniMind` (L126), `DualBrainMiniMind` (L161), 5模型訓練與12題評測 |
+| **Stage 1 Lab 09** (40題非飽和極限壓測) | [`scripts/stage1_lab09_non_saturated_stress_40q.py`](../scripts/stage1_lab09_non_saturated_stress_40q.py) | `Step 418` | `stage1_stress_bench` | `StressDualBrainModel` (L177), 6模型訓練與 Tier 1~4 共40題壓測 |
+| **Stage 2 Lab 01 v1** (初版 `bfloat16` 無謙遜閘門) | [`scripts/stage2_lab01_v1_bfloat16_no_humility.py`](../scripts/stage2_lab01_v1_bfloat16_no_humility.py) | `Step 451` | `stage2_qwen_pk` | `LoRALinear` (L113), **`DualBrainGraftedQwen`** (L185), **`domain_funnel`** (L194), **`struct_funnel`** (L195), **`law_brain`** (L199), **`extract_ds`** (L216), **`hop_law`** (L221) |
+| **Stage 2 Lab 01 v2** (進階 `float32` + 謙遜閘門) | [`scripts/stage2_lab01_v2_float32_with_humility.py`](../scripts/stage2_lab01_v2_float32_with_humility.py) | `Step 458` | `stage2_qwen_pk_v2` | 同上 + **謙遜閘門正則化 `loss_humility`** (L259-264) |
+| **Stage 2 Lab 02 v1** (150題 4選1 LogProb 初版) | [`scripts/stage2_lab02_v1_logprob_150q.py`](../scripts/stage2_lab02_v1_logprob_150q.py) | `Step 484` | `stage2_open_llm_leaderboard` | `DualBrainCribNoteQwen` (L231), `reasoning_router` (L262) |
+| **Stage 2 Lab 02 v2** (140題標準 MC + 生成式 GSM8K) | [`scripts/stage2_lab02_v2_authentic_140q.py`](../scripts/stage2_lab02_v2_authentic_140q.py) | `Step 488` | `stage2_open_llm_authentic` | `DualBrainCribNoteQwen` (L237), `make_crib_note` (L264), 端到端 `loss_crib_lm` (L337) |
+| **Stage 2 Lab 03** (三合一完整體 Full-Trinity) | [`scripts/stage2_lab03_full_trinity_24q.py`](../scripts/stage2_lab03_full_trinity_24q.py) | `Step 512` | `stage2_full_trinity_qwen_v2` | **`FullTrinityBlockDiffusionQwen`** (L176), `bidirectional_denoiser` (L198), `denoise_block` (L211), `iterative_block_generate` (L231) |
 
 ---
 

@@ -11,7 +11,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 sys.path.insert(0, '/content/minimind')
 
 from transformers import AutoTokenizer
@@ -89,17 +91,35 @@ multi_law_domains = [
     }),
 ]
 
-SLOT_LEN = 12
-PROMPT_LEN = 16
+# [audit #13] Lengths are derived from the data. The original hardcoded SLOT_LEN = 12 and
+# PROMPT_LEN = 16/18 silently truncated targets (e.g. "当血管壁堆积胆固醇变窄时，" is 18 tokens)
+# and premises (c0 + c1 is 23-27 tokens). Measured token lengths are listed in issue #13.
+def _tok_len(txt):
+    return len(tokenizer(txt, add_special_tokens=False).input_ids)
+_slot_texts = ([q for q, _ in rote_serials + domain_emg_codes] + [a for _, a in rote_serials + domain_emg_codes]
+               + [c for _, _, laws in multi_law_domains for cl in laws.values() for c in cl])
+_prompt_texts = ([q for q, _ in rote_serials + domain_emg_codes]
+                 + [cl[0] + cl[1] for _, _, laws in multi_law_domains for cl in laws.values()])
+SLOT_LEN = max(_tok_len(t) for t in _slot_texts) + 1      # +1 so every slot can end with [□]
+PROMPT_LEN = max(_tok_len(t) for t in _prompt_texts) + 1  # +1 for BOS
+AR_MAX_NEW_TOKENS = SLOT_LEN                              # AR may emit the longest answer in full
+print(f"[audit #13] SLOT_LEN={SLOT_LEN} PROMPT_LEN={PROMPT_LEN} AR_MAX_NEW_TOKENS={AR_MAX_NEW_TOKENS}", flush=True)
 
-def pad_slot(txt, length=SLOT_LEN):
-    ids = tokenizer(txt, add_special_tokens=False).input_ids[:length]
+def pad_slot(txt, length=None):
+    length = SLOT_LEN if length is None else length
+    ids = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(ids) > length:
+        raise ValueError(f"[audit #13] pad_slot would truncate {len(ids)} tokens to {length}: {txt!r}")
     val = [1]*len(ids) + [0]*(length - len(ids))
     pad = ids + [SLOT_PAD_ID]*(length - len(ids))
     return torch.tensor([pad], device='cuda'), torch.tensor([val], device='cuda')
 
-def pad_prompt(txt, length=PROMPT_LEN):
-    ids = [BOS_ID] + tokenizer(txt, add_special_tokens=False).input_ids[:length - 1]
+def pad_prompt(txt, length=None):
+    length = PROMPT_LEN if length is None else length
+    body = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(body) + 1 > length:
+        raise ValueError(f"[audit #13] pad_prompt would truncate {len(body) + 1} tokens to {length}: {txt!r}")
+    ids = [BOS_ID] + body
     ids = [SLOT_PAD_ID]*(length - len(ids)) + ids
     return torch.tensor([ids], device='cuda')
 
@@ -422,6 +442,9 @@ train_stress_model(m_tiny_dual, steps=220)
 train_stress_model(m_full_dual, steps=220)
 m_ar.eval(); m_diff.eval()
 
+# [audit #13] Fix the RNG before evaluation: Tier 3 injects random drift noise per hop.
+random.seed(42); torch.manual_seed(42); torch.cuda.manual_seed_all(42)
+
 # ==============================================================================
 # EVALUATE ON THE 40-TASK NON-SATURATED STRESS BENCHMARK
 # ==============================================================================
@@ -445,7 +468,7 @@ for name_m, mod in [
     for q_s, gt_a in rote_serials:
         if mod is m_ar:
             inp = torch.tensor([[BOS_ID] + tokenizer(q_s, add_special_tokens=False).input_ids], device='cuda')
-            out = mod.generate(inp, max_new_tokens=11, do_sample=False, use_cache=True)
+            out = mod.generate(inp, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
             pred = clean_str(out[0, inp.size(1):])
         elif mod is m_diff:
             pred = clean_str(mod.generate_slots(pad_prompt(q_s), steps=2)[0])
@@ -469,7 +492,7 @@ for name_m, mod in [
 
         if mod is m_ar:
             inp = torch.tensor([[BOS_ID] + tokenizer(p_str, add_special_tokens=False).input_ids], device='cuda')
-            out = mod.generate(inp, max_new_tokens=20, do_sample=False, use_cache=True)
+            out = mod.generate(inp, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
             pred_s2 = clean_str(out[0, inp.size(1):])
             pred_s3 = pred_s2
         elif mod is m_diff:
@@ -492,7 +515,7 @@ for name_m, mod in [
         emg_q, emg_gt = domain_emg_codes[unseen_idx // 2]
         if mod is m_ar:
             inp_e = torch.tensor([[BOS_ID] + tokenizer(emg_q, add_special_tokens=False).input_ids], device='cuda')
-            pred_emg = clean_str(mod.generate(inp_e, max_new_tokens=10, do_sample=False, use_cache=True)[0, inp_e.size(1):])
+            pred_emg = clean_str(mod.generate(inp_e, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)[0, inp_e.size(1):])
         elif mod is m_diff:
             pred_emg = clean_str(mod.generate_slots(pad_prompt(emg_q), steps=2)[0])
         elif mod.pure_thought_only:

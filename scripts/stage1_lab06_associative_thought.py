@@ -11,7 +11,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 sys.path.insert(0, '/content/minimind')
 os.makedirs('/content/minimind/out', exist_ok=True)
 
@@ -146,9 +148,14 @@ thought_chains = [
     ])
 ]
 
-MAX_SLOTS = 12
+# [audit #13] Derived from the data: the original MAX_SLOTS = 12 truncated "去了一趟热闹的生鲜超市，" (13 tokens).
+MAX_SLOTS = max(len(tokenizer(t, add_special_tokens=False).input_ids)
+                for name, chain in thought_chains for t in [name] + [x for pair in chain for x in pair]) + 1
+print(f"[audit #13] MAX_SLOTS={MAX_SLOTS}", flush=True)
 def pad_clause(txt):
-    ids = tokenizer(txt, add_special_tokens=False).input_ids[:MAX_SLOTS]
+    ids = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(ids) > MAX_SLOTS:
+        raise ValueError(f"[audit #13] pad_clause would truncate {len(ids)} tokens to {MAX_SLOTS}: {txt!r}")
     valid = [1] * len(ids) + [0] * (MAX_SLOTS - len(ids))
     padded = ids + [SLOT_PAD_ID] * (MAX_SLOTS - len(ids))
     return padded, valid
@@ -285,7 +292,18 @@ for _ in range(20):
 torch.cuda.synchronize()
 t_ar = (time.time() - t0) / 20.0 * 1000.0
 
-print(f"  Traditional AR (36 Token-by-Token Steps)            : {t_ar:6.2f} ms (36 Backbone Forward Passes)", flush=True)
-print(f"  Associative Thought (3 Vector Hops + 2 Map Passes)  : {t_thought:6.2f} ms (Only 2 Backbone Forward Passes!) -> {t_ar/t_thought:.2f}x Faster!", flush=True)
+# [audit #17] Count backbone forward passes instead of printing a hardcoded "Only 2".
+_n_fwd = [0]
+_hook = model.backbone.model.register_forward_hook(lambda *_: _n_fwd.__setitem__(0, _n_fwd[0] + 1))
+_ = model.think_and_speak(z1_sky, intent_z=intent_z0, style_id=STYLE_DETAILED_ID, max_hops=4, render_steps=2)
+n_fwd_thought = _n_fwd[0]; _n_fwd[0] = 0
+_ = model.backbone.generate(ar_inp, max_new_tokens=36, do_sample=False, use_cache=True, eos_token_id=None)
+n_fwd_ar = _n_fwd[0]
+_hook.remove()
+
+# NOTE [audit #16]: the "AR" row is this model's own bidirectional backbone running generate();
+# no AR model was trained and its output quality is not evaluated, so this is not a fair AR baseline.
+print(f"  Backbone generate (36 tokens, NOT a trained AR baseline): {t_ar:6.2f} ms ({n_fwd_ar} backbone forward passes)", flush=True)
+print(f"  Associative Thought (hops + map passes)                  : {t_thought:6.2f} ms ({n_fwd_thought} backbone forward passes) -> time ratio {t_ar/t_thought:.2f}x", flush=True)
 
 torch.save(model.state_dict(), '/content/minimind/out/associative_thought_minimind_512.pth')
