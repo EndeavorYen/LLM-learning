@@ -492,8 +492,16 @@ with torch.no_grad():  # [audit #7]
         return _p7_keys[i], float(cos[i].item())
 
     p7 = dict(A1=0, A1_law=0, A1_stage=0, A2=0, A2_law=0, A2_stage=0, D1=0, D2=0, B1=0, B2=0, B1s=0, B2s=0)
-    p7_lora = dict(B1=0, B2=0)
+    p7_lora = dict(B1=0, B2=0, B1n=0, B2n=0)
     _p7_rows = []
+
+    def _p7_lora_ll_cand_mean(premise, cand):  # [audit #7, post-hoc] mean log-prob over the candidate tokens only
+        p_ids = tokenizer(premise, return_tensors="pt").input_ids.to("cuda")
+        ids = tokenizer(premise + cand, return_tensors="pt").input_ids.to("cuda")
+        n_c = ids.size(1) - p_ids.size(1)
+        lp = F.log_softmax(qwen_base(input_ids=ids).logits.float()[:, :-1, :], dim=-1)
+        tok_lp = lp.gather(-1, ids[:, 1:].unsqueeze(-1))[0, :, 0]
+        return float(tok_lp[-max(1, n_c):].mean().item())
 
     def _p7_lora_ll(text):  # [audit #7] total log-likelihood of the full sequence under LoRA-enabled Qwen
         ids = tokenizer(text, return_tensors="pt").input_ids.to("cuda")
@@ -552,6 +560,13 @@ with torch.no_grad():  # [audit #7]
             ll3 = [_p7_lora_ll(premise + laws_d[lb1[0]][lb1[1]] + t) for t in cand_txts]
             lb2 = cand_keys[max(range(8), key=lambda i: ll3[i])]
             p7_lora['B1'] += int(lb1 == (law_id, 2)); p7_lora['B2'] += int(lb2 == (law_id, 3))
+            # [audit #7, post-hoc] length-normalised ranking (summed LL prefers shorter candidates)
+            ln2 = [_p7_lora_ll_cand_mean(premise, t) for t in cand_txts]
+            lb1n = cand_keys[max(range(8), key=lambda i: ln2[i])]
+            prem3 = premise + laws_d[lb1n[0]][lb1n[1]]
+            ln3 = [_p7_lora_ll_cand_mean(prem3, t) for t in cand_txts]
+            lb2n = cand_keys[max(range(8), key=lambda i: ln3[i])]
+            p7_lora['B1n'] += int(lb1n == (law_id, 2)); p7_lora['B2n'] += int(lb2n == (law_id, 3))
             set_lora_enabled(False)
 
             _p7_rows.append((f"{d_name}-規律{law_id+1}",
@@ -574,6 +589,7 @@ print(f"  B2  candidate rank, full (s+d): {p7['B2']}/{_p7_n} (chance 1/8) | s-on
 print("--- Qwen2.5-0.5B + LoRA (Competitor A), total log-likelihood of premise+candidate ---", flush=True)
 print(f"  B1  {p7_lora['B1']}/{_p7_n} (chance 1/8)", flush=True)
 print(f"  B2  {p7_lora['B2']}/{_p7_n} (chance 1/8) [conditioned on LoRA's own B1 pick]", flush=True)
+print(f"  [post-hoc] length-normalised B1 / B2: {p7_lora['B1n']}/{_p7_n} / {p7_lora['B2n']}/{_p7_n} (chance 1/8)", flush=True)
 print("--- Per-item nearest anchor / pick (✓ = expected) ---", flush=True)
 for tag, anc, picks in _p7_rows:
     print(f"  [{tag}]", flush=True)
@@ -582,7 +598,7 @@ for tag, anc, picks in _p7_rows:
 print(f"PROBE_RESULT seed={SEED} model=dual_brain A1={p7['A1']} A2={p7['A2']} D1={p7['D1']}/16 D2={p7['D2']} "
       f"B1={p7['B1']} B2={p7['B2']} B1s={p7['B1s']} B2s={p7['B2s']}", flush=True)
 print(f"PROBE_RESULT seed={SEED} model=qwen_lora A1=-1 A2=-1 D1=-1/16 D2=-1 "
-      f"B1={p7_lora['B1']} B2={p7_lora['B2']} B1s=-1 B2s=-1", flush=True)
+      f"B1={p7_lora['B1']} B2={p7_lora['B2']} B1s=-1 B2s=-1 B1n={p7_lora['B1n']} B2n={p7_lora['B2n']}", flush=True)
 
 os.makedirs('/content/out', exist_ok=True)
 torch.save(dual_head.half().state_dict(), '/content/out/dual_brain_qwen25_05b_head.pth')

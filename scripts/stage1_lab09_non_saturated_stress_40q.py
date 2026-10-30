@@ -697,6 +697,24 @@ def p7_diff_score(prem, cand):  # [audit #7] single step, fully-masked slot, sum
     tgt = pad_slot(cand)[0][0]
     return lp[torch.arange(SLOT_LEN, device='cuda'), tgt].sum().item()
 
+# [audit #7, post-hoc] Length-normalised variants. Summed log-likelihood systematically prefers shorter
+# candidates; lm-evaluation-harness reports a length-normalised accuracy for this reason. Added AFTER the
+# first seed-42 run showed AR at 0/8 on every seed; reported alongside (not instead of) the registered sums.
+@torch.no_grad()
+def p7_ar_score_norm(prem, cand):
+    n = len(tokenizer(cand, add_special_tokens=False).input_ids)
+    return p7_ar_score(prem, cand) / max(1, n)
+
+@torch.no_grad()
+def p7_diff_score_norm(prem, cand):  # mean log-prob over the candidate's real tokens only (pad slots excluded)
+    canv = torch.full((1, SLOT_LEN), MASK_ID, dtype=torch.long, device='cuda')
+    prompt = pad_prompt_tail(prem)
+    lg = m_diff.backbone(torch.cat([prompt, canv], dim=1)).logits[:, prompt.size(1):, :]
+    lp = F.log_softmax(lg[0].float(), dim=-1)
+    tgt, val = pad_slot(cand)
+    tgt, val = tgt[0], val[0].bool()
+    return lp[torch.arange(SLOT_LEN, device='cuda'), tgt][val].mean().item()
+
 def p7_argmax(scores):  # [audit #7]
     return max(range(len(scores)), key=lambda i: scores[i])
 
@@ -706,13 +724,14 @@ with torch.no_grad():
     for nm7, mod7 in P7_ALL_MODELS:
         mod7.eval()
         r = dict(A1=-1, A2=-1, A1law=-1, A1stage=-1, A2law=-1, A2stage=-1, D1=-1, D2=-1,
-                 B1=0, B2=0, B1s=-1, B2s=-1, B2direct=-1)
+                 B1=0, B2=0, B1s=-1, B2s=-1, B2direct=-1, B1n=-1, B2n=-1)
         is_thought = isinstance(mod7, StressDualBrainModel)
         if is_thought:
             anchors = p7_anchors(mod7)
             for k in ("A1", "A2", "A1law", "A1stage", "A2law", "A2stage", "D1", "D2", "B1s", "B2s"): r[k] = 0
         else:
             r["B2direct"] = 0
+            r["B1n"] = 0; r["B2n"] = 0  # [audit #7, post-hoc]
         for d_name, law_id, clauses, c_t in p7_items:
             cands = p7_cands[d_name]
             gold2, gold3 = law_id * 4 + 2, law_id * 4 + 3
@@ -753,6 +772,13 @@ with torch.no_grad():
                 r["B2"] += int(p7_argmax(sc3) == gold3)
                 # B2-direct (info only): candidate scored right after premise c0+c1
                 r["B2direct"] += int(p7_argmax(sc2) == gold3)
+                # [audit #7, post-hoc] length-normalised B1/B2 with the same B2 conditioning rule
+                score_n = p7_ar_score_norm if mod7 is m_ar else p7_diff_score_norm
+                sn2 = [score_n(prem, c) for c, _ in cands]
+                pick2n = p7_argmax(sn2)
+                r["B1n"] += int(pick2n == gold2)
+                prem3n = (prem + cands[pick2n][0]) if mod7 is m_ar else (clauses[1] + cands[pick2n][0])
+                r["B2n"] += int(p7_argmax([score_n(prem3n, c) for c, _ in cands]) == gold3)
         p7_results[nm7] = r
 
 print("\n" + "=" * 150, flush=True)
@@ -773,6 +799,7 @@ for nm7, _ in P7_ALL_MODELS:
         print(f"  A1/A2/D1/D2           : n/a (no thought vector)", flush=True)
         print(f"  B1                    : {r['B1']}/8 (chance 1/8)", flush=True)
         print(f"  B2 (after own B1 pick): {r['B2']}/8 (chance 1/8)   [info] B2-direct after c0+c1: {r['B2direct']}/8", flush=True)
+        print(f"  [post-hoc] length-normalised B1 / B2: {r['B1n']}/8 / {r['B2n']}/8 (chance 1/8)", flush=True)
 print(f"--- nearest-anchor labels per item ({P7_INSPECT}; LxSy = law x, stage y) ---", flush=True)
 print(f"  {'domain':<10} {'law':>3} | {'s0':>4} {'s1':>4} | {'s^2':>4} {'s^3':>4} | {'c2':>4} | {'B1pk':>4} {'B2pk':>4} | expected", flush=True)
 for d_name, law_id, l0, l1, l2, l3, lc2, bp in p7_inspect_rows:
@@ -780,4 +807,4 @@ for d_name, law_id, l0, l1, l2, l3, lc2, bp in p7_inspect_rows:
 for nm7, _ in P7_ALL_MODELS:
     r = p7_results[nm7]
     d1 = f"{r['D1']}/16" if r["D1"] >= 0 else "-1"
-    print(f"PROBE_RESULT seed={SEED} model={nm7} A1={r['A1']} A2={r['A2']} D1={d1} D2={r['D2']} B1={r['B1']} B2={r['B2']} B1s={r['B1s']} B2s={r['B2s']}", flush=True)
+    print(f"PROBE_RESULT seed={SEED} model={nm7} A1={r['A1']} A2={r['A2']} D1={d1} D2={r['D2']} B1={r['B1']} B2={r['B2']} B1s={r['B1s']} B2s={r['B2s']} B1n={r['B1n']} B2n={r['B2n']}", flush=True)
