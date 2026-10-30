@@ -25,7 +25,6 @@ for p in qwen_base.parameters():
 
 H_DIM = qwen_base.config.hidden_size  # 896
 VOCAB_SIZE = qwen_base.config.vocab_size
-SLOT_LEN = 12
 PAD_ID = tokenizer.eos_token_id
 MASK_ID = VOCAB_SIZE - 1  # Virtual [MASK] token id for canvas tracking
 
@@ -67,8 +66,18 @@ domains_pk = [
     }),
 ]
 
-def encode_slots(txt, length=SLOT_LEN):
-    ids = tokenizer.encode(txt, add_special_tokens=False)[:length]
+# [audit #13] SLOT_LEN is derived from the data. The original hardcoded 12 combined with
+# `[:length]` silently truncated any answer or clause longer than 12 Qwen tokens.
+_slot_texts = ([a for _, a in rote_secrets]
+               + [c for _, _, laws in domains_pk for cl in laws.values() for c in cl])
+SLOT_LEN = max(len(tokenizer.encode(t, add_special_tokens=False)) for t in _slot_texts) + 1  # +1 pad slot
+print(f"[audit #13] SLOT_LEN={SLOT_LEN} (longest slot text + 1)", flush=True)
+
+def encode_slots(txt, length=None):
+    length = SLOT_LEN if length is None else length
+    ids = tokenizer.encode(txt, add_special_tokens=False)
+    if len(ids) > length:
+        raise ValueError(f"[audit #13] encode_slots would truncate {len(ids)} tokens to {length}: {txt!r}")
     pad = ids + [PAD_ID] * (length - len(ids))
     return torch.tensor(pad, dtype=torch.long, device='cuda')
 
@@ -343,7 +352,7 @@ rote_ar, rote_trin = 0, 0
 for q_s, gt_a in rote_secrets:
     set_lora_enabled(True)
     inp = tokenizer(q_s, return_tensors="pt").to("cuda")
-    out_a = qwen_base.generate(**inp, max_new_tokens=10, do_sample=False, pad_token_id=PAD_ID)
+    out_a = qwen_base.generate(**inp, max_new_tokens=max(10, SLOT_LEN), do_sample=False, pad_token_id=PAD_ID)
     pred_a = tokenizer.decode(out_a[0, inp.input_ids.size(1):], skip_special_tokens=True).strip()
     if gt_a in pred_a: rote_ar += 1
 
@@ -364,7 +373,7 @@ for d_name, is_seen, laws_d in domains_pk:
         prompt_str = c_list[0] + c_list[1]
         set_lora_enabled(True)
         inp = tokenizer(prompt_str, return_tensors="pt").to("cuda")
-        out_a = qwen_base.generate(**inp, max_new_tokens=18, do_sample=False, pad_token_id=PAD_ID)
+        out_a = qwen_base.generate(**inp, max_new_tokens=max(18, SLOT_LEN), do_sample=False, pad_token_id=PAD_ID)
         pred_a = tokenizer.decode(out_a[0, inp.input_ids.size(1):], skip_special_tokens=True).strip()
         if c_list[2][:5] in pred_a:
             if is_seen: seen_ar += 1

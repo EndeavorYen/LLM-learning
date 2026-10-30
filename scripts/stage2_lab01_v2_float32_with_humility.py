@@ -9,6 +9,8 @@ import os, sys, time, math, random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+random.seed(42)
+torch.manual_seed(42)  # [audit #13] fixed seed (missing in the original run)
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 MODEL_ID = "Qwen/Qwen2.5-0.5B"
@@ -66,11 +68,19 @@ domains_pk = [
     }),
 ]
 
-SLOT_LEN = 12
+# [audit #13] SLOT_LEN is derived from the data. The original hardcoded 12 combined with
+# `[:length]` silently truncated any answer or clause longer than 12 Qwen tokens.
+_slot_texts = ([a for _, a in rote_secrets]
+               + [c for _, _, laws in domains_pk for cl in laws.values() for c in cl])
+SLOT_LEN = max(len(tokenizer.encode(t, add_special_tokens=False)) for t in _slot_texts) + 1  # +1 pad slot
+print(f"[audit #13] SLOT_LEN={SLOT_LEN} (longest slot text + 1)", flush=True)
 PAD_ID = tokenizer.eos_token_id
 
-def encode_slots(txt, length=SLOT_LEN):
-    ids = tokenizer.encode(txt, add_special_tokens=False)[:length]
+def encode_slots(txt, length=None):
+    length = SLOT_LEN if length is None else length
+    ids = tokenizer.encode(txt, add_special_tokens=False)
+    if len(ids) > length:
+        raise ValueError(f"[audit #13] encode_slots would truncate {len(ids)} tokens to {length}: {txt!r}")
     pad = ids + [PAD_ID] * (length - len(ids))
     return torch.tensor(pad, dtype=torch.long, device='cuda')
 
@@ -227,7 +237,7 @@ for d_name, is_seen, laws_d in domains_pk:
             all_clause_txts.append(c)
 
 h_all_clauses = extract_qwen_896_feature(all_clause_txts)  # (48, 896)
-target_all_slots = torch.stack([encode_slots(c) for c in all_clause_txts])  # (48, 12)
+target_all_slots = torch.stack([encode_slots(c) for c in all_clause_txts])  # (48, SLOT_LEN)
 
 opt_dual = torch.optim.AdamW(dual_head.parameters(), lr=1.2e-3, weight_decay=0.01)
 STEPS = 240
@@ -312,7 +322,7 @@ rote_lora, rote_dual = 0, 0
 for q_s, gt_a in rote_secrets:
     set_lora_enabled(True)
     inp = tokenizer(q_s, return_tensors="pt").to("cuda")
-    out_a = qwen_base.generate(**inp, max_new_tokens=10, do_sample=False, pad_token_id=PAD_ID)
+    out_a = qwen_base.generate(**inp, max_new_tokens=max(10, SLOT_LEN), do_sample=False, pad_token_id=PAD_ID)
     pred_a = tokenizer.decode(out_a[0, inp.input_ids.size(1):], skip_special_tokens=True).strip()
     if gt_a in pred_a: rote_lora += 1
 
@@ -336,7 +346,7 @@ for d_name, is_seen, laws_d in domains_pk:
 
         set_lora_enabled(True)
         inp = tokenizer(prompt_str, return_tensors="pt").to("cuda")
-        out_a = qwen_base.generate(**inp, max_new_tokens=18, do_sample=False, pad_token_id=PAD_ID)
+        out_a = qwen_base.generate(**inp, max_new_tokens=max(18, SLOT_LEN), do_sample=False, pad_token_id=PAD_ID)
         pred_a = tokenizer.decode(out_a[0, inp.input_ids.size(1):], skip_special_tokens=True).strip()
 
         set_lora_enabled(False)

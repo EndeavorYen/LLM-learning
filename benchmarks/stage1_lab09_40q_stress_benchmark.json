@@ -304,7 +304,8 @@
       "law_id": 0,
       "prompt": "血液在血管中正常循环，当血管壁堆积胆固醇变窄时，",
       "ground_truth": "血管内血压就会急剧升高，",
-      "match_criterion": "'血管内血压就' in prediction"
+      "match_criterion": "'血管内血压' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 18,
@@ -313,7 +314,8 @@
       "law_id": 1,
       "prompt": "心脏向全身正常供血，当心室供血突然中断时，",
       "ground_truth": "器官血氧就会迅速枯竭，",
-      "match_criterion": "'器官血氧就会' in prediction"
+      "match_criterion": "'器官血氧就' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 19,
@@ -322,7 +324,8 @@
       "law_id": 0,
       "prompt": "数据在光纤中高速传输，当网络带宽通道受限变窄时，",
       "ground_truth": "网络延迟与拥塞急剧升高，",
-      "match_criterion": "'网络延迟与拥' in prediction"
+      "match_criterion": "'网络延迟与' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 20,
@@ -331,7 +334,8 @@
       "law_id": 1,
       "prompt": "核心网向基站正常发包，当主干路由突然断连时，",
       "ground_truth": "基站缓存就会迅速枯竭，",
-      "match_criterion": "'基站缓存就会' in prediction"
+      "match_criterion": "'基站缓存就' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 21,
@@ -340,7 +344,8 @@
       "law_id": 0,
       "prompt": "零件在流水线顺畅运转，当关键工位故障产能变窄时，",
       "ground_truth": "产线积压負荷急剧升高，",
-      "match_criterion": "'产线积压負荷' in prediction"
+      "match_criterion": "'产线积压負' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 22,
@@ -349,7 +354,8 @@
       "law_id": 1,
       "prompt": "仓库向产线正常供料，当上游原料突然断供时，",
       "ground_truth": "产线库存就会迅速枯竭，",
-      "match_criterion": "'产线库存就会' in prediction"
+      "match_criterion": "'产线库存就' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 23,
@@ -358,7 +364,8 @@
       "law_id": 0,
       "prompt": "空气在气管中顺畅进出，当支气管发炎肿胀变窄时，",
       "ground_truth": "呼吸道阻力就会急剧升高，",
-      "match_criterion": "'呼吸道阻力就' in prediction"
+      "match_criterion": "'呼吸道阻力' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 24,
@@ -367,7 +374,8 @@
       "law_id": 1,
       "prompt": "肺部向血液正常供氧，当外界氧气突然断绝时，",
       "ground_truth": "体内血氧就会迅速枯竭，",
-      "match_criterion": "'体内血氧就会' in prediction"
+      "match_criterion": "'体内血氧就' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 25,
@@ -377,7 +385,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "血液在血管中正常循环，当血管壁堆积胆固醇变窄时，",
       "ground_truth_hop3": "最终导致血液循环受阻。",
-      "match_criterion": "'最终导致血液' in prediction"
+      "match_criterion": "'最终导致血' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 26,
@@ -387,7 +396,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "心脏向全身正常供血，当心室供血突然中断时，",
       "ground_truth_hop3": "最终导致组织机能停摆。",
-      "match_criterion": "'最终导致组织' in prediction"
+      "match_criterion": "'最终导致组' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 27,
@@ -397,7 +407,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "数据在光纤中高速传输，当网络带宽通道受限变窄时，",
       "ground_truth_hop3": "最终导致数据包传输中断。",
-      "match_criterion": "'最终导致数据' in prediction"
+      "match_criterion": "'最终导致数' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 28,
@@ -407,7 +418,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "核心网向基站正常发包，当主干路由突然断连时，",
       "ground_truth_hop3": "最终导致通信服务停摆。",
-      "match_criterion": "'最终导致通信' in prediction"
+      "match_criterion": "'最终导致通' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 29,
@@ -417,7 +429,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "零件在流水线顺畅运转，当关键工位故障产能变窄时，",
       "ground_truth_hop3": "最终导致工厂生产停摆。",
-      "match_criterion": "'最终导致工厂' in prediction"
+      "match_criterion": "'最终导致工' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 30,
@@ -427,7 +440,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "仓库向产线正常供料，当上游原料突然断供时，",
       "ground_truth_hop3": "最终导致装配作业停摆。",
-      "match_criterion": "'最终导致装配' in prediction"
+      "match_criterion": "'最终导致装' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 31,
@@ -437,7 +451,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "空气在气管中顺畅进出，当支气管发炎肿胀变窄时，",
       "ground_truth_hop3": "最终导致呼吸困难窒息。",
-      "match_criterion": "'最终导致呼吸' in prediction"
+      "match_criterion": "'最终导致呼' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 32,
@@ -447,7 +462,8 @@
       "injected_gaussian_drift_sigma": 0.08,
       "prompt": "肺部向血液正常供氧，当外界氧气突然断绝时，",
       "ground_truth_hop3": "最终导致呼吸代谢停摆。",
-      "match_criterion": "'最终导致呼吸' in prediction"
+      "match_criterion": "'最终导致呼' in prediction",
+      "match_criterion_note": "[audit #17] corrected to what the script actually checks"
     },
     {
       "task_id": 33,

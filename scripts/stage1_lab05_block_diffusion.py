@@ -11,7 +11,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 sys.path.insert(0, '/content/minimind')
 os.makedirs('/content/minimind/out', exist_ok=True)
 
@@ -252,7 +254,7 @@ for step in range(1, STEPS + 1):
     opt.step()
 
     if step in (1, 100, 200, 300):
-        print(f"  Step {step:3d}/{STEPS} | Total Loss: {loss.item():.4f} | Block Token Coverage (m1 U m2): 100.0%", flush=True)
+        print(f"  Step {step:3d}/{STEPS} | Total Loss: {loss.item():.4f} | Block Token Coverage (m1 U m2): {(m1 | m2).float().mean().item()*100:.1f}%", flush=True)  # [audit #17] measured, was a literal
 
 model.eval()
 
@@ -280,7 +282,9 @@ for label, p_str in [
     print(f"\n[{label}] Prompt: '{p_str}' -> Expanded {len(trace)} time(s) ({len(trace)*8} slots total):", flush=True)
     for blk_num, snaps in trace:
         print(f"  Block {blk_num} (+8 slots): Step 1: {render_with_symbols(snaps[0])}  -->  Step 3 (Final): {render_with_symbols(snaps[-1])}", flush=True)
-    print(f"  => Auto-Stopped on [□]! Final Output: {render_clean(full_out[0])}", flush=True)
+    # [audit #17] only claim an auto-stop when a [□] was actually emitted
+    stop_msg = "Auto-Stopped on [□]!" if (full_out[0] == SLOT_PAD_ID).any().item() else f"No [□] emitted, hit max_blocks={len(trace)}"
+    print(f"  => {stop_msg} Final Output: {render_clean(full_out[0])}", flush=True)
 
 print("\n=== [Benchmark B] Photoshop-Style Local Text Surgery: Modify (修改) / Expand (擴展) / Remove & Heal (移除與縫合) ===", flush=True)
 
@@ -298,7 +302,9 @@ print(f"   After  : {render_clean(mod_res)}", flush=True)
 # 2. EXPAND (局部插槽擴展 + 多餘欄位自動 [□] 摺疊)
 exp_canvas = s_long + [MASK_ID] * 16 + e_long
 exp_res, exp_snaps = model.local_text_surgery(exp_canvas, steps=3)
-print("\n2. [局部擴展 Expand] Inserted +16 [▓] slots into short skeleton sentence (14 needed, 2 excess -> [□]):", flush=True)
+# [audit #17] needed/excess counts come from the target instead of a hardcoded "(14 needed, 2 excess)"
+exp_needed = sum(1 for t in expanded_middle_target if t != SLOT_PAD_ID)
+print(f"\n2. [局部擴展 Expand] Inserted +16 [▓] slots into short skeleton sentence ({exp_needed} needed, {16 - exp_needed} excess -> [□]):", flush=True)
 print(f"   Skeleton : 因为太阳光进入大气层时， + [16x ▓] + 所以我们看到的天空是蓝色的。", flush=True)
 print(f"   Step 1   : {render_with_symbols(exp_snaps[1])}", flush=True)
 print(f"   Step 3   : {render_with_symbols(exp_snaps[-1])}", flush=True)
@@ -336,6 +342,6 @@ for ctx_len in (256, 1024, 2048):
 
     full_ops = 15 * (ctx_len + 32)
     blk_ops = ctx_len + 4 * (3 * 8 + 8)
-    print(f"  Context={ctx_len:4d} + Gen=32 | Full-Canvas (No Cache): {t_full:6.1f} ms ({full_ops:5d} tok-passes) | Block-Diffusion (KV-Cache): {t_blk:6.1f} ms ({blk_ops:4d} tok-passes) -> {t_full/t_blk:.2f}x Faster!", flush=True)
+    print(f"  Context={ctx_len:4d} + Gen=32 | Full-Canvas (No Cache): {t_full:6.1f} ms ({full_ops:5d} theoretical tok-passes) | Block-Diffusion (KV-Cache): {t_blk:6.1f} ms ({blk_ops:4d} theoretical tok-passes) -> Full/Block time ratio {t_full/t_blk:.2f}x", flush=True)
 
 torch.save(model.state_dict(), '/content/minimind/out/block_diffusion_minimind_512.pth')

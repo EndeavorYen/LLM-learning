@@ -1,5 +1,8 @@
 # Stage 1 白盒解剖與後 Transformer 架構演進研究報告
 
+> [!WARNING]
+> **稽核中（2026-10-30）**：本報告的 benchmark 結論待重跑驗證。主要問題：未知領域答案句洩漏進解碼頭訓練（[#14](https://github.com/EndeavorYen/LLM-learning/issues/14)）、長度截斷與 AR 生成長度不足（[#13](https://github.com/EndeavorYen/LLM-learning/issues/13)）、計分過寬與對照組協定不公平（[#16](https://github.com/EndeavorYen/LLM-learning/issues/16)）。總覽見 [#18](https://github.com/EndeavorYen/LLM-learning/issues/18)。
+
 本文件完整記錄我們在 **Stage 1（MiniMind 白盒實驗室）** 從零開始建立主流 LLM 訓練流水線（Pretrain / SFT / LoRA / DPO），並進一步針對現有自迴歸 Transformer 的底層缺陷（「Tokenizer 拆字窠臼」、「左到右單向眼罩」、「死背字面缺乏觸類旁通」、「知識密度低落」）進行 **5 輪架構改造與實證 Benchmark** 的完整研究路程。
 
 ---
@@ -117,6 +120,6 @@ flowchart TD
 2. **找出了模型縮小的物理下限（Sweet Spot 在 `5.46M`，低於 `1.31M` 即發生相變崩潰）**：
    - 當我們把雙腦模型從 `5.46M (4層 256維)` 進一步砍到極限的 **`1.31M (2層 128維，32維意念空間)`** 時，2 層網路無法同時容納 6 個正交領域與 8 個多規律狀態，分數從 `68%` 瞬間歸零（`0%`）——證明 **`4層 256維 (5.46M)` 是維持高密度正交解耦的最小臨界質量（Critical Mass）**！
 3. **揭露了雙腦模型在 Tier 1 (`25%`) 與 Tier 3 (`88%`) 的真實進化空間**：
-   - **Tier 1 瓶頸**：當 4 個序號前 10 碼完全一樣、只有最後 1 碼不同（`SN-8841-902-A1` vs `A2` vs `A3` vs `A4`）時，220 步的肌肉記憶只記住了叢集主幹（每組 4 題只對 1 題，恰為 `4/16 = 25%`）——這正是為什麼我們需要 **Stage 3 的外部精確向量檢索庫（FAISS RAG）** 來接手海量高混淆序號！
+   - **Tier 1 瓶頸**：**［稽核更正 [#13](https://github.com/EndeavorYen/LLM-learning/issues/13)］此 25% 是 `SLOT_LEN = 12` 截掉 A/B/C 組序號最後一碼（序號為 13 token）造成的理論上限，並非肌肉記憶只記住主幹；以下原始解讀不成立。** 當 4 個序號前 10 碼完全一樣、只有最後 1 碼不同（`SN-8841-902-A1` vs `A2` vs `A3` vs `A4`）時，220 步的肌肉記憶只記住了叢集主幹（每組 4 題只對 1 題，恰為 `4/16 = 25%`）——這正是為什麼我們需要 **Stage 3 的外部精確向量檢索庫（FAISS RAG）** 來接手海量高混淆序號！
    - **Tier 3 瓶頸**：當多步跳躍累積流形飄移 ($\sigma=0.08$) 時，準確率從 `100%` 微降至 `88% (7/8)`，直接印證了 **[Issue #3](https://github.com/EndeavorYen/LLM-learning/issues/3)** 提出的「長鏈流形校準」研究價值！
 

@@ -11,7 +11,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 sys.path.insert(0, '/content/minimind')
 os.makedirs('/content/minimind/out', exist_ok=True)
 
@@ -152,13 +154,6 @@ class EntropyGatedDualBrainMiniMind(nn.Module):
                         canvas[b, idx] = pred[b, idx]
         return canvas
 
-SLOT_LEN = 12
-def pad_slot(txt, length=SLOT_LEN):
-    ids = tokenizer(txt, add_special_tokens=False).input_ids[:length]
-    val = [1]*len(ids) + [0]*(length - len(ids))
-    pad = ids + [SLOT_PAD_ID]*(length - len(ids))
-    return torch.tensor([pad], device='cuda'), torch.tensor([val], device='cuda')
-
 rote_memories = [
     ("请问妈妈的手机号码是？", "0912-888-168"),
     ("请问妈妈的家里电话是？", "02-2345-6789"),
@@ -189,10 +184,36 @@ domains_data = [
     ])
 ]
 
-PROMPT_PAD_LEN = 18
-def pad_prompt(txt):
-    ids = [BOS_ID] + tokenizer(txt, add_special_tokens=False).input_ids[:PROMPT_PAD_LEN - 1]
-    ids = [SLOT_PAD_ID]*(PROMPT_PAD_LEN - len(ids)) + ids
+# [audit #13] Lengths are derived from the data. The original hardcoded SLOT_LEN = 12 and
+# PROMPT_LEN = 16/18 silently truncated targets (e.g. "当血管壁堆积胆固醇变窄时，" is 18 tokens)
+# and premises (c0 + c1 is 23-27 tokens). Measured token lengths are listed in issue #13.
+def _tok_len(txt):
+    return len(tokenizer(txt, add_special_tokens=False).input_ids)
+_slot_texts = ([a for _, a in rote_memories]  # questions only ever go through pad_prompt here
+               + [c for _, _, cl in domains_data for pair in cl for c in pair])
+_prompt_texts = ([q for q, _ in rote_memories]
+                 + [cl[0][0] + cl[1][0] for _, _, cl in domains_data])
+SLOT_LEN = max(_tok_len(t) for t in _slot_texts) + 1      # +1 so every slot can end with [□]
+PROMPT_LEN = max(_tok_len(t) for t in _prompt_texts) + 1  # +1 for BOS
+AR_MAX_NEW_TOKENS = SLOT_LEN                              # AR may emit the longest answer in full
+print(f"[audit #13] SLOT_LEN={SLOT_LEN} PROMPT_LEN={PROMPT_LEN} AR_MAX_NEW_TOKENS={AR_MAX_NEW_TOKENS}", flush=True)
+
+def pad_slot(txt, length=None):
+    length = SLOT_LEN if length is None else length
+    ids = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(ids) > length:
+        raise ValueError(f"[audit #13] pad_slot would truncate {len(ids)} tokens to {length}: {txt!r}")
+    val = [1]*len(ids) + [0]*(length - len(ids))
+    pad = ids + [SLOT_PAD_ID]*(length - len(ids))
+    return torch.tensor([pad], device='cuda'), torch.tensor([val], device='cuda')
+
+def pad_prompt(txt, length=None):
+    length = PROMPT_LEN if length is None else length
+    body = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(body) + 1 > length:
+        raise ValueError(f"[audit #13] pad_prompt would truncate {len(body) + 1} tokens to {length}: {txt!r}")
+    ids = [BOS_ID] + body
+    ids = [SLOT_PAD_ID]*(length - len(ids)) + ids
     return torch.tensor([ids], device='cuda')
 
 rote_tensors = [(pad_prompt(q), pad_slot(a)[0], q, a) for q, a in rote_memories]
@@ -366,8 +387,11 @@ for consol_step in range(1, 26):
 model.eval()
 
 conf_after, fast_after = model.probe_muscle_memory_confidence(p_unseen, steps=2)
-print(f"Before Consolidation (Unseen Medical Problem): Weakest-Token Confidence = {conf_before*100:5.1f}% (< {CONF_THRESHOLD*100:.0f}% -> Escalated to Slow Thought Layer)", flush=True)
-print(f"After  Consolidation (Practiced 25 times)    : Weakest-Token Confidence = {conf_after*100:5.1f}% (>= {CONF_THRESHOLD*100:.0f}% -> Now Instant Muscle Memory!)", flush=True)
+# [audit #17] routing labels follow the measured confidence instead of fixed text
+def _route_label(c):
+    return f">= {CONF_THRESHOLD*100:.0f}% -> Muscle Memory" if c >= CONF_THRESHOLD else f"< {CONF_THRESHOLD*100:.0f}% -> Escalate to Thought Layer"
+print(f"Before Consolidation (Unseen Medical Problem): Weakest-Token Confidence = {conf_before*100:5.1f}% ({_route_label(conf_before)})", flush=True)
+print(f"After  Consolidation (Practiced 25 times)    : Weakest-Token Confidence = {conf_after*100:5.1f}% ({_route_label(conf_after)})", flush=True)
 print(f"  -> Instant Muscle-Memory Output: {clean_str(fast_after[0])}", flush=True)
 
 torch.save(model.state_dict(), '/content/minimind/out/entropy_dual_brain_minimind_512.pth')
