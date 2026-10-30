@@ -91,7 +91,9 @@ all_domains = [
 def _tok_len(txt):
     return len(tokenizer(txt, add_special_tokens=False).input_ids)
 _slot_texts = ([q for q, _ in rote_facts] + [a for _, a in rote_facts]
-               + [c for _, _, cs in all_domains for c in cs])
+               + [c for _, _, cs in all_domains for c in cs]
+               # seen premises are appended to rote_data and pass through pad_slot in the thought path
+               + [cs[0] + cs[1] for _, seen, cs in all_domains if seen])
 _prompt_texts = ([q for q, _ in rote_facts] + [cs[0] for _, _, cs in all_domains]
                  + [cs[0] + cs[1] for _, _, cs in all_domains])
 SLOT_LEN = max(_tok_len(t) for t in _slot_texts) + 1      # +1 so every slot can end with [□]
