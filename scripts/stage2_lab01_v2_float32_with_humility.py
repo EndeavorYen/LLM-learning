@@ -9,8 +9,10 @@ import os, sys, time, math, random
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-random.seed(42)
-torch.manual_seed(42)  # [audit #13] fixed seed (missing in the original run)
+SEED = int(os.environ.get("AUDIT_SEED", "42"))  # [audit #7] seed sweep (42, 1, 2) via env var
+print(f"[audit #7] SEED={SEED}", flush=True)
+random.seed(SEED)  # [audit #7] was random.seed(42)
+torch.manual_seed(SEED)  # [audit #13] fixed seed (missing in the original run); [audit #7] was 42
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 # [audit #16] scoring helpers (inlined verbatim from the audit spec)
@@ -462,6 +464,125 @@ for sys_tag, p_s, gt_s, pa, r_tag, pb, gt_s2 in pk_comparisons:
     # [audit #16] verdict marks come from clause_match, not hard-coded per competitor
     print(f"  {'✅' if clause_match(pa, gt_s2) else '❌'} Qwen2.5-0.5B + LoRA SFT   : {pa[:45]}", flush=True)
     print(f"  {'✅' if clause_match(pb, gt_s2) else '❌'} Dual-Brain Qwen2.5 ({r_tag}): {pb}", flush=True)
+
+# ==============================================================================
+# [audit #7] MECHANISM TEST (pre-registered spec). Runs after all existing evaluation and BEFORE the
+# checkpoint save below (which casts dual_head to half in place). Unseen stage-2/3 clauses are only
+# ever encoded at inference time here (D2 and candidate encoding); nothing below trains.
+# ==============================================================================
+print("\n=== [audit #7] MECHANISM TEST (pre-registered, see issue #7) ===", flush=True)
+dual_head.eval()  # [audit #7]
+set_lora_enabled(False)  # [audit #7] frozen Qwen features for the Dual-Brain path
+
+def _p7_lbl(law_id, stage):  # [audit #7]
+    return f"(規律{law_id+1},階段{stage})"
+
+with torch.no_grad():  # [audit #7]
+    # Anchors: mean s over SEEN-system clauses per (law, stage), L2-normalized -> (8, 64), row = law*4 + stage
+    _p7_s_all = dual_head.extract_ds(h_all_clauses)[1]
+    _p7_keys = [(j, k) for j in (0, 1) for k in range(4)]
+    _p7_anchor = torch.stack([
+        _p7_s_all[[g for g, (_i, _j, _k, _seen) in enumerate(clause_meta) if _seen and _j == j and _k == k]].mean(dim=0)
+        for (j, k) in _p7_keys])
+    _p7_anchor = F.normalize(_p7_anchor, p=2, dim=-1)
+
+    def _p7_nearest(s_vec):  # [audit #7] s_vec (64,) -> ((law, stage), cos)
+        cos = _p7_anchor @ s_vec
+        i = int(cos.argmax().item())
+        return _p7_keys[i], float(cos[i].item())
+
+    p7 = dict(A1=0, A1_law=0, A1_stage=0, A2=0, A2_law=0, A2_stage=0, D1=0, D2=0, B1=0, B2=0, B1s=0, B2s=0)
+    p7_lora = dict(B1=0, B2=0)
+    _p7_rows = []
+
+    def _p7_lora_ll(text):  # [audit #7] total log-likelihood of the full sequence under LoRA-enabled Qwen
+        ids = tokenizer(text, return_tensors="pt").input_ids.to("cuda")
+        logits = qwen_base(input_ids=ids).logits.float()
+        lp = F.log_softmax(logits[:, :-1, :], dim=-1)
+        return float(lp.gather(-1, ids[:, 1:].unsqueeze(-1)).sum().item())
+
+    for d_idx, (d_name, is_seen, laws_d) in enumerate(domains_pk):
+        if is_seen:
+            continue
+        # Candidate set for this unseen system: its 8 clauses (2 laws x 4 stages), shared by every model
+        cand_keys = [(j, k) for j in (0, 1) for k in range(4)]
+        cand_txts = [laws_d[j][k] for (j, k) in cand_keys]
+        cand_h = h_all_clauses[torch.tensor([_gidx[(d_idx, j, k)] for (j, k) in cand_keys], device='cuda')]
+        d_c, s_c = dual_head.extract_ds(cand_h)  # (8, 64) each
+
+        for law_id in (0, 1):
+            c_list = laws_d[law_id]
+            # --- Dual-Brain: identical code path to the existing unseen-system evaluation (thought branch) ---
+            set_lora_enabled(False)
+            h_c01 = extract_qwen_896_feature([c_list[0], c_list[1]])
+            d01, s01 = dual_head.extract_ds(h_c01)
+            d_tgt = F.normalize(d01[0:1] + d01[1:2], p=2, dim=-1)
+            s_seq = s01.unsqueeze(0)
+            s2_hat = dual_head.hop_law(s_seq)[:, -1, :]
+            s3_hat = dual_head.hop_law(torch.cat([s_seq, s2_hat.unsqueeze(1)], dim=1))[:, -1, :]
+
+            # Test A
+            n2, c2v = _p7_nearest(s2_hat[0])
+            n3, c3v = _p7_nearest(s3_hat[0])
+            p7['A1'] += int(n2 == (law_id, 2)); p7['A1_law'] += int(n2[0] == law_id); p7['A1_stage'] += int(n2[1] == 2)
+            p7['A2'] += int(n3 == (law_id, 3)); p7['A2_law'] += int(n3[0] == law_id); p7['A2_stage'] += int(n3[1] == 3)
+            # D1: s0, s1 themselves
+            n0, c0v = _p7_nearest(s01[0]); n1, c1v = _p7_nearest(s01[1])
+            p7['D1'] += int(n0 == (law_id, 0)) + int(n1 == (law_id, 1))
+            # D2: encode the held-out true c2 directly (inference only); c3 printed for inspection, not scored
+            g2 = _gidx[(d_idx, law_id, 2)]; g3 = _gidx[(d_idx, law_id, 3)]
+            nt2, ct2v = _p7_nearest(_p7_s_all[g2]); nt3, ct3v = _p7_nearest(_p7_s_all[g3])
+            p7['D2'] += int(nt2 == (law_id, 2))
+
+            # Test B (Dual-Brain): cos(s_hat, s_c) + cos(d_premise, d_c), and s-only
+            cos_d = (d_c @ d_tgt[0])
+            sc2 = s_c @ s2_hat[0]; sc3 = s_c @ s3_hat[0]
+            pick = lambda sc: cand_keys[int(sc.argmax().item())]
+            b1, b2 = pick(sc2 + cos_d), pick(sc3 + cos_d)
+            b1s, b2s = pick(sc2), pick(sc3)
+            p7['B1'] += int(b1 == (law_id, 2)); p7['B2'] += int(b2 == (law_id, 3))
+            p7['B1s'] += int(b1s == (law_id, 2)); p7['B2s'] += int(b2s == (law_id, 3))
+
+            # --- Competitor A (LoRA): rank the same 8 candidates by total LL of premise+candidate ---
+            set_lora_enabled(True)
+            premise = c_list[0] + c_list[1]
+            ll2 = [_p7_lora_ll(premise + t) for t in cand_txts]
+            lb1 = cand_keys[max(range(8), key=lambda i: ll2[i])]
+            # B2: one more "hop" conditioned on LoRA's own stage-2 pick (mirrors s3_hat being built from s2_hat)
+            ll3 = [_p7_lora_ll(premise + laws_d[lb1[0]][lb1[1]] + t) for t in cand_txts]
+            lb2 = cand_keys[max(range(8), key=lambda i: ll3[i])]
+            p7_lora['B1'] += int(lb1 == (law_id, 2)); p7_lora['B2'] += int(lb2 == (law_id, 3))
+            set_lora_enabled(False)
+
+            _p7_rows.append((f"{d_name}-規律{law_id+1}",
+                             [("s0", n0, c0v, (law_id, 0)), ("s1", n1, c1v, (law_id, 1)),
+                              ("ŝ2", n2, c2v, (law_id, 2)), ("ŝ3", n3, c3v, (law_id, 3)),
+                              ("s(c2 true)", nt2, ct2v, (law_id, 2)), ("s(c3 true)", nt3, ct3v, (law_id, 3))],
+                             [("Dual B1", b1, (law_id, 2)), ("Dual B2", b2, (law_id, 3)),
+                              ("Dual B1s", b1s, (law_id, 2)), ("Dual B2s", b2s, (law_id, 3)),
+                              ("LoRA B1", lb1, (law_id, 2)), ("LoRA B2", lb2, (law_id, 3))]))
+
+_p7_n = len(_p7_rows)  # [audit #7] 8 = 4 unseen systems x 2 laws
+print(f"[audit #7] SEED={SEED} | items={_p7_n} | chance = 1/8 per item", flush=True)
+print("--- Dual-Brain (Competitor B) ---", flush=True)
+print(f"  A1  ŝ2 -> (correct law, stage 2): {p7['A1']}/{_p7_n} (chance 1/8) | law-correct {p7['A1_law']}/{_p7_n} | stage-correct {p7['A1_stage']}/{_p7_n}", flush=True)
+print(f"  A2  ŝ3 -> (correct law, stage 3): {p7['A2']}/{_p7_n} (chance 1/8) | law-correct {p7['A2_law']}/{_p7_n} | stage-correct {p7['A2_stage']}/{_p7_n}", flush=True)
+print(f"  D1  funnel: s0,s1 at (law,0),(law,1): {p7['D1']}/16 (chance 1/8) [diagnostic]", flush=True)
+print(f"  D2  held-out true c2 at (law,2): {p7['D2']}/{_p7_n} (chance 1/8) [diagnostic]", flush=True)
+print(f"  B1  candidate rank, full (s+d): {p7['B1']}/{_p7_n} (chance 1/8) | s-only: {p7['B1s']}/{_p7_n} (chance 1/8)", flush=True)
+print(f"  B2  candidate rank, full (s+d): {p7['B2']}/{_p7_n} (chance 1/8) | s-only: {p7['B2s']}/{_p7_n} (chance 1/8)", flush=True)
+print("--- Qwen2.5-0.5B + LoRA (Competitor A), total log-likelihood of premise+candidate ---", flush=True)
+print(f"  B1  {p7_lora['B1']}/{_p7_n} (chance 1/8)", flush=True)
+print(f"  B2  {p7_lora['B2']}/{_p7_n} (chance 1/8) [conditioned on LoRA's own B1 pick]", flush=True)
+print("--- Per-item nearest anchor / pick (✓ = expected) ---", flush=True)
+for tag, anc, picks in _p7_rows:
+    print(f"  [{tag}]", flush=True)
+    print("    " + " | ".join(f"{nm}->{_p7_lbl(*got)} cos={cv:.3f}{' ✓' if got == exp else ''}" for nm, got, cv, exp in anc), flush=True)
+    print("    " + " | ".join(f"{nm}={_p7_lbl(*got)}{' ✓' if got == exp else ''}" for nm, got, exp in picks), flush=True)
+print(f"PROBE_RESULT seed={SEED} model=dual_brain A1={p7['A1']} A2={p7['A2']} D1={p7['D1']}/16 D2={p7['D2']} "
+      f"B1={p7['B1']} B2={p7['B2']} B1s={p7['B1s']} B2s={p7['B2s']}", flush=True)
+print(f"PROBE_RESULT seed={SEED} model=qwen_lora A1=-1 A2=-1 D1=-1/16 D2=-1 "
+      f"B1={p7_lora['B1']} B2={p7_lora['B2']} B1s=-1 B2s=-1", flush=True)
 
 os.makedirs('/content/out', exist_ok=True)
 torch.save(dual_head.half().state_dict(), '/content/out/dual_brain_qwen25_05b_head.pth')
