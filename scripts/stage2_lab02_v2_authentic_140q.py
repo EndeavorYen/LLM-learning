@@ -229,10 +229,12 @@ print(f"[audit #15] train pool {len(lora_train_texts)} texts | max_length={TRAIN
 
 # [audit #16] equal budgets: same steps, batch size and cosine schedule for both trained competitors (own LR values kept).
 TRAIN_STEPS, TRAIN_BS = 100, 16
+DUAL_MICRO_BS, DUAL_ACCUM = 4, 4  # [audit #16] 4 x 4 = TRAIN_BS (memory only)
+assert DUAL_MICRO_BS * DUAL_ACCUM == TRAIN_BS
 def cosine_lr(base_lr, step):
     return base_lr * (0.1 + 0.9 * 0.5 * (1 + math.cos(math.pi * step / TRAIN_STEPS)))
 print(f"[audit #16] budget LoRA      : {TRAIN_STEPS} steps x BS {TRAIN_BS}, AdamW lr 5e-4 cosine -> 5e-5, clip 1.0", flush=True)
-print(f"[audit #16] budget Dual-Brain: {TRAIN_STEPS} steps x BS {TRAIN_BS}, AdamW lr 8e-4 cosine -> 8e-5, clip 1.0", flush=True)
+print(f"[audit #16] budget Dual-Brain: {TRAIN_STEPS} steps x BS {TRAIN_BS} (grad-accum {DUAL_MICRO_BS}x{DUAL_ACCUM}), AdamW lr 8e-4 cosine -> 8e-5, clip 1.0", flush=True)
 
 print(f"\n=== [3] Training Competitor 2: Standard Qwen2.5-0.5B + LoRA SFT on ARC+GSM8K Train ({len(lora_train_texts)} samples) ===", flush=True)
 set_lora_enabled(True)
@@ -346,28 +348,35 @@ for step in range(1, TRAIN_STEPS + 1):
     loss_ortho = (d_q * s_q).abs().mean() + (d_pos * s_pos).abs().mean()
 
     # B. End-to-End Crib-Note Prefix Training through Frozen Qwen2.5 on a mini-batch of the shared pool [audit #15]
+    # [audit #16] Gradient accumulation (MICRO_BS x ACCUM = TRAIN_BS): backprop through all of Qwen at
+    # 16 x 386 tokens ran out of memory on the L4; the effective batch and the training budget are unchanged.
+    (loss_hop + 0.5 * loss_ortho).backward()
     b_idx = torch.randint(0, N_POOL, (TRAIN_BS,), device='cuda')
-    d_g, s_g = dual_brain.encode_ds(h_pool_q[b_idx])
-    s_g_hat  = dual_brain.predict_solution_law(d_g, s_g)
-    crib_emb = dual_brain.make_crib_note(d_g, s_g_hat).to(torch.bfloat16)  # (TRAIN_BS, 2, 896)
+    loss_crib_lm = 0.0
+    for mb in range(DUAL_ACCUM):
+        mb_idx = b_idx[mb * DUAL_MICRO_BS:(mb + 1) * DUAL_MICRO_BS]
+        d_g, s_g = dual_brain.encode_ds(h_pool_q[mb_idx])
+        s_g_hat  = dual_brain.predict_solution_law(d_g, s_g)
+        crib_emb = dual_brain.make_crib_note(d_g, s_g_hat).to(torch.bfloat16)  # (MICRO_BS, 2, 896)
 
-    tok_ids = enc_pool.input_ids[b_idx]
-    tok_msk = enc_pool.attention_mask[b_idx]
-    word_emb = qwen_base.model.embed_tokens(tok_ids)
-    full_emb = torch.cat([crib_emb, word_emb], dim=1)
-    prefix_msk = torch.ones((TRAIN_BS, 2), dtype=tok_msk.dtype, device='cuda')
-    full_msk = torch.cat([prefix_msk, tok_msk], dim=1)
+        tok_ids = enc_pool.input_ids[mb_idx]
+        tok_msk = enc_pool.attention_mask[mb_idx]
+        word_emb = qwen_base.model.embed_tokens(tok_ids)
+        full_emb = torch.cat([crib_emb, word_emb], dim=1)
+        prefix_msk = torch.ones((len(mb_idx), 2), dtype=tok_msk.dtype, device='cuda')
+        full_msk = torch.cat([prefix_msk, tok_msk], dim=1)
 
-    lbls = tok_ids.clone()
-    lbls[tok_msk == 0] = -100
-    pad_lbl = torch.full((TRAIN_BS, 2), -100, dtype=lbls.dtype, device='cuda')
-    full_lbls = torch.cat([pad_lbl, lbls], dim=1)
+        lbls = tok_ids.clone()
+        lbls[tok_msk == 0] = -100
+        pad_lbl = torch.full((len(mb_idx), 2), -100, dtype=lbls.dtype, device='cuda')
+        full_lbls = torch.cat([pad_lbl, lbls], dim=1)
 
-    out_qwen = qwen_base(inputs_embeds=full_emb, attention_mask=full_msk, labels=full_lbls)
-    loss_crib_lm = out_qwen.loss.float()
+        out_qwen = qwen_base(inputs_embeds=full_emb, attention_mask=full_msk, labels=full_lbls)
+        mb_loss = out_qwen.loss.float() / DUAL_ACCUM
+        mb_loss.backward()
+        loss_crib_lm = loss_crib_lm + mb_loss.detach()
+        del out_qwen, full_emb, word_emb, crib_emb
 
-    loss = loss_crib_lm + loss_hop + 0.5 * loss_ortho
-    loss.backward()
     torch.nn.utils.clip_grad_norm_(dual_brain.parameters(), 1.0)
     opt_dual.step()
 
