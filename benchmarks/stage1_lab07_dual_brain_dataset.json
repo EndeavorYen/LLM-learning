@@ -1,0 +1,98 @@
+{
+  "script": "scripts/stage1_lab07_entropy_gated_dual_brain.py",
+  "confidence_gate_threshold": 0.85,
+  "rote_memories_6": [
+    {
+      "prompt": "请问妈妈的手机号码是？",
+      "answer": "0912-888-168"
+    },
+    {
+      "prompt": "请问妈妈的家里电话是？",
+      "answer": "02-2345-6789"
+    },
+    {
+      "prompt": "请问爸爸的手机号码是？",
+      "answer": "0933-777-999"
+    },
+    {
+      "prompt": "请问爸爸的家里电话是？",
+      "answer": "04-8765-4321"
+    },
+    {
+      "prompt": "水流在水管中稳定流动，当水管内壁结垢变窄时，",
+      "answer": "管内水压就会急剧升高。"
+    },
+    {
+      "prompt": "车流在高速路正常行驶，当施工导致车道变窄时，",
+      "answer": "路段交通压力急剧升高。"
+    }
+  ],
+  "domains_data_3x4": [
+    {
+      "domain": "水利工程",
+      "is_seen_causal_chain_in_training": true,
+      "clauses_detailed_and_concise": [
+        [
+          "水流在水管中稳定流动，",
+          "水流稳定流动，"
+        ],
+        [
+          "当水管内壁结垢变窄时，",
+          "水管结垢变窄时，"
+        ],
+        [
+          "管内水压就会急剧升高，",
+          "管内水压急升，"
+        ],
+        [
+          "最终导致水流堵塞中断。",
+          "导致水流堵塞。"
+        ]
+      ]
+    },
+    {
+      "domain": "交通工程",
+      "is_seen_causal_chain_in_training": true,
+      "clauses_detailed_and_concise": [
+        [
+          "车流在高速路正常行驶，",
+          "车流正常行驶，"
+        ],
+        [
+          "当施工导致车道变窄时，",
+          "车道施工变窄时，"
+        ],
+        [
+          "路段交通压力急剧升高，",
+          "路段车流压力急升，"
+        ],
+        [
+          "最终导致车流瘫痪堵塞。",
+          "导致交通瘫痪。"
+        ]
+      ]
+    },
+    {
+      "domain": "人體醫學",
+      "is_seen_causal_chain_in_training": false,
+      "clauses_detailed_and_concise": [
+        [
+          "血液在血管中正常循环，",
+          "血液正常循环，"
+        ],
+        [
+          "当血管壁堆积胆固醇变窄时，",
+          "血管壁变窄时，"
+        ],
+        [
+          "血管内血压就会急剧升高，",
+          "血管血压急升，"
+        ],
+        [
+          "最终导致血液循环受阻。",
+          "导致血液受阻。"
+        ]
+      ]
+    }
+  ]
+}

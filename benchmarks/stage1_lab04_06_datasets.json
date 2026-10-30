@@ -1,0 +1,106 @@
+{
+  "lab04_diffusion_vs_ar": {
+    "script": "scripts/stage1_lab04_diffusion_vs_ar.py",
+    "training_corpus_clauses": [
+      "人工智能正在深刻改变人类社会的生产与生活方式，从自动驾驶到医疗诊断都展现出巨大潜力。",
+      "大语言模型通过海量文本预训练掌握了丰富的世界知识，但在逻辑推理与精确计算上仍面临挑战。",
+      "扩散模型最初用于图像生成领域，如今通过离散遮罩机制成功拓展到了自然语言生成任务中。",
+      "双向注意力机制允许模型同时观察上下文的左右两侧信息，从而在完形填空与局部编辑中表现优异。"
+    ],
+    "cloze_infilling_benchmark_11_tokens": {
+      "full_ground_truth": "人工智能正在深刻改变人类社会的生产与生活方式",
+      "prefix_given": "人工智能",
+      "middle_masked_target": "正在深刻改变人类社会的",
+      "suffix_given": "生产与生活方式"
+    }
+  },
+  "lab05_block_diffusion": {
+    "script": "scripts/stage1_lab05_block_diffusion.py",
+    "variable_length_qa_pairs": [
+      {
+        "prompt": "请问水的化学分子式是什么？",
+        "answer": "H2O。"
+      },
+      {
+        "prompt": "请简述为什么天空呈现蓝色？",
+        "answer": "因为太阳光进入大气层后，波长较短的蓝光更容易被空气分子散射。"
+      },
+      {
+        "prompt": "请详细说明深度学习训练的三个核心步骤及其作用。",
+        "answer": "第一步是前向传播计算预测值与损失；第二步是反向传播计算梯度；第三步是优化器更新模型权重参数。"
+      }
+    ],
+    "local_text_surgery_tasks": [
+      {
+        "operation": "1_Modify (局部替換)",
+        "original": "深度学习模型在图像识别领域取得了突破性进展。",
+        "target": "深度学习模型在自然语言处理领域取得了突破性进展。"
+      },
+      {
+        "operation": "2_Expand (局部撐開擴展)",
+        "original": "Transformer架构提升了训练速度。",
+        "target": "Transformer架构通过自注意力平行运算大幅提升了训练速度。"
+      },
+      {
+        "operation": "3_Remove_and_Heal (局部移除與雙向縫合)",
+        "original": "这款智能手机即便在极端寒冷的环境下依然拥有极其出色的电池续航表现。",
+        "target": "这款智能手机拥有极其出色的电池续航表现。"
+      }
+    ]
+  },
+  "lab06_associative_thought": {
+    "script": "scripts/stage1_lab06_associative_thought.py",
+    "thought_chains_dual_style": [
+      {
+        "chain_id": "Chain_A_Monetary_Economics",
+        "steps": [
+          {
+            "step": 1,
+            "detailed": "中央银行宣布大幅下调基准存贷款利率，",
+            "concise": "央行大幅降息，"
+          },
+          {
+            "step": 2,
+            "detailed": "商业银行随之放宽企业与个人的信贷额度，",
+            "concise": "银行放宽信贷，"
+          },
+          {
+            "step": 3,
+            "detailed": "市场上的流动资金充裕并推动投资消费增长，",
+            "concise": "市场资金充裕促投资，"
+          },
+          {
+            "step": 4,
+            "detailed": "最终带动整体宏观经济与物价温和回升。",
+            "concise": "带动经济物价回升。"
+          }
+        ]
+      },
+      {
+        "chain_id": "Chain_B_Ecology_Rainfall",
+        "steps": [
+          {
+            "step": 1,
+            "detailed": "热带洋面水温持续上升引发大规模水汽蒸发，",
+            "concise": "洋面升温水汽蒸发，"
+          },
+          {
+            "step": 2,
+            "detailed": "湿润气流在高空遇冷凝结形成浓密积雨云层，",
+            "concise": "气流凝结成积雨云，"
+          },
+          {
+            "step": 3,
+            "detailed": "充沛的季风降雨迅速补充了干涸的流域水库，",
+            "concise": "充沛降雨补充水库，"
+          },
+          {
+            "step": 4,
+            "detailed": "最终促使下游森林与农田生态系统恢复生机。",
+            "concise": "促使下游生态复苏。"
+          }
+        ]
+      }
+    ]
+  }
+}

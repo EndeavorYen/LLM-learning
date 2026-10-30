@@ -1,0 +1,541 @@
+{
+  "script": "scripts/stage1_lab09_non_saturated_stress_40q.py",
+  "training_data": {
+    "rote_serials_16": [
+      {
+        "prompt": "查询节点A1密钥：",
+        "answer": "SN-8841-902-A1"
+      },
+      {
+        "prompt": "查询节点A2密钥：",
+        "answer": "SN-8841-902-A2"
+      },
+      {
+        "prompt": "查询节点A3密钥：",
+        "answer": "SN-8841-902-A3"
+      },
+      {
+        "prompt": "查询节点A4密钥：",
+        "answer": "SN-8841-902-A4"
+      },
+      {
+        "prompt": "查询节点B1密钥：",
+        "answer": "SN-7739-105-B1"
+      },
+      {
+        "prompt": "查询节点B2密钥：",
+        "answer": "SN-7739-105-B2"
+      },
+      {
+        "prompt": "查询节点B3密钥：",
+        "answer": "SN-7739-105-B3"
+      },
+      {
+        "prompt": "查询节点B4密钥：",
+        "answer": "SN-7739-105-B4"
+      },
+      {
+        "prompt": "查询节点C1密钥：",
+        "answer": "SN-6628-441-C1"
+      },
+      {
+        "prompt": "查询节点C2密钥：",
+        "answer": "SN-6628-441-C2"
+      },
+      {
+        "prompt": "查询节点C3密钥：",
+        "answer": "SN-6628-441-C3"
+      },
+      {
+        "prompt": "查询节点C4密钥：",
+        "answer": "SN-6628-441-C4"
+      },
+      {
+        "prompt": "查询节点D1密钥：",
+        "answer": "SN-5517-339-D1"
+      },
+      {
+        "prompt": "查询节点D2密钥：",
+        "answer": "SN-5517-339-D2"
+      },
+      {
+        "prompt": "查询节点D3密钥：",
+        "answer": "SN-5517-339-D3"
+      },
+      {
+        "prompt": "查询节点D4密钥：",
+        "answer": "SN-5517-339-D4"
+      }
+    ],
+    "domain_emergency_codes_4": [
+      {
+        "prompt": "查询人体医学急救码：",
+        "answer": "EMG-MED-119"
+      },
+      {
+        "prompt": "查询网络通讯抢修码：",
+        "answer": "EMG-NET-404"
+      },
+      {
+        "prompt": "查询工厂产线维修码：",
+        "answer": "EMG-FAC-502"
+      },
+      {
+        "prompt": "查询呼吸系统急救码：",
+        "answer": "EMG-AIR-999"
+      }
+    ],
+    "multi_law_domains_6x2x4_clauses_48": [
+      {
+        "domain": "水利工程",
+        "is_seen_causal_chain": true,
+        "law_0_narrowing": [
+          "水流在水管稳定流动，",
+          "当水管内壁结垢变窄时，",
+          "管内水压就会急剧升高，",
+          "最终导致水流堵塞中断。"
+        ],
+        "law_1_supply_cut": [
+          "水库向管网正常供水，",
+          "当上游水源突然断流时，",
+          "管网储水就会迅速枯竭，",
+          "最终导致末端供水停摆。"
+        ]
+      },
+      {
+        "domain": "交通工程",
+        "is_seen_causal_chain": true,
+        "law_0_narrowing": [
+          "车流在高速路正常行驶，",
+          "当施工导致车道变窄时，",
+          "路段交通压力急剧升高，",
+          "最终导致车流瘫痪堵塞。"
+        ],
+        "law_1_supply_cut": [
+          "巴士向干线正常发车，",
+          "当总站发车突然中断时，",
+          "干线运力就会迅速枯竭，",
+          "最终导致站点运输停摆。"
+        ]
+      },
+      {
+        "domain": "人體醫學",
+        "is_seen_causal_chain": false,
+        "law_0_narrowing": [
+          "血液在血管中正常循环，",
+          "当血管壁堆积胆固醇变窄时，",
+          "血管内血压就会急剧升高，",
+          "最终导致血液循环受阻。"
+        ],
+        "law_1_supply_cut": [
+          "心脏向全身正常供血，",
+          "当心室供血突然中断时，",
+          "器官血氧就会迅速枯竭，",
+          "最终导致组织机能停摆。"
+        ]
+      },
+      {
+        "domain": "網路通訊",
+        "is_seen_causal_chain": false,
+        "law_0_narrowing": [
+          "数据在光纤中高速传输，",
+          "当网络带宽通道受限变窄时，",
+          "网络延迟与拥塞急剧升高，",
+          "最终导致数据包传输中断。"
+        ],
+        "law_1_supply_cut": [
+          "核心网向基站正常发包，",
+          "当主干路由突然断连时，",
+          "基站缓存就会迅速枯竭，",
+          "最终导致通信服务停摆。"
+        ]
+      },
+      {
+        "domain": "工廠產線",
+        "is_seen_causal_chain": false,
+        "law_0_narrowing": [
+          "零件在流水线顺畅运转，",
+          "当关键工位故障产能变窄时，",
+          "产线积压負荷急剧升高，",
+          "最终导致工厂生产停摆。"
+        ],
+        "law_1_supply_cut": [
+          "仓库向产线正常供料，",
+          "当上游原料突然断供时，",
+          "产线库存就会迅速枯竭，",
+          "最终导致装配作业停摆。"
+        ]
+      },
+      {
+        "domain": "呼吸系統",
+        "is_seen_causal_chain": false,
+        "law_0_narrowing": [
+          "空气在气管中顺畅进出，",
+          "当支气管发炎肿胀变窄时，",
+          "呼吸道阻力就会急剧升高，",
+          "最终导致呼吸困难窒息。"
+        ],
+        "law_1_supply_cut": [
+          "肺部向血液正常供氧，",
+          "当外界氧气突然断绝时，",
+          "体内血氧就会迅速枯竭，",
+          "最终导致呼吸代谢停摆。"
+        ]
+      }
+    ]
+  },
+  "evaluation_40_tasks": [
+    {
+      "task_id": 1,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点A1密钥：",
+      "ground_truth": "SN-8841-902-A1",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 2,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点A2密钥：",
+      "ground_truth": "SN-8841-902-A2",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 3,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点A3密钥：",
+      "ground_truth": "SN-8841-902-A3",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 4,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点A4密钥：",
+      "ground_truth": "SN-8841-902-A4",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 5,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点B1密钥：",
+      "ground_truth": "SN-7739-105-B1",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 6,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点B2密钥：",
+      "ground_truth": "SN-7739-105-B2",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 7,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点B3密钥：",
+      "ground_truth": "SN-7739-105-B3",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 8,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点B4密钥：",
+      "ground_truth": "SN-7739-105-B4",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 9,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点C1密钥：",
+      "ground_truth": "SN-6628-441-C1",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 10,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点C2密钥：",
+      "ground_truth": "SN-6628-441-C2",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 11,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点C3密钥：",
+      "ground_truth": "SN-6628-441-C3",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 12,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点C4密钥：",
+      "ground_truth": "SN-6628-441-C4",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 13,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点D1密钥：",
+      "ground_truth": "SN-5517-339-D1",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 14,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点D2密钥：",
+      "ground_truth": "SN-5517-339-D2",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 15,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点D3密钥：",
+      "ground_truth": "SN-5517-339-D3",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 16,
+      "tier": "Tier1_Confusable_Serials_16",
+      "prompt": "查询节点D4密钥：",
+      "ground_truth": "SN-5517-339-D4",
+      "exact_match_required": true
+    },
+    {
+      "task_id": 17,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "人體醫學",
+      "law_id": 0,
+      "prompt": "血液在血管中正常循环，当血管壁堆积胆固醇变窄时，",
+      "ground_truth": "血管内血压就会急剧升高，",
+      "match_criterion": "'血管内血压就' in prediction"
+    },
+    {
+      "task_id": 18,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "人體醫學",
+      "law_id": 1,
+      "prompt": "心脏向全身正常供血，当心室供血突然中断时，",
+      "ground_truth": "器官血氧就会迅速枯竭，",
+      "match_criterion": "'器官血氧就会' in prediction"
+    },
+    {
+      "task_id": 19,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "網路通訊",
+      "law_id": 0,
+      "prompt": "数据在光纤中高速传输，当网络带宽通道受限变窄时，",
+      "ground_truth": "网络延迟与拥塞急剧升高，",
+      "match_criterion": "'网络延迟与拥' in prediction"
+    },
+    {
+      "task_id": 20,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "網路通訊",
+      "law_id": 1,
+      "prompt": "核心网向基站正常发包，当主干路由突然断连时，",
+      "ground_truth": "基站缓存就会迅速枯竭，",
+      "match_criterion": "'基站缓存就会' in prediction"
+    },
+    {
+      "task_id": 21,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "工廠產線",
+      "law_id": 0,
+      "prompt": "零件在流水线顺畅运转，当关键工位故障产能变窄时，",
+      "ground_truth": "产线积压負荷急剧升高，",
+      "match_criterion": "'产线积压負荷' in prediction"
+    },
+    {
+      "task_id": 22,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "工廠產線",
+      "law_id": 1,
+      "prompt": "仓库向产线正常供料，当上游原料突然断供时，",
+      "ground_truth": "产线库存就会迅速枯竭，",
+      "match_criterion": "'产线库存就会' in prediction"
+    },
+    {
+      "task_id": 23,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "呼吸系統",
+      "law_id": 0,
+      "prompt": "空气在气管中顺畅进出，当支气管发炎肿胀变窄时，",
+      "ground_truth": "呼吸道阻力就会急剧升高，",
+      "match_criterion": "'呼吸道阻力就' in prediction"
+    },
+    {
+      "task_id": 24,
+      "tier": "Tier2_MultiLaw_Unseen_1Hop_8",
+      "domain": "呼吸系統",
+      "law_id": 1,
+      "prompt": "肺部向血液正常供氧，当外界氧气突然断绝时，",
+      "ground_truth": "体内血氧就会迅速枯竭，",
+      "match_criterion": "'体内血氧就会' in prediction"
+    },
+    {
+      "task_id": 25,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "人體醫學",
+      "law_id": 0,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "血液在血管中正常循环，当血管壁堆积胆固醇变窄时，",
+      "ground_truth_hop3": "最终导致血液循环受阻。",
+      "match_criterion": "'最终导致血液' in prediction"
+    },
+    {
+      "task_id": 26,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "人體醫學",
+      "law_id": 1,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "心脏向全身正常供血，当心室供血突然中断时，",
+      "ground_truth_hop3": "最终导致组织机能停摆。",
+      "match_criterion": "'最终导致组织' in prediction"
+    },
+    {
+      "task_id": 27,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "網路通訊",
+      "law_id": 0,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "数据在光纤中高速传输，当网络带宽通道受限变窄时，",
+      "ground_truth_hop3": "最终导致数据包传输中断。",
+      "match_criterion": "'最终导致数据' in prediction"
+    },
+    {
+      "task_id": 28,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "網路通訊",
+      "law_id": 1,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "核心网向基站正常发包，当主干路由突然断连时，",
+      "ground_truth_hop3": "最终导致通信服务停摆。",
+      "match_criterion": "'最终导致通信' in prediction"
+    },
+    {
+      "task_id": 29,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "工廠產線",
+      "law_id": 0,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "零件在流水线顺畅运转，当关键工位故障产能变窄时，",
+      "ground_truth_hop3": "最终导致工厂生产停摆。",
+      "match_criterion": "'最终导致工厂' in prediction"
+    },
+    {
+      "task_id": 30,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "工廠產線",
+      "law_id": 1,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "仓库向产线正常供料，当上游原料突然断供时，",
+      "ground_truth_hop3": "最终导致装配作业停摆。",
+      "match_criterion": "'最终导致装配' in prediction"
+    },
+    {
+      "task_id": 31,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "呼吸系統",
+      "law_id": 0,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "空气在气管中顺畅进出，当支气管发炎肿胀变窄时，",
+      "ground_truth_hop3": "最终导致呼吸困难窒息。",
+      "match_criterion": "'最终导致呼吸' in prediction"
+    },
+    {
+      "task_id": 32,
+      "tier": "Tier3_LongHorizon_Drift_Hop_8",
+      "domain": "呼吸系統",
+      "law_id": 1,
+      "injected_gaussian_drift_sigma": 0.08,
+      "prompt": "肺部向血液正常供氧，当外界氧气突然断绝时，",
+      "ground_truth_hop3": "最终导致呼吸代谢停摆。",
+      "match_criterion": "'最终导致呼吸' in prediction"
+    },
+    {
+      "task_id": 33,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "人體醫學",
+      "law_id": 0,
+      "part1_analogy_prompt": "血液在血管中正常循环，当血管壁堆积胆固醇变窄时，",
+      "part1_ground_truth": "血管内血压就会急剧升高，",
+      "part2_rote_prompt": "查询人体医学急救码：",
+      "part2_ground_truth": "EMG-MED-119",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    },
+    {
+      "task_id": 34,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "人體醫學",
+      "law_id": 1,
+      "part1_analogy_prompt": "心脏向全身正常供血，当心室供血突然中断时，",
+      "part1_ground_truth": "器官血氧就会迅速枯竭，",
+      "part2_rote_prompt": "查询人体医学急救码：",
+      "part2_ground_truth": "EMG-MED-119",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    },
+    {
+      "task_id": 35,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "網路通訊",
+      "law_id": 0,
+      "part1_analogy_prompt": "数据在光纤中高速传输，当网络带宽通道受限变窄时，",
+      "part1_ground_truth": "网络延迟与拥塞急剧升高，",
+      "part2_rote_prompt": "查询网络通讯抢修码：",
+      "part2_ground_truth": "EMG-NET-404",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    },
+    {
+      "task_id": 36,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "網路通訊",
+      "law_id": 1,
+      "part1_analogy_prompt": "核心网向基站正常发包，当主干路由突然断连时，",
+      "part1_ground_truth": "基站缓存就会迅速枯竭，",
+      "part2_rote_prompt": "查询网络通讯抢修码：",
+      "part2_ground_truth": "EMG-NET-404",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    },
+    {
+      "task_id": 37,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "工廠產線",
+      "law_id": 0,
+      "part1_analogy_prompt": "零件在流水线顺畅运转，当关键工位故障产能变窄时，",
+      "part1_ground_truth": "产线积压負荷急剧升高，",
+      "part2_rote_prompt": "查询工厂产线维修码：",
+      "part2_ground_truth": "EMG-FAC-502",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    },
+    {
+      "task_id": 38,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "工廠產線",
+      "law_id": 1,
+      "part1_analogy_prompt": "仓库向产线正常供料，当上游原料突然断供时，",
+      "part1_ground_truth": "产线库存就会迅速枯竭，",
+      "part2_rote_prompt": "查询工厂产线维修码：",
+      "part2_ground_truth": "EMG-FAC-502",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    },
+    {
+      "task_id": 39,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "呼吸系統",
+      "law_id": 0,
+      "part1_analogy_prompt": "空气在气管中顺畅进出，当支气管发炎肿胀变窄时，",
+      "part1_ground_truth": "呼吸道阻力就会急剧升高，",
+      "part2_rote_prompt": "查询呼吸系统急救码：",
+      "part2_ground_truth": "EMG-AIR-999",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    },
+    {
+      "task_id": 40,
+      "tier": "Tier4_Hybrid_DualBrain_Compound_8",
+      "domain": "呼吸系統",
+      "law_id": 1,
+      "part1_analogy_prompt": "肺部向血液正常供氧，当外界氧气突然断绝时，",
+      "part1_ground_truth": "体内血氧就会迅速枯竭，",
+      "part2_rote_prompt": "查询呼吸系统急救码：",
+      "part2_ground_truth": "EMG-AIR-999",
+      "match_criterion": "BOTH part1 analogy AND part2 exact emergency code must succeed"
+    }
+  ]
+}

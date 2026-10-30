@@ -1,0 +1,191 @@
+{
+  "script": "scripts/stage1_lab08_knowledge_density_12q.py",
+  "training_data": {
+    "rote_facts_6": [
+      {
+        "prompt": "请问妈妈的手机号码是？",
+        "answer": "0912-888-168"
+      },
+      {
+        "prompt": "请问妈妈的家里电话是？",
+        "answer": "02-2345-6789"
+      },
+      {
+        "prompt": "请问爸爸的手机号码是？",
+        "answer": "0933-777-999"
+      },
+      {
+        "prompt": "请问爸爸的家里电话是？",
+        "answer": "04-8765-4321"
+      },
+      {
+        "prompt": "请问核心服务器的IP地址是？",
+        "answer": "192.168.10.254"
+      },
+      {
+        "prompt": "请问系统管理员的通行密钥是？",
+        "answer": "KEY-9901-X7B"
+      }
+    ],
+    "domains_6x4_clauses_24": [
+      {
+        "domain": "水利工程",
+        "is_seen": true,
+        "clauses": [
+          "水流在水管中稳定流动，",
+          "当水管内壁结垢变窄时，",
+          "管内水压就会急剧升高，",
+          "最终导致水流堵塞中断。"
+        ]
+      },
+      {
+        "domain": "交通工程",
+        "is_seen": true,
+        "clauses": [
+          "车流在高速路正常行驶，",
+          "当施工导致车道变窄时，",
+          "路段交通压力急剧升高，",
+          "最终导致车流瘫痪堵塞。"
+        ]
+      },
+      {
+        "domain": "人體醫學",
+        "is_seen": false,
+        "clauses": [
+          "血液在血管中正常循环，",
+          "当血管壁堆积胆固醇变窄时，",
+          "血管内血压就会急剧升高，",
+          "最终导致血液循环受阻。"
+        ]
+      },
+      {
+        "domain": "網路通訊",
+        "is_seen": false,
+        "clauses": [
+          "数据在光纤中高速传输，",
+          "当网络带宽通道受限变窄时，",
+          "网络延迟与拥塞急剧升高，",
+          "最终导致数据包传输中断。"
+        ]
+      },
+      {
+        "domain": "工廠產線",
+        "is_seen": false,
+        "clauses": [
+          "零件在流水线顺畅运转，",
+          "当关键工位故障产能变窄时，",
+          "产线积压負荷急剧升高，",
+          "最终导致工厂生产停摆。"
+        ]
+      },
+      {
+        "domain": "呼吸系統",
+        "is_seen": false,
+        "clauses": [
+          "空气在气管中顺畅进出，",
+          "当支气管发炎肿胀变窄时，",
+          "呼吸道阻力就会急剧升高，",
+          "最终导致呼吸困难窒息。"
+        ]
+      }
+    ]
+  },
+  "evaluation_12_tasks": [
+    {
+      "task_id": 1,
+      "category": "rote_memory",
+      "prompt": "请问妈妈的手机号码是？",
+      "ground_truth": "0912-888-168",
+      "match_criterion": "'0912-888' in prediction"
+    },
+    {
+      "task_id": 2,
+      "category": "rote_memory",
+      "prompt": "请问妈妈的家里电话是？",
+      "ground_truth": "02-2345-6789",
+      "match_criterion": "'02-2345-' in prediction"
+    },
+    {
+      "task_id": 3,
+      "category": "rote_memory",
+      "prompt": "请问爸爸的手机号码是？",
+      "ground_truth": "0933-777-999",
+      "match_criterion": "'0933-777' in prediction"
+    },
+    {
+      "task_id": 4,
+      "category": "rote_memory",
+      "prompt": "请问爸爸的家里电话是？",
+      "ground_truth": "04-8765-4321",
+      "match_criterion": "'04-8765-' in prediction"
+    },
+    {
+      "task_id": 5,
+      "category": "rote_memory",
+      "prompt": "请问核心服务器的IP地址是？",
+      "ground_truth": "192.168.10.254",
+      "match_criterion": "'192.168.' in prediction"
+    },
+    {
+      "task_id": 6,
+      "category": "rote_memory",
+      "prompt": "请问系统管理员的通行密钥是？",
+      "ground_truth": "KEY-9901-X7B",
+      "match_criterion": "'KEY-9901' in prediction"
+    },
+    {
+      "task_id": 7,
+      "category": "seen_domain_deduction",
+      "domain": "水利工程",
+      "prompt": "水流在水管中稳定流动，当水管内壁结垢变窄时，",
+      "ground_truth_stage2": "管内水压就会急剧升高，",
+      "ground_truth_stage3": "最终导致水流堵塞中断。",
+      "match_criterion": "'管内水压' in prediction"
+    },
+    {
+      "task_id": 8,
+      "category": "seen_domain_deduction",
+      "domain": "交通工程",
+      "prompt": "车流在高速路正常行驶，当施工导致车道变窄时，",
+      "ground_truth_stage2": "路段交通压力急剧升高，",
+      "ground_truth_stage3": "最终导致车流瘫痪堵塞。",
+      "match_criterion": "'路段交通' in prediction"
+    },
+    {
+      "task_id": 9,
+      "category": "unseen_domain_zero_shot_analogy",
+      "domain": "人體醫學",
+      "prompt": "血液在血管中正常循环，当血管壁堆积胆固醇变窄时，",
+      "ground_truth_stage2": "血管内血压就会急剧升高，",
+      "ground_truth_stage3": "最终导致血液循环受阻。",
+      "match_criterion": "'血管内血' in prediction"
+    },
+    {
+      "task_id": 10,
+      "category": "unseen_domain_zero_shot_analogy",
+      "domain": "網路通訊",
+      "prompt": "数据在光纤中高速传输，当网络带宽通道受限变窄时，",
+      "ground_truth_stage2": "网络延迟与拥塞急剧升高，",
+      "ground_truth_stage3": "最终导致数据包传输中断。",
+      "match_criterion": "'网络延迟' in prediction"
+    },
+    {
+      "task_id": 11,
+      "category": "unseen_domain_zero_shot_analogy",
+      "domain": "工廠產線",
+      "prompt": "零件在流水线顺畅运转，当关键工位故障产能变窄时，",
+      "ground_truth_stage2": "产线积压負荷急剧升高，",
+      "ground_truth_stage3": "最终导致工厂生产停摆。",
+      "match_criterion": "'产线积压' in prediction"
+    },
+    {
+      "task_id": 12,
+      "category": "unseen_domain_zero_shot_analogy",
+      "domain": "呼吸系統",
+      "prompt": "空气在气管中顺畅进出，当支气管发炎肿胀变窄时，",
+      "ground_truth_stage2": "呼吸道阻力就会急剧升高，",
+      "ground_truth_stage3": "最终导致呼吸困难窒息。",
+      "match_criterion": "'呼吸道阻' in prediction"
+    }
+  ]
+}

@@ -30,6 +30,8 @@ dataset/
 *.jsonl
 *.parquet
 *.csv
+!benchmarks/
+!benchmarks/**
 
 # OS & IDE
 .DS_Store

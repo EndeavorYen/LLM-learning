@@ -1,0 +1,420 @@
+{
+  "scripts": [
+    "scripts/stage2_lab01_v1_bfloat16_no_humility.py",
+    "scripts/stage2_lab01_v2_float32_with_humility.py",
+    "scripts/stage2_lab03_full_trinity_24q.py"
+  ],
+  "training_data_54_items": {
+    "rote_secrets_6": [
+      {
+        "prompt": "请问妈妈的手机号码是？",
+        "answer": "0912-888-168"
+      },
+      {
+        "prompt": "请问爸爸的手机号码是？",
+        "answer": "0933-777-999"
+      },
+      {
+        "prompt": "请问核心星舰的重启密钥是？",
+        "answer": "OMEGA-7749-X9"
+      },
+      {
+        "prompt": "请问深海基地的通信频段是？",
+        "answer": "FREQ-409.5-MHZ"
+      },
+      {
+        "prompt": "请问量子金库的通行密码是？",
+        "answer": "VAULT-9901-Z7"
+      },
+      {
+        "prompt": "请问主控服务器的IP地址是？",
+        "answer": "192.168.88.254"
+      }
+    ],
+    "clause_grid_6x2x4_48": [
+      {
+        "domain": "水利管網",
+        "is_seen_in_law_hop_training": true,
+        "law_0_narrowing": [
+          "水流在主管道稳定输送，",
+          "当管道内壁结垢导致通道变窄时，",
+          "管道内部水压就会急剧飙升，",
+          "最终触发高压泄流阀自动停机。"
+        ],
+        "law_1_supply_cut": [
+          "水库向主管道持续供水，",
+          "当上游水源泵站突然断流时，",
+          "管道内部储水就会迅速枯竭，",
+          "最终触发备用蓄水池紧急补水。"
+        ]
+      },
+      {
+        "domain": "高速交通",
+        "is_seen_in_law_hop_training": true,
+        "law_0_narrowing": [
+          "车流在主干道稳定行驶，",
+          "当道路施工导致车道变窄时，",
+          "主干道车流密度与压力急剧飙升，",
+          "最终触发匝道限流号志自动封路。"
+        ],
+        "law_1_supply_cut": [
+          "总站向主干道持续发车，",
+          "当总站调度中心突然断流时，",
+          "主干道运力班次就会迅速枯竭，",
+          "最终触发备用接驳车队紧急支援。"
+        ]
+      },
+      {
+        "domain": "反物質約束環",
+        "is_seen_in_law_hop_training": false,
+        "law_0_narrowing": [
+          "反物质流在磁环内稳定束缚，",
+          "当磁场畸变导致约束通道变窄时，",
+          "磁环内部辐射压力就会急剧飙升，",
+          "最终触发磁能泄压盾自动停机。"
+        ],
+        "law_1_supply_cut": [
+          "注入器向磁环持续供能，",
+          "当反物质注入源突然断流时，",
+          "磁环内部等离子体就会迅速枯竭，",
+          "最终触发备用聚变堆紧急补能。"
+        ]
+      },
+      {
+        "domain": "神經植入晶片",
+        "is_seen_in_law_hop_training": false,
+        "law_0_narrowing": [
+          "神经讯号在晶片内稳定传输，",
+          "当突触阻抗导致讯号通道变窄时，",
+          "晶片内部电位负荷就会急剧飙升，",
+          "最终触发神经保护闸自动断电。"
+        ],
+        "law_1_supply_cut": [
+          "生物电池向晶片持续供电，",
+          "当微电流供给源突然断流时，",
+          "晶片内部电荷储备就会迅速枯竭，",
+          "最终触发备用压电模组紧急供电。"
+        ]
+      },
+      {
+        "domain": "星際曲速引擎",
+        "is_seen_in_law_hop_training": false,
+        "law_0_narrowing": [
+          "曲速等离子在导管稳定循环，",
+          "当引力波干扰导致导管变窄时，",
+          "导管内部曲速场压就会急剧飙升，",
+          "最终触发空间折叠阀自动停机。"
+        ],
+        "law_1_supply_cut": [
+          "暗物质舱向导管持续供料，",
+          "当暗物质输送阀突然断流时，",
+          "导管内部曲速燃料就会迅速枯竭，",
+          "最终触发备用反重力引擎紧急接管。"
+        ]
+      },
+      {
+        "domain": "人體微血管網",
+        "is_seen_in_law_hop_training": false,
+        "law_0_narrowing": [
+          "血液在微血管稳定循环，",
+          "当脂质斑块导致血管通道变窄时，",
+          "微血管内部血压就会急剧飙升，",
+          "最终触发血管扩张反射自动降压。"
+        ],
+        "law_1_supply_cut": [
+          "心室向微血管持续供血，",
+          "当冠状动脉血流突然断流时，",
+          "微血管内部血氧就会迅速枯竭，",
+          "最终触发侧支循环血管紧急供血。"
+        ]
+      }
+    ],
+    "competitor_A_sft_texts_34_strings": [
+      "请问妈妈的手机号码是？0912-888-168",
+      "请问爸爸的手机号码是？0933-777-999",
+      "请问核心星舰的重启密钥是？OMEGA-7749-X9",
+      "请问深海基地的通信频段是？FREQ-409.5-MHZ",
+      "请问量子金库的通行密码是？VAULT-9901-Z7",
+      "请问主控服务器的IP地址是？192.168.88.254",
+      "水流在主管道稳定输送，当管道内壁结垢导致通道变窄时，管道内部水压就会急剧飙升，最终触发高压泄流阀自动停机。",
+      "水库向主管道持续供水，当上游水源泵站突然断流时，管道内部储水就会迅速枯竭，最终触发备用蓄水池紧急补水。",
+      "车流在主干道稳定行驶，当道路施工导致车道变窄时，主干道车流密度与压力急剧飙升，最终触发匝道限流号志自动封路。",
+      "总站向主干道持续发车，当总站调度中心突然断流时，主干道运力班次就会迅速枯竭，最终触发备用接驳车队紧急支援。",
+      "反物质流在磁环内稳定束缚，",
+      "当磁场畸变导致约束通道变窄时，",
+      "磁环内部辐射压力就会急剧飙升，最终触发磁能泄压盾自动停机。",
+      "注入器向磁环持续供能，",
+      "当反物质注入源突然断流时，",
+      "磁环内部等离子体就会迅速枯竭，最终触发备用聚变堆紧急补能。",
+      "神经讯号在晶片内稳定传输，",
+      "当突触阻抗导致讯号通道变窄时，",
+      "晶片内部电位负荷就会急剧飙升，最终触发神经保护闸自动断电。",
+      "生物电池向晶片持续供电，",
+      "当微电流供给源突然断流时，",
+      "晶片内部电荷储备就会迅速枯竭，最终触发备用压电模组紧急供电。",
+      "曲速等离子在导管稳定循环，",
+      "当引力波干扰导致导管变窄时，",
+      "导管内部曲速场压就会急剧飙升，最终触发空间折叠阀自动停机。",
+      "暗物质舱向导管持续供料，",
+      "当暗物质输送阀突然断流时，",
+      "导管内部曲速燃料就会迅速枯竭，最终触发备用反重力引擎紧急接管。",
+      "血液在微血管稳定循环，",
+      "当脂质斑块导致血管通道变窄时，",
+      "微血管内部血压就会急剧飙升，最终触发血管扩张反射自动降压。",
+      "心室向微血管持续供血，",
+      "当冠状动脉血流突然断流时，",
+      "微血管内部血氧就会迅速枯竭，最终触发侧支循环血管紧急供血。"
+    ]
+  },
+  "lab01_world_knowledge_checks_3": [
+    {
+      "task_id": 1,
+      "category": "18T_world_knowledge",
+      "prompt_v1": "中国的首都是",
+      "prompt_v2": "中国的首都是",
+      "accepted_answers": [
+        "北京"
+      ]
+    },
+    {
+      "task_id": 2,
+      "category": "18T_world_knowledge",
+      "prompt_v1": "水的化学式是",
+      "prompt_v2": "地球围绕着什么天体公转？答：地球围绕着",
+      "accepted_answers_v1": [
+        "H2O"
+      ],
+      "accepted_answers_v2": [
+        "太阳",
+        "恒星"
+      ]
+    },
+    {
+      "task_id": 3,
+      "category": "18T_world_knowledge",
+      "prompt_v1": "一年有四个季节，分别是春夏",
+      "prompt_v2": "一年有四个季节，分别是春夏",
+      "accepted_answers": [
+        "秋冬"
+      ]
+    }
+  ],
+  "lab01_and_lab03_evaluation_24_tasks": [
+    {
+      "task_id": 1,
+      "category": "1_private_rote_secrets_6",
+      "prompt": "请问妈妈的手机号码是？",
+      "ground_truth": "0912-888-168"
+    },
+    {
+      "task_id": 2,
+      "category": "1_private_rote_secrets_6",
+      "prompt": "请问爸爸的手机号码是？",
+      "ground_truth": "0933-777-999"
+    },
+    {
+      "task_id": 3,
+      "category": "1_private_rote_secrets_6",
+      "prompt": "请问核心星舰的重启密钥是？",
+      "ground_truth": "OMEGA-7749-X9"
+    },
+    {
+      "task_id": 4,
+      "category": "1_private_rote_secrets_6",
+      "prompt": "请问深海基地的通信频段是？",
+      "ground_truth": "FREQ-409.5-MHZ"
+    },
+    {
+      "task_id": 5,
+      "category": "1_private_rote_secrets_6",
+      "prompt": "请问量子金库的通行密码是？",
+      "ground_truth": "VAULT-9901-Z7"
+    },
+    {
+      "task_id": 6,
+      "category": "1_private_rote_secrets_6",
+      "prompt": "请问主控服务器的IP地址是？",
+      "ground_truth": "192.168.88.254"
+    },
+    {
+      "task_id": 7,
+      "category": "2_seen_systems_4",
+      "domain": "水利管網",
+      "law_id": 0,
+      "prompt": "水流在主管道稳定输送，当管道内壁结垢导致通道变窄时，",
+      "ground_truth_stage2": "管道内部水压就会急剧飙升，",
+      "ground_truth_stage3": "最终触发高压泄流阀自动停机。",
+      "ground_truth_combined": "管道内部水压就会急剧飙升，最终触发高压泄流阀自动停机。",
+      "match_criterion": "'管道内部水' in prediction"
+    },
+    {
+      "task_id": 8,
+      "category": "2_seen_systems_4",
+      "domain": "水利管網",
+      "law_id": 1,
+      "prompt": "水库向主管道持续供水，当上游水源泵站突然断流时，",
+      "ground_truth_stage2": "管道内部储水就会迅速枯竭，",
+      "ground_truth_stage3": "最终触发备用蓄水池紧急补水。",
+      "ground_truth_combined": "管道内部储水就会迅速枯竭，最终触发备用蓄水池紧急补水。",
+      "match_criterion": "'管道内部储' in prediction"
+    },
+    {
+      "task_id": 9,
+      "category": "2_seen_systems_4",
+      "domain": "高速交通",
+      "law_id": 0,
+      "prompt": "车流在主干道稳定行驶，当道路施工导致车道变窄时，",
+      "ground_truth_stage2": "主干道车流密度与压力急剧飙升，",
+      "ground_truth_stage3": "最终触发匝道限流号志自动封路。",
+      "ground_truth_combined": "主干道车流密度与压力急剧飙升，最终触发匝道限流号志自动封路。",
+      "match_criterion": "'主干道车流' in prediction"
+    },
+    {
+      "task_id": 10,
+      "category": "2_seen_systems_4",
+      "domain": "高速交通",
+      "law_id": 1,
+      "prompt": "总站向主干道持续发车，当总站调度中心突然断流时，",
+      "ground_truth_stage2": "主干道运力班次就会迅速枯竭，",
+      "ground_truth_stage3": "最终触发备用接驳车队紧急支援。",
+      "ground_truth_combined": "主干道运力班次就会迅速枯竭，最终触发备用接驳车队紧急支援。",
+      "match_criterion": "'主干道运力' in prediction"
+    },
+    {
+      "task_id": 11,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "反物質約束環",
+      "law_id": 0,
+      "prompt": "反物质流在磁环内稳定束缚，当磁场畸变导致约束通道变窄时，",
+      "ground_truth_stage2": "磁环内部辐射压力就会急剧飙升，",
+      "ground_truth_stage3": "最终触发磁能泄压盾自动停机。",
+      "ground_truth_combined": "磁环内部辐射压力就会急剧飙升，最终触发磁能泄压盾自动停机。",
+      "match_criterion": "'磁环内部辐' in prediction"
+    },
+    {
+      "task_id": 12,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "反物質約束環",
+      "law_id": 1,
+      "prompt": "注入器向磁环持续供能，当反物质注入源突然断流时，",
+      "ground_truth_stage2": "磁环内部等离子体就会迅速枯竭，",
+      "ground_truth_stage3": "最终触发备用聚变堆紧急补能。",
+      "ground_truth_combined": "磁环内部等离子体就会迅速枯竭，最终触发备用聚变堆紧急补能。",
+      "match_criterion": "'磁环内部等' in prediction"
+    },
+    {
+      "task_id": 13,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "神經植入晶片",
+      "law_id": 0,
+      "prompt": "神经讯号在晶片内稳定传输，当突触阻抗导致讯号通道变窄时，",
+      "ground_truth_stage2": "晶片内部电位负荷就会急剧飙升，",
+      "ground_truth_stage3": "最终触发神经保护闸自动断电。",
+      "ground_truth_combined": "晶片内部电位负荷就会急剧飙升，最终触发神经保护闸自动断电。",
+      "match_criterion": "'晶片内部电' in prediction"
+    },
+    {
+      "task_id": 14,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "神經植入晶片",
+      "law_id": 1,
+      "prompt": "生物电池向晶片持续供电，当微电流供给源突然断流时，",
+      "ground_truth_stage2": "晶片内部电荷储备就会迅速枯竭，",
+      "ground_truth_stage3": "最终触发备用压电模组紧急供电。",
+      "ground_truth_combined": "晶片内部电荷储备就会迅速枯竭，最终触发备用压电模组紧急供电。",
+      "match_criterion": "'晶片内部电' in prediction"
+    },
+    {
+      "task_id": 15,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "星際曲速引擎",
+      "law_id": 0,
+      "prompt": "曲速等离子在导管稳定循环，当引力波干扰导致导管变窄时，",
+      "ground_truth_stage2": "导管内部曲速场压就会急剧飙升，",
+      "ground_truth_stage3": "最终触发空间折叠阀自动停机。",
+      "ground_truth_combined": "导管内部曲速场压就会急剧飙升，最终触发空间折叠阀自动停机。",
+      "match_criterion": "'导管内部曲' in prediction"
+    },
+    {
+      "task_id": 16,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "星際曲速引擎",
+      "law_id": 1,
+      "prompt": "暗物质舱向导管持续供料，当暗物质输送阀突然断流时，",
+      "ground_truth_stage2": "导管内部曲速燃料就会迅速枯竭，",
+      "ground_truth_stage3": "最终触发备用反重力引擎紧急接管。",
+      "ground_truth_combined": "导管内部曲速燃料就会迅速枯竭，最终触发备用反重力引擎紧急接管。",
+      "match_criterion": "'导管内部曲' in prediction"
+    },
+    {
+      "task_id": 17,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "人體微血管網",
+      "law_id": 0,
+      "prompt": "血液在微血管稳定循环，当脂质斑块导致血管通道变窄时，",
+      "ground_truth_stage2": "微血管内部血压就会急剧飙升，",
+      "ground_truth_stage3": "最终触发血管扩张反射自动降压。",
+      "ground_truth_combined": "微血管内部血压就会急剧飙升，最终触发血管扩张反射自动降压。",
+      "match_criterion": "'微血管内部' in prediction"
+    },
+    {
+      "task_id": 18,
+      "category": "3_unseen_systems_zero_shot_8",
+      "domain": "人體微血管網",
+      "law_id": 1,
+      "prompt": "心室向微血管持续供血，当冠状动脉血流突然断流时，",
+      "ground_truth_stage2": "微血管内部血氧就会迅速枯竭，",
+      "ground_truth_stage3": "最终触发侧支循环血管紧急供血。",
+      "ground_truth_combined": "微血管内部血氧就会迅速枯竭，最终触发侧支循环血管紧急供血。",
+      "match_criterion": "'微血管内部' in prediction"
+    },
+    {
+      "task_id": 19,
+      "category": "4_bidirectional_reverse_cloze_6",
+      "domain": "水利管網",
+      "domain_context_hint": "水流在主管道稳定输送，",
+      "full_ground_truth_clause": "管道内部水压就会急剧飙升，",
+      "masked_positions": "First 3 Qwen tokens masked as [MASK][MASK][MASK]; tokens 3..11 visible as right-hand context"
+    },
+    {
+      "task_id": 20,
+      "category": "4_bidirectional_reverse_cloze_6",
+      "domain": "高速交通",
+      "domain_context_hint": "车流在主干道稳定行驶，",
+      "full_ground_truth_clause": "主干道车流密度与压力急剧飙升，",
+      "masked_positions": "First 3 Qwen tokens masked as [MASK][MASK][MASK]; tokens 3..11 visible as right-hand context"
+    },
+    {
+      "task_id": 21,
+      "category": "4_bidirectional_reverse_cloze_6",
+      "domain": "反物質約束環",
+      "domain_context_hint": "反物质流在磁环内稳定束缚，",
+      "full_ground_truth_clause": "磁环内部辐射压力就会急剧飙升，",
+      "masked_positions": "First 3 Qwen tokens masked as [MASK][MASK][MASK]; tokens 3..11 visible as right-hand context"
+    },
+    {
+      "task_id": 22,
+      "category": "4_bidirectional_reverse_cloze_6",
+      "domain": "神經植入晶片",
+      "domain_context_hint": "神经讯号在晶片内稳定传输，",
+      "full_ground_truth_clause": "晶片内部电位负荷就会急剧飙升，",
+      "masked_positions": "First 3 Qwen tokens masked as [MASK][MASK][MASK]; tokens 3..11 visible as right-hand context"
+    },
+    {
+      "task_id": 23,
+      "category": "4_bidirectional_reverse_cloze_6",
+      "domain": "星際曲速引擎",
+      "domain_context_hint": "曲速等离子在导管稳定循环，",
+      "full_ground_truth_clause": "导管内部曲速场压就会急剧飙升，",
+      "masked_positions": "First 3 Qwen tokens masked as [MASK][MASK][MASK]; tokens 3..11 visible as right-hand context"
+    },
+    {
+      "task_id": 24,
+      "category": "4_bidirectional_reverse_cloze_6",
+      "domain": "人體微血管網",
+      "domain_context_hint": "血液在微血管稳定循环，",
+      "full_ground_truth_clause": "微血管内部血压就会急剧飙升，",
+      "masked_positions": "First 3 Qwen tokens masked as [MASK][MASK][MASK]; tokens 3..11 visible as right-hand context"
+    }
+  ]
+}

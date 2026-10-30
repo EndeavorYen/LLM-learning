@@ -1,0 +1,34 @@
+{
+  "scripts": [
+    "scripts/stage2_lab02_v1_logprob_150q.py",
+    "scripts/stage2_lab02_v2_authentic_140q.py"
+  ],
+  "random_seeds": {
+    "python_random_seed": 42,
+    "torch_manual_seed": 42
+  },
+  "datasets_and_deterministic_slices": {
+    "1_MMLU_50q": {
+      "hf_dataset_id": "cais/mmlu",
+      "subset": "all",
+      "split_slice": "test[:100]",
+      "post_filter": "list(ds_mmlu_test)[:50] (First 50 deterministic items from cais/mmlu test split)",
+      "evaluation_protocol_v2": "4-choice prompt formatted with A/B/C/D; argmax over token IDs for [' A', ' B', ' C', ' D']"
+    },
+    "2_ARC_Challenge_50q": {
+      "hf_dataset_id": "allenai/ai2_arc",
+      "subset": "ARC-Challenge",
+      "train_split_slice": "train[:200] filtered by len(x['choices']['text']) == 4 -> first 100 items used for training",
+      "test_split_slice": "test[:100] filtered by len(x['choices']['text']) == 4 -> first 50 items used for evaluation",
+      "evaluation_protocol_v2": "4-choice prompt formatted with A/B/C/D; log_softmax over [' A', ' B', ' C', ' D'] + 0.25 * law_sim structural bonus"
+    },
+    "3_GSM8K_40q": {
+      "hf_dataset_id": "openai/gsm8k",
+      "subset": "main",
+      "train_split_slice": "train[:200] -> first 100 items used for LoRA SFT, first 40 items used for Crib-Note LM training",
+      "test_split_slice": "test[:50] -> first 40 items used for generative evaluation",
+      "evaluation_protocol_v2": "2-shot Chain-of-Thought greedy generation (up to 96 new tokens, stop at '\\n\\n'), regex extraction of final number compared to ground-truth after '####'",
+      "two_shot_cot_prompt": "Question: Natalia sold clips to 48 of her friends in April, and then she sold half as many clips in May. How many clips did Natalia sell altogether in April and May?\nAnswer: Natalia sold 48/2 = 24 clips in May. Natalia sold 48+24 = 72 clips altogether in April and May. #### 72\n\nQuestion: Weng earns $12 an hour for babysitting. Yesterday, she just did 50 minutes of babysitting. How much did she earn?\nAnswer: Weng earns 12/60 = $0.2 per minute. Working 50 minutes, she earned 0.2 x 50 = $10. #### 10\n\n"
+    }
+  }
+}
