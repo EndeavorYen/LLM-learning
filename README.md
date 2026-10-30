@@ -2,34 +2,37 @@
 
 本專案以 **Google Colab (NVIDIA L4 GPU)** 為雲端算力引擎，結合本地權重管理與 GitHub 版本控制，從最底層的隨機初始化權重（Pre-training）出發，不僅完整實作現代主流 LLM 四大訓練階段（Pretrain / SFT / LoRA / DPO），更在 **Stage 1 白盒沙盒** 中針對自迴歸 Transformer 的底層限制展開了 **5 輪後 Transformer 架構演進實驗（Diffusion LLM $\rightarrow$ Block Diffusion & 局部修圖 $\rightarrow$ 意念球量化與聯想 $\rightarrow$ 信心閘門雙腦與高知識密度架構）**。
 
-📄 **完整研究報告與 Benchmark 對決總表**：請參閱 [`docs/stage1_research_journey_and_benchmarks.md`](docs/stage1_research_journey_and_benchmarks.md)
+📄 **完整研究報告與 Benchmark 對決總表**：
+- 📘 **Stage 1 白盒拆解與後 Transformer 演進報告**：[`docs/stage1_research_journey_and_benchmarks.md`](docs/stage1_research_journey_and_benchmarks.md)
+- 📗 **Stage 2 工業級 Qwen2.5-0.5B 微創雙腦嫁接、公開基準擂台與「三合一完整體」深度技術報告**：[`docs/stage2_qwen_grafting_and_trinity_analysis.md`](docs/stage2_qwen_grafting_and_trinity_analysis.md)
 
 ---
 
 ## 🗺️ 四階段實戰學習與研究路徑 (Learning & Research Roadmap)
 
 ```
-[階段 1: 白盒拆解與架構突圍 (MiniMind 5.46M ~ 30.03M)]  ✅ 已完成！
+[階段 1: 白盒拆解與架構突圍 (MiniMind 1.31M ~ 31.93M)]  ✅ 已完成！
    ├─ Part A (主流基線)：Pre-train (猜下一個字) -> Full SFT (-100 遮罩) -> LoRA (0.43% 便利貼微調) -> DPO (偏好對齊)
    └─ Part B (破框研究)：
         ├─ Lab 04: 雙向 Diffusion-MiniMind (LLaDA 架構，拍立得平行顯影，速度快 4~10 倍、克漏字 100%)
         ├─ Lab 05: Block-Diffusion + 動態擴充畫布 ([□] 佔位符自動停機) + 文字版 Photoshop 局部修圖 (修改/擴展/移除)
         ├─ Lab 06: 意念空間量化 (512 維球面座標) + 純向量聯想跳躍 + 單一意念雙風格平行映射 (快 14.23 倍)
         ├─ Lab 07: Entropy-Gated Dual-Brain (最弱字元信心閘門自動切換「肌肉記憶」與「意念觸類旁通」+ 熟能生巧固化)
-        └─ Lab 08: 知識密度與智商大對決 (5.46M 迷你雙腦模型以 9.56 倍知識密度越級擊敗 30.03M 原版 AR/Diffusion)
+        ├─ Lab 08: 知識密度與智商大對決 (5.46M 迷你雙腦模型以 9.56 倍知識密度越級擊敗 30.03M 原版 AR/Diffusion)
+        └─ Lab 09: 40題非飽和極限壓力測試 (找出 5.46M 最小臨界質量與資訊瓶頸定律 Issue #4)
           ↓
-[階段 2: 工業級預訓練模型嫁接與對齊實戰 (Qwen2.5-0.5B)]  🔥 進行中！
-   ├─ Lab 01: 微創雙腦嫁接大對決 (`Dual-Brain Qwen2.5-0.5B [86%]` vs `Qwen2.5-0.5B + 標準 LoRA [48%]`，未知系統零樣本推演 7/8 vs 0/8！)
-   ├─ SFTTrainer + Chat Template 工業標準格式化
-   └─ DPOTrainer 偏好對齊 + FlashAttention-2 / SDPA 顯存優化
+[階段 2: 工業級預訓練模型微創嫁接與公開基準對決 (Qwen2.5-0.5B)]  ✅ 已完成！
+   ├─ Lab 01: 微創雙腦嫁接對決 (`Dual-Brain Qwen2.5 [86%]` vs `標準 LoRA [48%]`，未知系統零樣本推演 7/8 vs 0/8)
+   ├─ Lab 02: 國際公開基準擂台 (`MMLU` 0% 遺忘 + `ARC-Challenge` 科學推理暴增 +8.0% + 驗證單點壓縮 vs 多步算術 `GSM8K`)
+   └─ Lab 03: 三合一完整體 `Full-Trinity` (凍結 Qwen 896D + 128D 意念軌道 + 2層雙向 Block-Diffusion：未知推演 8/8、逆向克漏字 6/6、快 8.11 倍、總分 96% vs 29%！)
           ↓
-[階段 3: 外掛底層記憶庫 (RAG & Memory)]
-   ├─ 零框架手寫 RAG (意念向量檢索 + FAISS)
-   └─ 對話狀態管理器 (Sliding Window + Summary Buffer)
+[階段 3: 野生語料自監督意念對齊 & 內建極致知識密度 (攻克 Issue #1 & Issue #4)]  🔜 下一步
+   ├─ 無監督野生文本自動結構與意念對齊 (擺脫人工表格標籤，從普通文本自動聚類分離領域 d 與規律 s)
+   └─ 內建稀疏微記憶槽 (Internal Sparse Memory，不靠場外作弊 RAG，在裸機內部以 O(1) 極低算力 Cost 接手海量死背常識，釋放 100% 推理容量)
           ↓
-[階段 4: 前沿極限 (高知識密度合成數據 & RL 推理)]
-   ├─ Textbook 級別合成數據微調 (極限壓榨小模型容量)
-   └─ Rule-based RL (GRPO) 激發長思維鏈 (<think>...</think>)
+[階段 4: 動態多節點思維鏈 (s1 -> s2 -> ... -> sk) & 流形錨點校準 (攻克 Issue #2 & Issue #3)]
+   ├─ 動態意念顆粒度伸縮 (將複雜多步數學題 GSM8K 自動拆解為多顆連續意念節點，一步一節點推演)
+   └─ 超長聯想鏈之球面流形錨點校準 (Manifold Anchor Calibration，消除 5~10 步長鏈跳躍飄移)
 ```
 
 ---
@@ -74,7 +77,7 @@
 
 | 階段 | 核心目標 | 實作重點 | 狀態 |
 | :--- | :--- | :--- | :---: |
-| **Stage 1** | 白盒拆解 MiniMind 與後 Transformer 架構突圍 | Pretrain/SFT/LoRA/DPO + Diffusion/Block-Diffusion/意念雙腦 8 大實驗 | ✅ **已完成** |
-| **Stage 2** | 工業級對齊實戰 | Qwen2.5-0.5B + TRL SFT / DPO、顯存優化與架構移植探索 | 🟡 準備進入 |
-| **Stage 3** | 外掛 RAG 與記憶 | FAISS 原生檢索、Sliding Window / Summary Memory | ⚪ 待開始 |
-| **Stage 4** | 合成數據與 RL 推理 | Schema 結構化輸出、Rule-based RL 思維鏈 (`<think>`) | ⚪ 待開始 |
+| **Stage 1** | 白盒拆解 MiniMind 與後 Transformer 架構突圍 | Pretrain/SFT/LoRA/DPO + Diffusion/Block-Diffusion/意念雙腦 9 大實驗 | ✅ **已完成** |
+| **Stage 2** | 工業級預訓練模型微創嫁接與公開基準對決 | `Qwen2.5-0.5B` 嫁接 128D 意念腦 + 雙向 Block-Diffusion (`Full-Trinity 96% vs 29%`, `ARC +8%`) | ✅ **已完成** |
+| **Stage 3** | 野生語料自監督意念對齊 & 內建極致知識密度 | 攻克 [Issue #1](https://github.com/EndeavorYen/LLM-learning/issues/1) & [Issue #4](https://github.com/EndeavorYen/LLM-learning/issues/4)：免人工標籤對比聚類 + 內建 $O(1)$ 稀疏微記憶槽（提升裸機密度、降低 Cost） | 🔜 **準備進入** |
+| **Stage 4** | 動態多節點思維鏈 & 流形錨點校準 | 攻克 [Issue #2](https://github.com/EndeavorYen/LLM-learning/issues/2) & [Issue #3](https://github.com/EndeavorYen/LLM-learning/issues/3)：多步數學/邏輯動態節點拆解 ($s_1 \to \dots \to s_k$) + 長鏈防飄移校準 | ⚪ 待開始 |
