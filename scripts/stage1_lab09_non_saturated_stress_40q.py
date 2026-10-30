@@ -10,6 +10,9 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+SEED = int(os.environ.get("AUDIT_SEED", "42"))  # [audit #7] pre-registered seeds: 42, 1, 2 (each a full retrain)
+print(f"[audit #7] SEED={SEED}", flush=True)
+
 if not os.path.exists('/content/minimind'):
     # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
     subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
@@ -338,18 +341,19 @@ cfg_512 = MiniMindConfig(hidden_size=512, num_hidden_layers=8, use_moe=False)
 cfg_256 = MiniMindConfig(hidden_size=256, num_hidden_layers=4, use_moe=False)
 cfg_128 = MiniMindConfig(hidden_size=128, num_hidden_layers=2, use_moe=False)
 
-torch.manual_seed(42)
+random.seed(SEED)  # [audit #7] also seeds AR mini-batch sampling (random.sample) so a seed is a reproducible run
+torch.manual_seed(SEED)  # [audit #7]
 m_ar = MiniMindForCausalLM(cfg_512).cuda().bfloat16()
-torch.manual_seed(42)
+torch.manual_seed(SEED)  # [audit #7]
 m_diff = PureDiffusionModel(cfg_512).cuda().bfloat16()
-torch.manual_seed(42)
+torch.manual_seed(SEED)  # [audit #7]
 # Pure-Thought LCM compresses all sentences (including 16 confusable serials!) into a single continuous thought vector without fast token attention!
 m_lcm = StressDualBrainModel(cfg_512, thought_dim=24, pure_thought_only=True).cuda().bfloat16()
-torch.manual_seed(42)
+torch.manual_seed(SEED)  # [audit #7]
 m_micro_dual = StressDualBrainModel(cfg_128, thought_dim=32, pure_thought_only=False).cuda().bfloat16()
-torch.manual_seed(42)
+torch.manual_seed(SEED)  # [audit #7]
 m_tiny_dual = StressDualBrainModel(cfg_256, thought_dim=128, pure_thought_only=False).cuda().bfloat16()
-torch.manual_seed(42)
+torch.manual_seed(SEED)  # [audit #7]
 m_full_dual = StressDualBrainModel(cfg_512, thought_dim=256, pure_thought_only=False).cuda().bfloat16()
 
 def count_m(m): return sum(p.numel() for p in m.parameters()) / 1e6
@@ -515,7 +519,7 @@ train_stress_model(m_full_dual, steps=TRAIN_STEPS, tag="Full-Dual-512")
 m_ar.eval(); m_diff.eval()
 
 # [audit #13] Fix the RNG before evaluation: Tier 3 injects random drift noise per hop.
-random.seed(42); torch.manual_seed(42); torch.cuda.manual_seed_all(42)
+random.seed(SEED); torch.manual_seed(SEED); torch.cuda.manual_seed_all(SEED)  # [audit #7]
 
 # ==============================================================================
 # EVALUATE ON THE 36-TASK NON-SATURATED STRESS BENCHMARK  [audit #16] (was 40: Tier 4 double-counted Tier 2)
@@ -615,3 +619,165 @@ for name_m, mod in [
     pm = count_m(mod)
     dens = tot / pm  # [audit #16] density over the 36 scored tasks
     print(f"{name_m:<30} | {pm:6.2f}M | {t1_ok:7d}/{N_T1} ({t1_ok/N_T1*100:3.0f}%) | {t2_ok:7d}/{N_T2}  ({t2_ok/N_T2*100:3.0f}%) | {t3_ok:8d}/{N_T3}  ({t3_ok/N_T3*100:3.0f}%) | {t4_ok:8d}/{N_T4}  ({t4_ok/N_T4*100:3.0f}%) | {tot:4d}/{N_TOT} ({tot/N_TOT*100:3.0f}%) | {dens:7.2f} t/M | {t4_compound:12d}/8", flush=True)
+
+# ==============================================================================
+# [audit #7] MECHANISM TEST (pre-registered, see issue #7)
+# Runs AFTER the benchmark above (which is left untouched). Everything is inference-only:
+# models in eval mode, torch.no_grad, NO latent / hop noise (noise_std=0, hop_noise=0).
+#   A  : premise s0,s1 (unseen domain) -> struct_brain hop -> s^2 (1 hop), s^3 (2 hops) -> nearest anchor
+#   D1 : s0, s1 themselves -> nearest anchor (funnel localisation, 16 items)
+#   D2 : encode the HELD-OUT true c2 (inference only) -> nearest anchor (answer localisation)
+#   B  : rank the same 8 candidates (unseen domain's 2 laws x 4 stages) per item; chance 1/8
+# Anchors: 8 (law, stage) anchors = L2-normalised mean of s over SEEN-domain clauses.
+# ==============================================================================
+P7_THOUGHT_MODELS = [("PureThought-LCM-512", m_lcm), ("Micro-Dual-128", m_micro_dual),
+                     ("Tiny-Dual-256", m_tiny_dual), ("Full-Dual-512", m_full_dual)]  # [audit #7]
+P7_ALL_MODELS = [("AR-512", m_ar), ("Diff-512", m_diff)] + P7_THOUGHT_MODELS        # [audit #7]
+P7_LABELS = [(lw, st) for lw in (0, 1) for st in range(4)]                          # [audit #7] anchor index = lw*4+st
+P7_INSPECT = "Tiny-Dual-256"                                                        # [audit #7]
+
+def p7_lbl(i):  # [audit #7]
+    lw, st = P7_LABELS[i]
+    return f"L{lw}S{st}"
+
+# [audit #7] the 8 probe items: (domain name, law, clauses, c_t) for unseen domains, same order as Tier 2/3
+p7_items = [(d_name, law_id, clauses, c_t) for _, d_name, is_seen, law_id, clauses, c_t in dom_law_tensors if not is_seen]
+assert len(p7_items) == 8
+# [audit #7] candidate set per unseen domain: its 8 clauses (law-major, stage-minor), shared by ALL models
+p7_cands = {}
+for _, d_name, is_seen, law_id, clauses, c_t in dom_law_tensors:
+    if is_seen: continue
+    p7_cands.setdefault(d_name, [None] * 8)
+    for st in range(4):
+        p7_cands[d_name][law_id * 4 + st] = (clauses[st], c_t[st])
+
+@torch.no_grad()
+def p7_encode(mod, ct):  # [audit #7] same code path as solve_multi_hop_analogy, noise 0
+    d, s = mod.encode_thought(ct[0], ct[1], noise_std=0.0)
+    return d, s  # (1, D) each, model dtype
+
+@torch.no_grad()
+def p7_hops(mod, s0, s1, hops):  # [audit #7] identical loop to solve_multi_hop_analogy, hop_noise = 0
+    curr_seq = torch.cat([s0, s1], dim=0).unsqueeze(0)
+    for _ in range(hops):
+        next_s = mod.forward_struct_hop(curr_seq)[:, -1, :]
+        curr_seq = torch.cat([curr_seq, next_s.unsqueeze(1)], dim=1)
+    return curr_seq[:, -1, :]
+
+@torch.no_grad()
+def p7_anchors(mod):  # [audit #7] (8, D) float32, L2-normalised mean s over seen-domain clauses
+    acc = {i: [] for i in range(8)}
+    for _, _, is_seen, law_id, _, c_t in dom_law_tensors:
+        if not is_seen: continue
+        for st in range(4):
+            acc[law_id * 4 + st].append(p7_encode(mod, c_t[st])[1].float()[0])
+    return F.normalize(torch.stack([torch.stack(acc[i]).mean(dim=0) for i in range(8)]), p=2, dim=-1)
+
+def p7_nearest(anchors, s):  # [audit #7] cosine-nearest anchor index (anchors and s are unit vectors)
+    return int((anchors @ F.normalize(s.float()[0], p=2, dim=-1)).argmax().item())
+
+def p7_cos(a, b):  # [audit #7]
+    return F.cosine_similarity(a.float(), b.float(), dim=-1).item()
+
+@torch.no_grad()
+def p7_ar_score(prem, cand):  # [audit #7] log p(cand | BOS + premise) under AR (premise tokens are common to all candidates)
+    p_ids = [BOS_ID] + tokenizer(prem, add_special_tokens=False).input_ids
+    c_ids = tokenizer(cand, add_special_tokens=False).input_ids
+    inp = torch.tensor([p_ids + c_ids], device='cuda')
+    lp = F.log_softmax(m_ar(inp).logits[0].float(), dim=-1)
+    pos = torch.arange(len(p_ids) - 1, len(p_ids) + len(c_ids) - 1, device='cuda')
+    return lp[pos, torch.tensor(c_ids, device='cuda')].sum().item()
+
+@torch.no_grad()
+def p7_diff_score(prem, cand):  # [audit #7] single step, fully-masked slot, sum log-prob of the padded candidate slot
+    canv = torch.full((1, SLOT_LEN), MASK_ID, dtype=torch.long, device='cuda')
+    prompt = pad_prompt_tail(prem)
+    lg = m_diff.backbone(torch.cat([prompt, canv], dim=1)).logits[:, prompt.size(1):, :]
+    lp = F.log_softmax(lg[0].float(), dim=-1)
+    tgt = pad_slot(cand)[0][0]
+    return lp[torch.arange(SLOT_LEN, device='cuda'), tgt].sum().item()
+
+def p7_argmax(scores):  # [audit #7]
+    return max(range(len(scores)), key=lambda i: scores[i])
+
+p7_results = {}
+p7_inspect_rows = []
+with torch.no_grad():
+    for nm7, mod7 in P7_ALL_MODELS:
+        mod7.eval()
+        r = dict(A1=-1, A2=-1, A1law=-1, A1stage=-1, A2law=-1, A2stage=-1, D1=-1, D2=-1,
+                 B1=0, B2=0, B1s=-1, B2s=-1, B2direct=-1)
+        is_thought = isinstance(mod7, StressDualBrainModel)
+        if is_thought:
+            anchors = p7_anchors(mod7)
+            for k in ("A1", "A2", "A1law", "A1stage", "A2law", "A2stage", "D1", "D2", "B1s", "B2s"): r[k] = 0
+        else:
+            r["B2direct"] = 0
+        for d_name, law_id, clauses, c_t in p7_items:
+            cands = p7_cands[d_name]
+            gold2, gold3 = law_id * 4 + 2, law_id * 4 + 3
+            if is_thought:
+                d0, s0 = p7_encode(mod7, c_t[0]); d1, s1 = p7_encode(mod7, c_t[1])
+                s_hat2 = p7_hops(mod7, s0, s1, 1); s_hat3 = p7_hops(mod7, s0, s1, 2)
+                n0, n1 = p7_nearest(anchors, s0), p7_nearest(anchors, s1)
+                n2, n3 = p7_nearest(anchors, s_hat2), p7_nearest(anchors, s_hat3)
+                nc2 = p7_nearest(anchors, p7_encode(mod7, c_t[2])[1])  # D2: held-out c2, inference only
+                # Test A
+                r["A1"] += int(n2 == gold2); r["A2"] += int(n3 == gold3)
+                r["A1law"] += int(P7_LABELS[n2][0] == law_id); r["A1stage"] += int(P7_LABELS[n2][1] == 2)
+                r["A2law"] += int(P7_LABELS[n3][0] == law_id); r["A2stage"] += int(P7_LABELS[n3][1] == 3)
+                # D1 / D2
+                r["D1"] += int(n0 == law_id * 4 + 0) + int(n1 == law_id * 4 + 1)
+                r["D2"] += int(nc2 == gold2)
+                # Test B: cos(s^, s_c) + cos(d_premise, d_c); d_premise as in solve_multi_hop_analogy
+                d_prem = F.normalize(d0 + d1, p=2, dim=-1)
+                enc_c = [p7_encode(mod7, ct) for _, ct in cands]
+                b_picks = []
+                for s_hat, gold, kf, ks in ((s_hat2, gold2, "B1", "B1s"), (s_hat3, gold3, "B2", "B2s")):
+                    full = [p7_cos(s_hat, sc) + p7_cos(d_prem, dc) for dc, sc in enc_c]
+                    sonly = [p7_cos(s_hat, sc) for _, sc in enc_c]
+                    r[kf] += int(p7_argmax(full) == gold); r[ks] += int(p7_argmax(sonly) == gold)
+                    b_picks.append(p7_lbl(p7_argmax(full)))
+                if nm7 == P7_INSPECT:
+                    p7_inspect_rows.append((d_name, law_id, p7_lbl(n0), p7_lbl(n1), p7_lbl(n2), p7_lbl(n3), p7_lbl(nc2), b_picks))
+            else:
+                score = p7_ar_score if mod7 is m_ar else p7_diff_score
+                prem = clauses[0] + clauses[1]
+                sc2 = [score(prem, c) for c, _ in cands]
+                pick2 = p7_argmax(sc2)
+                r["B1"] += int(pick2 == gold2)
+                # B2 (scored): candidate follows the model's OWN B1 pick, mirroring Tier 3 (no gold stage-2 leak).
+                #   AR: premise c0+c1+pick; Pure-Diffusion: premise c1+pick (the seen-domain stage1+stage2->stage3 pairs it was trained on).
+                prem3 = (prem + cands[pick2][0]) if mod7 is m_ar else (clauses[1] + cands[pick2][0])
+                sc3 = [score(prem3, c) for c, _ in cands]
+                r["B2"] += int(p7_argmax(sc3) == gold3)
+                # B2-direct (info only): candidate scored right after premise c0+c1
+                r["B2direct"] += int(p7_argmax(sc2) == gold3)
+        p7_results[nm7] = r
+
+print("\n" + "=" * 150, flush=True)
+print("=== [audit #7] MECHANISM TEST (pre-registered, see issue #7) ===", flush=True)
+print("=" * 150, flush=True)
+print(f"[audit #7] SEED={SEED}  |  8 items = 4 unseen domains x 2 laws  |  anchors = mean s over seen-domain clauses per (law, stage)  |  hop noise 0", flush=True)
+for nm7, _ in P7_ALL_MODELS:
+    r = p7_results[nm7]
+    print(f"--- {nm7} ---", flush=True)
+    if r["A1"] >= 0:
+        print(f"  A1 (s^2 -> (law,2))   : {r['A1']}/8 (chance 1/8)   law-correct {r['A1law']}/8, stage-correct {r['A1stage']}/8", flush=True)
+        print(f"  A2 (s^3 -> (law,3))   : {r['A2']}/8 (chance 1/8)   law-correct {r['A2law']}/8, stage-correct {r['A2stage']}/8", flush=True)
+        print(f"  D1 (s0,s1 localised)  : {r['D1']}/16 (chance 1/8)   [diagnostic]", flush=True)
+        print(f"  D2 (true c2 localised): {r['D2']}/8 (chance 1/8)   [diagnostic]", flush=True)
+        print(f"  B1 full / s-only      : {r['B1']}/8 / {r['B1s']}/8 (chance 1/8)", flush=True)
+        print(f"  B2 full / s-only      : {r['B2']}/8 / {r['B2s']}/8 (chance 1/8)", flush=True)
+    else:
+        print(f"  A1/A2/D1/D2           : n/a (no thought vector)", flush=True)
+        print(f"  B1                    : {r['B1']}/8 (chance 1/8)", flush=True)
+        print(f"  B2 (after own B1 pick): {r['B2']}/8 (chance 1/8)   [info] B2-direct after c0+c1: {r['B2direct']}/8", flush=True)
+print(f"--- nearest-anchor labels per item ({P7_INSPECT}; LxSy = law x, stage y) ---", flush=True)
+print(f"  {'domain':<10} {'law':>3} | {'s0':>4} {'s1':>4} | {'s^2':>4} {'s^3':>4} | {'c2':>4} | {'B1pk':>4} {'B2pk':>4} | expected", flush=True)
+for d_name, law_id, l0, l1, l2, l3, lc2, bp in p7_inspect_rows:
+    print(f"  {d_name:<10} {law_id:>3} | {l0:>4} {l1:>4} | {l2:>4} {l3:>4} | {lc2:>4} | {bp[0]:>4} {bp[1]:>4} | L{law_id}S0 L{law_id}S1 L{law_id}S2 L{law_id}S3", flush=True)
+for nm7, _ in P7_ALL_MODELS:
+    r = p7_results[nm7]
+    d1 = f"{r['D1']}/16" if r["D1"] >= 0 else "-1"
+    print(f"PROBE_RESULT seed={SEED} model={nm7} A1={r['A1']} A2={r['A2']} D1={d1} D2={r['D2']} B1={r['B1']} B2={r['B2']} B1s={r['B1s']} B2s={r['B2s']}", flush=True)
