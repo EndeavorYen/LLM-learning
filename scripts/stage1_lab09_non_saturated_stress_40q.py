@@ -26,12 +26,34 @@ BOS_ID = tokenizer.bos_token_id
 EOS_ID = tokenizer.eos_token_id
 
 # ==============================================================================
-# NON-SATURATED 40-TASK STRESS BENCHMARK
+# NON-SATURATED STRESS BENCHMARK ([audit #16] now 36 scored tasks; file name kept for history)
 # Tier 1 (16 tasks): High-Entropy Confusable Serial Numbers (differ by 1 char!)
 # Tier 2 ( 8 tasks): Multi-Law Zero-Shot 1-Hop Analogy (4 Unseen Domains x 2 Competing Laws)
-# Tier 3 ( 8 tasks): Long-Horizon 3-Hop Zero-Shot Chain (Tests Latent Drift at Hop 3!)
-# Tier 4 ( 8 tasks): Hybrid Compound Tasks (Requires BOTH Unseen Analogy + Exact Emergency Code!)
+# Tier 3 ( 8 tasks): Long-Horizon 2-Hop Zero-Shot Chain (stage 3 from stage 0+1; [audit #16] was mislabelled 3-hop)
+# Tier 4 ( 4 tasks): [audit #16] each of the 4 unseen-domain Emergency Codes scored ONCE (exact match).
+#                    The old compound metric (Tier-2 hit AND code correct, /8) is printed as info only,
+#                    because it re-counted Tier 2.
 # ==============================================================================
+
+# [audit #16] scoring helpers (verbatim from the audit spec)
+import re as _re
+_PUNCT = "，。,.；;：:！!？?"
+def norm_text(s: str) -> str:
+    """[audit #16] whitespace-free, full/half-width punctuation unified."""
+    s = _re.sub(r"\s+", "", s or "")
+    return s.replace(",", "，").replace(".", "。").replace(";", "；").replace(":", "：").replace("!", "！").replace("?", "？")
+def first_clause(s: str) -> str:
+    """[audit #16] text up to and including the first clause-ending punctuation (，。；！？)."""
+    s = norm_text(s)
+    m = _re.search(r"[，。；！？]", s)
+    return s[: m.end()] if m else s
+def clause_match(pred: str, gt: str) -> bool:
+    """[audit #16] full-clause exact match (replaces the old first-5/6-character substring test)."""
+    return first_clause(pred) == norm_text(gt)
+def exact_answer_match(pred: str, gt: str) -> bool:
+    """[audit #16] rote answers: prediction must start with the answer and then stop or hit punctuation."""
+    p, g = norm_text(pred), norm_text(gt)
+    return p.startswith(g) and (len(p) == len(g) or p[len(g)] in _PUNCT)
 
 # 16 Highly Confusable Rote Serial Numbers (4 clusters x 4 near-identical nodes)
 rote_serials = [
@@ -99,7 +121,9 @@ def _tok_len(txt):
 _slot_texts = ([q for q, _ in rote_serials + domain_emg_codes] + [a for _, a in rote_serials + domain_emg_codes]
                + [c for _, _, laws in multi_law_domains for cl in laws.values() for c in cl])
 _prompt_texts = ([q for q, _ in rote_serials + domain_emg_codes]
-                 + [cl[0] + cl[1] for _, _, laws in multi_law_domains for cl in laws.values()])
+                 + [cl[0] + cl[1] for _, _, laws in multi_law_domains for cl in laws.values()]
+                 # [audit #16] Pure-Diffusion's Tier-3 second pass uses premise = stage1 + stage2 (seen-domain training pairs)
+                 + [cl[1] + cl[2] for _, is_seen, laws in multi_law_domains if is_seen for cl in laws.values()])
 SLOT_LEN = max(_tok_len(t) for t in _slot_texts) + 1      # +1 so every slot can end with [□]
 PROMPT_LEN = max(_tok_len(t) for t in _prompt_texts) + 1  # +1 for BOS
 AR_MAX_NEW_TOKENS = SLOT_LEN                              # AR may emit the longest answer in full
@@ -121,6 +145,13 @@ def pad_prompt(txt, length=None):
         raise ValueError(f"[audit #13] pad_prompt would truncate {len(body) + 1} tokens to {length}: {txt!r}")
     ids = [BOS_ID] + body
     ids = [SLOT_PAD_ID]*(length - len(ids)) + ids
+    return torch.tensor([ids], device='cuda')
+
+def pad_prompt_tail(txt):
+    """[audit #16] like pad_prompt, but for model-generated premises: keeps the LAST PROMPT_LEN-1 tokens if too long."""
+    body = tokenizer(txt, add_special_tokens=False).input_ids[-(PROMPT_LEN - 1):]
+    ids = [BOS_ID] + body
+    ids = [SLOT_PAD_ID]*(PROMPT_LEN - len(ids)) + ids
     return torch.tensor([ids], device='cuda')
 
 def clean_str(t_ids):
@@ -287,7 +318,8 @@ class StressDualBrainModel(nn.Module):
         '''
         If hops=1: predicts s_2 from [s_0, s_1]
         If hops=2: predicts s_2 -> s_3 from [s_0, s_1]
-        If hops=3 (Long-horizon stress!): predicts s_1 -> s_2 -> s_3 from ONLY [s_0] + law direction!
+        Always conditions on [s_0, s_1]; hops=k appends k predicted states. [audit #16] Tier 3 uses hops=2
+        (the old "hops=3 from only s_0" mode was never implemented nor used).
         '''
         d0, s0 = self.encode_thought(c0_ids, c0_val)
         d1, s1 = self.encode_thought(c1_ids, c1_val)
@@ -326,6 +358,8 @@ for nm, md in [("AR-512", m_ar), ("Diff-512", m_diff), ("PureThought-LCM-512", m
     print(f"  {nm:<22}: {count_m(md):6.2f}M params", flush=True)
 
 # 1. Train AR-512 and Pure-Diffusion-512
+_n_held_total = sum(2 * 2 for _, is_seen, _ in multi_law_domains if not is_seen)  # 2 laws x stages 2,3
+print(f"[audit #14] held out {_n_held_total} unseen answer clauses from every loss", flush=True)
 ar_seqs, diff_p, diff_a = [], [], []
 for pt, at, q_s, a_s in rote_tensors:
     ar_seqs.append([BOS_ID] + tokenizer(q_s + a_s, add_special_tokens=False).input_ids + [EOS_ID])
@@ -335,15 +369,35 @@ for d_idx, d_name, is_seen, law_id, clauses, c_t in dom_law_tensors:
     if is_seen:
         ar_seqs.append([BOS_ID] + tokenizer("".join(clauses), add_special_tokens=False).input_ids + [EOS_ID])
         diff_p.append(pad_prompt(clauses[0] + clauses[1])[0]); diff_a.append(c_t[2][0][0])
+        # [audit #16] seen-domain (stage1+stage2 -> stage3) pairs so Pure-Diffusion's Tier-3 second pass
+        # (premise = stage1 + its own stage-2 prediction) is an in-distribution query.
+        diff_p.append(pad_prompt(clauses[1] + clauses[2])[0]); diff_a.append(c_t[3][0][0])
     else:
-        for c in clauses:
-            ar_seqs.append([BOS_ID] + tokenizer(c, add_special_tokens=False).input_ids + [EOS_ID])
+        # [audit #14] unseen domain: only the PREMISE (stage 0 + 1) is visible, with NO EOS after it
+        # (EOS here would teach AR to stop exactly where the answer should begin). Answer clauses
+        # (stage 2, 3) were previously in the AR data as standalone sequences -> leak, now removed.
+        ar_seqs.append([BOS_ID] + tokenizer(clauses[0] + clauses[1], add_special_tokens=False).input_ids)
+        # [audit #14] same premise visibility for Pure-Diffusion: (stage 0 -> stage 1) pair only.
+        diff_p.append(pad_prompt(clauses[0])[0]); diff_a.append(c_t[1][0][0])
 
-opt_ar = torch.optim.AdamW(m_ar.parameters(), lr=3e-4)
-opt_diff = torch.optim.AdamW(m_diff.parameters(), lr=3e-4)
+# [audit #16] equal budget for all 6 models: TRAIN_STEPS optimizer steps, cosine LR 3e-4 -> 3e-5
+# (AR / Pure-Diffusion previously got 160 steps at constant LR; the thought models got 220 cosine steps).
+TRAIN_STEPS = 220
+LR_MAX, LR_MIN = 3e-4, 3e-5
+def cosine_lr(step, steps):
+    return LR_MIN + 0.5 * (LR_MAX - LR_MIN) * (1 + math.cos(math.pi * step / steps))
+LOG_STEPS = {1, TRAIN_STEPS // 2, TRAIN_STEPS}  # [audit #16] log losses so training failures are visible
+for nm in ("AR-512", "Diff-512", "PureThought-LCM-512", "Micro-Dual-128", "Tiny-Dual-256", "Full-Dual-512"):
+    print(f"[audit #16] budget {nm:<22}: {TRAIN_STEPS} steps, cosine LR {LR_MAX:g}->{LR_MIN:g}", flush=True)
+
+opt_ar = torch.optim.AdamW(m_ar.parameters(), lr=LR_MAX)
+opt_diff = torch.optim.AdamW(m_diff.parameters(), lr=LR_MAX)
 t_dp = torch.stack(diff_p); t_da = torch.stack(diff_a)
 
-for step in range(1, 161):
+for step in range(1, TRAIN_STEPS + 1):
+    lr = cosine_lr(step, TRAIN_STEPS)  # [audit #16]
+    for opt_x in (opt_ar, opt_diff):
+        for pg in opt_x.param_groups: pg['lr'] = lr
     opt_ar.zero_grad()
     # Sample mini-batch of 16 sequences for AR speed
     batch_s = random.sample(ar_seqs, min(16, len(ar_seqs)))
@@ -353,17 +407,37 @@ for step in range(1, 161):
     opt_diff.zero_grad()
     loss_d = m_diff.forward_loss(t_dp, t_da)
     loss_d.backward(); torch.nn.utils.clip_grad_norm_(m_diff.parameters(), 1.0); opt_diff.step()
+    if step in LOG_STEPS:  # [audit #16]
+        print(f"  [AR-512]   step {step:4d}/{TRAIN_STEPS} loss={loss_a.item():.4f} lr={lr:.2e}", flush=True)
+        print(f"  [Diff-512] step {step:4d}/{TRAIN_STEPS} loss={loss_d.item():.4f} lr={lr:.2e}", flush=True)
 
 # 2. Train PureThought-LCM, Micro-Dual-128, Tiny-Dual-256, Full-Dual-512
-def train_stress_model(mod, steps=220):
-    opt_m = torch.optim.AdamW(mod.parameters(), lr=3e-4)
+def train_stress_model(mod, steps=TRAIN_STEPS, tag="model"):
+    opt_m = torch.optim.AdamW(mod.parameters(), lr=LR_MAX)
     mod.train()
-    # Pre-stack all 12 domain-law chains x 4 clauses = 48 clauses
-    all_ct, all_cv = [], []
-    for _, _, _, _, _, c_t in dom_law_tensors:
-        for ct, cv in c_t:
+    # [audit #14] Stack only ALLOWED clauses: every seen-domain clause + unseen-domain premise clauses
+    # (stage 0, 1). Unseen answer clauses (stage 2, 3) never enter any loss. Explicit index lists replace
+    # the old .view(6, 2, 4, D) grid, which needed all 48 clauses.
+    all_ct, all_cv, k_dom, k_law, k_stage = [], [], [], [], []
+    row_of = {}  # (d_idx, law_id, stage) -> row in b_ct
+    n_held = 0
+    for d_idx, _, is_seen, law_id, _, c_t in dom_law_tensors:
+        for st, (ct, cv) in enumerate(c_t):
+            if (not is_seen) and st >= 2:
+                n_held += 1
+                continue
+            row_of[(d_idx, law_id, st)] = len(all_ct)
             all_ct.append(ct[0]); all_cv.append(cv[0])
-    b_ct = torch.stack(all_ct); b_cv = torch.stack(all_cv)  # (48, SLOT_LEN)
+            k_dom.append(d_idx); k_law.append(law_id); k_stage.append(st)
+    b_ct = torch.stack(all_ct); b_cv = torch.stack(all_cv)  # (32, SLOT_LEN)
+    k_dom = torch.tensor(k_dom, device='cuda')
+    k_state = torch.tensor(k_law, device='cuda') * 4 + torch.tensor(k_stage, device='cuda')  # 0..7
+    n_dom = len(multi_law_domains)
+    dom_anchor_rows = torch.tensor([row_of[(d, 0, 0)] for d in range(n_dom)], device='cuda')       # (6,)
+    struct_anchor_rows = torch.tensor([row_of[(0, lw, st)] for lw in (0, 1) for st in range(4)], device='cuda')  # (8,) domain 0 (seen)
+    seen_doms = [d for d, (_, is_seen, _) in enumerate(multi_law_domains) if is_seen]
+    hop_rows = torch.tensor([[row_of[(d, lw, st)] for st in range(4)] for d in seen_doms for lw in (0, 1)], device='cuda')  # (4, 4)
+    print(f"[audit #14] held out {n_held} unseen answer clauses from every loss ({tag}; {len(all_ct)} clauses used)", flush=True)
 
     rt_p = torch.stack([x[0][0] for x in rote_tensors])
     rt_a = torch.stack([x[1][0] for x in rote_tensors])
@@ -371,7 +445,7 @@ def train_stress_model(mod, steps=220):
     rt_qv = torch.stack([pad_slot(x[2])[1][0] for x in rote_tensors])
 
     for step in range(1, steps + 1):
-        lr = 3e-5 + 0.5 * (3e-4 - 3e-5) * (1 + math.cos(math.pi * step / steps))
+        lr = cosine_lr(step, steps)  # [audit #16] same schedule as AR / Pure-Diffusion
         for pg in opt_m.param_groups: pg['lr'] = lr
         opt_m.zero_grad()
         loss_tot = 0.0
@@ -392,36 +466,32 @@ def train_stress_model(mod, steps=220):
             lg_r = mod.forward_thought_render(dq_r, sq_r, canv_r)
             loss_tot = loss_tot + F.cross_entropy(lg_r.reshape(-1, lg_r.size(-1)), rt_a.reshape(-1), ignore_index=-100)
 
-        # Encode all 48 domain-law clauses: shape (6 domains, 2 laws, 4 stages, D)
+        # [audit #14] Encode the allowed clauses only (seen: all stages; unseen: stage 0/1)
         d_vec, s_vec = mod.encode_thought(b_ct, b_cv)
-        D_th = d_vec.size(-1)
-        d_grid = d_vec.view(6, 2, 4, D_th)
-        s_grid = s_vec.view(6, 2, 4, D_th)
 
         loss_dis = 0.0
-        # 1. Domain invariance: all 8 clauses of domain i (across both laws & 4 stages) share d_i!
-        d_anchor = d_grid[:, 0, 0, :]  # (6, D)
-        loss_dis = loss_dis + (1.0 - (d_grid * d_anchor.unsqueeze(1).unsqueeze(2)).sum(dim=-1)).mean()
+        # 1. Domain invariance: every allowed clause of domain i shares d_i (anchor = law 0, stage 0)
+        d_anchor = d_vec[dom_anchor_rows]  # (6, D)
+        loss_dis = loss_dis + (1.0 - (d_vec * d_anchor[k_dom]).sum(dim=-1)).mean()
         # Domain orthogonality across the 6 domains
         d_gram = torch.matmul(d_anchor, d_anchor.T)
-        eye_6 = torch.eye(6, device='cuda', dtype=torch.bool)
+        eye_6 = torch.eye(n_dom, device='cuda', dtype=torch.bool)
         loss_dis = loss_dis + F.relu(d_gram[~eye_6] + 0.1).mean()
 
-        # 2. Structural isomorphism: across all 6 domains, (law_id, stage_j) shares universal structural vector s_{law, stage}!
-        s_anchor = s_grid[0, :, :, :]  # (2, 4, D) from Domain 0
-        loss_dis = loss_dis + (1.0 - (s_grid * s_anchor.unsqueeze(0)).sum(dim=-1)).mean()
+        # 2. Structural isomorphism: every allowed clause with (law_id, stage_j) shares s_{law, stage} (anchor = Domain 0, seen)
+        s_anchor = s_vec[struct_anchor_rows]  # (8, D)
+        loss_dis = loss_dis + (1.0 - (s_vec * s_anchor[k_state]).sum(dim=-1)).mean()
         # Orthogonal repulsion across all 8 distinct structural states (2 laws x 4 stages = 8 states)
-        s_flat8 = s_anchor.reshape(8, D_th)
-        s_gram = torch.matmul(s_flat8, s_flat8.T)
+        s_gram = torch.matmul(s_anchor, s_anchor.T)
         eye_8 = torch.eye(8, device='cuda', dtype=torch.bool)
         loss_dis = loss_dis + F.relu(s_gram[~eye_8] + 0.1).mean()
 
         # 3. Train Structural Hopping ONLY on the 2 Seen Domains (Water & Highway, both laws: 4 chains of length 4)!
-        s_seen_chains = s_grid[:2, :, :, :].reshape(4, 4, D_th)
+        s_seen_chains = s_vec[hop_rows]  # (4, 4, D) [audit #14] explicit seen-domain index list
         pred_s = mod.forward_struct_hop(s_seen_chains[:, :-1, :])
         loss_hop = (1.0 - (pred_s * s_seen_chains[:, 1:, :].detach()).sum(dim=-1)).mean()
 
-        # 4. Train Thought-to-Language Block-Diffusion Mapper on all 48 clauses
+        # 4. Train Thought-to-Language Block-Diffusion Mapper on the allowed clauses ([audit #14] was all 48)
         for mask_p in (0.5, 1.0):
             m = (torch.rand_like(b_ct, dtype=torch.float) < mask_p); m[:, 0] = True
             c = b_ct.clone(); c[m] = MASK_ID
@@ -433,26 +503,51 @@ def train_stress_model(mod, steps=220):
         loss_tot.backward()
         torch.nn.utils.clip_grad_norm_(mod.parameters(), 1.0)
         opt_m.step()
+        if step in {1, steps // 2, steps}:  # [audit #16] make training failures (e.g. Micro Dual-Brain) visible
+            print(f"  [{tag}] step {step:4d}/{steps} loss={loss_tot.item():.4f} hop={loss_hop.item():.4f} dis={loss_dis.item():.4f} lr={lr:.2e}", flush=True)
     mod.eval()
 
-print("Training competing models on the 40-Task Multi-Law & High-Entropy Stress Suite...", flush=True)
-train_stress_model(m_lcm, steps=220)
-train_stress_model(m_micro_dual, steps=220)
-train_stress_model(m_tiny_dual, steps=220)
-train_stress_model(m_full_dual, steps=220)
+print("Training competing models on the 36-Task Multi-Law & High-Entropy Stress Suite...", flush=True)
+train_stress_model(m_lcm, steps=TRAIN_STEPS, tag="PureThought-LCM-512")
+train_stress_model(m_micro_dual, steps=TRAIN_STEPS, tag="Micro-Dual-128")
+train_stress_model(m_tiny_dual, steps=TRAIN_STEPS, tag="Tiny-Dual-256")
+train_stress_model(m_full_dual, steps=TRAIN_STEPS, tag="Full-Dual-512")
 m_ar.eval(); m_diff.eval()
 
 # [audit #13] Fix the RNG before evaluation: Tier 3 injects random drift noise per hop.
 random.seed(42); torch.manual_seed(42); torch.cuda.manual_seed_all(42)
 
 # ==============================================================================
-# EVALUATE ON THE 40-TASK NON-SATURATED STRESS BENCHMARK
+# EVALUATE ON THE 36-TASK NON-SATURATED STRESS BENCHMARK  [audit #16] (was 40: Tier 4 double-counted Tier 2)
 # ==============================================================================
-print("\n==================================================================================================================================", flush=True)
-print("=== [NON-SATURATED STRESS BENCHMARK] 40 HARD TASKS ACROSS 4 TIERS (Exposing Capacity & Architectural Limits!) ===", flush=True)
-print("==================================================================================================================================", flush=True)
-print(f"{'Model Architecture':<28} | {'Params':>7} | {'Tier1:16 Serials':>16} | {'Tier2:8 MultiLaw':>16} | {'Tier3:8 LongHop':>15} | {'Tier4:8 Hybrid':>14} | {'Total (40)':>10} | {'IQ Density':>12}", flush=True)
-print("-" * 134, flush=True)
+def second_clause(s: str) -> str:
+    """[audit #16] AR Tier-3: the text after the first generated clause (i.e. the 2nd generated clause onward)."""
+    s = norm_text(s)
+    m = _re.search(r"[，。；！？]", s)
+    return s[m.end():] if m else ""
+
+def predict_rote(mod, q_s):
+    """[audit #16] one rote-answer prediction path per model family (shared by Tier 1 and Tier 4)."""
+    if mod is m_ar:
+        inp = torch.tensor([[BOS_ID] + tokenizer(q_s, add_special_tokens=False).input_ids], device='cuda')
+        out = mod.generate(inp, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
+        return clean_str(out[0, inp.size(1):])
+    elif mod is m_diff:
+        return clean_str(mod.generate_slots(pad_prompt(q_s), steps=2)[0])
+    elif mod.pure_thought_only:
+        qt, qv = pad_slot(q_s)
+        dq, sq = mod.encode_thought(qt, qv, noise_std=0.04)
+        return clean_str(mod.render_from_ds(dq, sq, steps=2)[0])
+    else:
+        _, out = mod.probe_muscle(pad_prompt(q_s), steps=2)
+        return clean_str(out[0])
+
+N_T1, N_T2, N_T3, N_T4, N_TOT = 16, 8, 8, 4, 36  # [audit #16]
+print("\n" + "=" * 150, flush=True)
+print("=== [NON-SATURATED STRESS BENCHMARK] 36 SCORED TASKS ACROSS 4 TIERS (Tier 3 = 2 latent hops; Tier4-compound is info only, NOT in total) ===", flush=True)
+print("=" * 150, flush=True)
+print(f"{'Model Architecture':<30} | {'Params':>7} | {'Tier1:16 Serials':>16} | {'Tier2:8 MultiLaw':>16} | {'Tier3:8 2-Hop':>15} | {'Tier4:4 EmgCode':>15} | {'Total (36)':>13} | {'IQ Density':>12} | {'[info] T2&Code /8':>17}", flush=True)
+print("-" * 150, flush=True)
 
 for name_m, mod in [
     ("1. AR-MiniMind (8L,512D)", m_ar),
@@ -462,27 +557,26 @@ for name_m, mod in [
     ("5. Tiny Dual-Brain (4L,256D)", m_tiny_dual),
     ("6. Full Dual-Brain (8L,512D)", m_full_dual),
 ]:
-    t1_ok, t2_ok, t3_ok, t4_ok = 0, 0, 0, 0
+    t1_ok, t2_ok, t3_ok, t4_ok, t4_compound = 0, 0, 0, 0, 0
 
     # --- Tier 1: 16 Confusable High-Entropy Serial Numbers ---
     for q_s, gt_a in rote_serials:
-        if mod is m_ar:
-            inp = torch.tensor([[BOS_ID] + tokenizer(q_s, add_special_tokens=False).input_ids], device='cuda')
-            out = mod.generate(inp, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
-            pred = clean_str(out[0, inp.size(1):])
-        elif mod is m_diff:
-            pred = clean_str(mod.generate_slots(pad_prompt(q_s), steps=2)[0])
-        elif mod.pure_thought_only:
-            qt, qv = pad_slot(q_s)
-            dq, sq = mod.encode_thought(qt, qv, noise_std=0.04)
-            pred = clean_str(mod.render_from_ds(dq, sq, steps=2)[0])
-        else:
-            _, out = mod.probe_muscle(pad_prompt(q_s), steps=2)
-            pred = clean_str(out[0])
-        if pred == gt_a: t1_ok += 1
+        pred = predict_rote(mod, q_s)
+        if exact_answer_match(pred, gt_a): t1_ok += 1  # [audit #16]
+
+    # --- Tier 4: [audit #16] each of the 4 domain Emergency Codes scored ONCE (exact_answer_match) ---
+    code_ok = []
+    for emg_q, emg_gt in domain_emg_codes:
+        code_ok.append(exact_answer_match(predict_rote(mod, emg_q), emg_gt))
+    t4_ok = sum(code_ok)
 
     # --- Tier 2: 8 Multi-Law 1-Hop Unseen Analogies (4 Unseen Domains x 2 Laws, predicting Stage 2 from Stage 0+1) ---
-    # --- Tier 3: 8 Multi-Hop Long-Horizon Unseen Analogies (predicting Stage 3 after 2 autonomous hops + slight latent drift!) ---
+    # --- Tier 3: 8 Multi-Hop Unseen Analogies (predicting Stage 3 from Stage 0+1 after 2 latent hops + drift noise) ---
+    # [audit #16] Tier-3 baseline fairness: AR and Pure-Diffusion used to re-use their stage-2 output as the
+    # stage-3 answer (could never be right). Now:
+    #   * AR keeps generating (2 x AR_MAX_NEW_TOKENS) and is scored on the SECOND generated clause;
+    #   * Pure-Diffusion runs a second time with premise = clauses[1] + its own predicted stage-2 clause
+    #     (it was trained on seen-domain (stage1+stage2 -> stage3) pairs for exactly this query).
     unseen_idx = 0
     for d_idx, d_name, is_seen, law_id, clauses, c_t in dom_law_tensors:
         if is_seen: continue
@@ -492,45 +586,32 @@ for name_m, mod in [
 
         if mod is m_ar:
             inp = torch.tensor([[BOS_ID] + tokenizer(p_str, add_special_tokens=False).input_ids], device='cuda')
-            out = mod.generate(inp, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
-            pred_s2 = clean_str(out[0, inp.size(1):])
-            pred_s3 = pred_s2
+            out = mod.generate(inp, max_new_tokens=2 * AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
+            gen = clean_str(out[0, inp.size(1):])
+            pred_s2 = gen
+            pred_s3 = second_clause(gen)  # [audit #16]
         elif mod is m_diff:
             pred_s2 = clean_str(mod.generate_slots(pad_prompt(p_str), steps=2)[0])
-            pred_s3 = pred_s2
+            pred_s3 = clean_str(mod.generate_slots(pad_prompt_tail(clauses[1] + first_clause(pred_s2)), steps=2)[0])  # [audit #16]
         else:
             # 1-hop analogy for Stage 2
             out_s2 = mod.solve_multi_hop_analogy(c_t[0][0], c_t[0][1], c_t[1][0], c_t[1][1], hops=1, hop_noise=0.02)
             pred_s2 = clean_str(out_s2[0])
-            # Multi-hop analogy for Stage 3 (with cumulative latent drift noise=0.08 per hop!)
+            # 2-hop analogy for Stage 3 (with latent drift noise=0.08 per hop)
             out_s3 = mod.solve_multi_hop_analogy(c_t[0][0], c_t[0][1], c_t[1][0], c_t[1][1], hops=2, hop_noise=0.08)
             pred_s3 = clean_str(out_s3[0])
 
-        hit_s2 = (gt_stage2[:5] in pred_s2)
-        hit_s3 = (gt_stage3[:5] in pred_s3)
+        hit_s2 = clause_match(pred_s2, gt_stage2)  # [audit #16] full clause, was gt[:5] substring
+        hit_s3 = clause_match(pred_s3, gt_stage3)  # [audit #16]
         if hit_s2: t2_ok += 1
         if hit_s3: t3_ok += 1
 
-        # --- Tier 4: 8 Hybrid Compound Tasks (Must get BOTH Unseen Analogy Stage 2 AND Domain Emergency Code!) ---
-        emg_q, emg_gt = domain_emg_codes[unseen_idx // 2]
-        if mod is m_ar:
-            inp_e = torch.tensor([[BOS_ID] + tokenizer(emg_q, add_special_tokens=False).input_ids], device='cuda')
-            pred_emg = clean_str(mod.generate(inp_e, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)[0, inp_e.size(1):])
-        elif mod is m_diff:
-            pred_emg = clean_str(mod.generate_slots(pad_prompt(emg_q), steps=2)[0])
-        elif mod.pure_thought_only:
-            qt, qv = pad_slot(emg_q)
-            dq, sq = mod.encode_thought(qt, qv, noise_std=0.04)
-            pred_emg = clean_str(mod.render_from_ds(dq, sq, steps=2)[0])
-        else:
-            _, out_e = mod.probe_muscle(pad_prompt(emg_q), steps=2)
-            pred_emg = clean_str(out_e[0])
-
-        if hit_s2 and (pred_emg == emg_gt):
-            t4_ok += 1
+        # [audit #16] old compound metric (Tier-2 hit AND domain code correct, /8): informational only, NOT in total
+        if hit_s2 and code_ok[unseen_idx // 2]:
+            t4_compound += 1
         unseen_idx += 1
 
     tot = t1_ok + t2_ok + t3_ok + t4_ok
     pm = count_m(mod)
-    dens = tot / pm
-    print(f"{name_m:<28} | {pm:6.2f}M | {t1_ok:7d}/16 ({t1_ok/16*100:3.0f}%) | {t2_ok:7d}/8  ({t2_ok/8*100:3.0f}%) | {t3_ok:6d}/8  ({t3_ok/8*100:3.0f}%) | {t4_ok:5d}/8  ({t4_ok/8*100:3.0f}%) | {tot:4d}/40 ({tot/40*100:2.0f}%) | {dens:7.2f} t/M", flush=True)
+    dens = tot / pm  # [audit #16] density over the 36 scored tasks
+    print(f"{name_m:<30} | {pm:6.2f}M | {t1_ok:7d}/{N_T1} ({t1_ok/N_T1*100:3.0f}%) | {t2_ok:7d}/{N_T2}  ({t2_ok/N_T2*100:3.0f}%) | {t3_ok:8d}/{N_T3}  ({t3_ok/N_T3*100:3.0f}%) | {t4_ok:8d}/{N_T4}  ({t4_ok/N_T4*100:3.0f}%) | {tot:4d}/{N_TOT} ({tot/N_TOT*100:3.0f}%) | {dens:7.2f} t/M | {t4_compound:12d}/8", flush=True)
