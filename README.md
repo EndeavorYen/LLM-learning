@@ -56,6 +56,7 @@
 | :---: | :--- | :--- | :--- | :--- |
 | **01** | **Qwen2.5-0.5B 微創雙腦嫁接 PK** | [`01_qwen25_vs_dual_brain_qwen_pk.ipynb`](notebooks/02_stage2_alignment/01_qwen25_vs_dual_brain_qwen_pk.ipynb) | `dual_brain_qwen25_05b_head.pth` (`41.6 MB`) | 100% 凍結 `Qwen2.5-0.5B` (494M)，嫁接 `896->128` 窄瓶頸正交意念漏斗與謙遜閘門；在 8 大未知系統零樣本推演拿下 **`7/8 (87.5%)`**，完勝標準 `Qwen2.5-0.5B + LoRA` 的 **`0/8 (0%)`**（總分 **86% vs 48%**）！ |
 | **02** | **Mini Open-LLM Leaderboard 公開基準擂台** | [`02_mini_open_llm_leaderboard_mmlu_arc_gsm8k.ipynb`](notebooks/02_stage2_alignment/02_mini_open_llm_leaderboard_mmlu_arc_gsm8k.ipynb) | `dual_brain_qwen25_open_llm_cribnote.pth` (`4.06 MB`) | 實測 140 題官方 `MMLU + ARC-Challenge + GSM8K`：雙腦小抄版在 **`ARC-Challenge` 科學推理暴增 `+8.0%` (`46% -> 54%`)** 且 **`MMLU` 0% 遺忘 (`40%`)**；標準 LoRA 則嚴重災難性遺忘 (`MMLU 30%`, `GSM8K 崩潰至 5%`)！ |
+| **03** | **三合一完整體 (Dual-Brain + Block-Diffusion + Qwen2.5)** | [`03_full_trinity_dual_brain_block_diffusion_qwen25.ipynb`](notebooks/02_stage2_alignment/03_full_trinity_dual_brain_block_diffusion_qwen25.ipynb) | `full_trinity_dual_brain_block_diff_qwen25.pth` (`73.8 MB`) | 補齊 2 層雙向 Block-Diffusion 顯影頭 (`m1 ∪ ~m1`)：未知系統零樣本推演 **`8/8 (100%)`**、逆向克漏字修圖 **`6/6 (100%)`**、推論速度 **快 `8.11 倍`**，24 題總分 **`96% vs 29%`** 輾壓標準 AR LoRA！ |
 
 ---
 
