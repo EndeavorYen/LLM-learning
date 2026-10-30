@@ -45,6 +45,16 @@
 | **06** | **意念量化與連續聯想** | [`06_associative_thought_minimind.ipynb`](notebooks/01_stage1_minimind/06_associative_thought_minimind.ipynb) | `associative_thought_minimind_512.pth` (`70.1 MB`) | 思考過程 0 文字 Token，純 512 維球面座標跳躍 + 雙語氣自然映射，比 36 步 AR **快 14.23 倍** |
 | **07** | **信心閘門雙腦與記憶固化** | [`07_entropy_gated_dual_brain_minimind.ipynb`](notebooks/01_stage1_minimind/07_entropy_gated_dual_brain_minimind.ipynb) | `entropy_dual_brain_minimind_512.pth` (`63.9 MB`) | 電話號碼 `99.2%` 信心走肌肉記憶 (100% 精準)；未知醫學題 `31.1%` 信心自動轉意念層零樣本推導，練習後固化為 `91.8%` 肌肉記憶 |
 | **08** | **知識密度與智商大對決** | [`08_knowledge_density_iq_benchmark.ipynb`](notebooks/01_stage1_minimind/08_knowledge_density_iq_benchmark.ipynb) | `tiny_dual_brain_256.pth` (`11.0 MB`) | **`5.46M` 迷你雙腦模型** 在 4 大未知領域類比與 6 組死背號碼拿 **12/12 滿分**，知識密度達 `30M` 原版模型的 **9.56 倍**！ |
+| **09** | **40題非飽和極限壓力測試** | [`09_non_saturated_stress_benchmark.ipynb`](notebooks/01_stage1_minimind/09_non_saturated_stress_benchmark.ipynb) | *(壓力極限測試套件)* | 打破滿分飽和！拉開 `Dual-Brain (68%)` vs `Pure-Thought LCM (40%)` vs `Pure-Diffusion (10%)` 差距，並找出 `5.46M` 臨界甜蜜點与 RAG 需求邊界 |
+
+---
+
+## 🔬 開放研究議題追蹤 (Open Research Issues)
+
+我們在 Stage 1 實驗中發掘出的 3 個後 Transformer 世代核心開放問題，已建立於 GitHub Issues 持續深入探索：
+- 📌 **[Issue #1：無監督野生語料的「自動結構與意念對齊」](https://github.com/EndeavorYen/LLM-learning/issues/1)** *(Unsupervised Structural Alignment in the Wild)*
+- 📌 **[Issue #2：多層次意念的「動態顆粒度伸縮」](https://github.com/EndeavorYen/LLM-learning/issues/2)** *(Dynamic & Hierarchical Thought Granularity)*
+- 📌 **[Issue #3：超長聯想鏈的「腦波流形飄移與錨點校準」](https://github.com/EndeavorYen/LLM-learning/issues/3)** *(Latent Drift in Long-Horizon Thought Chains)*
 
 ---
 
