@@ -1,0 +1,169 @@
+[lab11] SEED=1 | device=cuda
+[lab11] data = /content/analogy_v4.json (analogy_v4)
+[lab11] seen sentences=324 (12 domains x 27 state classes) | seen premises=72 | hop chains=72 | unseen items=48 | leak check passed for all 468 training texts
+=== [1] Loading 'Qwen/Qwen2.5-0.5B' (frozen, bf16) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+config.json:   0%|          | 0.00/681 [00:00<?, ?B/s]
+tokenizer_config.json:   0%|          | 0.00/7.23k [00:00<?, ?B/s]
+vocab.json:   0%|          | 0.00/2.78M [00:00<?, ?B/s]
+merges.txt:   0%|          | 0.00/1.67M [00:00<?, ?B/s]
+tokenizer.json:   0%|          | 0.00/7.03M [00:00<?, ?B/s]
+model.safetensors: reconstructing file:   0%|          |  0.00B /  988MB        
+model.safetensors: downloading bytes:           |  0.00B            
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+generation_config.json:   0%|          | 0.00/138 [00:00<?, ?B/s]
+Loaded in 29.8s | hidden=896 | layers=24
+[lab11] extracted 660 features (896-d, float32)
+
+=== [2] Training V0 (Lab 09 joint): 563,264 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [V0] step   1/400 | total 5.6797 | dis 3.3300 (s_pull 0.067 s_push 2.170 d_pull 0.027 d_push 1.066) | hop 0.9399 | cos=0.9399 ce=3.2980 acc=19/288 acc234=3/216
+HL_LOSS seed=1 variant=V0 step=1 loss=0.9399 cos=0.9399 ce=3.2980 acc=19/288 acc234=3/216
+  [V0] step 200/400 | total 1.8556 | dis 1.3097 (s_pull 0.041 s_push 1.248 d_pull 0.001 d_push 0.020) | hop 0.2184 | cos=0.2184 ce=1.9654 acc=101/288 acc234=49/216
+HL_LOSS seed=1 variant=V0 step=200 loss=0.2184 cos=0.2184 ce=1.9654 acc=101/288 acc234=49/216
+  [V0] step 400/400 | total 1.6354 | dis 0.9483 (s_pull 0.068 s_push 0.863 d_pull 0.001 d_push 0.017) | hop 0.2748 | cos=0.2748 ce=1.3446 acc=130/288 acc234=93/216
+HL_LOSS seed=1 variant=V0 step=400 loss=0.2748 cos=0.2748 ce=1.3446 acc=130/288 acc234=93/216
+  [V0] trained in 5.7s
+[check] funnel=V0 LAST BR-2 = 24/48 == 24/48: OK
+[check] funnel=V0 LAST BR-3 = 24/48 == 24/48: OK
+[check] funnel=V0 LAST BR-4 = 24/48 == 24/48: OK
+[lab11] funnel=V0 max off-diagonal anchor cosine = 0.581 ((L1,S3) vs (L5,S3))
+
+=== [2] Training stageA (funnel only, no hop): 492,160 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [stageA] step   1/400 | dis 3.3300 (s_pull 0.067 s_push 2.170 d_pull 0.027 d_push 1.066)
+  [stageA] step 200/400 | dis 0.8598 (s_pull 0.073 s_push 0.749 d_pull 0.006 d_push 0.032)
+  [stageA] step 400/400 | dis 0.6368 (s_pull 0.064 s_push 0.545 d_pull 0.004 d_push 0.023)
+  [stageA] trained in 2.2s
+[check] funnel=stageA LAST BR-2 = 24/48 == 24/48: OK
+[check] funnel=stageA LAST BR-3 = 24/48 == 24/48: OK
+[check] funnel=stageA LAST BR-4 = 24/48 == 24/48: OK
+[lab11] funnel=stageA max off-diagonal anchor cosine = 0.302 ((L4,S3) vs (L5,S3))
+
+=== [2] Training V1 hop (funnel frozen; loss=cos; pos=no): 71,104 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [V1] step    1/2000 | hop loss (cos) 1.0385 | cos=1.0385 ce=4.3630 acc=2/288 acc234=2/216
+HL_LOSS seed=1 variant=V1 step=1 loss=1.0385 cos=1.0385 ce=4.3630 acc=2/288 acc234=2/216
+  [V1] step  500/2000 | hop loss (cos) 0.0460 | cos=0.0460 ce=0.0324 acc=287/288 acc234=215/216
+HL_LOSS seed=1 variant=V1 step=500 loss=0.0460 cos=0.0460 ce=0.0324 acc=287/288 acc234=215/216
+  [V1] step 1000/2000 | hop loss (cos) 0.0327 | cos=0.0327 ce=0.0328 acc=287/288 acc234=215/216
+HL_LOSS seed=1 variant=V1 step=1000 loss=0.0327 cos=0.0327 ce=0.0328 acc=287/288 acc234=215/216
+  [V1] step 2000/2000 | hop loss (cos) 0.0243 | cos=0.0243 ce=0.0314 acc=286/288 acc234=214/216
+HL_LOSS seed=1 variant=V1 step=2000 loss=0.0243 cos=0.0243 ce=0.0314 acc=286/288 acc234=214/216
+  [V1] trained in 13.5s
+
+=== [2] Training V2 hop (funnel frozen; loss=cos; pos=yes): 71,424 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [V2] step    1/2000 | hop loss (cos) 1.0377 | cos=1.0377 ce=4.3798 acc=2/288 acc234=2/216
+HL_LOSS seed=1 variant=V2 step=1 loss=1.0377 cos=1.0377 ce=4.3798 acc=2/288 acc234=2/216
+  [V2] step  500/2000 | hop loss (cos) 0.0469 | cos=0.0469 ce=0.0276 acc=286/288 acc234=214/216
+HL_LOSS seed=1 variant=V2 step=500 loss=0.0469 cos=0.0469 ce=0.0276 acc=286/288 acc234=214/216
+  [V2] step 1000/2000 | hop loss (cos) 0.0310 | cos=0.0310 ce=0.0312 acc=287/288 acc234=215/216
+HL_LOSS seed=1 variant=V2 step=1000 loss=0.0310 cos=0.0310 ce=0.0312 acc=287/288 acc234=215/216
+  [V2] step 2000/2000 | hop loss (cos) 0.0229 | cos=0.0229 ce=0.0276 acc=287/288 acc234=215/216
+HL_LOSS seed=1 variant=V2 step=2000 loss=0.0229 cos=0.0229 ce=0.0276 acc=287/288 acc234=215/216
+  [V2] trained in 13.8s
+
+=== [2] Training V3 hop (funnel frozen; loss=ce, tau 0.1; pos=no): 71,104 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [V3] step    1/2000 | hop loss (ce) 4.3630 | cos=1.0385 ce=4.3630 acc=2/288 acc234=2/216
+HL_LOSS seed=1 variant=V3 step=1 loss=4.3630 cos=1.0385 ce=4.3630 acc=2/288 acc234=2/216
+  [V3] step  500/2000 | hop loss (ce) 0.0091 | cos=0.1227 ce=0.0091 acc=288/288 acc234=216/216
+HL_LOSS seed=1 variant=V3 step=500 loss=0.0091 cos=0.1227 ce=0.0091 acc=288/288 acc234=216/216
+  [V3] step 1000/2000 | hop loss (ce) 0.0077 | cos=0.1104 ce=0.0077 acc=288/288 acc234=216/216
+HL_LOSS seed=1 variant=V3 step=1000 loss=0.0077 cos=0.1104 ce=0.0077 acc=288/288 acc234=216/216
+  [V3] step 2000/2000 | hop loss (ce) 0.0064 | cos=0.1018 ce=0.0064 acc=288/288 acc234=216/216
+HL_LOSS seed=1 variant=V3 step=2000 loss=0.0064 cos=0.1018 ce=0.0064 acc=288/288 acc234=216/216
+  [V3] trained in 13.9s
+
+=== [2] Training V4 hop (funnel frozen; loss=ce, tau 0.1; pos=yes): 71,424 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [V4] step    1/2000 | hop loss (ce) 4.3798 | cos=1.0377 ce=4.3798 acc=2/288 acc234=2/216
+HL_LOSS seed=1 variant=V4 step=1 loss=4.3798 cos=1.0377 ce=4.3798 acc=2/288 acc234=2/216
+  [V4] step  500/2000 | hop loss (ce) 0.0092 | cos=0.1201 ce=0.0092 acc=288/288 acc234=216/216
+HL_LOSS seed=1 variant=V4 step=500 loss=0.0092 cos=0.1201 ce=0.0092 acc=288/288 acc234=216/216
+  [V4] step 1000/2000 | hop loss (ce) 0.0073 | cos=0.1077 ce=0.0073 acc=288/288 acc234=216/216
+HL_LOSS seed=1 variant=V4 step=1000 loss=0.0073 cos=0.1077 ce=0.0073 acc=288/288 acc234=216/216
+  [V4] step 2000/2000 | hop loss (ce) 0.0062 | cos=0.0997 ce=0.0062 acc=288/288 acc234=216/216
+HL_LOSS seed=1 variant=V4 step=2000 loss=0.0062 cos=0.0997 ce=0.0062 acc=288/288 acc234=216/216
+  [V4] trained in 14.2s
+
+=== [5] Training Premise MLP (6 laws): 246,470 params | 72 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Premise MLP (6 laws)] step   1/400 | CE 1.9945 | train acc 0.194
+  [Premise MLP (6 laws)] step 200/400 | CE 0.0000 | train acc 1.000
+  [Premise MLP (6 laws)] step 400/400 | CE 0.0000 | train acc 1.000
+
+=== [5] Training Sentence MLP (27 states): 247,835 params | 324 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Sentence MLP (27 states)] step   1/400 | CE 3.6598 | train acc 0.046
+  [Sentence MLP (27 states)] step 200/400 | CE 0.0003 | train acc 1.000
+  [Sentence MLP (27 states)] step 400/400 | CE 0.0002 | train acc 1.000
+
+======================================================================================================================================================
+=== RESULTS seed=1 | seen BR-k: 72 training chains (12 seen domains x 6 laws) | BR-k / A-k / FLIP-k: 48 unseen items (8 domains x 6 laws) | chance BR = 50% | A-k = nearest anchor of ŝk is (law, k) | FLIP-k = picks that change when s0 -> partner's s0 ===
+variant mode      sBR-2    sBR-3    sBR-4    seen    BR-2    BR-3    BR-4  unseen     A-2     A-3     A-4  FLIP-2  FLIP-3  FLIP-4
+---------------------------------------------------------------------------------------------------------------------------------
+V0      free      43/72    51/72    48/72   65.7%   27/48   28/48   31/48   59.7%   11/48    3/48   14/48    6/48   12/48   18/48
+V0      snap      43/72    32/72    37/72   51.9%   27/48   23/48   28/48   54.2%   11/48    0/48    9/48    6/48    6/48    8/48
+V1      free      72/72    72/72    72/72  100.0%   29/48   34/48   34/48   67.4%   24/48   25/48   29/48   30/48   28/48   20/48
+V1      snap      72/72    72/72    72/72  100.0%   29/48   35/48   32/48   66.7%   24/48   24/48   28/48   30/48   30/48   24/48
+V2      free      72/72    72/72    72/72  100.0%   28/48   35/48   36/48   68.8%   28/48   34/48   36/48   20/48   26/48   24/48
+V2      snap      72/72    72/72    72/72  100.0%   28/48   35/48   35/48   68.1%   28/48   31/48   33/48   20/48   26/48   22/48
+V3      free      72/72    72/72    72/72  100.0%   34/48   34/48   36/48   72.2%   31/48   31/48   37/48   32/48   28/48   24/48
+V3      snap      72/72    72/72    72/72  100.0%   34/48   35/48   34/48   71.5%   31/48   31/48   34/48   32/48   26/48   24/48
+V4      free      72/72    72/72    72/72  100.0%   34/48   40/48   38/48   77.8%   38/48   42/48   43/48   36/48   32/48   28/48
+V4      snap      72/72    72/72    72/72  100.0%   34/48   38/48   36/48   75.0%   38/48   39/48   39/48   36/48   32/48   24/48
+---------------------------------------------------------------------------------------------------------------------------------
+PREMISE-MLP       72/72    72/72    72/72  100.0%   33/48   40/48   39/48   77.8%   (PREM = predicted law correct on unseen: 43/48)
+CEIL V0           72/72    72/72    71/72   99.5%   37/48   42/48   41/48   83.3%   (true law -> anchor picker)
+CEIL stageA       72/72    72/72    72/72  100.0%   37/48   41/48   39/48   81.2%   (true law -> anchor picker)
+LAST exactly 50% at every stage (both funnels): OK
+
+=== Training losses (V0 / stageA / MLPs: steps 1, 200, 400; V1-V4 hop: steps 1, 500, 1000, 2000; train mode; acc = teacher-forced next-state class over the 27 anchors) ===
+  V0                         step    1 | total 5.6797 | dis 3.3300 (s_pull 0.067 s_push 2.170 d_pull 0.027 d_push 1.066) | hop 0.9399 | cos=0.9399 ce=3.2980 acc=19/288 acc234=3/216
+  V0                         step  200 | total 1.8556 | dis 1.3097 (s_pull 0.041 s_push 1.248 d_pull 0.001 d_push 0.020) | hop 0.2184 | cos=0.2184 ce=1.9654 acc=101/288 acc234=49/216
+  V0                         step  400 | total 1.6354 | dis 0.9483 (s_pull 0.068 s_push 0.863 d_pull 0.001 d_push 0.017) | hop 0.2748 | cos=0.2748 ce=1.3446 acc=130/288 acc234=93/216
+  stageA                     step    1 | dis 3.3300 (s_pull 0.067 s_push 2.170 d_pull 0.027 d_push 1.066)
+  stageA                     step  200 | dis 0.8598 (s_pull 0.073 s_push 0.749 d_pull 0.006 d_push 0.032)
+  stageA                     step  400 | dis 0.6368 (s_pull 0.064 s_push 0.545 d_pull 0.004 d_push 0.023)
+  V1                         step    1 | hop loss (cos) 1.0385 | cos=1.0385 ce=4.3630 acc=2/288 acc234=2/216
+  V1                         step  500 | hop loss (cos) 0.0460 | cos=0.0460 ce=0.0324 acc=287/288 acc234=215/216
+  V1                         step 1000 | hop loss (cos) 0.0327 | cos=0.0327 ce=0.0328 acc=287/288 acc234=215/216
+  V1                         step 2000 | hop loss (cos) 0.0243 | cos=0.0243 ce=0.0314 acc=286/288 acc234=214/216
+  V2                         step    1 | hop loss (cos) 1.0377 | cos=1.0377 ce=4.3798 acc=2/288 acc234=2/216
+  V2                         step  500 | hop loss (cos) 0.0469 | cos=0.0469 ce=0.0276 acc=286/288 acc234=214/216
+  V2                         step 1000 | hop loss (cos) 0.0310 | cos=0.0310 ce=0.0312 acc=287/288 acc234=215/216
+  V2                         step 2000 | hop loss (cos) 0.0229 | cos=0.0229 ce=0.0276 acc=287/288 acc234=215/216
+  V3                         step    1 | hop loss (ce) 4.3630 | cos=1.0385 ce=4.3630 acc=2/288 acc234=2/216
+  V3                         step  500 | hop loss (ce) 0.0091 | cos=0.1227 ce=0.0091 acc=288/288 acc234=216/216
+  V3                         step 1000 | hop loss (ce) 0.0077 | cos=0.1104 ce=0.0077 acc=288/288 acc234=216/216
+  V3                         step 2000 | hop loss (ce) 0.0064 | cos=0.1018 ce=0.0064 acc=288/288 acc234=216/216
+  V4                         step    1 | hop loss (ce) 4.3798 | cos=1.0377 ce=4.3798 acc=2/288 acc234=2/216
+  V4                         step  500 | hop loss (ce) 0.0092 | cos=0.1201 ce=0.0092 acc=288/288 acc234=216/216
+  V4                         step 1000 | hop loss (ce) 0.0073 | cos=0.1077 ce=0.0073 acc=288/288 acc234=216/216
+  V4                         step 2000 | hop loss (ce) 0.0062 | cos=0.0997 ce=0.0062 acc=288/288 acc234=216/216
+  Premise MLP (6 laws)       step    1 | CE 1.9945 | train acc 0.194
+  Premise MLP (6 laws)       step  200 | CE 0.0000 | train acc 1.000
+  Premise MLP (6 laws)       step  400 | CE 0.0000 | train acc 1.000
+  Sentence MLP (27 states)   step    1 | CE 3.6598 | train acc 0.046
+  Sentence MLP (27 states)   step  200 | CE 0.0003 | train acc 1.000
+  Sentence MLP (27 states)   step  400 | CE 0.0002 | train acc 1.000
+  eval-mode teacher-forced on the seen chains (dropout off):
+    V0: cos=0.2633 ce=1.3083 acc=127/288 acc234=93/216
+    V1: cos=0.0111 ce=0.0243 acc=287/288 acc234=215/216
+    V2: cos=0.0105 ce=0.0247 acc=287/288 acc234=215/216
+    V3: cos=0.0841 ce=0.0048 acc=288/288 acc234=216/216
+    V4: cos=0.0839 ce=0.0047 acc=288/288 acc234=216/216
+
+=== V0 reproduction of Lab 09 (seed 1) ===
+HL_V0REPRO seed=1 BR2=27 BR3=28 BR4=31 A2=11 A3=3 A4=14 FLIP2=6 FLIP3=12 FLIP4=18 seenBR2=43 seenBR3=51 seenBR4=48 ceilBR2=37 ceilBR3=42 ceilBR4=41 pmBR2=33 pmBR3=40 pmBR4=39 pmseenBR2=72 pmseenBR3=72 pmseenBR4=72
+[check] V0 (free) + ceiling + PREMISE-MLP vs Lab 09 seed 1: identical
+
+HL_RESULT seed=1 variant=V0 mode=free seenBR2=43 seenBR3=51 seenBR4=48 BR2=27 BR3=28 BR4=31 A2=11 FLIP2=6 A3=3 A4=14 FLIP3=12 FLIP4=18
+HL_RESULT seed=1 variant=V0 mode=snap seenBR2=43 seenBR3=32 seenBR4=37 BR2=27 BR3=23 BR4=28 A2=11 FLIP2=6 A3=0 A4=9 FLIP3=6 FLIP4=8
+HL_RESULT seed=1 variant=V1 mode=free seenBR2=72 seenBR3=72 seenBR4=72 BR2=29 BR3=34 BR4=34 A2=24 FLIP2=30 A3=25 A4=29 FLIP3=28 FLIP4=20
+HL_RESULT seed=1 variant=V1 mode=snap seenBR2=72 seenBR3=72 seenBR4=72 BR2=29 BR3=35 BR4=32 A2=24 FLIP2=30 A3=24 A4=28 FLIP3=30 FLIP4=24
+HL_RESULT seed=1 variant=V2 mode=free seenBR2=72 seenBR3=72 seenBR4=72 BR2=28 BR3=35 BR4=36 A2=28 FLIP2=20 A3=34 A4=36 FLIP3=26 FLIP4=24
+HL_RESULT seed=1 variant=V2 mode=snap seenBR2=72 seenBR3=72 seenBR4=72 BR2=28 BR3=35 BR4=35 A2=28 FLIP2=20 A3=31 A4=33 FLIP3=26 FLIP4=22
+HL_RESULT seed=1 variant=V3 mode=free seenBR2=72 seenBR3=72 seenBR4=72 BR2=34 BR3=34 BR4=36 A2=31 FLIP2=32 A3=31 A4=37 FLIP3=28 FLIP4=24
+HL_RESULT seed=1 variant=V3 mode=snap seenBR2=72 seenBR3=72 seenBR4=72 BR2=34 BR3=35 BR4=34 A2=31 FLIP2=32 A3=31 A4=34 FLIP3=26 FLIP4=24
+HL_RESULT seed=1 variant=V4 mode=free seenBR2=72 seenBR3=72 seenBR4=72 BR2=34 BR3=40 BR4=38 A2=38 FLIP2=36 A3=42 A4=43 FLIP3=32 FLIP4=28
+HL_RESULT seed=1 variant=V4 mode=snap seenBR2=72 seenBR3=72 seenBR4=72 BR2=34 BR3=38 BR4=36 A2=38 FLIP2=36 A3=39 A4=39 FLIP3=32 FLIP4=24
+HL_REF seed=1 name=premise_mlp BR2=33 BR3=40 BR4=39 PREM=43
+HL_REF seed=1 name=seen_premise_mlp BR2=72 BR3=72 BR4=72 n=72
+HL_CEIL seed=1 funnel=V0 BR2=37 BR3=42 BR4=41 seenBR2=72 seenBR3=72 seenBR4=71
+HL_CEIL seed=1 funnel=stageA BR2=37 BR3=41 BR4=39 seenBR2=72 seenBR3=72 seenBR4=72
+[lab11] total time 96.9s
