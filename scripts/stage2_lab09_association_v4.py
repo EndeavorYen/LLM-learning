@@ -404,7 +404,7 @@ RESULTS = {}
 EV_HOP = eval_head(hop_head)
 EV_RAND = eval_head(rand_head)
 RESULTS["HOP (anchor)"] = EV_HOP["hop_a"]
-RESULTS["HOP (direct cos)"] = EV_HOP["hop_d"]
+RESULTS["HOP (direct cos) [secondary]"] = EV_HOP["hop_d"]
 RESULTS["LAST"] = EV_HOP["last"]
 RESULTS["S0-RULE"] = EV_HOP["s0r"]
 print("[v4] LAST and S0-RULE use the trained HOP head's s-space and anchors", flush=True)
@@ -463,12 +463,91 @@ with torch.no_grad():
     pm = new_score()
     pm["PREM"] = sum(int(pl == L) for pl, L in zip(PM_LAW, IT_LAW))
     for k in EVAL_STAGES:
-        lg = sent_mlp(H_ALL[IT_CAND[k]])                          # (48, 2, 27)
+        # [review] log_softmax per candidate: raw logits are not comparable across two different inputs
+        lg = F.log_softmax(sent_mlp(H_ALL[IT_CAND[k]]), dim=-1)  # (48, 2, 27)
         col = _t([cls_of(l, k) for l in PM_LAW])                   # (48,)
         sc2 = lg.gather(2, col.view(-1, 1, 1).expand(-1, 2, 1)).squeeze(-1)  # (48, 2): logit of class (pred law, k)
         p = CAND_LAWS_T.gather(1, sc2.argmax(-1, keepdim=True)).squeeze(1)
         pm[f"BR{k}"] = int((p == IT_LAW_T).sum().item())
 RESULTS["PREMISE-MLP"] = pm
+
+
+# ==============================================================================
+# [4b] Diagnostics requested by the independent review (secondary; not part of the registered criteria)
+# ==============================================================================
+DIAG = {}
+
+
+@torch.no_grad()
+def anchor_picker(head, laws):
+    """BR-k when the law is given by `laws` and the candidate is chosen with the HOP head's anchor picker."""
+    _d, S = head.extract_ds(H_ALL)
+    anchors = F.normalize(CLS_OH.T @ S[SEEN_G] / CLS_OH.sum(0).unsqueeze(-1), p=2, dim=-1)
+    out = new_score()
+    for k in EVAL_STAGES:
+        tgt = anchors[_t([cls_of(l, k) for l in laws])]
+        out[f"BR{k}"] = int((pick_by(tgt, S[IT_CAND[k]]) == IT_LAW_T).sum().item())
+    return out
+
+
+@torch.no_grad()
+def mlp_picker(laws):
+    """BR-k when the law is given by `laws` and the candidate is chosen with the sentence MLP (log-probs)."""
+    out = new_score()
+    for k in EVAL_STAGES:
+        lg = F.log_softmax(sent_mlp(H_ALL[IT_CAND[k]]), dim=-1)
+        col = _t([cls_of(l, k) for l in laws])
+        sc2 = lg.gather(2, col.view(-1, 1, 1).expand(-1, 2, 1)).squeeze(-1)
+        out[f"BR{k}"] = int((CAND_LAWS_T.gather(1, sc2.argmax(-1, keepdim=True)).squeeze(1) == IT_LAW_T).sum().item())
+    return out
+
+
+DIAG["premise-law -> anchor picker"] = anchor_picker(hop_head, PM_LAW)   # separates law inference from picking
+DIAG["true law -> anchor picker"] = anchor_picker(hop_head, IT_LAW)      # ceiling of the anchor picker
+DIAG["true law -> MLP picker"] = mlp_picker(IT_LAW)                       # ceiling of the sentence-MLP picker
+
+
+@torch.no_grad()
+def seen_domain_br():
+    """BR-k on the SEEN domains (training data): distinguishes 'did not learn' from 'does not generalise'."""
+    _d, S = hop_head.extract_ds(H_ALL)
+    Ss = S[SEEN_G]
+    anchors = F.normalize(CLS_OH.T @ Ss / CLS_OH.sum(0).unsqueeze(-1), p=2, dim=-1)
+    items = [(di, law) for di in range(N_SEEN_DOM) for law in range(N_LAWS)]
+    s0 = Ss[_t([SEEN_POS[(di, law, 0)] for (di, law) in items])]
+    s1 = Ss[_t([SEEN_POS[(di, law, 1)] for (di, law) in items])]
+    true = _t([law for (_di, law) in items])
+    cl = _t([list(PAIRS[PAIR_OF[law]]) for (_di, law) in items])
+    hats = rollout(hop_head, s0, s1)
+    pl = prem_mlp(H_PREM_SEEN).argmax(-1).tolist()  # PREM_SEEN is ordered (domain, law) like `items`
+    hop_sc, pm_sc = new_score(), new_score()
+    for k in EVAL_STAGES:
+        cand_rows = _t([[SEEN_POS[(di, c, k)] for c in PAIRS[PAIR_OF[law]]] for (di, law) in items])
+        cand = Ss[cand_rows]
+        near = (hats[k] @ anchors.T).argmax(-1)
+        j = (cand @ anchors[near].unsqueeze(-1)).squeeze(-1).argmax(-1)
+        hop_sc[f"BR{k}"] = int((cl.gather(1, j.unsqueeze(1)).squeeze(1) == true).sum().item())
+        lg = F.log_softmax(sent_mlp(H_SEEN[cand_rows]), dim=-1)
+        col = _t([cls_of(l, k) for l in pl])
+        sc2 = lg.gather(2, col.view(-1, 1, 1).expand(-1, 2, 1)).squeeze(-1)
+        pm_sc[f"BR{k}"] = int((cl.gather(1, sc2.argmax(-1, keepdim=True)).squeeze(1) == true).sum().item())
+    return hop_sc, pm_sc, len(items)
+
+
+SEEN_HOP, SEEN_PM, N_SEEN_ITEMS = seen_domain_br()
+
+
+@torch.no_grad()
+def eval_mode_hop_loss(head):
+    """Teacher-forced hop loss on the seen chains in eval mode (should match the last training values)."""
+    head.eval()
+    _d, s = head.extract_ds(H_SEEN)
+    s_ch = s[HOP_IDX]
+    pred = head.hop_law(s_ch[:, :-1, :])
+    return float((1.0 - (pred * s_ch[:, 1:, :]).sum(-1)).mean().item())
+
+
+EVAL_HOP_LOSS = eval_mode_hop_loss(hop_head)
 
 
 # ==============================================================================
@@ -514,7 +593,7 @@ RESULTS["Qwen zero-shot"] = eval_lm("", "Qwen zero-shot")
 RESULTS["Qwen few-shot"] = eval_lm(FEWSHOT_PREFIX, "Qwen few-shot")
 
 RESULTS["RANDOM HOP (anchor)"] = EV_RAND["hop_a"]
-RESULTS["RANDOM HOP (direct cos)"] = EV_RAND["hop_d"]
+RESULTS["RANDOM HOP (direct cos) [secondary]"] = EV_RAND["hop_d"]
 
 
 # ==============================================================================
@@ -578,9 +657,20 @@ print("          " + " ".join(f"{clbl(c):>8}" for c in range(N_CLS)), flush=True
 for i in range(N_CLS):
     print(f"  {clbl(i):>8} " + " ".join(f"{_gram[i, j]:>8.2f}" for j in range(N_CLS)), flush=True)
 
-METHOD_TAGS = {"HOP (anchor)": "hop", "HOP (direct cos)": "hop_direct", "LAST": "last", "S0-RULE": "s0_rule",
+print("\n=== [review] diagnostics (secondary; not in the registered criteria) ===", flush=True)
+for name, sc in DIAG.items():
+    print(f"  {name:<32} BR2={cell(sc['BR2'])} BR3={cell(sc['BR3'])} BR4={cell(sc['BR4'])} mean {pct_mean(sc, ['BR2', 'BR3', 'BR4'])}", flush=True)
+print(f"  seen-domain BR (training data, {N_SEEN_ITEMS} items): HOP " + " ".join(f"BR{k}={SEEN_HOP[f'BR{k}']}/{N_SEEN_ITEMS}" for k in EVAL_STAGES)
+      + " | PREMISE-MLP " + " ".join(f"BR{k}={SEEN_PM[f'BR{k}']}/{N_SEEN_ITEMS}" for k in EVAL_STAGES), flush=True)
+print(f"  eval-mode teacher-forced hop loss on seen chains: {EVAL_HOP_LOSS:.4f}", flush=True)
+for name, sc in DIAG.items():
+    print(f"V4_DIAG seed={SEED} name={name.replace(' ', '_')} BR2={sc['BR2']} BR3={sc['BR3']} BR4={sc['BR4']}", flush=True)
+print(f"V4_DIAG seed={SEED} name=seen_hop " + " ".join(f"BR{k}={SEEN_HOP[f'BR{k}']}" for k in EVAL_STAGES) + f" n={N_SEEN_ITEMS}", flush=True)
+print(f"V4_DIAG seed={SEED} name=seen_premise_mlp " + " ".join(f"BR{k}={SEEN_PM[f'BR{k}']}" for k in EVAL_STAGES) + f" n={N_SEEN_ITEMS}", flush=True)
+
+METHOD_TAGS = {"HOP (anchor)": "hop", "HOP (direct cos) [secondary]": "hop_direct", "LAST": "last", "S0-RULE": "s0_rule",
                "PREMISE-MLP": "premise_mlp", "Qwen zero-shot": "qwen_zeroshot", "Qwen few-shot": "qwen_fewshot",
-               "RANDOM HOP (anchor)": "random_hop", "RANDOM HOP (direct cos)": "random_hop_direct"}
+               "RANDOM HOP (anchor)": "random_hop", "RANDOM HOP (direct cos) [secondary]": "random_hop_direct"}
 print("", flush=True)
 for name, sc in RESULTS.items():
     print(f"V4_RESULT seed={SEED} method={METHOD_TAGS[name]} BR2={sc['BR2']} BR3={sc['BR3']} BR4={sc['BR4']} "
