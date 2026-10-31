@@ -50,9 +50,13 @@ print(f"[v5] python {sys.version.split()[0]} | torch {torch.__version__} | numpy
       f"transformers {getattr(transformers, '__version__', '?')} ({getattr(transformers, '__file__', '?')})", flush=True)
 try:
     with open(os.path.abspath(__file__), "rb") as _f:
-        print(f"[v5] script sha256={hashlib.sha256(_f.read()).hexdigest()}", flush=True)
+        SCRIPT_SHA256 = hashlib.sha256(_f.read()).hexdigest()
 except (NameError, OSError):
-    print("[v5] script sha256=unavailable (no __file__)", flush=True)
+    SCRIPT_SHA256 = "unavailable"  # e.g. executed through a notebook kernel; the runner records the repo file's sha
+print(f"[v5] script sha256={SCRIPT_SHA256}", flush=True)
+ENV_TAG = f"torch={torch.__version__},transformers={getattr(transformers, '__version__', '?')},device={DEVICE}"
+if DEVICE == "cuda":
+    ENV_TAG += f",gpu={torch.cuda.get_device_name(0).replace(' ', '_')}"
 
 
 def seed_all(seed: int = SEED):
@@ -131,6 +135,9 @@ DATA = json.loads(_DATA_RAW.decode("utf-8"))
 DATA_SHA256 = hashlib.sha256(_DATA_RAW).hexdigest()
 print(f"[v5] data = {DATA_PATH} ({DATA.get('version')}) sha256={DATA_SHA256}", flush=True)
 assert DATA.get("version") == "analogy_v5", DATA.get("version")  # [lab12]
+# [review S3] pin the exact file that passed the lexical check and the blind judgement (144/144)
+EXPECTED_DATA_SHA256 = "d2a9e877595829b4ff1560be90cd04739acdb11be782b14a067c4b9c4d24f196"
+assert DATA_SHA256 == EXPECTED_DATA_SHA256, f"analogy_v5.json is not the registered file: {DATA_SHA256}"
 
 N_LAWS, N_STAGES, EVAL_STAGES = 6, 5, (2, 3, 4)
 assert len(DATA["laws"]) == N_LAWS
@@ -297,6 +304,8 @@ qwen_base = AutoModelForCausalLM.from_pretrained(MODEL_ID, dtype=torch.bfloat16,
 qwen_base.eval()
 for p in qwen_base.parameters():
     p.requires_grad = False
+_P0 = next(qwen_base.parameters(), None)  # [review N5] (the CPU test stub has no parameters and a FAKE version)
+assert (_P0 is not None and _P0.dtype == torch.bfloat16) or "FAKE" in getattr(transformers, "__version__", "")
 H_DIM = qwen_base.config.hidden_size  # 896
 print(f"Loaded in {time.time()-t0:.1f}s | hidden={H_DIM} | layers={qwen_base.config.num_hidden_layers}", flush=True)
 
@@ -312,8 +321,17 @@ def extract_qwen_896_feature(text_list):
     return pooled_896  # (B, 896) float32
 
 
-H_ALL = torch.cat([extract_qwen_896_feature(ALL_TEXTS[i:i + 64]) for i in range(0, len(ALL_TEXTS), 64)], dim=0)
-assert H_ALL.shape == (len(ALL_TEXTS), H_DIM)
+# [review N3] unseen-domain texts and training texts are never in the same padded batch, so no training feature
+# depends on an unseen text even at bf16 rounding level (padding length).
+_FORBID_IDX = [i for i, t in enumerate(ALL_TEXTS) if t in FORBIDDEN]
+_TRAIN_IDX = [i for i, t in enumerate(ALL_TEXTS) if t not in FORBIDDEN]
+H_ALL = torch.empty(len(ALL_TEXTS), H_DIM, dtype=torch.float32, device=DEVICE)
+for _grp in (_TRAIN_IDX, _FORBID_IDX):
+    for i in range(0, len(_grp), 64):
+        _ix = _grp[i:i + 64]
+        H_ALL[torch.tensor(_ix, device=DEVICE)] = extract_qwen_896_feature([ALL_TEXTS[j] for j in _ix])
+assert H_ALL.shape == (len(ALL_TEXTS), H_DIM) and len(_FORBID_IDX) + len(_TRAIN_IDX) == len(ALL_TEXTS)
+assert bool(torch.isfinite(H_ALL).all())
 SEEN_G = torch.tensor([g for (g, _d, _c) in SEEN], device=DEVICE)
 H_SEEN = H_ALL[SEEN_G]  # (N_SEEN_SENT, 896): the only sentence features that enter a head / sentence-MLP loss
 PREM_SEEN_G = torch.tensor([g for (g, _d, _l) in PREM_SEEN], device=DEVICE)
@@ -678,12 +696,12 @@ def eval_rules(head):
             sc[f"BR{k}"] = n_correct(pick_by(tgt, cand))
     # [lab12] DEC. S0-RULE: cos(s0, anchor(a,0)) vs cos(s0, anchor(b,0)), ties -> a (the same decision for every k).
     s0_dec = pick_by(s0, anchors[IT_DEC_CLS[0]])
-    # LAST: s1's class (pair, 1) is shared by a and b (asserted for IT_DEC_CLS[1]) -> no branch information,
-    # tie rule -> always a.
-    last_dec = CAND_LAWS_T[:, 0]
+    # LAST: [review S4] the hop DEC rule with ŝk replaced by s1: cos(s1, anchor(a,k)) vs cos(s1, anchor(b,k)).
+    # Both items of a (domain, pair) share s1 and the pair-ordered anchors, so this is exactly 50% only if the
+    # DEC indexing (IT_DEC_CLS) is right -- an (L, partner) ordering bug would show up as 0% or 100%.
     for k in EVAL_STAGES:
         s0r[f"DEC{k}"] = n_correct(s0_dec)
-        last[f"DEC{k}"] = n_correct(last_dec)
+        last[f"DEC{k}"] = n_correct(pick_by(s1, anchors[IT_DEC_CLS[k]]))
     return dict(last=last, s0r=s0r, n1=n1, s0_law=s0_law, s0_dec=s0_dec.tolist())
 
 
@@ -925,8 +943,7 @@ def eval_lm(prefix: str, tag: str):
             j = 0 if lp[0] >= lp[1] else 1
             sc[f"BR{k}"] += int(CAND_LAWS[i][j] == law)
             prompt = prompt + cands[j]  # next stage conditioned on the method's own pick
-    for k in EVAL_STAGES:
-        sc[f"DEC{k}"] = sc[f"BR{k}"]  # [lab12]
+    # [review N2] DEC is defined independently of the candidate sentences; the LM has no such decision -> n/a (-1)
     print(f"[v5] {tag}: BR2={sc['BR2']}/{N_ITEMS} BR3={sc['BR3']}/{N_ITEMS} BR4={sc['BR4']}/{N_ITEMS}", flush=True)
     return sc
 
@@ -956,7 +973,10 @@ METHODS = [  # (machine tag, label)
 ]
 assert [m for m, _ in METHODS] == list(RESULTS), list(RESULTS)
 for _m, _ in METHODS:
-    assert all(0 <= RESULTS[_m][k] <= N_ITEMS for k in ("BR2", "BR3", "BR4", "DEC2", "DEC3", "DEC4")), _m
+    assert all(0 <= RESULTS[_m][k] <= N_ITEMS for k in ("BR2", "BR3", "BR4")), _m
+    # [review N2] the LM has no candidate-independent decision -> DEC = -1 (n/a); every other method has DEC
+    _dec_ok = (lambda v: v == -1) if _m.startswith("qwen_") else (lambda v: 0 <= v <= N_ITEMS)
+    assert all(_dec_ok(RESULTS[_m][k]) for k in ("DEC2", "DEC3", "DEC4")), _m
 
 
 def cell(v, n=N_ITEMS):
@@ -1032,7 +1052,8 @@ for tag, step, msg in LOSS_LOG:
 
 print("", flush=True)
 print_override_banner()
-print(f"V5_CONFIG seed={SEED} variant={VARIANT} mode={MODE} override={int(OVERRIDE)}", flush=True)
+print(f"V5_CONFIG seed={SEED} variant={VARIANT} mode={MODE} override={int(OVERRIDE)} data_sha={DATA_SHA256[:16]} "
+      f"script_sha={SCRIPT_SHA256[:16]} env={ENV_TAG}", flush=True)
 for m, _label in METHODS:
     sc = RESULTS[m]
     print(f"V5_RESULT seed={SEED} method={m} " + " ".join(f"{k}={sc[k]}" for k in SCORE_KEYS), flush=True)
