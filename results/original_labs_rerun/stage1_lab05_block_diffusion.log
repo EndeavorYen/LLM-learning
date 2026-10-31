@@ -1,0 +1,43 @@
+=== [1] Training Block-Diffusion MiniMind (Complementary Masking + Block Expansion + Local Surgery) ===
+  Step   1/300 | Total Loss: 26.7500 | Block Token Coverage (m1 U m2): 100.0%
+  Step 100/300 | Total Loss: 0.2656 | Block Token Coverage (m1 U m2): 100.0%
+  Step 200/300 | Total Loss: 0.1094 | Block Token Coverage (m1 U m2): 100.0%
+  Step 300/300 | Total Loss: 0.1040 | Block Token Coverage (m1 U m2): 100.0%
+
+=== [Benchmark A] Problem 2 Solved: Dynamic Block Expansion (+8 Slots) + [□] Placeholder Auto-Stop ===
+
+[Short Sentence (1 Block = 8 slots)] Prompt: '地球是太阳系' -> Expanded 1 time(s) (8 slots total):
+  Block 1 (+8 slots): Step 1: 中的[▓][▓][▓][▓][▓][□][□]  -->  Step 3 (Final): 中的一颗行星。[□][□]
+  => Auto-Stopped on [□]! Final Output: 地球是太阳系中的一颗行星。
+
+[Medium Sentence (2 Blocks = 16 slots)] Prompt: '机器学习通过' -> Expanded 2 time(s) (16 slots total):
+  Block 1 (+8 slots): Step 1: 算法[▓]计算机从[▓][▓][▓][▓]  -->  Step 3 (Final): 算法让计算机从海量数据中
+  Block 2 (+8 slots): Step 1: [▓][▓][▓][▓][▓][□][□][□]  -->  Step 3 (Final): 自动学习规律。[□][□][□]
+  => Auto-Stopped on [□]! Final Output: 机器学习通过算法让计算机从海量数据中自动学习规律。
+
+[Long Sentence (4 Blocks = 32 slots)] Prompt: '因为太阳光进入' -> Expanded 4 time(s) (32 slots total):
+  Block 1 (+8 slots): Step 1: [▓][▓][▓][▓]，[▓]光的�  -->  Step 3 (Final): 大气层时，蓝光的�
+  Block 2 (+8 slots): Step 1: [▓][▓][▓]短，容易[▓][▓]  -->  Step 3 (Final): �长比较短，容易被空气
+  Block 3 (+8 slots): Step 1: [▓]散[▓]，[▓][▓][▓]的  -->  Step 3 (Final): 分子散射，所以我们看到的
+  Block 4 (+8 slots): Step 1: [▓][▓][▓]蓝色的[▓][▓]  -->  Step 3 (Final): 天空是蓝色的[□][□]
+  => Auto-Stopped on [□]! Final Output: 因为太阳光进入大气层时，蓝光的波长比较短，容易被空气分子散射，所以我们看到的天空是蓝色的
+
+=== [Benchmark B] Photoshop-Style Local Text Surgery: Modify (修改) / Expand (擴展) / Remove & Heal (移除與縫合) ===
+1. [局部修改 Modify] Changed ending from reading books to cleaning teeth, masked location:
+   Before : 周末下午我特地去了一��[▓][▓][▓][▓]，请专业医生帮我检查牙��并清理了牙结石。
+   After  : 周末下午我特地去了一趟牙科诊所，请专业医生帮我检查牙齿并清理了牙结石。
+
+2. [局部擴展 Expand] Inserted +16 [▓] slots into short skeleton sentence (15 needed, 1 excess -> [□]):
+   Skeleton : 因为太阳光进入大气层时， + [16x ▓] + 所以我们看到的天空是蓝色的。
+   Step 1   : 因为太阳光进入大气层时，蓝光[▓]�[▓][▓]短，[▓][▓][▓][▓][▓][▓][▓][▓]所以我们看到的天空是蓝色的。
+   Step 3   : 因为太阳光进入大气层时，蓝光的��长比较短，容易被空气分子散射，[□]所以我们看到的天空是蓝色的。
+   Collapsed: 因为太阳光进入大气层时，蓝光的波长比较短，容易被空气分子散射，所以我们看到的天空是蓝色的。
+
+3. [局部移除與縫合 Remove & Heal] Deleted middle supermarket trip + apples/milk, left 4 [▓] healing slots:
+   Cut Seam : 周末下午我[▓][▓][▓][▓]面包准备做早餐。
+   Healed   : 周末下午我买了新鲜的面包准备做早餐。
+
+=== [Benchmark C] Problem 3 Solved: Block Diffusion (With KV-Cache) vs Full-Canvas Diffusion on Long Contexts ===
+  Context= 256 + Gen=32 | Full-Canvas (No Cache):  179.2 ms ( 4320 theoretical tok-passes) | Block-Diffusion (KV-Cache):  200.9 ms ( 384 theoretical tok-passes) -> Full/Block time ratio 0.89x
+  Context=1024 + Gen=32 | Full-Canvas (No Cache):  477.5 ms (15840 theoretical tok-passes) | Block-Diffusion (KV-Cache):  222.2 ms (1152 theoretical tok-passes) -> Full/Block time ratio 2.15x
+  Context=2048 + Gen=32 | Full-Canvas (No Cache): 1186.8 ms (31200 theoretical tok-passes) | Block-Diffusion (KV-Cache):  267.6 ms (2176 theoretical tok-passes) -> Full/Block time ratio 4.44x

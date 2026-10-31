@@ -11,12 +11,33 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 sys.path.insert(0, '/content/minimind')
 os.makedirs('/content/minimind/out', exist_ok=True)
 
 from transformers import AutoTokenizer
 from model.model_minimind import MiniMindConfig, MiniMindForCausalLM
+
+import re as _re
+_PUNCT = "，。,.；;：:！!？?"
+def norm_text(s: str) -> str:
+    """[audit #16] whitespace-free, full/half-width punctuation unified."""
+    s = _re.sub(r"\s+", "", s or "")
+    return s.replace(",", "，").replace(".", "。").replace(";", "；").replace(":", "：").replace("!", "！").replace("?", "？")
+def first_clause(s: str) -> str:
+    """[audit #16] text up to and including the first clause-ending punctuation (，。；！？)."""
+    s = norm_text(s)
+    m = _re.search(r"[，。；！？]", s)
+    return s[: m.end()] if m else s
+def clause_match(pred: str, gt: str) -> bool:
+    """[audit #16] full-clause exact match (replaces the old first-5/6-character substring test)."""
+    return first_clause(pred) == norm_text(gt)
+def exact_answer_match(pred: str, gt: str) -> bool:
+    """[audit #16] rote answers: prediction must start with the answer and then stop or hit punctuation."""
+    p, g = norm_text(pred), norm_text(gt)
+    return p.startswith(g) and (len(p) == len(g) or p[len(g)] in _PUNCT)
 
 tokenizer = AutoTokenizer.from_pretrained('/content/minimind/model')
 MASK_ID = 3
@@ -152,13 +173,6 @@ class EntropyGatedDualBrainMiniMind(nn.Module):
                         canvas[b, idx] = pred[b, idx]
         return canvas
 
-SLOT_LEN = 12
-def pad_slot(txt, length=SLOT_LEN):
-    ids = tokenizer(txt, add_special_tokens=False).input_ids[:length]
-    val = [1]*len(ids) + [0]*(length - len(ids))
-    pad = ids + [SLOT_PAD_ID]*(length - len(ids))
-    return torch.tensor([pad], device='cuda'), torch.tensor([val], device='cuda')
-
 rote_memories = [
     ("请问妈妈的手机号码是？", "0912-888-168"),
     ("请问妈妈的家里电话是？", "02-2345-6789"),
@@ -189,10 +203,36 @@ domains_data = [
     ])
 ]
 
-PROMPT_PAD_LEN = 18
-def pad_prompt(txt):
-    ids = [BOS_ID] + tokenizer(txt, add_special_tokens=False).input_ids[:PROMPT_PAD_LEN - 1]
-    ids = [SLOT_PAD_ID]*(PROMPT_PAD_LEN - len(ids)) + ids
+# [audit #13] Lengths are derived from the data. The original hardcoded SLOT_LEN = 12 and
+# PROMPT_LEN = 16/18 silently truncated targets (e.g. "当血管壁堆积胆固醇变窄时，" is 18 tokens)
+# and premises (c0 + c1 is 23-27 tokens). Measured token lengths are listed in issue #13.
+def _tok_len(txt):
+    return len(tokenizer(txt, add_special_tokens=False).input_ids)
+_slot_texts = ([a for _, a in rote_memories]  # questions only ever go through pad_prompt here
+               + [c for _, _, cl in domains_data for pair in cl for c in pair])
+_prompt_texts = ([q for q, _ in rote_memories]
+                 + [cl[0][0] + cl[1][0] for _, _, cl in domains_data])
+SLOT_LEN = max(_tok_len(t) for t in _slot_texts) + 1      # +1 so every slot can end with [□]
+PROMPT_LEN = max(_tok_len(t) for t in _prompt_texts) + 1  # +1 for BOS
+AR_MAX_NEW_TOKENS = SLOT_LEN                              # AR may emit the longest answer in full
+print(f"[audit #13] SLOT_LEN={SLOT_LEN} PROMPT_LEN={PROMPT_LEN} AR_MAX_NEW_TOKENS={AR_MAX_NEW_TOKENS}", flush=True)
+
+def pad_slot(txt, length=None):
+    length = SLOT_LEN if length is None else length
+    ids = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(ids) > length:
+        raise ValueError(f"[audit #13] pad_slot would truncate {len(ids)} tokens to {length}: {txt!r}")
+    val = [1]*len(ids) + [0]*(length - len(ids))
+    pad = ids + [SLOT_PAD_ID]*(length - len(ids))
+    return torch.tensor([pad], device='cuda'), torch.tensor([val], device='cuda')
+
+def pad_prompt(txt, length=None):
+    length = PROMPT_LEN if length is None else length
+    body = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(body) + 1 > length:
+        raise ValueError(f"[audit #13] pad_prompt would truncate {len(body) + 1} tokens to {length}: {txt!r}")
+    ids = [BOS_ID] + body
+    ids = [SLOT_PAD_ID]*(length - len(ids)) + ids
     return torch.tensor([ids], device='cuda')
 
 rote_tensors = [(pad_prompt(q), pad_slot(a)[0], q, a) for q, a in rote_memories]
@@ -205,6 +245,17 @@ for d_name, train_c, clauses in domains_data:
         c_list.append((dt, dv, ct, cv))
     dom_tensors.append((d_name, train_c, c_list))
 
+# [audit #14] Explicit (domain, stage) index list of clauses allowed in ANY loss: every stage of a seen
+# domain, but only the premise stages (0, 1) of an unseen domain. Stage 2/3 of unseen domains (both the
+# detailed and the concise style) are held out of render, disentangle and hop losses.
+allowed_keys = [(di, sj) for di, (_, train_c, c_list) in enumerate(dom_tensors)
+                for sj in range(len(c_list)) if train_c or sj < 2]
+key2row = {k: r for r, k in enumerate(allowed_keys)}
+seen_doms = [di for di, (_, train_c, _) in enumerate(dom_tensors) if train_c]
+N_DOM = len(dom_tensors)
+N_STAGE = len(dom_tensors[0][2])
+N_HELD_OUT = N_DOM * N_STAGE - len(allowed_keys)
+
 cfg = MiniMindConfig(hidden_size=512, num_hidden_layers=8, use_moe=False)
 torch.manual_seed(42)
 model = EntropyGatedDualBrainMiniMind(cfg, slot_len=SLOT_LEN).cuda().bfloat16()
@@ -212,6 +263,8 @@ opt = torch.optim.AdamW(model.parameters(), lr=3e-4, weight_decay=0.01)
 
 print("=== [1] Training Entropy-Gated Dual-Brain MiniMind (With Orthogonal State Repulsion s_i _|_ s_j) ===", flush=True)
 STEPS = 220
+print(f"[audit #14] held out {N_HELD_OUT} unseen answer clauses from every loss "
+      f"({2 * N_HELD_OUT} strings incl. detailed + concise styles)", flush=True)
 model.train()
 for step in range(1, STEPS + 1):
     lr = 3e-5 + 0.5 * (3e-4 - 3e-5) * (1 + math.cos(math.pi * step / STEPS))
@@ -233,9 +286,9 @@ for step in range(1, STEPS + 1):
     loss_s1 = F.cross_entropy(s1_logits.reshape(-1, s1_logits.size(-1)), l_batch.reshape(-1), ignore_index=-100)
 
     all_dt, all_dv, all_ct, all_cv = [], [], [], []
-    for _, _, c_list in dom_tensors:
-        for dt, dv, ct, cv in c_list:
-            all_dt.append(dt[0]); all_dv.append(dv[0]); all_ct.append(ct[0]); all_cv.append(cv[0])
+    for di, sj in allowed_keys:  # [audit #14] only allowed clauses are encoded / trained
+        dt, dv, ct, cv = dom_tensors[di][2][sj]
+        all_dt.append(dt[0]); all_dv.append(dv[0]); all_ct.append(ct[0]); all_cv.append(cv[0])
 
     b_dt = torch.stack(all_dt, dim=0); b_dv = torch.stack(all_dv, dim=0)
     b_ct = torch.stack(all_ct, dim=0); b_cv = torch.stack(all_cv, dim=0)
@@ -246,35 +299,42 @@ for step in range(1, STEPS + 1):
     d_mean = F.normalize(d_det + d_con, p=2, dim=-1)
     s_mean = F.normalize(s_det + s_con, p=2, dim=-1)
 
-    d_grid = d_mean.view(3, 4, -1)
-    s_grid = s_mean.view(3, 4, -1)
+    # [audit #14] explicit index lookup instead of .view(3, 4, D); pairs touching a held-out clause are skipped
+    def _d(di, sj): return d_mean[key2row[(di, sj)]]
+    def _s(di, sj): return s_mean[key2row[(di, sj)]]
+    def _ok(*keys): return all(k in key2row for k in keys)
 
     # 1. Domain invariance within each domain & orthogonality across different domains
-    for dom_i in range(3):
-        for st_j in range(1, 4):
-            loss_dis = loss_dis + (1.0 - (d_grid[dom_i, 0] * d_grid[dom_i, st_j]).sum())
-    for d_a in range(3):
-        for d_b in range(d_a + 1, 3):
-            loss_dis = loss_dis + F.relu((d_grid[d_a, 0] * d_grid[d_b, 0]).sum() + 0.1)
+    for dom_i in range(N_DOM):
+        for st_j in range(1, N_STAGE):
+            if _ok((dom_i, 0), (dom_i, st_j)):
+                loss_dis = loss_dis + (1.0 - (_d(dom_i, 0) * _d(dom_i, st_j)).sum())
+    for d_a in range(N_DOM):
+        for d_b in range(d_a + 1, N_DOM):
+            loss_dis = loss_dis + F.relu((_d(d_a, 0) * _d(d_b, 0)).sum() + 0.1)
 
     # 2. Structural isomorphism across domains (state j is the same across Water, Highway, Blood)
     #    PLUS State Orthogonality (state i != state j must be orthogonal so s_1..s_4 NEVER collapse!)
-    for st_j in range(4):
-        loss_dis = loss_dis + (1.0 - (s_grid[0, st_j] * s_grid[1, st_j]).sum()) + (1.0 - (s_grid[0, st_j] * s_grid[2, st_j]).sum())
-    for st_a in range(4):
-        for st_b in range(st_a + 1, 4):
-            for dom_i in range(3):
-                loss_dis = loss_dis + F.relu((s_grid[dom_i, st_a] * s_grid[dom_i, st_b]).sum() + 0.1)
+    for st_j in range(N_STAGE):
+        for dom_o in range(1, N_DOM):
+            if _ok((0, st_j), (dom_o, st_j)):
+                loss_dis = loss_dis + (1.0 - (_s(0, st_j) * _s(dom_o, st_j)).sum())
+    for st_a in range(N_STAGE):
+        for st_b in range(st_a + 1, N_STAGE):
+            for dom_i in range(N_DOM):
+                if _ok((dom_i, st_a), (dom_i, st_b)):
+                    loss_dis = loss_dis + F.relu((_s(dom_i, st_a) * _s(dom_i, st_b)).sum() + 0.1)
 
     # 3. Train Structural Hopping ONLY on Domain 0 (Water) and Domain 1 (Highway)! NEVER on Domain 2 (Blood)!
-    s_seen = s_grid[:2, :, :]
+    s_seen = torch.stack([torch.stack([_s(di, sj) for sj in range(N_STAGE)]) for di in seen_doms])  # [audit #14]
     pred_s_next = model.forward_struct_hop(s_seen[:, :-1, :])
     tgt_s_next = s_seen[:, 1:, :].detach()
     loss_hop = (1.0 - (pred_s_next * tgt_s_next).sum(dim=-1)).mean()
 
-    # 4. Train System 2 Thought-to-Language Block-Diffusion Mapper on all 12 concepts (Detailed & Concise)
+    # 4. Train System 2 Thought-to-Language Block-Diffusion Mapper on the allowed concepts (Detailed & Concise)
+    #    [audit #14] was all 12 concepts, which leaked the unseen stage-2/3 sentences into the render loss
     s2_d, s2_s, s2_st, s2_canv, s2_lbl = [], [], [], [], []
-    for idx in range(12):
+    for idx in range(len(allowed_keys)):
         for st_tok, tgt_row in ((STYLE_DETAILED_ID, b_dt[idx]), (STYLE_CONCISE_ID, b_ct[idx])):
             for m in (torch.rand(SLOT_LEN, device='cuda') < 0.5, torch.ones(SLOT_LEN, dtype=torch.bool, device='cuda')):
                 if not m.any(): m[0] = True
@@ -318,6 +378,11 @@ test_queries = [
     ("UNSEEN Medical Analogy", "血液在血管中正常循环，当血管壁堆积胆固醇变窄时，", ("血液在血管中正常循环，", "当血管壁堆积胆固醇变窄时，"))
 ]
 
+# [audit #16] ground truth for scoring: rote answers by prompt, held-out stage-2 clause (both styles) for unseen
+rote_gt = dict(rote_memories)
+_unseen_clauses = [cl for _, train_c, cl in domains_data if not train_c][0]
+UNSEEN_GT_DET, UNSEEN_GT_CON = _unseen_clauses[2]
+
 for tag, q_txt, clauses_pair in test_queries:
     p_tensor = pad_prompt(q_txt)
     min_conf, fast_canvas = model.probe_muscle_memory_confidence(p_tensor, steps=2)
@@ -327,6 +392,17 @@ for tag, q_txt, clauses_pair in test_queries:
         print(f"[{tag}] Prompt: '{q_txt}'", flush=True)
         print(f"  -> Router : {route_decision}", flush=True)
         print(f"  -> Output : {final_answer}", flush=True)
+        if q_txt in rote_gt:  # [audit #16] score the fast path with exact_answer_match
+            print(f"  -> exact_answer_match vs '{rote_gt[q_txt]}': {exact_answer_match(final_answer, rote_gt[q_txt])}", flush=True)
+        else:
+            print(f"  -> clause_match vs held-out stage-2 '{UNSEEN_GT_DET}': {clause_match(final_answer, UNSEEN_GT_DET)}", flush=True)
+    elif clauses_pair is None:
+        # [audit #16] a familiar prompt fell below threshold; no premise clauses to run the thought layer on
+        final_answer = clean_str(fast_canvas[0])
+        print(f"[{tag}] Prompt: '{q_txt}'", flush=True)
+        print(f"  -> Router : below threshold (Weakest-Token Confidence={min_conf*100:5.1f}%), no thought-layer clauses -> fast-path output kept", flush=True)
+        print(f"  -> Output : {final_answer}", flush=True)
+        print(f"  -> exact_answer_match vs '{rote_gt[q_txt]}': {exact_answer_match(final_answer, rote_gt[q_txt])}", flush=True)
     else:
         route_decision = f"🧠 [ESCALATE TO THOUGHT LAYER!] (Weakest-Token Confidence={min_conf*100:5.1f}% < {CONF_THRESHOLD*100:.0f}% -> Hesitation Detected!)"
         blind_guess = clean_str(fast_canvas[0])
@@ -341,6 +417,12 @@ for tag, q_txt, clauses_pair in test_queries:
         print(f"  -> (What Blind Muscle-Memory Would Have Hallucinated: '{blind_guess}')", flush=True)
         print(f"  -> Thought Layer Zero-Shot Analogy (Detailed): {det_ans}", flush=True)
         print(f"  -> Thought Layer Zero-Shot Analogy (Concise ): {con_ans}", flush=True)
+        # [audit #16] score the first predicted clause (stage 2) against the held-out stage-2 sentence
+        det_ok = clause_match(clean_str(s2_det[0]), UNSEEN_GT_DET)
+        con_ok = clause_match(clean_str(s2_con[0]), UNSEEN_GT_CON)
+        print(f"  -> clause_match (Detailed) vs held-out '{UNSEEN_GT_DET}': {det_ok}", flush=True)
+        print(f"  -> clause_match (Concise ) vs held-out '{UNSEEN_GT_CON}': {con_ok}", flush=True)
+        print(f"  -> Thought-layer stage-2 score: {int(det_ok) + int(con_ok)}/2", flush=True)
 
 print(f"\n====================================================================================================", flush=True)
 print(f"=== [Breakthrough Test 2] CONSOLIDATION (熟能生巧：把意念層推導出的新知識下沉固化為肌肉記憶！) ===", flush=True)
@@ -352,7 +434,12 @@ conf_before, _ = model.probe_muscle_memory_confidence(p_unseen, steps=2)
 c1_t, c1_v = pad_slot("血液在血管中正常循环，")
 c2_t, c2_v = pad_slot("当血管壁堆积胆固醇变窄时，")
 thought_solution = model.solve_via_thought_analogy(c1_t, c1_v, c2_t, c2_v, style_id=STYLE_DETAILED_ID, steps=2)
+# [audit #14] the consolidation target is the model's OWN thought-layer output (not ground truth); it is
+# scored here so the log shows whether what gets distilled is actually correct.
 distilled_target = thought_solution[0:1].detach().clone()
+_distilled_txt = clean_str(distilled_target[0])
+print(f"Distillation target (thought layer, not GT): '{_distilled_txt}' | "
+      f"clause_match vs held-out '{UNSEEN_GT_DET}': {clause_match(_distilled_txt, UNSEEN_GT_DET)}", flush=True)
 
 model.train()
 for consol_step in range(1, 26):
@@ -366,8 +453,12 @@ for consol_step in range(1, 26):
 model.eval()
 
 conf_after, fast_after = model.probe_muscle_memory_confidence(p_unseen, steps=2)
-print(f"Before Consolidation (Unseen Medical Problem): Weakest-Token Confidence = {conf_before*100:5.1f}% (< {CONF_THRESHOLD*100:.0f}% -> Escalated to Slow Thought Layer)", flush=True)
-print(f"After  Consolidation (Practiced 25 times)    : Weakest-Token Confidence = {conf_after*100:5.1f}% (>= {CONF_THRESHOLD*100:.0f}% -> Now Instant Muscle Memory!)", flush=True)
+# [audit #17] routing labels follow the measured confidence instead of fixed text
+def _route_label(c):
+    return f">= {CONF_THRESHOLD*100:.0f}% -> Muscle Memory" if c >= CONF_THRESHOLD else f"< {CONF_THRESHOLD*100:.0f}% -> Escalate to Thought Layer"
+print(f"Before Consolidation (Unseen Medical Problem): Weakest-Token Confidence = {conf_before*100:5.1f}% ({_route_label(conf_before)})", flush=True)
+print(f"After  Consolidation (Practiced 25 times)    : Weakest-Token Confidence = {conf_after*100:5.1f}% ({_route_label(conf_after)})", flush=True)
 print(f"  -> Instant Muscle-Memory Output: {clean_str(fast_after[0])}", flush=True)
+print(f"  -> clause_match vs held-out '{UNSEEN_GT_DET}': {clause_match(clean_str(fast_after[0]), UNSEEN_GT_DET)}", flush=True)  # [audit #16]
 
 torch.save(model.state_dict(), '/content/minimind/out/entropy_dual_brain_minimind_512.pth')

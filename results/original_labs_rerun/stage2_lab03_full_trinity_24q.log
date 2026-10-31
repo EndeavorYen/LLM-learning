@@ -1,0 +1,74 @@
+=== [1] Loading Official 'Qwen/Qwen2.5-0.5B' (494M Params, 24 Layers, 896-D, 151,936 Vocab) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loaded in 12.8s! Building Full Trinity: [Frozen Qwen 896-D] + [128-D Thought Funnel & Law-Hop Brain] + [2-Layer Bidirectional Block-Diffusion Denoiser]
+[audit #13] SLOT_LEN=15 (longest slot text + 1)
+
+=== [2] Training Competitor A: Standard Autoregressive Qwen2.5-0.5B + LoRA (1.38M params) ===
+[audit #16] Competitor A budget: 260 steps, cosine LR 0.0005 -> 5e-05, trainable params = 1,376,256
+  [Competitor A: AR LoRA Qwen2.5] Step   1/260 | AR Loss: 4.5784
+  [Competitor A: AR LoRA Qwen2.5] Step  90/260 | AR Loss: 0.0677
+  [Competitor A: AR LoRA Qwen2.5] Step 180/260 | AR Loss: 0.0676
+  [Competitor A: AR LoRA Qwen2.5] Step 260/260 | AR Loss: 0.0674
+
+=== [3] Training Competitor B: Full Trinity Dual-Brain Block-Diffusion Qwen2.5-0.5B (41.69M params) ===
+[audit #16] Competitor B budget: 260 steps, cosine LR 0.001 -> 5e-05, trainable params = 41,687,872
+[audit #14] held out 16 unseen answer clauses from every loss
+  [Full Trinity Qwen2.5] Step   1/260 | Fast-Diff: 12.3451 | Bidir-Block-Diff (m1+~m1): 23.2586 | Law-Hop: 0.9300 | Ortho: 2.1595
+  [Full Trinity Qwen2.5] Step  90/260 | Fast-Diff: 0.0002 | Bidir-Block-Diff (m1+~m1): 0.1726 | Law-Hop: 0.0512 | Ortho: 0.1134
+  [Full Trinity Qwen2.5] Step 180/260 | Fast-Diff: 0.0000 | Bidir-Block-Diff (m1+~m1): 0.0143 | Law-Hop: 0.0172 | Ortho: 0.0063
+  [Full Trinity Qwen2.5] Step 260/260 | Fast-Diff: 0.0000 | Bidir-Block-Diff (m1+~m1): 0.0068 | Law-Hop: 0.0135 | Ortho: 0.0029
+
+==========================================================================================================================
+=== [FULL TRINITY BENCHMARK] Standard AR LoRA Qwen2.5-0.5B vs Full-Trinity (Dual-Brain + Block-Diffusion) Qwen2.5-0.5B ===
+==========================================================================================================================
+[audit #16] cloze: AR candidate set = 6 distinct masked spans (same for every item); Trinity uses no oracle hint
+Evaluation Dimension                           |   Qwen2.5-0.5B + AR LoRA | Full-Trinity Dual-Brain + Block-Diff Qwen2.5
+------------------------------------------------------------------------------------------------------------------------
+1. Private Rote Secrets & Keys (6)             |                    1 / 6 |                                        6 / 6
+2. Seen Engineering Systems (4)                |                    4 / 4 |                                        4 / 4
+3. UNSEEN Systems Zero-Shot Analogy (8)        |                    0 / 8 |                                        0 / 8
+4. Bidirectional Prefix Cloze Healing (6)      |                    3 / 6 |                                        1 / 6
+5. 12-System Wall Time (not comparable — see #12) |               6516.9 ms |                                 786.0 ms
+------------------------------------------------------------------------------------------------------------------------
+TOTAL SCORE (Out of 24 Multi-Modal Tasks)      |               8 / 24 ( 33%) |                                  11 / 24 ( 46%)
+
+=== [Polaroid 2-Step Block-Diffusion Visualization on Unseen Systems] ===
+
+[反物質約束環-規律1] Premise: '反物质流在磁环内稳定束缚，当磁场畸变导致约束通道变窄时，'
+  📸 Step 1 (60% High-Conf Unmasked) : 磁场[MASK]畸[MASK]磁[MASK][MASK]变[MASK][MASK][□][□][□][□][□] | 当反[MASK][MASK]时流[MASK][MASK][MASK][MASK][□][□][□][□][□]
+  ✨ Step 2 (Bidirectional Refined)  : 磁场物质畸变磁约束内变变时当反物质注入时流通道流机停
+
+[反物質約束環-規律2] Premise: '注入器向磁环持续供能，当反物质注入源突然断流时，'
+  📸 Step 1 (60% High-Conf Unmasked) : 注入器畸[MASK][MASK][MASK][MASK][MASK][MASK]，，[□][□][□][□] | 最终[MASK][MASK][MASK]磁[MASK]供[MASK][MASK][□][□][□][□][□][□]
+  ✨ Step 2 (Bidirectional Refined)  : 注入器畸变磁环内部能束缚，，最终触发物质注入磁水供能。
+
+[神經植入晶片-規律1] Premise: '神经讯号在晶片内稳定传输，当突触阻抗导致讯号通道变窄时，'
+  📸 Step 1 (60% High-Conf Unmasked) : 神经[MASK][MASK][MASK][MASK]片讯号号[MASK][MASK][□]，[□][□] | 当触发[MASK][MASK]流流[MASK][MASK]自动，[□][MASK][MASK][□][□]
+  ✨ Step 2 (Bidirectional Refined)  : 神经讯号在抗片讯号号变，当触发匝供给流流讯流自动，道
+
+[神經植入晶片-規律2] Premise: '生物电池向晶片持续供电，当微电流供给源突然断流时，'
+  📸 Step 1 (60% High-Conf Unmasked) : [MASK][MASK][MASK]晶力[MASK][MASK]号[MASK]，[□][□][□][□][□] | [MASK]触发[MASK]晶[MASK][MASK]供电[MASK][MASK][□][□][□][□][□][□]
+  ✨ Step 2 (Bidirectional Refined)  : 主力触晶力片讯号急剧，最终触发向晶触发池供电紧急时
+
+=== [Bidirectional Prefix Cloze: AR ranks candidate sentences by log-likelihood; Trinity infills from visible input, no oracle] ===
+
+[水利管網] Damaged Canvas : [MASK][MASK][MASK]压就会急剧飙升，[□][□][□][□][□][□][□]
+  Ground Truth          : 管道内部水压就会急剧飙升，
+  ✅ AR LoRA Qwen2.5 (LL-ranked): 管道内部水压就会急剧飙升，
+  ❌ Full-Trinity Qwen2.5     : 主干就会压就会急剧飙升，
+
+[高速交通] Damaged Canvas : [MASK][MASK][MASK]车流密度与压力急剧飙升，[□][□][□][□]
+  Ground Truth          : 主干道车流密度与压力急剧飙升，
+  ✅ AR LoRA Qwen2.5 (LL-ranked): 主干道车流密度与压力急剧飙升，
+  ✅ Full-Trinity Qwen2.5     : 主干道车流密度与压力急剧飙升，
+
+[反物質約束環] Damaged Canvas : [MASK][MASK][MASK]辐射压力就会急剧飙升，[□][□][□][□][□][□]
+  Ground Truth          : 磁环内部辐射压力就会急剧飙升，
+  ✅ AR LoRA Qwen2.5 (LL-ranked): 磁环内部辐射压力就会急剧飙升，
+  ❌ Full-Trinity Qwen2.5     : 当物质畸辐射压力就会急剧飙升，
+
+[神經植入晶片] Damaged Canvas : [MASK][MASK][MASK]电位负荷就会急剧飙升，[□][□][□][□][□]
+  Ground Truth          : 晶片内部电位负荷就会急剧飙升，
+  ❌ AR LoRA Qwen2.5 (LL-ranked): 主干道电位负荷就会急剧飙升，
+  ❌ Full-Trinity Qwen2.5     : 管道内部压电位负荷就会急剧飙升，

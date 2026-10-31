@@ -1,0 +1,684 @@
+[l14] SEED=1 | device=cuda
+[l14] python 3.13.16 | torch 2.11.0+cu130 | numpy 2.1.3 | transformers 5.21.0 (/usr/local/lib/python3.13/dist-packages/transformers/__init__.py)
+[l14] script sha256=unavailable
+[l14] data = /content/stories.json (state_tracking_v1) sha256=ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108 | generator seed=20261031 | templates_sha256=1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70
+[l14] rule simulator reproduces `states` and `final` of all 6336 stories
+[l14] train   : 3456 stories | 16 domains | final classes per n: n1:864 n2:864 n3:864 n4:864
+[l14] val_seen: 1440 stories | 16 domains | final classes per n: n1:144 n2:144 n3:144 n4:144 n5:144 n6:144 n7:144 n8:144 n9:144 n10:144
+[l14] test    : 1440 stories | 8 domains | final classes per n: n1:144 n2:144 n3:144 n4:144 n5:144 n6:144 n7:144 n8:144 n9:144 n10:144
+[l14] train domains: 便桥, 停车场, 充电宝, 公交站台, 冷库, 急诊留观室, 手机存储, 水塔, 水库, 油罐, 流浪狗收容所, 电动车充电棚, 粮仓, 货车, 过山车排队区, 鱼缸
+[l14] test domains : 仓库, 垃圾站, 插线板, 服务器, 机场停机位, 民宿, 电梯, 高压锅
+[l14] templates = /content/templates.json sha256=1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70 (matches stories.json templates_sha256)
+[l14] templates.json: seen domains = split 'train', test domains = split 'test'
+[l14] init state parts checked against /content/templates.json (192 entries)
+[l14] unique sentences: train 640 | val_seen 640 | test 320 | sentences shared across domains: 0
+[l14] V5 leak check passed for all 8276 training texts (640 train sentences + 7636 unique training prefix texts) against 320 test sentences and 1440 test story texts
+[l14] val_seen stories whose whole text equals a training prefix text (per n): {1: 82, 2: 1}
+=== [1] Loading 'Qwen/Qwen2.5-0.5B' (frozen, bf16) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+config.json:   0%|          | 0.00/681 [00:00<?, ?B/s]
+tokenizer_config.json:   0%|          | 0.00/7.23k [00:00<?, ?B/s]
+vocab.json:   0%|          | 0.00/2.78M [00:00<?, ?B/s]
+merges.txt:   0%|          | 0.00/1.67M [00:00<?, ?B/s]
+tokenizer.json:   0%|          | 0.00/7.03M [00:00<?, ?B/s]
+model.safetensors: reconstructing file:   0%|          |  0.00B /  988MB        
+model.safetensors: downloading bytes:           |  0.00B            
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+generation_config.json:   0%|          | 0.00/138 [00:00<?, ?B/s]
+Loaded in 29.9s | hidden=896 | layers=24
+[l14] extracted 960 sentence features (max_length 128) and 7636 + 2880 whole-story features (max_length 512) in 21.5s | max tokens: sent/train=29, sent/val_only=0, sent/test=26, story/train_prefixes=90, story/test=163, story/val_seen=165
+
+=== [2] Training FUNNEL-F64 (13 sentence classes, s pull/push): 246,080 params | 400 steps full batch on 640 train sentences | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [FUNNEL-F64] step   1/400 | loss 2.2295 (s_pull 0.037 s_push 2.192)
+  [FUNNEL-F64] step 200/400 | loss 0.8964 (s_pull 0.106 s_push 0.790)
+  [FUNNEL-F64] step 400/400 | loss 0.6064 (s_pull 0.082 s_push 0.524)
+[l14] diagnostic: sentence type (13 classes) by nearest train-class mean in R896: train 337/640 | val_only 0/0 | test 130/320
+[l14] diagnostic: sentence type (13 classes) by nearest train-class mean in F64: train 617/640 | val_only 0/0 | test 226/320
+[l14] training: 3456 stories = 12096 prefixes / steps (7636 unique prefix texts)
+[l14] architecture checks passed (fresh models, train inputs): snap feeds back exactly the nearest anchor, free the state itself; ONE-STEP-TF is causal and position-free
+
+=== [4] Training HOP-R896-d896: 3,222,912 params | 3456 stories / 12096 steps | 3000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | wd 0.01 | clip 1.0 ===
+  [HOP-R896-d896] step    1/3000 | CE 2.2380 align 0.9993 total 3.2373 | train step acc 1176/12096 (train mode)
+  [HOP-R896-d896] step 1000/3000 | CE 0.0007 align 0.0039 total 0.0047 | train step acc 12096/12096 (train mode)
+  [HOP-R896-d896] step 2000/3000 | CE 0.0006 align 0.0011 total 0.0017 | train step acc 12096/12096 (train mode)
+  [HOP-R896-d896] step 3000/3000 | CE 0.0006 align 0.0007 total 0.0012 | train step acc 12096/12096 (train mode)
+  [HOP-R896-d896] trained in 151.3s
+
+=== [4] Training HOP-R896-d64: 107,520 params | 3456 stories / 12096 steps | 3000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | wd 0.01 | clip 1.0 ===
+  [HOP-R896-d64] step    1/3000 | CE 2.8581 align 0.9832 total 3.8413 | train step acc 1468/12096 (train mode)
+  [HOP-R896-d64] step 1000/3000 | CE 0.0055 align 0.0350 total 0.0405 | train step acc 12096/12096 (train mode)
+  [HOP-R896-d64] step 2000/3000 | CE 0.0023 align 0.0072 total 0.0095 | train step acc 12096/12096 (train mode)
+  [HOP-R896-d64] step 3000/3000 | CE 0.0018 align 0.0038 total 0.0056 | train step acc 12096/12096 (train mode)
+  [HOP-R896-d64] trained in 26.9s
+
+=== [4] Training HOP-F64-d64: 54,272 params | 3456 stories / 12096 steps | 3000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | wd 0.01 | clip 1.0 ===
+  [HOP-F64-d64] step    1/3000 | CE 2.7082 align 0.9600 total 3.6681 | train step acc 948/12096 (train mode)
+  [HOP-F64-d64] step 1000/3000 | CE 0.0249 align 0.0700 total 0.0950 | train step acc 12059/12096 (train mode)
+  [HOP-F64-d64] step 2000/3000 | CE 0.0130 align 0.0470 total 0.0601 | train step acc 12087/12096 (train mode)
+  [HOP-F64-d64] step 3000/3000 | CE 0.0102 align 0.0406 total 0.0508 | train step acc 12089/12096 (train mode)
+  [HOP-F64-d64] trained in 26.6s
+
+=== [4] Training HOP-F64-d896: 2,477,440 params | 3456 stories / 12096 steps | 3000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | wd 0.01 | clip 1.0 ===
+  [HOP-F64-d896] step    1/3000 | CE 2.2231 align 1.0133 total 3.2364 | train step acc 1335/12096 (train mode)
+  [HOP-F64-d896] step 1000/3000 | CE 0.0020 align 0.0146 total 0.0166 | train step acc 12093/12096 (train mode)
+  [HOP-F64-d896] step 2000/3000 | CE 0.0006 align 0.0043 total 0.0048 | train step acc 12096/12096 (train mode)
+  [HOP-F64-d896] step 3000/3000 | CE 0.0005 align 0.0030 total 0.0035 | train step acc 12096/12096 (train mode)
+  [HOP-F64-d896] trained in 139.4s
+
+=== [4] Training SYMBOLIC: 37,056 params | 3456 stories / 12096 steps | 3000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | wd 0.01 | clip 1.0 ===
+  [SYMBOLIC] step    1/3000 | CE 2.9441 align 1.0027 total 3.9467 | train step acc 1436/12096 (train mode)
+  [SYMBOLIC] step 1000/3000 | CE 0.0007 align 0.0003 total 0.0010 | train step acc 12096/12096 (train mode)
+  [SYMBOLIC] step 2000/3000 | CE 0.0005 align 0.0000 total 0.0006 | train step acc 12096/12096 (train mode)
+  [SYMBOLIC] step 3000/3000 | CE 0.0005 align 0.0000 total 0.0005 | train step acc 12096/12096 (train mode)
+  [SYMBOLIC] trained in 25.4s
+
+=== [4] Training ONE-STEP-TF: 124,937 params | 3456 stories / 12096 steps | 3000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | wd 0.01 | clip 1.0 ===
+  [ONE-STEP-TF] step    1/3000 | CE 2.2603 | train step acc 1212/12096 (train mode)
+  [ONE-STEP-TF] step 1000/3000 | CE 0.0193 | train step acc 12022/12096 (train mode)
+  [ONE-STEP-TF] step 2000/3000 | CE 0.0129 | train step acc 12050/12096 (train mode)
+  [ONE-STEP-TF] step 3000/3000 | CE 0.0075 | train step acc 12064/12096 (train mode)
+  [ONE-STEP-TF] trained in 41.7s
+
+=== [4] Training ONE-STEP-QWEN (whole-text Qwen feature, every prefix): 246,665 params | 12096 examples | 1000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [ONE-STEP-QWEN (whole-text Qwen feature, every prefix)] step    1/1000 | CE 2.5841 | train acc 0.064
+  [ONE-STEP-QWEN (whole-text Qwen feature, every prefix)] step  500/1000 | CE 0.1033 | train acc 0.977
+  [ONE-STEP-QWEN (whole-text Qwen feature, every prefix)] step 1000/1000 | CE 0.0155 | train acc 1.000
+
+=== [4] Training BAG (init one-hot + event counts, every prefix): 20,617 params | 12096 examples | 1000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [BAG (init one-hot + event counts, every prefix)] step    1/1000 | CE 2.2030 | train acc 0.067
+  [BAG (init one-hot + event counts, every prefix)] step  500/1000 | CE 0.0874 | train acc 0.956
+  [BAG (init one-hot + event counts, every prefix)] step 1000/1000 | CE 0.0790 | train acc 0.959
+
+[l14] MAJORITY = L3_ok | LAST lookup: 6 (last event) keys
+[l14] fingerprint seed=1: H_SENT=0x1.aa179dcbe932cp+16 H_WHOLE_TRAIN=0x1.14dc983f35da8p+20 funnel=-0x1.4cf195e327c70p+4 HOP-R896-d896=-0x1.e41a24c23cf92p+6 HOP-R896-d64=0x1.bd8bf17987322p+4 HOP-F64-d64=0x1.78c68bfcdc2c0p+4 HOP-F64-d896=0x1.0583e6abf0170p+6 SYMBOLIC=0x1.531a006b1f400p+4 ONE-STEP-TF=0x1.0842d500d8a5ap+8 qwen_mlp=-0x1.e0c8cb5ff4858p+4 bag=0x1.9407358c9ca40p+7
+
+======================================================================================================================================================
+=== RESULTS seed=1 split=test (unseen domains): final-state accuracy (%) per n | stories per n: [144, 144, 144, 144, 144, 144, 144, 144, 144, 144] | SHORT = mean n=1-4, LONG = mean n=6-10 ===
+method          mode      n=1    n=2    n=3    n=4    n=5    n=6    n=7    n=8    n=9   n=10   SHORT     n5    LONG
+-------------------------------------------------------------------------------------------------------------------
+HOP-R896-d896   free     38.9   35.4   31.2   20.1   29.2   18.1   16.0   22.9   18.8   19.4    31.4   29.2    19.0
+HOP-R896-d896   snap     43.8   39.6   36.8   27.8   31.9   21.5   24.3   35.4   23.6   20.8    37.0   31.9    25.1
+HOP-R896-d64    free     31.2   34.7   24.3   20.1   20.8   20.1   10.4   20.1   15.3   17.4    27.6   20.8    16.7
+HOP-R896-d64    snap     36.8   38.2   34.0   26.4   27.8   24.3   20.1   27.1   23.6   22.9    33.9   27.8    23.6
+HOP-F64-d64     free     38.9   33.3   32.6   29.2   25.7   29.9   24.3   30.6   33.3   24.3    33.5   25.7    28.5
+HOP-F64-d64     snap     49.3   35.4   38.2   36.1   32.6   29.9   31.2   40.3   34.0   29.9    39.8   32.6    33.1
+HOP-F64-d896    free     47.2   34.0   31.9   36.1   26.4   31.2   32.6   32.6   29.2   29.2    37.3   26.4    31.0
+HOP-F64-d896    snap     47.2   38.9   35.4   34.7   31.9   31.2   34.0   39.6   37.5   31.9    39.1   31.9    34.9
+ONE-STEP-TF     -        38.9   38.2   31.2   29.2   23.6   18.1   22.2   26.4   27.8   20.1    34.4   23.6    22.9
+ONE-STEP-QWEN   -        37.5   24.3   26.4   14.6   18.1   19.4   19.4   18.8   14.6   18.8    25.7   18.1    18.2
+SYMBOLIC        free    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0   100.0  100.0   100.0
+SYMBOLIC        snap    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0   100.0  100.0   100.0
+BAG             -       100.0   94.4   88.9   77.1   63.2   60.4   52.8   51.4   41.0   41.7    90.1   63.2    49.4
+LAST            -        22.9   20.1   18.8   22.2   22.2   20.8   25.0   24.3   23.6   21.5    21.0   22.2    23.1
+MAJORITY        -        11.1   11.1   11.1   11.1   11.1   11.1   11.1   11.1   11.1   11.1    11.1   11.1    11.1
+
+=== RESULTS seed=1 split=val_seen (seen domains): final-state accuracy (%) per n | stories per n: [144, 144, 144, 144, 144, 144, 144, 144, 144, 144] | SHORT = mean n=1-4, LONG = mean n=6-10 ===
+method          mode      n=1    n=2    n=3    n=4    n=5    n=6    n=7    n=8    n=9   n=10   SHORT     n5    LONG
+-------------------------------------------------------------------------------------------------------------------
+HOP-R896-d896   free    100.0  100.0  100.0  100.0  100.0   99.3  100.0   99.3  100.0  100.0   100.0  100.0    99.7
+HOP-R896-d896   snap    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0   100.0  100.0   100.0
+HOP-R896-d64    free    100.0  100.0  100.0  100.0   99.3   99.3   97.2   96.5   97.2   95.8   100.0   99.3    97.2
+HOP-R896-d64    snap    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0   100.0  100.0   100.0
+HOP-F64-d64     free    100.0   97.9   94.4   94.4   96.5   88.2   87.5   90.3   79.9   82.6    96.7   96.5    85.7
+HOP-F64-d64     snap     99.3   97.2   97.2   95.8   97.9   94.4   97.2   97.9   92.4   96.5    97.4   97.9    95.7
+HOP-F64-d896    free    100.0  100.0   97.9   99.3   98.6   97.2   97.9   98.6   96.5   97.9    99.3   98.6    97.6
+HOP-F64-d896    snap    100.0  100.0   98.6  100.0   98.6   97.2  100.0  100.0   97.9   98.6    99.7   98.6    98.8
+ONE-STEP-TF     -        99.3   93.8   86.8   75.0   58.3   58.3   48.6   47.2   45.1   41.0    88.7   58.3    48.1
+ONE-STEP-QWEN   -        98.6   86.8   66.0   59.0   47.2   35.4   31.2   27.1   30.6   27.1    77.6   47.2    30.3
+SYMBOLIC        free    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0   100.0  100.0   100.0
+SYMBOLIC        snap    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0   100.0  100.0   100.0
+BAG             -       100.0   96.5   84.7   77.8   70.8   61.8   54.9   41.0   47.9   44.4    89.8   70.8    50.0
+LAST            -        21.5   20.8   23.6   22.2   22.2   20.8   22.9   21.5   23.6   22.2    22.0   22.2    22.2
+MAJORITY        -        11.1   11.1   11.1   11.1   11.1   11.1   11.1   11.1   11.1   11.1    11.1   11.1    11.1
+
+=== per-step state accuracy (%) on the test stories with n = 10 (t = events consumed; t = 0 = after the init sentence) ===
+method          mode      t=0    t=1    t=2    t=3    t=4    t=5    t=6    t=7    t=8    t=9   t=10
+---------------------------------------------------------------------------------------------------
+HOP-R896-d896   free     52.8   43.8   34.7   28.5   25.7   18.1   19.4   18.8   17.4   16.7   19.4
+HOP-R896-d896   snap     52.8   45.1   42.4   34.7   31.9   25.7   27.1   28.5   24.3   22.2   20.8
+HOP-R896-d64    free     50.7   38.2   31.2   25.0   22.2   20.1   16.7   17.4   16.0   18.8   17.4
+HOP-R896-d64    snap     50.7   44.4   36.1   32.6   31.9   29.2   34.0   31.9   25.7   24.3   22.9
+HOP-F64-d64     free     58.3   50.7   31.9   34.7   31.2   33.3   34.0   25.7   29.9   29.2   24.3
+HOP-F64-d64     snap     58.3   53.5   45.8   42.4   38.2   40.3   41.0   36.8   38.2   34.0   29.9
+HOP-F64-d896    free     54.9   48.6   42.4   41.0   37.5   38.2   34.7   32.6   32.6   31.2   29.2
+HOP-F64-d896    snap     54.9   51.4   43.8   45.1   41.0   41.7   38.2   36.1   36.8   36.1   31.9
+SYMBOLIC        free    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0
+SYMBOLIC        snap    100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0  100.0
+
+=== training fit (accuracy over all 12096 training prefixes / steps, eval mode) ===
+  HOP-R896-d896   free   100.00% (12096/12096)
+  HOP-R896-d896   snap   100.00% (12096/12096)
+  HOP-R896-d64    free   100.00% (12096/12096)
+  HOP-R896-d64    snap   100.00% (12096/12096)
+  HOP-F64-d64     free    99.93% (12088/12096)
+  HOP-F64-d64     snap    99.35% (12017/12096)
+  HOP-F64-d896    free   100.00% (12096/12096)
+  HOP-F64-d896    snap    99.91% (12085/12096)
+  ONE-STEP-TF     -      100.00% (12096/12096)
+  ONE-STEP-QWEN   -       99.98% (12094/12096)
+  SYMBOLIC        free   100.00% (12096/12096)
+  SYMBOLIC        snap   100.00% (12096/12096)
+  BAG             -       95.86% (11595/12096)
+  LAST            -       20.02% (2422/12096)
+  MAJORITY        -       12.14% (1469/12096)
+
+=== parameters ===
+  FUNNEL-F64           246,080
+  HOP-R896-d896      3,222,912
+  HOP-R896-d64         107,520
+  HOP-F64-d64           54,272
+  HOP-F64-d896       2,477,440
+  SYMBOLIC              37,056
+  ONE-STEP-TF          124,937
+  ONE-STEP-QWEN        246,665
+  BAG                   20,617
+  LAST                       6 lookup entries (+ MAJORITY fallback)
+
+=== validity numbers (issue #23; numbers only) ===
+  V1 val_seen n=1-4 (mean over n; pooled count): HOP-R896-d896/free = 100.00% (576/576) | ONE-STEP-TF/- = 88.72% (511/576)
+  V2 test LONG: BAG/- = 49.44% (356/720)
+  V3 blind judge: external, not computed by this script
+  V4 val_seen LONG: SYMBOLIC/snap = 100.00% (720/720)
+  V5 leak check: passed (asserted): 320 test sentences / 1440 test story texts absent from 640 train sentences and 7636 training prefix texts; sequence training inputs read train sentence rows only; mu / funnel use train sentences only
+
+=== Training losses (train mode) ===
+  FUNNEL-F64                                               step    1 | loss 2.2295 (s_pull 0.037 s_push 2.192)
+  FUNNEL-F64                                               step  200 | loss 0.8964 (s_pull 0.106 s_push 0.790)
+  FUNNEL-F64                                               step  400 | loss 0.6064 (s_pull 0.082 s_push 0.524)
+  HOP-R896-d896                                            step    1 | CE 2.2380 align 0.9993 total 3.2373 | train step acc 1176/12096 (train mode)
+  HOP-R896-d896                                            step 1000 | CE 0.0007 align 0.0039 total 0.0047 | train step acc 12096/12096 (train mode)
+  HOP-R896-d896                                            step 2000 | CE 0.0006 align 0.0011 total 0.0017 | train step acc 12096/12096 (train mode)
+  HOP-R896-d896                                            step 3000 | CE 0.0006 align 0.0007 total 0.0012 | train step acc 12096/12096 (train mode)
+  HOP-R896-d64                                             step    1 | CE 2.8581 align 0.9832 total 3.8413 | train step acc 1468/12096 (train mode)
+  HOP-R896-d64                                             step 1000 | CE 0.0055 align 0.0350 total 0.0405 | train step acc 12096/12096 (train mode)
+  HOP-R896-d64                                             step 2000 | CE 0.0023 align 0.0072 total 0.0095 | train step acc 12096/12096 (train mode)
+  HOP-R896-d64                                             step 3000 | CE 0.0018 align 0.0038 total 0.0056 | train step acc 12096/12096 (train mode)
+  HOP-F64-d64                                              step    1 | CE 2.7082 align 0.9600 total 3.6681 | train step acc 948/12096 (train mode)
+  HOP-F64-d64                                              step 1000 | CE 0.0249 align 0.0700 total 0.0950 | train step acc 12059/12096 (train mode)
+  HOP-F64-d64                                              step 2000 | CE 0.0130 align 0.0470 total 0.0601 | train step acc 12087/12096 (train mode)
+  HOP-F64-d64                                              step 3000 | CE 0.0102 align 0.0406 total 0.0508 | train step acc 12089/12096 (train mode)
+  HOP-F64-d896                                             step    1 | CE 2.2231 align 1.0133 total 3.2364 | train step acc 1335/12096 (train mode)
+  HOP-F64-d896                                             step 1000 | CE 0.0020 align 0.0146 total 0.0166 | train step acc 12093/12096 (train mode)
+  HOP-F64-d896                                             step 2000 | CE 0.0006 align 0.0043 total 0.0048 | train step acc 12096/12096 (train mode)
+  HOP-F64-d896                                             step 3000 | CE 0.0005 align 0.0030 total 0.0035 | train step acc 12096/12096 (train mode)
+  SYMBOLIC                                                 step    1 | CE 2.9441 align 1.0027 total 3.9467 | train step acc 1436/12096 (train mode)
+  SYMBOLIC                                                 step 1000 | CE 0.0007 align 0.0003 total 0.0010 | train step acc 12096/12096 (train mode)
+  SYMBOLIC                                                 step 2000 | CE 0.0005 align 0.0000 total 0.0006 | train step acc 12096/12096 (train mode)
+  SYMBOLIC                                                 step 3000 | CE 0.0005 align 0.0000 total 0.0005 | train step acc 12096/12096 (train mode)
+  ONE-STEP-TF                                              step    1 | CE 2.2603 | train step acc 1212/12096 (train mode)
+  ONE-STEP-TF                                              step 1000 | CE 0.0193 | train step acc 12022/12096 (train mode)
+  ONE-STEP-TF                                              step 2000 | CE 0.0129 | train step acc 12050/12096 (train mode)
+  ONE-STEP-TF                                              step 3000 | CE 0.0075 | train step acc 12064/12096 (train mode)
+  ONE-STEP-QWEN (whole-text Qwen feature, every prefix)    step    1 | CE 2.5841 | train acc 0.064
+  ONE-STEP-QWEN (whole-text Qwen feature, every prefix)    step  500 | CE 0.1033 | train acc 0.977
+  ONE-STEP-QWEN (whole-text Qwen feature, every prefix)    step 1000 | CE 0.0155 | train acc 1.000
+  BAG (init one-hot + event counts, every prefix)          step    1 | CE 2.2030 | train acc 0.067
+  BAG (init one-hot + event counts, every prefix)          step  500 | CE 0.0874 | train acc 0.956
+  BAG (init one-hot + event counts, every prefix)          step 1000 | CE 0.0790 | train acc 0.959
+
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=1 correct=56 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=2 correct=51 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=3 correct=45 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=4 correct=29 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=5 correct=42 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=6 correct=26 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=7 correct=23 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=8 correct=33 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=9 correct=27 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=free n=10 correct=28 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=1 correct=63 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=2 correct=57 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=3 correct=53 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=4 correct=40 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=5 correct=46 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=6 correct=31 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=7 correct=35 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=8 correct=51 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=9 correct=34 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d896 mode=snap n=10 correct=30 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=1 correct=45 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=2 correct=50 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=3 correct=35 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=4 correct=29 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=5 correct=30 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=6 correct=29 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=7 correct=15 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=8 correct=29 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=9 correct=22 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=free n=10 correct=25 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=1 correct=53 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=2 correct=55 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=3 correct=49 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=4 correct=38 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=5 correct=40 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=6 correct=35 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=7 correct=29 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=8 correct=39 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=9 correct=34 total=144
+L14_ACC seed=1 split=test method=HOP-R896-d64 mode=snap n=10 correct=33 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=1 correct=56 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=2 correct=48 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=3 correct=47 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=4 correct=42 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=5 correct=37 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=6 correct=43 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=7 correct=35 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=8 correct=44 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=9 correct=48 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=free n=10 correct=35 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=1 correct=71 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=2 correct=51 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=3 correct=55 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=4 correct=52 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=5 correct=47 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=6 correct=43 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=7 correct=45 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=8 correct=58 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=9 correct=49 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d64 mode=snap n=10 correct=43 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=1 correct=68 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=2 correct=49 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=3 correct=46 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=4 correct=52 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=5 correct=38 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=6 correct=45 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=7 correct=47 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=8 correct=47 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=9 correct=42 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=free n=10 correct=42 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=1 correct=68 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=2 correct=56 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=3 correct=51 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=4 correct=50 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=5 correct=46 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=6 correct=45 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=7 correct=49 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=8 correct=57 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=9 correct=54 total=144
+L14_ACC seed=1 split=test method=HOP-F64-d896 mode=snap n=10 correct=46 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=1 correct=56 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=2 correct=55 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=3 correct=45 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=4 correct=42 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=5 correct=34 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=6 correct=26 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=7 correct=32 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=8 correct=38 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=9 correct=40 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-TF mode=- n=10 correct=29 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=1 correct=54 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=2 correct=35 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=3 correct=38 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=4 correct=21 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=5 correct=26 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=6 correct=28 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=7 correct=28 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=8 correct=27 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=9 correct=21 total=144
+L14_ACC seed=1 split=test method=ONE-STEP-QWEN mode=- n=10 correct=27 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=1 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=2 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=3 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=4 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=5 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=6 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=7 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=8 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=9 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=free n=10 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=1 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=2 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=3 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=4 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=5 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=6 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=7 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=8 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=9 correct=144 total=144
+L14_ACC seed=1 split=test method=SYMBOLIC mode=snap n=10 correct=144 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=1 correct=144 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=2 correct=136 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=3 correct=128 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=4 correct=111 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=5 correct=91 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=6 correct=87 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=7 correct=76 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=8 correct=74 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=9 correct=59 total=144
+L14_ACC seed=1 split=test method=BAG mode=- n=10 correct=60 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=1 correct=33 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=2 correct=29 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=3 correct=27 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=4 correct=32 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=5 correct=32 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=6 correct=30 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=7 correct=36 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=8 correct=35 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=9 correct=34 total=144
+L14_ACC seed=1 split=test method=LAST mode=- n=10 correct=31 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=1 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=2 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=3 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=4 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=5 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=6 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=7 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=8 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=9 correct=16 total=144
+L14_ACC seed=1 split=test method=MAJORITY mode=- n=10 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=3 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=4 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=5 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=6 correct=143 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=7 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=8 correct=143 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=9 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=free n=10 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=3 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=4 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=5 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=6 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=7 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=8 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=9 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d896 mode=snap n=10 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=3 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=4 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=5 correct=143 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=6 correct=143 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=7 correct=140 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=8 correct=139 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=9 correct=140 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=free n=10 correct=138 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=3 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=4 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=5 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=6 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=7 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=8 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=9 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-R896-d64 mode=snap n=10 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=2 correct=141 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=3 correct=136 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=4 correct=136 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=5 correct=139 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=6 correct=127 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=7 correct=126 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=8 correct=130 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=9 correct=115 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=free n=10 correct=119 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=1 correct=143 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=2 correct=140 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=3 correct=140 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=4 correct=138 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=5 correct=141 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=6 correct=136 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=7 correct=140 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=8 correct=141 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=9 correct=133 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d64 mode=snap n=10 correct=139 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=3 correct=141 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=4 correct=143 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=5 correct=142 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=6 correct=140 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=7 correct=141 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=8 correct=142 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=9 correct=139 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=free n=10 correct=141 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=3 correct=142 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=4 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=5 correct=142 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=6 correct=140 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=7 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=8 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=9 correct=141 total=144
+L14_ACC seed=1 split=val_seen method=HOP-F64-d896 mode=snap n=10 correct=142 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=1 correct=143 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=2 correct=135 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=3 correct=125 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=4 correct=108 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=5 correct=84 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=6 correct=84 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=7 correct=70 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=8 correct=68 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=9 correct=65 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-TF mode=- n=10 correct=59 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=1 correct=142 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=2 correct=125 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=3 correct=95 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=4 correct=85 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=5 correct=68 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=6 correct=51 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=7 correct=45 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=8 correct=39 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=9 correct=44 total=144
+L14_ACC seed=1 split=val_seen method=ONE-STEP-QWEN mode=- n=10 correct=39 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=3 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=4 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=5 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=6 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=7 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=8 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=9 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=free n=10 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=2 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=3 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=4 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=5 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=6 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=7 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=8 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=9 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=SYMBOLIC mode=snap n=10 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=1 correct=144 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=2 correct=139 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=3 correct=122 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=4 correct=112 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=5 correct=102 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=6 correct=89 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=7 correct=79 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=8 correct=59 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=9 correct=69 total=144
+L14_ACC seed=1 split=val_seen method=BAG mode=- n=10 correct=64 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=1 correct=31 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=2 correct=30 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=3 correct=34 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=4 correct=32 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=5 correct=32 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=6 correct=30 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=7 correct=33 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=8 correct=31 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=9 correct=34 total=144
+L14_ACC seed=1 split=val_seen method=LAST mode=- n=10 correct=32 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=1 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=2 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=3 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=4 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=5 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=6 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=7 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=8 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=9 correct=16 total=144
+L14_ACC seed=1 split=val_seen method=MAJORITY mode=- n=10 correct=16 total=144
+L14_SUM seed=1 split=test method=HOP-R896-d896 mode=free short=0.3142 n5=0.2917 long=0.1903
+L14_SUM seed=1 split=test method=HOP-R896-d896 mode=snap short=0.3698 n5=0.3194 long=0.2514
+L14_SUM seed=1 split=test method=HOP-R896-d64 mode=free short=0.2760 n5=0.2083 long=0.1667
+L14_SUM seed=1 split=test method=HOP-R896-d64 mode=snap short=0.3385 n5=0.2778 long=0.2361
+L14_SUM seed=1 split=test method=HOP-F64-d64 mode=free short=0.3351 n5=0.2569 long=0.2847
+L14_SUM seed=1 split=test method=HOP-F64-d64 mode=snap short=0.3976 n5=0.3264 long=0.3306
+L14_SUM seed=1 split=test method=HOP-F64-d896 mode=free short=0.3733 n5=0.2639 long=0.3097
+L14_SUM seed=1 split=test method=HOP-F64-d896 mode=snap short=0.3906 n5=0.3194 long=0.3486
+L14_SUM seed=1 split=test method=ONE-STEP-TF mode=- short=0.3438 n5=0.2361 long=0.2292
+L14_SUM seed=1 split=test method=ONE-STEP-QWEN mode=- short=0.2569 n5=0.1806 long=0.1819
+L14_SUM seed=1 split=test method=SYMBOLIC mode=free short=1.0000 n5=1.0000 long=1.0000
+L14_SUM seed=1 split=test method=SYMBOLIC mode=snap short=1.0000 n5=1.0000 long=1.0000
+L14_SUM seed=1 split=test method=BAG mode=- short=0.9010 n5=0.6319 long=0.4944
+L14_SUM seed=1 split=test method=LAST mode=- short=0.2101 n5=0.2222 long=0.2306
+L14_SUM seed=1 split=test method=MAJORITY mode=- short=0.1111 n5=0.1111 long=0.1111
+L14_SUM seed=1 split=val_seen method=HOP-R896-d896 mode=free short=1.0000 n5=1.0000 long=0.9972
+L14_SUM seed=1 split=val_seen method=HOP-R896-d896 mode=snap short=1.0000 n5=1.0000 long=1.0000
+L14_SUM seed=1 split=val_seen method=HOP-R896-d64 mode=free short=1.0000 n5=0.9931 long=0.9722
+L14_SUM seed=1 split=val_seen method=HOP-R896-d64 mode=snap short=1.0000 n5=1.0000 long=1.0000
+L14_SUM seed=1 split=val_seen method=HOP-F64-d64 mode=free short=0.9670 n5=0.9653 long=0.8569
+L14_SUM seed=1 split=val_seen method=HOP-F64-d64 mode=snap short=0.9740 n5=0.9792 long=0.9569
+L14_SUM seed=1 split=val_seen method=HOP-F64-d896 mode=free short=0.9931 n5=0.9861 long=0.9764
+L14_SUM seed=1 split=val_seen method=HOP-F64-d896 mode=snap short=0.9965 n5=0.9861 long=0.9875
+L14_SUM seed=1 split=val_seen method=ONE-STEP-TF mode=- short=0.8872 n5=0.5833 long=0.4806
+L14_SUM seed=1 split=val_seen method=ONE-STEP-QWEN mode=- short=0.7760 n5=0.4722 long=0.3028
+L14_SUM seed=1 split=val_seen method=SYMBOLIC mode=free short=1.0000 n5=1.0000 long=1.0000
+L14_SUM seed=1 split=val_seen method=SYMBOLIC mode=snap short=1.0000 n5=1.0000 long=1.0000
+L14_SUM seed=1 split=val_seen method=BAG mode=- short=0.8976 n5=0.7083 long=0.5000
+L14_SUM seed=1 split=val_seen method=LAST mode=- short=0.2205 n5=0.2222 long=0.2222
+L14_SUM seed=1 split=val_seen method=MAJORITY mode=- short=0.1111 n5=0.1111 long=0.1111
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=0 correct=76 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=1 correct=63 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=2 correct=50 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=3 correct=41 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=4 correct=37 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=5 correct=26 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=6 correct=28 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=7 correct=27 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=8 correct=25 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=9 correct=24 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=free t=10 correct=28 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=0 correct=76 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=1 correct=65 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=2 correct=61 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=3 correct=50 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=4 correct=46 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=5 correct=37 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=6 correct=39 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=7 correct=41 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=8 correct=35 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=9 correct=32 total=144
+L14_STEP seed=1 method=HOP-R896-d896 mode=snap t=10 correct=30 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=0 correct=73 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=1 correct=55 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=2 correct=45 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=3 correct=36 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=4 correct=32 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=5 correct=29 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=6 correct=24 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=7 correct=25 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=8 correct=23 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=9 correct=27 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=free t=10 correct=25 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=0 correct=73 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=1 correct=64 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=2 correct=52 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=3 correct=47 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=4 correct=46 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=5 correct=42 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=6 correct=49 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=7 correct=46 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=8 correct=37 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=9 correct=35 total=144
+L14_STEP seed=1 method=HOP-R896-d64 mode=snap t=10 correct=33 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=0 correct=84 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=1 correct=73 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=2 correct=46 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=3 correct=50 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=4 correct=45 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=5 correct=48 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=6 correct=49 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=7 correct=37 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=8 correct=43 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=9 correct=42 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=free t=10 correct=35 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=0 correct=84 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=1 correct=77 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=2 correct=66 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=3 correct=61 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=4 correct=55 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=5 correct=58 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=6 correct=59 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=7 correct=53 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=8 correct=55 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=9 correct=49 total=144
+L14_STEP seed=1 method=HOP-F64-d64 mode=snap t=10 correct=43 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=0 correct=79 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=1 correct=70 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=2 correct=61 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=3 correct=59 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=4 correct=54 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=5 correct=55 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=6 correct=50 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=7 correct=47 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=8 correct=47 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=9 correct=45 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=free t=10 correct=42 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=0 correct=79 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=1 correct=74 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=2 correct=63 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=3 correct=65 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=4 correct=59 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=5 correct=60 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=6 correct=55 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=7 correct=52 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=8 correct=53 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=9 correct=52 total=144
+L14_STEP seed=1 method=HOP-F64-d896 mode=snap t=10 correct=46 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=0 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=1 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=2 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=3 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=4 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=5 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=6 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=7 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=8 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=9 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=free t=10 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=0 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=1 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=2 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=3 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=4 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=5 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=6 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=7 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=8 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=9 correct=144 total=144
+L14_STEP seed=1 method=SYMBOLIC mode=snap t=10 correct=144 total=144
+L14_FIT seed=1 method=HOP-R896-d896 mode=free acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=HOP-R896-d896 mode=snap acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=HOP-R896-d64 mode=free acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=HOP-R896-d64 mode=snap acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=HOP-F64-d64 mode=free acc=0.9993 correct=12088 total=12096
+L14_FIT seed=1 method=HOP-F64-d64 mode=snap acc=0.9935 correct=12017 total=12096
+L14_FIT seed=1 method=HOP-F64-d896 mode=free acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=HOP-F64-d896 mode=snap acc=0.9991 correct=12085 total=12096
+L14_FIT seed=1 method=ONE-STEP-TF mode=- acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=ONE-STEP-QWEN mode=- acc=0.9998 correct=12094 total=12096
+L14_FIT seed=1 method=SYMBOLIC mode=free acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=SYMBOLIC mode=snap acc=1.0000 correct=12096 total=12096
+L14_FIT seed=1 method=BAG mode=- acc=0.9586 correct=11595 total=12096
+L14_FIT seed=1 method=LAST mode=- acc=0.2002 correct=2422 total=12096
+L14_FIT seed=1 method=MAJORITY mode=- acc=0.1214 correct=1469 total=12096
+L14_PARAMS method=FUNNEL-F64 params=246080
+L14_PARAMS method=HOP-R896-d896 params=3222912
+L14_PARAMS method=HOP-R896-d64 params=107520
+L14_PARAMS method=HOP-F64-d64 params=54272
+L14_PARAMS method=HOP-F64-d896 params=2477440
+L14_PARAMS method=SYMBOLIC params=37056
+L14_PARAMS method=ONE-STEP-TF params=124937
+L14_PARAMS method=ONE-STEP-QWEN params=246665
+L14_PARAMS method=BAG params=20617
+[l14] total time 470.5s
+L14_CONFIG seed=1 data_sha=ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4

@@ -1,0 +1,393 @@
+[l13] SEED=42 | device=cuda
+[l13] python 3.13.16 | torch 2.11.0+cu130 | numpy 2.1.3 | transformers 5.21.0 (/usr/local/lib/python3.13/dist-packages/transformers/__init__.py)
+[l13] script sha256=unavailable
+[l13] HOP recipe = Lab 12 V4 (pos=True, loss=ce), free rollout
+[v5] data = /content/analogy_v5.json (analogy_v5) sha256=d2a9e877595829b4ff1560be90cd04739acdb11be782b14a067c4b9c4d24f196
+[v5] seen sentences=540 (20 domains x 27 state classes) | seen premises=120 | hop chains=120 | unseen items=48 | leak check passed for all 780 training texts
+[l13] leak check passed for the 240 additional Lab 13 training inputs (ONE-STEP s0+s1 pairs, X1-ONLY s1)
+=== [1] Loading 'Qwen/Qwen2.5-0.5B' (frozen, bf16) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+config.json:   0%|          | 0.00/681 [00:00<?, ?B/s]
+tokenizer_config.json:   0%|          | 0.00/7.23k [00:00<?, ?B/s]
+vocab.json:   0%|          | 0.00/2.78M [00:00<?, ?B/s]
+merges.txt:   0%|          | 0.00/1.67M [00:00<?, ?B/s]
+tokenizer.json:   0%|          | 0.00/7.03M [00:00<?, ?B/s]
+model.safetensors: reconstructing file:   0%|          |  0.00B /  988MB        
+model.safetensors: downloading bytes:           |  0.00B            
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+generation_config.json:   0%|          | 0.00/138 [00:00<?, ?B/s]
+Loaded in 30.3s | hidden=896 | layers=24
+[v5] extracted 924 features (896-d, float32)
+[l13] row-level leak check passed | T1 noise rows (unseen s0, s1, premises) = 120
+
+=== [2] Training stageA (funnel only, no hop): 492,160 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [stageA] step   1/400 | dis 3.3264 (s_pull 0.052 s_push 2.181 d_pull 0.031 d_push 1.062)
+  [stageA] step 200/400 | dis 0.9943 (s_pull 0.091 s_push 0.822 d_pull 0.009 d_push 0.073)
+  [stageA] step 400/400 | dis 0.8176 (s_pull 0.081 s_push 0.664 d_pull 0.005 d_push 0.067)
+  [stageA] trained in 2.7s
+
+=== [2] Training HOP-F64 hop (funnel frozen; loss=ce, tau 0.1; pos=yes): 71,424 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [HOP-F64] step    1/2000 | hop loss (ce) 3.5990 | cos=0.9699 ce=3.5990 acc=31/480 acc234=30/360
+L13_LOSS seed=42 model=HOP-F64 step=1 loss=3.5990 cos=0.9699 ce=3.5990 acc=31/480 acc234=30/360
+  [HOP-F64] step  500/2000 | hop loss (ce) 0.0164 | cos=0.1320 ce=0.0164 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-F64 step=500 loss=0.0164 cos=0.1320 ce=0.0164 acc=480/480 acc234=360/360
+  [HOP-F64] step 1000/2000 | hop loss (ce) 0.0138 | cos=0.1246 ce=0.0138 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-F64 step=1000 loss=0.0138 cos=0.1246 ce=0.0138 acc=480/480 acc234=360/360
+  [HOP-F64] step 2000/2000 | hop loss (ce) 0.0128 | cos=0.1193 ce=0.0128 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-F64 step=2000 loss=0.0128 cos=0.1193 ce=0.0128 acc=480/480 acc234=360/360
+  [HOP-F64] trained in 13.8s
+[l13] fingerprint seed=42: H_ALL=0x1.4b7abc716e954p+16 stageA=0x1.5474e6ff1a95cp+8 hop=0x1.3949c096b3af9p+8
+
+=== [6] Training Premise MLP (6 laws): 246,470 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Premise MLP (6 laws)] step   1/400 | CE 2.3889 | train acc 0.167
+  [Premise MLP (6 laws)] step 200/400 | CE 0.0000 | train acc 1.000
+  [Premise MLP (6 laws)] step 400/400 | CE 0.0000 | train acc 1.000
+
+=== [6] Training Sentence MLP (27 states): 247,835 params | 540 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Sentence MLP (27 states)] step   1/400 | CE 3.7453 | train acc 0.043
+  [Sentence MLP (27 states)] step 200/400 | CE 0.0006 | train acc 1.000
+  [Sentence MLP (27 states)] step 400/400 | CE 0.0004 | train acc 1.000
+
+[l13] spaces: PCA top-64 explained variance of the centred seen features = 0.8692
+[l13] space F64  D=64  | anchors: max off-diag cos 0.403 | mean partner cos (stages 0,2,3,4) 0.375 | m (mean nearest-anchor distance) 1.1062 | span rank 27
+[l13] space P64  D=64  | anchors: max off-diag cos 0.913 | mean partner cos (stages 0,2,3,4) 0.516 | m (mean nearest-anchor distance) 0.7986 | span rank 27
+[l13] space R896 D=896 | anchors: max off-diag cos 0.881 | mean partner cos (stages 0,2,3,4) 0.485 | m (mean nearest-anchor distance) 0.8538 | span rank 27
+[l13] eval_hop_x == Lab 12 eval_hop on F64 HOP (BR = BRa, DEC, A, per-item DEC picks): OK
+
+=== [l13] Lab 12 reproduction (seed 42; logged run: Colab L4) ===
+[check] F64 HOP BR2-4 (Lab 13 BRa = Lab 12 anchor-mediated BR)                 lab13 (38, 40, 41) | lab12 log (38, 40, 41) | MATCH
+[check] F64 HOP DEC2-4                                                         lab13 (42, 42, 42) | lab12 log (42, 42, 42) | MATCH
+[check] F64 HOP A2-4                                                           lab13 (39, 39, 40) | lab12 log (39, 39, 40) | MATCH
+[check] F64 HOP BR2-4 common picker (Lab 12 hop_dec_law_mlp_picker)            lab13 (38, 40, 40) | lab12 log (38, 40, 40) | MATCH
+[check] PREMISE-MLP DEC2-4                                                     lab13 (47, 47, 47) | lab12 log (47, 47, 47) | MATCH
+[check] PREMISE-MLP BR2-4 common picker (Lab 12 premise_dec_law_mlp_picker)    lab13 (42, 44, 44) | lab12 log (42, 44, 44) | MATCH
+[info]  fingerprint H_ALL   lab13 0x1.4b7abc716e954p+16 | lab12 log 0x1.4b7abc716e954p+16 | MATCH (hardware-dependent, not asserted)
+[info]  fingerprint stageA  lab13 0x1.5474e6ff1a95cp+8 | lab12 log 0x1.5474e6ff1a95cp+8 | MATCH (hardware-dependent, not asserted)
+[info]  fingerprint hop     lab13 0x1.3949c096b3af9p+8 | lab12 log 0x1.3949c096b3af9p+8 | MATCH (hardware-dependent, not asserted)
+[check] Lab 12 reproduction on CUDA: OK (torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4; Lab 12 log: Colab L4, torch 2.11.0+cu130)
+
+=== [2] Training HOP-F64-check hop (states frozen; loss=ce, tau 0.1; pos=yes; D=64): 71,424 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [HOP-F64-check] step    1/2000 | hop loss (ce) 3.5990 | cos=0.9699 ce=3.5990 acc=31/480 acc234=30/360
+L13_LOSS seed=42 model=HOP-F64-check step=1 loss=3.5990 cos=0.9699 ce=3.5990 acc=31/480 acc234=30/360
+  [HOP-F64-check] step  500/2000 | hop loss (ce) 0.0164 | cos=0.1320 ce=0.0164 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-F64-check step=500 loss=0.0164 cos=0.1320 ce=0.0164 acc=480/480 acc234=360/360
+  [HOP-F64-check] step 1000/2000 | hop loss (ce) 0.0138 | cos=0.1246 ce=0.0138 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-F64-check step=1000 loss=0.0138 cos=0.1246 ce=0.0138 acc=480/480 acc234=360/360
+  [HOP-F64-check] step 2000/2000 | hop loss (ce) 0.0128 | cos=0.1193 ce=0.0128 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-F64-check step=2000 loss=0.0128 cos=0.1193 ce=0.0128 acc=480/480 acc234=360/360
+  [HOP-F64-check] trained in 13.6s
+[check] train_hop_x == Lab 12 train_hop on F64 (bit-identical weights): OK
+
+=== [2] Training HOP-P64 hop (states frozen; loss=ce, tau 0.1; pos=yes; D=64): 71,424 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [HOP-P64] step    1/2000 | hop loss (ce) 4.2860 | cos=1.0255 ce=4.2860 acc=5/480 acc234=4/360
+L13_LOSS seed=42 model=HOP-P64 step=1 loss=4.2860 cos=1.0255 ce=4.2860 acc=5/480 acc234=4/360
+  [HOP-P64] step  500/2000 | hop loss (ce) 0.0343 | cos=0.6861 ce=0.0343 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-P64 step=500 loss=0.0343 cos=0.6861 ce=0.0343 acc=480/480 acc234=360/360
+  [HOP-P64] step 1000/2000 | hop loss (ce) 0.0278 | cos=0.6843 ce=0.0278 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-P64 step=1000 loss=0.0278 cos=0.6843 ce=0.0278 acc=480/480 acc234=360/360
+  [HOP-P64] step 2000/2000 | hop loss (ce) 0.0251 | cos=0.6816 ce=0.0251 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-P64 step=2000 loss=0.0251 cos=0.6816 ce=0.0251 acc=480/480 acc234=360/360
+  [HOP-P64] trained in 13.6s
+
+=== [2] Training HOP-R896 hop (states frozen; loss=ce, tau 0.1; pos=yes; D=896): 182,912 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [HOP-R896] step    1/2000 | hop loss (ce) 3.4245 | cos=1.0075 ce=3.4245 acc=14/480 acc234=12/360
+L13_LOSS seed=42 model=HOP-R896 step=1 loss=3.4245 cos=1.0075 ce=3.4245 acc=14/480 acc234=12/360
+  [HOP-R896] step  500/2000 | hop loss (ce) 0.0224 | cos=0.7064 ce=0.0224 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-R896 step=500 loss=0.0224 cos=0.7064 ce=0.0224 acc=480/480 acc234=360/360
+  [HOP-R896] step 1000/2000 | hop loss (ce) 0.0172 | cos=0.6990 ce=0.0172 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-R896 step=1000 loss=0.0172 cos=0.6990 ce=0.0172 acc=480/480 acc234=360/360
+  [HOP-R896] step 2000/2000 | hop loss (ce) 0.0156 | cos=0.6950 ce=0.0156 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-R896 step=2000 loss=0.0156 cos=0.6950 ce=0.0156 acc=480/480 acc234=360/360
+  [HOP-R896] trained in 14.1s
+
+=== [2] Training HOP-wide-R896 hop (states frozen; loss=ce, tau 0.1; pos=yes; D=896): 13,672,960 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [HOP-wide-R896] step    1/2000 | hop loss (ce) 3.3828 | cos=0.9994 ce=3.3828 acc=18/480 acc234=11/360
+L13_LOSS seed=42 model=HOP-wide-R896 step=1 loss=3.3828 cos=0.9994 ce=3.3828 acc=18/480 acc234=11/360
+  [HOP-wide-R896] step  500/2000 | hop loss (ce) 0.0145 | cos=0.6915 ce=0.0145 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-wide-R896 step=500 loss=0.0145 cos=0.6915 ce=0.0145 acc=480/480 acc234=360/360
+  [HOP-wide-R896] step 1000/2000 | hop loss (ce) 0.0132 | cos=0.6886 ce=0.0132 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-wide-R896 step=1000 loss=0.0132 cos=0.6886 ce=0.0132 acc=480/480 acc234=360/360
+  [HOP-wide-R896] step 2000/2000 | hop loss (ce) 0.0130 | cos=0.6887 ce=0.0130 acc=480/480 acc234=360/360
+L13_LOSS seed=42 model=HOP-wide-R896 step=2000 loss=0.0130 cos=0.6887 ce=0.0130 acc=480/480 acc234=360/360
+  [HOP-wide-R896] trained in 24.3s
+
+=== [6] Training ONE-STEP F64 (concat[x0, x1] -> 6 laws): 49,862 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [ONE-STEP F64 (concat[x0, x1] -> 6 laws)] step   1/400 | CE 1.7953 | train acc 0.167
+  [ONE-STEP F64 (concat[x0, x1] -> 6 laws)] step 200/400 | CE 0.0018 | train acc 1.000
+  [ONE-STEP F64 (concat[x0, x1] -> 6 laws)] step 400/400 | CE 0.0011 | train acc 1.000
+
+=== [6] Training X1-ONLY F64 (x1 -> 6 laws, sanity): 33,478 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [X1-ONLY F64 (x1 -> 6 laws, sanity)] step   1/400 | CE 1.7949 | train acc 0.167
+  [X1-ONLY F64 (x1 -> 6 laws, sanity)] step 200/400 | CE 0.6943 | train acc 0.500
+  [X1-ONLY F64 (x1 -> 6 laws, sanity)] step 400/400 | CE 0.6938 | train acc 0.500
+
+=== [6] Training ONE-STEP P64 (concat[x0, x1] -> 6 laws): 49,862 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [ONE-STEP P64 (concat[x0, x1] -> 6 laws)] step   1/400 | CE 1.7961 | train acc 0.167
+  [ONE-STEP P64 (concat[x0, x1] -> 6 laws)] step 200/400 | CE 0.0076 | train acc 1.000
+  [ONE-STEP P64 (concat[x0, x1] -> 6 laws)] step 400/400 | CE 0.0036 | train acc 1.000
+
+=== [6] Training X1-ONLY P64 (x1 -> 6 laws, sanity): 33,478 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [X1-ONLY P64 (x1 -> 6 laws, sanity)] step   1/400 | CE 1.7938 | train acc 0.167
+  [X1-ONLY P64 (x1 -> 6 laws, sanity)] step 200/400 | CE 0.6961 | train acc 0.500
+  [X1-ONLY P64 (x1 -> 6 laws, sanity)] step 400/400 | CE 0.6946 | train acc 0.500
+
+=== [6] Training ONE-STEP R896 (concat[x0, x1] -> 6 laws): 475,846 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [ONE-STEP R896 (concat[x0, x1] -> 6 laws)] step   1/400 | CE 1.7942 | train acc 0.167
+  [ONE-STEP R896 (concat[x0, x1] -> 6 laws)] step 200/400 | CE 0.0021 | train acc 1.000
+  [ONE-STEP R896 (concat[x0, x1] -> 6 laws)] step 400/400 | CE 0.0011 | train acc 1.000
+
+=== [6] Training X1-ONLY R896 (x1 -> 6 laws, sanity): 246,470 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [X1-ONLY R896 (x1 -> 6 laws, sanity)] step   1/400 | CE 1.7936 | train acc 0.167
+  [X1-ONLY R896 (x1 -> 6 laws, sanity)] step 200/400 | CE 0.6940 | train acc 0.500
+  [X1-ONLY R896 (x1 -> 6 laws, sanity)] step 400/400 | CE 0.6936 | train acc 0.500
+[check] X1-ONLY F64: DEC (24, 24, 24) == 24/48, seen DEC 60 == 60/120: OK
+[check] X1-ONLY P64: DEC (24, 24, 24) == 24/48, seen DEC 60 == 60/120: OK
+[check] X1-ONLY R896: DEC (24, 24, 24) == 24/48, seen DEC 60 == 60/120: OK
+
+=== [10] T1 input noise: alpha in (0.0, 0.25, 0.5, 1.0, 2.0), K=5 draws (common random numbers across alpha) ===
+[check] T1 alpha=0 equals the clean DEC for every method: OK | X1-ONLY 50% under every draw: OK
+
+=== [10] T2 state perturbation after step 2: beta in (0.0, 0.5, 1.0), kinds iso / span, K=5 ===
+[check] T2 beta=0 equals the clean DEC3/DEC4 for every hop: OK
+
+=== [10] T3 long rollout to step 12 (sliding window of the last 4 states) ===
+[check] T3 steps 2-4 equal the clean rollout for every hop: OK
+
+==================================================================================================================================================================================
+=== RESULTS seed=42 | 48 unseen items (8 domains x 6 laws); chance 24/48 | DEC-k = picker-free pairwise decision (Lab 12) | BR-k = DEC law -> common sentence-MLP picker | BRa-k = HOP anchor-mediated BR in its own space (= Lab 12 BR) | A-k = nearest anchor is (L,k) | seenDEC on 120 seen chains ===
+space    method           params  DEC-2  DEC-3  DEC-4     DEC   BR-2   BR-3   BR-4      BR  BRa-2  BRa-3  BRa-4     BRa    A-2    A-3    A-4  seenD-2  seenD-3  seenD-4
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+F64      HOP              71,424  42/48  42/48  42/48  87.50%  38/48  40/48  40/48  81.94%  38/48  40/48  41/48  82.64%  39/48  39/48  40/48  120/120  120/120  120/120
+F64      ONE-STEP         49,862  44/48  44/48  44/48  91.67%  39/48  41/48  42/48  84.72%    -      -      -        -     -      -      -    120/120  120/120  120/120
+F64      X1-ONLY          33,478  24/48  24/48  24/48  50.00%    -      -      -        -     -      -      -        -     -      -      -     60/120   60/120   60/120
+P64      HOP              71,424  48/48  47/48  47/48  98.61%  43/48  43/48  44/48  90.28%  37/48  34/48  37/48  75.00%  43/48  41/48  43/48  120/120  120/120  120/120
+P64      ONE-STEP         49,862  44/48  44/48  44/48  91.67%  40/48  42/48  41/48  85.42%    -      -      -        -     -      -      -    120/120  120/120  120/120
+P64      X1-ONLY          33,478  24/48  24/48  24/48  50.00%    -      -      -        -     -      -      -        -     -      -      -     60/120   60/120   60/120
+R896     HOP             182,912  46/48  43/48  46/48  93.75%  41/48  39/48  43/48  85.42%  36/48  34/48  35/48  72.92%  40/48  38/48  40/48  120/120  120/120  120/120
+R896     HOP-wide     13,672,960  47/48  46/48  47/48  97.22%  42/48  42/48  44/48  88.89%  37/48  33/48  36/48  73.61%  42/48  42/48  43/48  120/120  120/120  120/120
+R896     ONE-STEP        475,846  48/48  48/48  48/48 100.00%  43/48  44/48  45/48  91.67%    -      -      -        -     -      -      -    120/120  120/120  120/120
+R896     X1-ONLY         246,470  24/48  24/48  24/48  50.00%    -      -      -        -     -      -      -        -     -      -      -     60/120   60/120   60/120
+JOINT896 PREMISE-MLP     246,470  47/48  47/48  47/48  97.92%  42/48  44/48  44/48  90.28%    -      -      -        -     -      -      -    120/120  120/120  120/120
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+params = trainable parameters of the method itself (HOP: the hop only). Not included: the F64 stage-A funnel (492,160 params, trained once, shared by F64 HOP and F64 ONE-STEP) and the common sentence-MLP picker (247,835 params).
+X1-ONLY exactly 50% in every space (unseen and seen): OK | Lab 12 reproduction: MATCH (checked on CUDA)
+
+=== STRESS T1: input noise H' = H + alpha*sigma*eps on the unseen s0 / s1 / premise rows; mean DEC-2/3/4 counts over 5 draws (out of 48); [mean of the 3 stages as %] ===
+space    method                             alpha=0                    alpha=0.25                     alpha=0.5                       alpha=1                       alpha=2
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+F64      HOP            42.00/42.00/42.00 [ 87.50%]   42.40/42.20/42.20 [ 88.06%]   42.00/42.00/42.20 [ 87.64%]   39.80/40.00/40.20 [ 83.33%]   35.00/36.00/35.40 [ 73.89%]
+F64      ONE-STEP       44.00/44.00/44.00 [ 91.67%]   43.20/43.20/43.20 [ 90.00%]   43.40/43.40/43.40 [ 90.42%]   41.60/41.60/41.60 [ 86.67%]   36.20/36.20/36.20 [ 75.42%]
+P64      HOP            48.00/47.00/47.00 [ 98.61%]   47.00/46.20/47.20 [ 97.50%]   46.20/45.60/45.40 [ 95.28%]   42.40/42.40/41.00 [ 87.36%]   35.20/36.20/35.00 [ 73.89%]
+P64      ONE-STEP       44.00/44.00/44.00 [ 91.67%]   44.80/44.80/44.80 [ 93.33%]   44.40/44.40/44.40 [ 92.50%]   40.40/40.40/40.40 [ 84.17%]   35.40/35.40/35.40 [ 73.75%]
+R896     HOP            46.00/43.00/46.00 [ 93.75%]   45.40/44.40/45.80 [ 94.17%]   44.60/44.80/45.20 [ 93.47%]   42.80/43.40/43.40 [ 90.00%]   37.40/37.80/36.60 [ 77.64%]
+R896     HOP-wide       47.00/46.00/47.00 [ 97.22%]   47.00/46.00/46.60 [ 96.94%]   46.20/45.40/46.00 [ 95.56%]   44.60/44.20/44.00 [ 92.22%]   38.40/37.80/37.60 [ 79.03%]
+R896     ONE-STEP       48.00/48.00/48.00 [100.00%]   47.80/47.80/47.80 [ 99.58%]   47.60/47.60/47.60 [ 99.17%]   46.20/46.20/46.20 [ 96.25%]   42.60/42.60/42.60 [ 88.75%]
+JOINT896 PREMISE-MLP    47.00/47.00/47.00 [ 97.92%]   47.00/47.00/47.00 [ 97.92%]   46.80/46.80/46.80 [ 97.50%]   44.80/44.80/44.80 [ 93.33%]   41.80/41.80/41.80 [ 87.08%]
+
+=== STRESS T2: x̂2' = normalize(x̂2 + beta*m*u), fed back; mean DEC-3/DEC-4 counts over 5 draws ===
+  m per space: F64 1.1062 (anchor span rank 27), P64 0.7986 (anchor span rank 27), R896 0.8538 (anchor span rank 27)
+space    method      u                 beta=0          beta=0.5            beta=1
+---------------------------------------------------------------------------------
+F64      HOP         iso          42.00/42.00       42.20/42.40       42.40/42.40
+F64      HOP         span         42.00/42.00       42.00/42.00       42.40/42.40
+P64      HOP         iso          47.00/47.00       46.60/47.00       46.00/46.40
+P64      HOP         span         47.00/47.00       46.20/47.00       45.20/45.80
+R896     HOP         iso          43.00/46.00       44.00/46.00       44.00/46.00
+R896     HOP         span         43.00/46.00       44.60/45.80       43.80/45.20
+R896     HOP-wide    iso          46.00/47.00       46.00/47.00       45.80/46.80
+R896     HOP-wide    span         46.00/47.00       46.00/46.00       45.20/46.20
+
+=== STRESS T3: long rollout (window 4); per step: mean cosine to the nearest anchor | fraction of items whose nearest anchor belongs to the DEC-2 law ===
+space    method                     t=2     t=3     t=4     t=5     t=6     t=7     t=8     t=9    t=10    t=11    t=12
+-----------------------------------------------------------------------------------------------------------------------
+F64      HOP         cos_near    0.9327  0.9543  0.9567  0.8607  0.8545  0.7881  0.7645  0.7467  0.7555  0.7555  0.7471
+                     law_keep    0.8958  0.8750  0.8958  0.8333  0.5833  0.5625  0.5625  0.5417  0.5417  0.5833  0.5625
+P64      HOP         cos_near    0.8111  0.8383  0.8457  0.8502  0.8171  0.7804  0.8063  0.7920  0.7764  0.7621  0.7896
+                     law_keep    0.8958  0.8542  0.8958  0.5833  0.5000  0.5000  0.3958  0.3958  0.3958  0.3750  0.3125
+R896     HOP         cos_near    0.8092  0.7819  0.8056  0.7688  0.7895  0.7782  0.7758  0.7602  0.7622  0.7541  0.7505
+                     law_keep    0.8750  0.8333  0.8750  0.8125  0.7708  0.5417  0.4167  0.3750  0.2500  0.2292  0.2292
+R896     HOP-wide    cos_near    0.8365  0.8510  0.8651  0.8575  0.8437  0.8598  0.8454  0.8174  0.8150  0.8088  0.7928
+                     law_keep    0.8958  0.8958  0.9167  0.7708  0.6667  0.7083  0.5000  0.4792  0.5625  0.6042  0.5625
+
+=== Diagnostics ===
+  PCA top-64 explained variance (centred seen features): 0.8692
+  anchors F64 : max off-diagonal cosine 0.403 | mean partner cosine 0.375 | m 1.1062 | span rank 27
+  anchors P64 : max off-diagonal cosine 0.913 | mean partner cosine 0.516 | m 0.7986 | span rank 27
+  anchors R896: max off-diagonal cosine 0.881 | mean partner cosine 0.485 | m 0.8538 | span rank 27
+  eval-mode teacher-forced hop metrics on the seen chains (dropout off):
+    F64   HOP       cos=0.1065 ce=0.0103 acc=480/480 acc234=360/360
+    P64   HOP       cos=0.6762 ce=0.0206 acc=480/480 acc234=360/360
+    R896  HOP       cos=0.6882 ce=0.0128 acc=480/480 acc234=360/360
+    R896  HOP-wide  cos=0.6869 ce=0.0125 acc=480/480 acc234=360/360
+  Lab 12 eval_hop on F64 HOP: seen-domain BR (120, 120, 120) / 120, FLIP (28, 36, 34) / 48
+
+=== Training losses (train mode) ===
+  stageA                                       step    1 | dis 3.3264 (s_pull 0.052 s_push 2.181 d_pull 0.031 d_push 1.062)
+  stageA                                       step  200 | dis 0.9943 (s_pull 0.091 s_push 0.822 d_pull 0.009 d_push 0.073)
+  stageA                                       step  400 | dis 0.8176 (s_pull 0.081 s_push 0.664 d_pull 0.005 d_push 0.067)
+  HOP-F64                                      step    1 | hop loss (ce) 3.5990 | cos=0.9699 ce=3.5990 acc=31/480 acc234=30/360
+  HOP-F64                                      step  500 | hop loss (ce) 0.0164 | cos=0.1320 ce=0.0164 acc=480/480 acc234=360/360
+  HOP-F64                                      step 1000 | hop loss (ce) 0.0138 | cos=0.1246 ce=0.0138 acc=480/480 acc234=360/360
+  HOP-F64                                      step 2000 | hop loss (ce) 0.0128 | cos=0.1193 ce=0.0128 acc=480/480 acc234=360/360
+  Premise MLP (6 laws)                         step    1 | CE 2.3889 | train acc 0.167
+  Premise MLP (6 laws)                         step  200 | CE 0.0000 | train acc 1.000
+  Premise MLP (6 laws)                         step  400 | CE 0.0000 | train acc 1.000
+  Sentence MLP (27 states)                     step    1 | CE 3.7453 | train acc 0.043
+  Sentence MLP (27 states)                     step  200 | CE 0.0006 | train acc 1.000
+  Sentence MLP (27 states)                     step  400 | CE 0.0004 | train acc 1.000
+  HOP-F64-check                                step    1 | hop loss (ce) 3.5990 | cos=0.9699 ce=3.5990 acc=31/480 acc234=30/360
+  HOP-F64-check                                step  500 | hop loss (ce) 0.0164 | cos=0.1320 ce=0.0164 acc=480/480 acc234=360/360
+  HOP-F64-check                                step 1000 | hop loss (ce) 0.0138 | cos=0.1246 ce=0.0138 acc=480/480 acc234=360/360
+  HOP-F64-check                                step 2000 | hop loss (ce) 0.0128 | cos=0.1193 ce=0.0128 acc=480/480 acc234=360/360
+  HOP-P64                                      step    1 | hop loss (ce) 4.2860 | cos=1.0255 ce=4.2860 acc=5/480 acc234=4/360
+  HOP-P64                                      step  500 | hop loss (ce) 0.0343 | cos=0.6861 ce=0.0343 acc=480/480 acc234=360/360
+  HOP-P64                                      step 1000 | hop loss (ce) 0.0278 | cos=0.6843 ce=0.0278 acc=480/480 acc234=360/360
+  HOP-P64                                      step 2000 | hop loss (ce) 0.0251 | cos=0.6816 ce=0.0251 acc=480/480 acc234=360/360
+  HOP-R896                                     step    1 | hop loss (ce) 3.4245 | cos=1.0075 ce=3.4245 acc=14/480 acc234=12/360
+  HOP-R896                                     step  500 | hop loss (ce) 0.0224 | cos=0.7064 ce=0.0224 acc=480/480 acc234=360/360
+  HOP-R896                                     step 1000 | hop loss (ce) 0.0172 | cos=0.6990 ce=0.0172 acc=480/480 acc234=360/360
+  HOP-R896                                     step 2000 | hop loss (ce) 0.0156 | cos=0.6950 ce=0.0156 acc=480/480 acc234=360/360
+  HOP-wide-R896                                step    1 | hop loss (ce) 3.3828 | cos=0.9994 ce=3.3828 acc=18/480 acc234=11/360
+  HOP-wide-R896                                step  500 | hop loss (ce) 0.0145 | cos=0.6915 ce=0.0145 acc=480/480 acc234=360/360
+  HOP-wide-R896                                step 1000 | hop loss (ce) 0.0132 | cos=0.6886 ce=0.0132 acc=480/480 acc234=360/360
+  HOP-wide-R896                                step 2000 | hop loss (ce) 0.0130 | cos=0.6887 ce=0.0130 acc=480/480 acc234=360/360
+  ONE-STEP F64 (concat[x0, x1] -> 6 laws)      step    1 | CE 1.7953 | train acc 0.167
+  ONE-STEP F64 (concat[x0, x1] -> 6 laws)      step  200 | CE 0.0018 | train acc 1.000
+  ONE-STEP F64 (concat[x0, x1] -> 6 laws)      step  400 | CE 0.0011 | train acc 1.000
+  X1-ONLY F64 (x1 -> 6 laws, sanity)           step    1 | CE 1.7949 | train acc 0.167
+  X1-ONLY F64 (x1 -> 6 laws, sanity)           step  200 | CE 0.6943 | train acc 0.500
+  X1-ONLY F64 (x1 -> 6 laws, sanity)           step  400 | CE 0.6938 | train acc 0.500
+  ONE-STEP P64 (concat[x0, x1] -> 6 laws)      step    1 | CE 1.7961 | train acc 0.167
+  ONE-STEP P64 (concat[x0, x1] -> 6 laws)      step  200 | CE 0.0076 | train acc 1.000
+  ONE-STEP P64 (concat[x0, x1] -> 6 laws)      step  400 | CE 0.0036 | train acc 1.000
+  X1-ONLY P64 (x1 -> 6 laws, sanity)           step    1 | CE 1.7938 | train acc 0.167
+  X1-ONLY P64 (x1 -> 6 laws, sanity)           step  200 | CE 0.6961 | train acc 0.500
+  X1-ONLY P64 (x1 -> 6 laws, sanity)           step  400 | CE 0.6946 | train acc 0.500
+  ONE-STEP R896 (concat[x0, x1] -> 6 laws)     step    1 | CE 1.7942 | train acc 0.167
+  ONE-STEP R896 (concat[x0, x1] -> 6 laws)     step  200 | CE 0.0021 | train acc 1.000
+  ONE-STEP R896 (concat[x0, x1] -> 6 laws)     step  400 | CE 0.0011 | train acc 1.000
+  X1-ONLY R896 (x1 -> 6 laws, sanity)          step    1 | CE 1.7936 | train acc 0.167
+  X1-ONLY R896 (x1 -> 6 laws, sanity)          step  200 | CE 0.6940 | train acc 0.500
+  X1-ONLY R896 (x1 -> 6 laws, sanity)          step  400 | CE 0.6936 | train acc 0.500
+
+L13_CONFIG seed=42 data_sha=d2a9e877595829b4 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+L13_RESULT seed=42 space=F64 method=HOP DEC2=42 DEC3=42 DEC4=42 BR2=38 BR3=40 BR4=40 BRa2=38 BRa3=40 BRa4=41 A2=39 A3=39 A4=40 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=71424
+L13_RESULT seed=42 space=F64 method=ONE-STEP DEC2=44 DEC3=44 DEC4=44 BR2=39 BR3=41 BR4=42 BRa2=-1 BRa3=-1 BRa4=-1 A2=-1 A3=-1 A4=-1 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=49862
+L13_RESULT seed=42 space=F64 method=X1-ONLY DEC2=24 DEC3=24 DEC4=24 BR2=-1 BR3=-1 BR4=-1 BRa2=-1 BRa3=-1 BRa4=-1 A2=-1 A3=-1 A4=-1 seenDEC2=60 seenDEC3=60 seenDEC4=60 params=33478
+L13_RESULT seed=42 space=P64 method=HOP DEC2=48 DEC3=47 DEC4=47 BR2=43 BR3=43 BR4=44 BRa2=37 BRa3=34 BRa4=37 A2=43 A3=41 A4=43 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=71424
+L13_RESULT seed=42 space=P64 method=ONE-STEP DEC2=44 DEC3=44 DEC4=44 BR2=40 BR3=42 BR4=41 BRa2=-1 BRa3=-1 BRa4=-1 A2=-1 A3=-1 A4=-1 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=49862
+L13_RESULT seed=42 space=P64 method=X1-ONLY DEC2=24 DEC3=24 DEC4=24 BR2=-1 BR3=-1 BR4=-1 BRa2=-1 BRa3=-1 BRa4=-1 A2=-1 A3=-1 A4=-1 seenDEC2=60 seenDEC3=60 seenDEC4=60 params=33478
+L13_RESULT seed=42 space=R896 method=HOP DEC2=46 DEC3=43 DEC4=46 BR2=41 BR3=39 BR4=43 BRa2=36 BRa3=34 BRa4=35 A2=40 A3=38 A4=40 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=182912
+L13_RESULT seed=42 space=R896 method=HOP-wide DEC2=47 DEC3=46 DEC4=47 BR2=42 BR3=42 BR4=44 BRa2=37 BRa3=33 BRa4=36 A2=42 A3=42 A4=43 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=13672960
+L13_RESULT seed=42 space=R896 method=ONE-STEP DEC2=48 DEC3=48 DEC4=48 BR2=43 BR3=44 BR4=45 BRa2=-1 BRa3=-1 BRa4=-1 A2=-1 A3=-1 A4=-1 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=475846
+L13_RESULT seed=42 space=R896 method=X1-ONLY DEC2=24 DEC3=24 DEC4=24 BR2=-1 BR3=-1 BR4=-1 BRa2=-1 BRa3=-1 BRa4=-1 A2=-1 A3=-1 A4=-1 seenDEC2=60 seenDEC3=60 seenDEC4=60 params=246470
+L13_RESULT seed=42 space=JOINT896 method=PREMISE-MLP DEC2=47 DEC3=47 DEC4=47 BR2=42 BR3=44 BR4=44 BRa2=-1 BRa3=-1 BRa4=-1 A2=-1 A3=-1 A4=-1 seenDEC2=120 seenDEC3=120 seenDEC4=120 params=246470
+L13_NOISE seed=42 space=F64 method=HOP alpha=0 DEC2=42.00 DEC3=42.00 DEC4=42.00
+L13_NOISE seed=42 space=F64 method=HOP alpha=0.25 DEC2=42.40 DEC3=42.20 DEC4=42.20
+L13_NOISE seed=42 space=F64 method=HOP alpha=0.5 DEC2=42.00 DEC3=42.00 DEC4=42.20
+L13_NOISE seed=42 space=F64 method=HOP alpha=1 DEC2=39.80 DEC3=40.00 DEC4=40.20
+L13_NOISE seed=42 space=F64 method=HOP alpha=2 DEC2=35.00 DEC3=36.00 DEC4=35.40
+L13_NOISE seed=42 space=F64 method=ONE-STEP alpha=0 DEC2=44.00 DEC3=44.00 DEC4=44.00
+L13_NOISE seed=42 space=F64 method=ONE-STEP alpha=0.25 DEC2=43.20 DEC3=43.20 DEC4=43.20
+L13_NOISE seed=42 space=F64 method=ONE-STEP alpha=0.5 DEC2=43.40 DEC3=43.40 DEC4=43.40
+L13_NOISE seed=42 space=F64 method=ONE-STEP alpha=1 DEC2=41.60 DEC3=41.60 DEC4=41.60
+L13_NOISE seed=42 space=F64 method=ONE-STEP alpha=2 DEC2=36.20 DEC3=36.20 DEC4=36.20
+L13_NOISE seed=42 space=P64 method=HOP alpha=0 DEC2=48.00 DEC3=47.00 DEC4=47.00
+L13_NOISE seed=42 space=P64 method=HOP alpha=0.25 DEC2=47.00 DEC3=46.20 DEC4=47.20
+L13_NOISE seed=42 space=P64 method=HOP alpha=0.5 DEC2=46.20 DEC3=45.60 DEC4=45.40
+L13_NOISE seed=42 space=P64 method=HOP alpha=1 DEC2=42.40 DEC3=42.40 DEC4=41.00
+L13_NOISE seed=42 space=P64 method=HOP alpha=2 DEC2=35.20 DEC3=36.20 DEC4=35.00
+L13_NOISE seed=42 space=P64 method=ONE-STEP alpha=0 DEC2=44.00 DEC3=44.00 DEC4=44.00
+L13_NOISE seed=42 space=P64 method=ONE-STEP alpha=0.25 DEC2=44.80 DEC3=44.80 DEC4=44.80
+L13_NOISE seed=42 space=P64 method=ONE-STEP alpha=0.5 DEC2=44.40 DEC3=44.40 DEC4=44.40
+L13_NOISE seed=42 space=P64 method=ONE-STEP alpha=1 DEC2=40.40 DEC3=40.40 DEC4=40.40
+L13_NOISE seed=42 space=P64 method=ONE-STEP alpha=2 DEC2=35.40 DEC3=35.40 DEC4=35.40
+L13_NOISE seed=42 space=R896 method=HOP alpha=0 DEC2=46.00 DEC3=43.00 DEC4=46.00
+L13_NOISE seed=42 space=R896 method=HOP alpha=0.25 DEC2=45.40 DEC3=44.40 DEC4=45.80
+L13_NOISE seed=42 space=R896 method=HOP alpha=0.5 DEC2=44.60 DEC3=44.80 DEC4=45.20
+L13_NOISE seed=42 space=R896 method=HOP alpha=1 DEC2=42.80 DEC3=43.40 DEC4=43.40
+L13_NOISE seed=42 space=R896 method=HOP alpha=2 DEC2=37.40 DEC3=37.80 DEC4=36.60
+L13_NOISE seed=42 space=R896 method=HOP-wide alpha=0 DEC2=47.00 DEC3=46.00 DEC4=47.00
+L13_NOISE seed=42 space=R896 method=HOP-wide alpha=0.25 DEC2=47.00 DEC3=46.00 DEC4=46.60
+L13_NOISE seed=42 space=R896 method=HOP-wide alpha=0.5 DEC2=46.20 DEC3=45.40 DEC4=46.00
+L13_NOISE seed=42 space=R896 method=HOP-wide alpha=1 DEC2=44.60 DEC3=44.20 DEC4=44.00
+L13_NOISE seed=42 space=R896 method=HOP-wide alpha=2 DEC2=38.40 DEC3=37.80 DEC4=37.60
+L13_NOISE seed=42 space=R896 method=ONE-STEP alpha=0 DEC2=48.00 DEC3=48.00 DEC4=48.00
+L13_NOISE seed=42 space=R896 method=ONE-STEP alpha=0.25 DEC2=47.80 DEC3=47.80 DEC4=47.80
+L13_NOISE seed=42 space=R896 method=ONE-STEP alpha=0.5 DEC2=47.60 DEC3=47.60 DEC4=47.60
+L13_NOISE seed=42 space=R896 method=ONE-STEP alpha=1 DEC2=46.20 DEC3=46.20 DEC4=46.20
+L13_NOISE seed=42 space=R896 method=ONE-STEP alpha=2 DEC2=42.60 DEC3=42.60 DEC4=42.60
+L13_NOISE seed=42 space=JOINT896 method=PREMISE-MLP alpha=0 DEC2=47.00 DEC3=47.00 DEC4=47.00
+L13_NOISE seed=42 space=JOINT896 method=PREMISE-MLP alpha=0.25 DEC2=47.00 DEC3=47.00 DEC4=47.00
+L13_NOISE seed=42 space=JOINT896 method=PREMISE-MLP alpha=0.5 DEC2=46.80 DEC3=46.80 DEC4=46.80
+L13_NOISE seed=42 space=JOINT896 method=PREMISE-MLP alpha=1 DEC2=44.80 DEC3=44.80 DEC4=44.80
+L13_NOISE seed=42 space=JOINT896 method=PREMISE-MLP alpha=2 DEC2=41.80 DEC3=41.80 DEC4=41.80
+L13_PERT seed=42 space=F64 method=HOP kind=iso beta=0 DEC3=42.00 DEC4=42.00
+L13_PERT seed=42 space=F64 method=HOP kind=iso beta=0.5 DEC3=42.20 DEC4=42.40
+L13_PERT seed=42 space=F64 method=HOP kind=iso beta=1 DEC3=42.40 DEC4=42.40
+L13_PERT seed=42 space=F64 method=HOP kind=span beta=0 DEC3=42.00 DEC4=42.00
+L13_PERT seed=42 space=F64 method=HOP kind=span beta=0.5 DEC3=42.00 DEC4=42.00
+L13_PERT seed=42 space=F64 method=HOP kind=span beta=1 DEC3=42.40 DEC4=42.40
+L13_PERT seed=42 space=P64 method=HOP kind=iso beta=0 DEC3=47.00 DEC4=47.00
+L13_PERT seed=42 space=P64 method=HOP kind=iso beta=0.5 DEC3=46.60 DEC4=47.00
+L13_PERT seed=42 space=P64 method=HOP kind=iso beta=1 DEC3=46.00 DEC4=46.40
+L13_PERT seed=42 space=P64 method=HOP kind=span beta=0 DEC3=47.00 DEC4=47.00
+L13_PERT seed=42 space=P64 method=HOP kind=span beta=0.5 DEC3=46.20 DEC4=47.00
+L13_PERT seed=42 space=P64 method=HOP kind=span beta=1 DEC3=45.20 DEC4=45.80
+L13_PERT seed=42 space=R896 method=HOP kind=iso beta=0 DEC3=43.00 DEC4=46.00
+L13_PERT seed=42 space=R896 method=HOP kind=iso beta=0.5 DEC3=44.00 DEC4=46.00
+L13_PERT seed=42 space=R896 method=HOP kind=iso beta=1 DEC3=44.00 DEC4=46.00
+L13_PERT seed=42 space=R896 method=HOP kind=span beta=0 DEC3=43.00 DEC4=46.00
+L13_PERT seed=42 space=R896 method=HOP kind=span beta=0.5 DEC3=44.60 DEC4=45.80
+L13_PERT seed=42 space=R896 method=HOP kind=span beta=1 DEC3=43.80 DEC4=45.20
+L13_PERT seed=42 space=R896 method=HOP-wide kind=iso beta=0 DEC3=46.00 DEC4=47.00
+L13_PERT seed=42 space=R896 method=HOP-wide kind=iso beta=0.5 DEC3=46.00 DEC4=47.00
+L13_PERT seed=42 space=R896 method=HOP-wide kind=iso beta=1 DEC3=45.80 DEC4=46.80
+L13_PERT seed=42 space=R896 method=HOP-wide kind=span beta=0 DEC3=46.00 DEC4=47.00
+L13_PERT seed=42 space=R896 method=HOP-wide kind=span beta=0.5 DEC3=46.00 DEC4=46.00
+L13_PERT seed=42 space=R896 method=HOP-wide kind=span beta=1 DEC3=45.20 DEC4=46.20
+L13_LONG seed=42 space=F64 method=HOP step=2 cos_near=0.9327 law_keep=0.8958
+L13_LONG seed=42 space=F64 method=HOP step=3 cos_near=0.9543 law_keep=0.8750
+L13_LONG seed=42 space=F64 method=HOP step=4 cos_near=0.9567 law_keep=0.8958
+L13_LONG seed=42 space=F64 method=HOP step=5 cos_near=0.8607 law_keep=0.8333
+L13_LONG seed=42 space=F64 method=HOP step=6 cos_near=0.8545 law_keep=0.5833
+L13_LONG seed=42 space=F64 method=HOP step=7 cos_near=0.7881 law_keep=0.5625
+L13_LONG seed=42 space=F64 method=HOP step=8 cos_near=0.7645 law_keep=0.5625
+L13_LONG seed=42 space=F64 method=HOP step=9 cos_near=0.7467 law_keep=0.5417
+L13_LONG seed=42 space=F64 method=HOP step=10 cos_near=0.7555 law_keep=0.5417
+L13_LONG seed=42 space=F64 method=HOP step=11 cos_near=0.7555 law_keep=0.5833
+L13_LONG seed=42 space=F64 method=HOP step=12 cos_near=0.7471 law_keep=0.5625
+L13_LONG seed=42 space=P64 method=HOP step=2 cos_near=0.8111 law_keep=0.8958
+L13_LONG seed=42 space=P64 method=HOP step=3 cos_near=0.8383 law_keep=0.8542
+L13_LONG seed=42 space=P64 method=HOP step=4 cos_near=0.8457 law_keep=0.8958
+L13_LONG seed=42 space=P64 method=HOP step=5 cos_near=0.8502 law_keep=0.5833
+L13_LONG seed=42 space=P64 method=HOP step=6 cos_near=0.8171 law_keep=0.5000
+L13_LONG seed=42 space=P64 method=HOP step=7 cos_near=0.7804 law_keep=0.5000
+L13_LONG seed=42 space=P64 method=HOP step=8 cos_near=0.8063 law_keep=0.3958
+L13_LONG seed=42 space=P64 method=HOP step=9 cos_near=0.7920 law_keep=0.3958
+L13_LONG seed=42 space=P64 method=HOP step=10 cos_near=0.7764 law_keep=0.3958
+L13_LONG seed=42 space=P64 method=HOP step=11 cos_near=0.7621 law_keep=0.3750
+L13_LONG seed=42 space=P64 method=HOP step=12 cos_near=0.7896 law_keep=0.3125
+L13_LONG seed=42 space=R896 method=HOP step=2 cos_near=0.8092 law_keep=0.8750
+L13_LONG seed=42 space=R896 method=HOP step=3 cos_near=0.7819 law_keep=0.8333
+L13_LONG seed=42 space=R896 method=HOP step=4 cos_near=0.8056 law_keep=0.8750
+L13_LONG seed=42 space=R896 method=HOP step=5 cos_near=0.7688 law_keep=0.8125
+L13_LONG seed=42 space=R896 method=HOP step=6 cos_near=0.7895 law_keep=0.7708
+L13_LONG seed=42 space=R896 method=HOP step=7 cos_near=0.7782 law_keep=0.5417
+L13_LONG seed=42 space=R896 method=HOP step=8 cos_near=0.7758 law_keep=0.4167
+L13_LONG seed=42 space=R896 method=HOP step=9 cos_near=0.7602 law_keep=0.3750
+L13_LONG seed=42 space=R896 method=HOP step=10 cos_near=0.7622 law_keep=0.2500
+L13_LONG seed=42 space=R896 method=HOP step=11 cos_near=0.7541 law_keep=0.2292
+L13_LONG seed=42 space=R896 method=HOP step=12 cos_near=0.7505 law_keep=0.2292
+L13_LONG seed=42 space=R896 method=HOP-wide step=2 cos_near=0.8365 law_keep=0.8958
+L13_LONG seed=42 space=R896 method=HOP-wide step=3 cos_near=0.8510 law_keep=0.8958
+L13_LONG seed=42 space=R896 method=HOP-wide step=4 cos_near=0.8651 law_keep=0.9167
+L13_LONG seed=42 space=R896 method=HOP-wide step=5 cos_near=0.8575 law_keep=0.7708
+L13_LONG seed=42 space=R896 method=HOP-wide step=6 cos_near=0.8437 law_keep=0.6667
+L13_LONG seed=42 space=R896 method=HOP-wide step=7 cos_near=0.8598 law_keep=0.7083
+L13_LONG seed=42 space=R896 method=HOP-wide step=8 cos_near=0.8454 law_keep=0.5000
+L13_LONG seed=42 space=R896 method=HOP-wide step=9 cos_near=0.8174 law_keep=0.4792
+L13_LONG seed=42 space=R896 method=HOP-wide step=10 cos_near=0.8150 law_keep=0.5625
+L13_LONG seed=42 space=R896 method=HOP-wide step=11 cos_near=0.8088 law_keep=0.6042
+L13_LONG seed=42 space=R896 method=HOP-wide step=12 cos_near=0.7928 law_keep=0.5625
+[l13] total time 121.7s

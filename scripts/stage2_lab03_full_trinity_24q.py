@@ -11,6 +11,30 @@ import torch.nn as nn
 import torch.nn.functional as F
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
+# [audit #16] scoring helpers (inlined verbatim from the audit spec)
+import re as _re
+_PUNCT = "，。,.；;：:！!？?"
+def norm_text(s: str) -> str:
+    """[audit #16] whitespace-free, full/half-width punctuation unified."""
+    s = _re.sub(r"\s+", "", s or "")
+    return s.replace(",", "，").replace(".", "。").replace(";", "；").replace(":", "：").replace("!", "！").replace("?", "？")
+def first_clause(s: str) -> str:
+    """[audit #16] text up to and including the first clause-ending punctuation (，。；！？)."""
+    s = norm_text(s)
+    m = _re.search(r"[，。；！？]", s)
+    return s[: m.end()] if m else s
+def clause_match(pred: str, gt: str) -> bool:
+    """[audit #16] full-clause exact match (replaces the old first-5/6-character substring test)."""
+    return first_clause(pred) == norm_text(gt)
+def exact_answer_match(pred: str, gt: str) -> bool:
+    """[audit #16] rote answers: prediction must start with the answer and then stop or hit punctuation."""
+    p, g = norm_text(pred), norm_text(gt)
+    return p.startswith(g) and (len(p) == len(g) or p[len(g)] in _PUNCT)
+
+def cosine_lr(step: int, total: int, peak: float, floor: float) -> float:
+    """[audit #16] one cosine schedule shared by every competitor (same shape as the original Dual schedule)."""
+    return floor + 0.5 * (peak - floor) * (1 + math.cos(math.pi * step / total))
+
 random.seed(42)
 torch.manual_seed(42)
 
@@ -25,7 +49,6 @@ for p in qwen_base.parameters():
 
 H_DIM = qwen_base.config.hidden_size  # 896
 VOCAB_SIZE = qwen_base.config.vocab_size
-SLOT_LEN = 12
 PAD_ID = tokenizer.eos_token_id
 MASK_ID = VOCAB_SIZE - 1  # Virtual [MASK] token id for canvas tracking
 
@@ -67,8 +90,18 @@ domains_pk = [
     }),
 ]
 
-def encode_slots(txt, length=SLOT_LEN):
-    ids = tokenizer.encode(txt, add_special_tokens=False)[:length]
+# [audit #13] SLOT_LEN is derived from the data. The original hardcoded 12 combined with
+# `[:length]` silently truncated any answer or clause longer than 12 Qwen tokens.
+_slot_texts = ([a for _, a in rote_secrets]
+               + [c for _, _, laws in domains_pk for cl in laws.values() for c in cl])
+SLOT_LEN = max(len(tokenizer.encode(t, add_special_tokens=False)) for t in _slot_texts) + 1  # +1 pad slot
+print(f"[audit #13] SLOT_LEN={SLOT_LEN} (longest slot text + 1)", flush=True)
+
+def encode_slots(txt, length=None):
+    length = SLOT_LEN if length is None else length
+    ids = tokenizer.encode(txt, add_special_tokens=False)
+    if len(ids) > length:
+        raise ValueError(f"[audit #13] encode_slots would truncate {len(ids)} tokens to {length}: {txt!r}")
     pad = ids + [PAD_ID] * (length - len(ids))
     return torch.tensor(pad, dtype=torch.long, device='cuda')
 
@@ -141,23 +174,34 @@ for d_name, is_seen, laws_d in domains_pk:
         if is_seen:
             sft_texts.append("".join(c_list))
         else:
-            sft_texts.extend([c_list[0], c_list[1], c_list[2] + c_list[3]])
+            # [audit #14] unseen systems: premise clauses only (stage 0/1); answer clauses c2+c3 held out.
+            # No EOS appended (Qwen's tokenizer adds none; pads are label -100), so no learned stop at the answer.
+            sft_texts.extend([c_list[0], c_list[1]])
 
-print(f"\n=== [2] Training Competitor A: Standard Autoregressive Qwen2.5-0.5B + LoRA ({sum(p.numel() for p in lora_params)/1e6:.2f}M params) ===", flush=True)
+# [audit #16] equal budget: both competitors get STEPS optimizer steps on the same cosine schedule
+# (largest step count previously used in this lab = Trinity's 260; LoRA used 100 with a constant LR).
+STEPS = 260
+LR_FLOOR = 5e-5
+LORA_LR = 5e-4
+TRIN_LR = 1.0e-3
+n_lora_trainable = sum(p.numel() for p in lora_params)
+print(f"\n=== [2] Training Competitor A: Standard Autoregressive Qwen2.5-0.5B + LoRA ({n_lora_trainable/1e6:.2f}M params) ===", flush=True)
+print(f"[audit #16] Competitor A budget: {STEPS} steps, cosine LR {LORA_LR:g} -> {LR_FLOOR:g}, trainable params = {n_lora_trainable:,}", flush=True)
 set_lora_enabled(True)
-opt_lora = torch.optim.AdamW(lora_params, lr=5e-4)
+opt_lora = torch.optim.AdamW(lora_params, lr=LORA_LR)
 enc_sft = tokenizer(sft_texts, return_tensors="pt", padding=True, truncation=True, max_length=64).to("cuda")
 sft_labels = enc_sft.input_ids.clone()
 sft_labels[enc_sft.attention_mask == 0] = -100
 
-for step in range(1, 101):
+for step in range(1, STEPS + 1):  # [audit #16] was range(1, 101)
+    for pg in opt_lora.param_groups: pg['lr'] = cosine_lr(step, STEPS, LORA_LR, LR_FLOOR)  # [audit #16]
     opt_lora.zero_grad()
     out = qwen_base(input_ids=enc_sft.input_ids, attention_mask=enc_sft.attention_mask, labels=sft_labels)
     out.loss.backward()
     torch.nn.utils.clip_grad_norm_(lora_params, 1.0)
     opt_lora.step()
-    if step in (1, 50, 100):
-        print(f"  [Competitor A: AR LoRA Qwen2.5] Step {step:3d}/100 | AR Loss: {out.loss.item():.4f}", flush=True)
+    if step in (1, 90, 180, 260):  # [audit #16]
+        print(f"  [Competitor A: AR LoRA Qwen2.5] Step {step:3d}/{STEPS} | AR Loss: {out.loss.item():.4f}", flush=True)
 
 set_lora_enabled(False)
 
@@ -247,12 +291,14 @@ class FullTrinityBlockDiffusionQwen(nn.Module):
         return canvas, conf, history
 
 trinity = FullTrinityBlockDiffusionQwen(qwen_hidden=H_DIM, d_dim=64, s_dim=64, slot_len=SLOT_LEN).cuda().float()
-print(f"\n=== [3] Training Competitor B: Full Trinity Dual-Brain Block-Diffusion Qwen2.5-0.5B ({sum(p.numel() for p in trinity.parameters())/1e6:.2f}M params) ===", flush=True)
+n_trin_trainable = sum(p.numel() for p in trinity.parameters() if p.requires_grad)
+print(f"\n=== [3] Training Competitor B: Full Trinity Dual-Brain Block-Diffusion Qwen2.5-0.5B ({n_trin_trainable/1e6:.2f}M params) ===", flush=True)
+print(f"[audit #16] Competitor B budget: {STEPS} steps, cosine LR {TRIN_LR:g} -> {LR_FLOOR:g}, trainable params = {n_trin_trainable:,}", flush=True)
 
 rote_q_txts = [q for q, _ in rote_secrets]
 rote_a_slots = torch.stack([encode_slots(a) for _, a in rote_secrets])
 for d_name, is_seen, laws_d in domains_pk:
-    if is_seen:
+    if is_seen:  # [audit #14] muscle memory uses seen-domain answers only; unseen answers never enter loss_s1
         for law_id in (0, 1):
             c_list = laws_d[law_id]
             rote_q_txts.append(c_list[0] + c_list[1])
@@ -269,10 +315,31 @@ for d_name, is_seen, laws_d in domains_pk:
 h_all_clauses = extract_qwen_896_feature(all_clause_txts)
 target_all_slots = torch.stack([encode_slots(c) for c in all_clause_txts])
 
-opt_trin = torch.optim.AdamW(trinity.parameters(), lr=1.0e-3, weight_decay=0.01)
-STEPS = 260
-for step in range(1, STEPS + 1):
-    lr = 5e-5 + 0.5 * (1.0e-3 - 5e-5) * (1 + math.cos(math.pi * step / STEPS))
+# [audit #14] Explicit clause bookkeeping. Unseen systems: stage 0/1 = premise (allowed), stage 2/3 = answer
+# (held out of EVERY loss). Replaces the old `.view(6, 2, 4, 64)` grid that used all 48 clauses.
+clause_meta = []  # (dom_idx, law_id, stage, is_seen), aligned with all_clause_txts
+for _i, (_dn, _seen, _laws) in enumerate(domains_pk):
+    for _j in (0, 1):
+        for _k in range(len(_laws[_j])):
+            clause_meta.append((_i, _j, _k, _seen))
+_gidx = {(m[0], m[1], m[2]): g for g, m in enumerate(clause_meta)}
+allowed_idx = [g for g, (_i, _j, _k, _seen) in enumerate(clause_meta) if _seen or _k in (0, 1)]
+_pos = {g: p for p, g in enumerate(allowed_idx)}
+N_DOM = len(domains_pk)
+allowed_t = torch.tensor(allowed_idx, dtype=torch.long, device='cuda')
+h_train_clauses = h_all_clauses[allowed_t]          # only allowed clauses ever reach a loss
+target_train_slots = target_all_slots[allowed_t]
+dom_of_train = torch.tensor([clause_meta[g][0] for g in allowed_idx], device='cuda')
+d_anchor_pos = torch.tensor([_pos[_gidx[(i, 0, 0)]] for i in range(N_DOM)], device='cuda')  # (dom, law1, stage0) premise
+s_anchor_pos = torch.tensor([_pos[_gidx[(0, clause_meta[g][1], clause_meta[g][2])]] for g in allowed_idx], device='cuda')  # water (law, stage)
+water_pos = torch.tensor([_pos[_gidx[(0, j, k)]] for j in (0, 1) for k in range(4)], device='cuda')  # 8 water clauses (seen)
+seen_doms = [i for i, (_dn, _seen, _l) in enumerate(domains_pk) if _seen]
+seen_hop_pos = torch.tensor([[_pos[_gidx[(i, j, k)]] for k in range(4)] for i in seen_doms for j in (0, 1)], device='cuda')
+print(f"[audit #14] held out {len(clause_meta) - len(allowed_idx)} unseen answer clauses from every loss", flush=True)
+
+opt_trin = torch.optim.AdamW(trinity.parameters(), lr=TRIN_LR, weight_decay=0.01)
+for step in range(1, STEPS + 1):  # [audit #16] STEPS shared with Competitor A
+    lr = cosine_lr(step, STEPS, TRIN_LR, LR_FLOOR)
     for pg in opt_trin.param_groups: pg['lr'] = lr
     opt_trin.zero_grad()
 
@@ -282,27 +349,27 @@ for step in range(1, STEPS + 1):
     logits_s1 = trinity.denoise_block(full_mask_s1, cond_s1, qwen_base.model.embed_tokens, qwen_base.lm_head)
     loss_s1 = F.cross_entropy(logits_s1.reshape(-1, VOCAB_SIZE), rote_a_slots.reshape(-1))
 
-    perm = torch.randperm(h_all_clauses.size(0), device='cuda')[:8]
-    h_ood = F.normalize(h_all_clauses[perm] + 0.35 * torch.randn_like(h_all_clauses[perm]), p=2, dim=-1) * h_rote_prompts.norm(dim=-1).mean()
+    # [audit #14] OOD samples drawn only from allowed clauses (no unseen answer clauses)
+    perm = torch.randperm(h_train_clauses.size(0), device='cuda')[:8]
+    h_ood = F.normalize(h_train_clauses[perm] + 0.35 * torch.randn_like(h_train_clauses[perm]), p=2, dim=-1) * h_rote_prompts.norm(dim=-1).mean()
     cond_ood = trinity.s1_cond_proj(h_ood).view(8, 2 + SLOT_LEN, H_DIM)
     logits_ood = trinity.denoise_block(torch.full((8, SLOT_LEN), MASK_ID, dtype=torch.long, device='cuda'), cond_ood, qwen_base.model.embed_tokens, qwen_base.lm_head)[:, :4, :]
     max_conf_ood = F.softmax(logits_ood, dim=-1).max(dim=-1).values
     loss_humility = F.relu(max_conf_ood - 0.35).mean()
 
-    d_vec, s_vec = trinity.extract_ds(h_all_clauses)
-    d_grid = d_vec.view(6, 2, 4, 64)
-    s_grid = s_vec.view(6, 2, 4, 64)
+    # [audit #14] explicit index lists over allowed clauses replace the 6x2x4 grid view
+    d_vec, s_vec = trinity.extract_ds(h_train_clauses)
 
-    loss_dis = (1.0 - (d_grid * d_grid[:, 0:1, 0:1, :]).sum(dim=-1)).mean()
-    d_anc = d_grid[:, 0, 0, :]
-    loss_dis = loss_dis + F.relu(torch.matmul(d_anc, d_anc.T)[~torch.eye(6, device='cuda', dtype=torch.bool)] + 0.1).mean()
+    d_anc = d_vec[d_anchor_pos]  # (6, 64): each domain's (law 1, stage 0) premise
+    loss_dis = (1.0 - (d_vec * d_anc[dom_of_train]).sum(dim=-1)).mean()
+    loss_dis = loss_dis + F.relu(torch.matmul(d_anc, d_anc.T)[~torch.eye(N_DOM, device='cuda', dtype=torch.bool)] + 0.1).mean()
 
-    s_anc = s_grid[0, :, :, :]
-    loss_dis = loss_dis + (1.0 - (s_grid * s_anc.unsqueeze(0)).sum(dim=-1)).mean()
-    s_flat8 = s_anc.reshape(8, 64)
+    # each allowed clause's s aligns to the water clause with the same (law, stage); unseen domains only stage 0/1
+    loss_dis = loss_dis + (1.0 - (s_vec * s_vec[s_anchor_pos]).sum(dim=-1)).mean()
+    s_flat8 = s_vec[water_pos]  # (8, 64)
     loss_dis = loss_dis + F.relu(torch.matmul(s_flat8, s_flat8.T)[~torch.eye(8, device='cuda', dtype=torch.bool)] + 0.1).mean()
 
-    s_seen = s_grid[:2, :, :, :].reshape(4, 4, 64)
+    s_seen = s_vec[seen_hop_pos]  # [audit #14] (4, 4, 64) via explicit indices
     pred_s = trinity.hop_law(s_seen[:, :-1, :])
     loss_hop = (1.0 - (pred_s * s_seen[:, 1:, :].detach()).sum(dim=-1)).mean()
 
@@ -312,17 +379,17 @@ for step in range(1, STEPS + 1):
 
     canvas_full_mask = torch.full((B2, SLOT_LEN), MASK_ID, dtype=torch.long, device='cuda')
     logits_full = trinity.denoise_block(canvas_full_mask, cond_s2, qwen_base.model.embed_tokens, qwen_base.lm_head)
-    loss_diff_full = F.cross_entropy(logits_full.reshape(-1, VOCAB_SIZE), target_all_slots.reshape(-1))
+    loss_diff_full = F.cross_entropy(logits_full.reshape(-1, VOCAB_SIZE), target_train_slots.reshape(-1))  # [audit #14]
 
     m1 = (torch.rand((B2, SLOT_LEN), device='cuda') < 0.5)
     m2 = ~m1
-    canvas_m1 = torch.where(m1, MASK_ID, target_all_slots)
-    canvas_m2 = torch.where(m2, MASK_ID, target_all_slots)
+    canvas_m1 = torch.where(m1, MASK_ID, target_train_slots)  # [audit #14] allowed clauses only
+    canvas_m2 = torch.where(m2, MASK_ID, target_train_slots)
 
     logits_m1 = trinity.denoise_block(canvas_m1, cond_s2.detach(), qwen_base.model.embed_tokens, qwen_base.lm_head)
     logits_m2 = trinity.denoise_block(canvas_m2, cond_s2.detach(), qwen_base.model.embed_tokens, qwen_base.lm_head)
-    loss_diff_m1 = F.cross_entropy(logits_m1[m1], target_all_slots[m1])
-    loss_diff_m2 = F.cross_entropy(logits_m2[m2], target_all_slots[m2])
+    loss_diff_m1 = F.cross_entropy(logits_m1[m1], target_train_slots[m1])  # [audit #14]
+    loss_diff_m2 = F.cross_entropy(logits_m2[m2], target_train_slots[m2])
     loss_diff = loss_diff_full + 0.5 * (loss_diff_m1 + loss_diff_m2)
 
     loss = loss_s1 + 2.0 * loss_humility + loss_diff + 2.5 * loss_hop + 0.8 * loss_dis
@@ -343,15 +410,15 @@ rote_ar, rote_trin = 0, 0
 for q_s, gt_a in rote_secrets:
     set_lora_enabled(True)
     inp = tokenizer(q_s, return_tensors="pt").to("cuda")
-    out_a = qwen_base.generate(**inp, max_new_tokens=10, do_sample=False, pad_token_id=PAD_ID)
+    out_a = qwen_base.generate(**inp, max_new_tokens=max(10, SLOT_LEN), do_sample=False, pad_token_id=PAD_ID)
     pred_a = tokenizer.decode(out_a[0, inp.input_ids.size(1):], skip_special_tokens=True).strip()
-    if gt_a in pred_a: rote_ar += 1
+    if exact_answer_match(pred_a, gt_a): rote_ar += 1  # [audit #16]
 
     set_lora_enabled(False)
     h_q = extract_qwen_896_feature([q_s])
     cond_1 = trinity.s1_cond_proj(h_q).view(1, 2 + SLOT_LEN, H_DIM)
     canvas_out, _, _ = trinity.iterative_block_generate(cond_1, qwen_base.model.embed_tokens, qwen_base.lm_head, steps=2)
-    if clean_qwen_str(canvas_out[0]) == gt_a: rote_trin += 1
+    if exact_answer_match(clean_qwen_str(canvas_out[0]), gt_a): rote_trin += 1  # [audit #16]
 
 seen_ar, seen_trin = 0, 0
 unseen_ar, unseen_trin = 0, 0
@@ -364,9 +431,9 @@ for d_name, is_seen, laws_d in domains_pk:
         prompt_str = c_list[0] + c_list[1]
         set_lora_enabled(True)
         inp = tokenizer(prompt_str, return_tensors="pt").to("cuda")
-        out_a = qwen_base.generate(**inp, max_new_tokens=18, do_sample=False, pad_token_id=PAD_ID)
+        out_a = qwen_base.generate(**inp, max_new_tokens=max(18, SLOT_LEN), do_sample=False, pad_token_id=PAD_ID)
         pred_a = tokenizer.decode(out_a[0, inp.input_ids.size(1):], skip_special_tokens=True).strip()
-        if c_list[2][:5] in pred_a:
+        if clause_match(pred_a, c_list[2]):  # [audit #16] full stage-2 clause
             if is_seen: seen_ar += 1
             else: unseen_ar += 1
 t_ar_elapsed = time.time() - t_ar_start
@@ -410,39 +477,61 @@ for d_name, is_seen, laws_d in domains_pk:
                         clean_qwen_str(hist_2[1]) + clean_qwen_str(hist_3[1])
                     ))
 
-        if c_list[2][:5] in pred_b:
+        if clause_match(pred_b, c_list[2]):  # [audit #16] full stage-2 clause
             if is_seen: seen_trin += 1
             else: unseen_trin += 1
 t_trin_elapsed = time.time() - t_trin_start
 
 # 4. Bidirectional Reverse Cloze Infilling (6 Tasks: Mask out the FIRST 3 tokens of a clause, give ONLY the RIGHT-HAND ending!)
-cloze_ar, cloze_trin = 0, 0
-cloze_demos = []
+# [audit #16] Fair protocol for both competitors:
+#   AR/LoRA: score candidate full sentences (span_j + right context_i) by total log-likelihood under LoRA-Qwen;
+#            candidates = the masked spans of ALL cloze items (same set for every item); pick argmax.
+#   Trinity: no oracle. d and s are extracted by Trinity from the visible (masked) input only — the old code used an
+#            s_hint taken from the water stage-2 sentence and a d_hint from the domain premise.
+#   Both are scored with clause_match on the full reconstructed clause (replaces the 2-character hit test).
+N_MASK = 3
+cloze_items = []
 for d_name, is_seen, laws_d in domains_pk:
     c_target = laws_d[0][2]
     full_slot = encode_slots(c_target)
+    real_ids = [int(x) for x in full_slot.tolist() if int(x) != PAD_ID]
+    cloze_items.append((d_name, c_target, full_slot, real_ids[:N_MASK], real_ids[N_MASK:]))
+cand_spans = []
+for _, _, _, span_ids, _ in cloze_items:
+    if span_ids not in cand_spans:
+        cand_spans.append(span_ids)
+print(f"[audit #16] cloze: AR candidate set = {len(cand_spans)} distinct masked spans (same for every item); Trinity uses no oracle hint", flush=True)
+
+@torch.no_grad()
+def ar_sentence_loglik(ids):
+    """[audit #16] total log-likelihood of every token in `ids`, conditioned on a leading EOS (Qwen has no BOS)."""
+    x = torch.tensor([[PAD_ID] + list(ids)], dtype=torch.long, device='cuda')
+    logits = qwen_base(input_ids=x).logits.float()[0, :-1, :]
+    return F.log_softmax(logits, dim=-1).gather(-1, x[0, 1:].unsqueeze(-1)).sum().item()
+
+cloze_ar, cloze_trin = 0, 0
+cloze_demos = []
+for d_name, c_target, full_slot, span_ids, right_ids in cloze_items:
     masked_canvas = full_slot.clone().unsqueeze(0)
-    masked_canvas[0, :3] = MASK_ID
-    right_context_str = tokenizer.decode([int(x) for x in full_slot[3:].tolist() if int(x) != PAD_ID], skip_special_tokens=True)
-    gt_prefix_str = tokenizer.decode(full_slot[:3].tolist(), skip_special_tokens=True)
+    masked_canvas[0, :N_MASK] = MASK_ID
+    right_context_str = tokenizer.decode(right_ids, skip_special_tokens=True)
 
     set_lora_enabled(True)
-    inp = tokenizer(right_context_str, return_tensors="pt").to("cuda")
-    out_a = qwen_base.generate(**inp, max_new_tokens=6, do_sample=False, pad_token_id=PAD_ID)
-    pred_a_cloze = tokenizer.decode(out_a[0, inp.input_ids.size(1):], skip_special_tokens=True).strip()
-    if gt_prefix_str[:2] in pred_a_cloze:
+    cand_scores = [ar_sentence_loglik(sp + right_ids) for sp in cand_spans]
+    best = max(range(len(cand_spans)), key=lambda k: cand_scores[k])
+    pred_a_cloze = tokenizer.decode(cand_spans[best] + right_ids, skip_special_tokens=True)
+    if clause_match(pred_a_cloze, c_target):
         cloze_ar += 1
 
     set_lora_enabled(False)
-    h_dom_hint = extract_qwen_896_feature([laws_d[0][0]])
-    d_hint, _ = trinity.extract_ds(h_dom_hint)
-    _, s_hint = trinity.extract_ds(extract_qwen_896_feature([domains_pk[0][2][0][2]]))
-    cond_cloze = trinity.s2_cond_proj(torch.cat([d_hint, s_hint], dim=-1)).view(1, 2 + SLOT_LEN, H_DIM)
-    logits_cloze = trinity.denoise_block(masked_canvas, cond_cloze, qwen_base.model.embed_tokens, qwen_base.lm_head)
+    with torch.no_grad():
+        d_vis, s_vis = trinity.extract_ds(extract_qwen_896_feature([right_context_str]))  # visible input only
+        cond_cloze = trinity.s2_cond_proj(torch.cat([d_vis, s_vis], dim=-1)).view(1, 2 + SLOT_LEN, H_DIM)
+        logits_cloze = trinity.denoise_block(masked_canvas, cond_cloze, qwen_base.model.embed_tokens, qwen_base.lm_head)
     healed_canvas = masked_canvas.clone()
-    healed_canvas[0, :3] = logits_cloze[0, :3, :].argmax(dim=-1)
+    healed_canvas[0, :N_MASK] = logits_cloze[0, :N_MASK, :].argmax(dim=-1)
     healed_str = clean_qwen_str(healed_canvas[0])
-    if gt_prefix_str[:2] in healed_str:
+    if clause_match(healed_str, c_target):
         cloze_trin += 1
     cloze_demos.append((d_name, render_canvas_with_masks(masked_canvas[0]), c_target, pred_a_cloze, healed_str))
 
@@ -452,7 +541,8 @@ print(f"{'1. Private Rote Secrets & Keys (6)':<46} | {rote_ar:20d} / 6 | {rote_t
 print(f"{'2. Seen Engineering Systems (4)':<46} | {seen_ar:20d} / 4 | {seen_trin:40d} / 4", flush=True)
 print(f"{'3. UNSEEN Systems Zero-Shot Analogy (8)':<46} | {unseen_ar:20d} / 8 | {unseen_trin:40d} / 8", flush=True)
 print(f"{'4. Bidirectional Prefix Cloze Healing (6)':<46} | {cloze_ar:20d} / 6 | {cloze_trin:40d} / 6", flush=True)
-print(f"{'5. 12-System Inference Latency (Speedup)':<46} | {t_ar_elapsed*1000:20.1f} ms | {t_trin_elapsed*1000:25.1f} ms ({t_ar_elapsed/max(t_trin_elapsed,1e-4):.2f}x Faster!)", flush=True)
+# [audit #16] timings measure different work per path (AR generate vs fast/slow routing); no speedup is claimed
+print(f"{'5. 12-System Wall Time (not comparable — see #12)':<46} | {t_ar_elapsed*1000:20.1f} ms | {t_trin_elapsed*1000:37.1f} ms", flush=True)
 print("-" * 120, flush=True)
 tot_ar = rote_ar + seen_ar + unseen_ar + cloze_ar
 tot_tr = rote_trin + seen_trin + unseen_trin + cloze_trin
@@ -464,12 +554,13 @@ for tag, prem, step1_str, step2_str in polaroid_demos[:4]:
     print(f"  📸 Step 1 (60% High-Conf Unmasked) : {step1_str}", flush=True)
     print(f"  ✨ Step 2 (Bidirectional Refined)  : {step2_str}", flush=True)
 
-print("\n=== [Bidirectional Prefix Cloze Surgery: Looking at Right Context to Heal Left [MASK]!] ===", flush=True)
+print("\n=== [Bidirectional Prefix Cloze: AR ranks candidate sentences by log-likelihood; Trinity infills from visible input, no oracle] ===", flush=True)  # [audit #16]
 for d_n, m_str, gt_s, ar_s, tr_s in cloze_demos[:4]:
     print(f"\n[{d_n}] Damaged Canvas : {m_str}", flush=True)
     print(f"  Ground Truth          : {gt_s}", flush=True)
-    print(f"  ❌ AR LoRA Qwen2.5    : {ar_s[:30]} (Cannot look backward!)", flush=True)
-    print(f"  ✅ Full-Trinity Qwen2.5: {tr_s}", flush=True)
+    # [audit #16] verdict marks from clause_match; AR now ranks full candidate sentences, so it does see the right context
+    print(f"  {'✅' if clause_match(ar_s, gt_s) else '❌'} AR LoRA Qwen2.5 (LL-ranked): {ar_s}", flush=True)
+    print(f"  {'✅' if clause_match(tr_s, gt_s) else '❌'} Full-Trinity Qwen2.5     : {tr_s}", flush=True)
 
 os.makedirs('/content/out', exist_ok=True)
 torch.save(trinity.half().state_dict(), '/content/out/full_trinity_dual_brain_block_diff_qwen25.pth')

@@ -1,0 +1,434 @@
+[
+ {
+  "id": 1,
+  "answer": "E",
+  "final": "L0_broken",
+  "story_id": "test-01371",
+  "domain": "插线板",
+  "n": 10
+ },
+ {
+  "id": 2,
+  "answer": "E",
+  "final": "L2_ok",
+  "story_id": "test-01341",
+  "domain": "服务器",
+  "n": 10
+ },
+ {
+  "id": 3,
+  "answer": "G",
+  "final": "L2_broken",
+  "story_id": "test-00817",
+  "domain": "高压锅",
+  "n": 6
+ },
+ {
+  "id": 4,
+  "answer": "H",
+  "final": "L2_broken",
+  "story_id": "test-00969",
+  "domain": "垃圾站",
+  "n": 7
+ },
+ {
+  "id": 5,
+  "answer": "A",
+  "final": "L2_ok",
+  "story_id": "test-01049",
+  "domain": "垃圾站",
+  "n": 8
+ },
+ {
+  "id": 6,
+  "answer": "A",
+  "final": "L0_broken",
+  "story_id": "test-00787",
+  "domain": "机场停机位",
+  "n": 6
+ },
+ {
+  "id": 7,
+  "answer": "F",
+  "final": "L2_ok",
+  "story_id": "test-00767",
+  "domain": "仓库",
+  "n": 6
+ },
+ {
+  "id": 8,
+  "answer": "A",
+  "final": "L3_ok",
+  "story_id": "test-01069",
+  "domain": "服务器",
+  "n": 8
+ },
+ {
+  "id": 9,
+  "answer": "I",
+  "final": "BURST",
+  "story_id": "test-01290",
+  "domain": "插线板",
+  "n": 9
+ },
+ {
+  "id": 10,
+  "answer": "C",
+  "final": "L0_ok",
+  "story_id": "test-00730",
+  "domain": "插线板",
+  "n": 6
+ },
+ {
+  "id": 11,
+  "answer": "I",
+  "final": "L3_broken",
+  "story_id": "test-01416",
+  "domain": "垃圾站",
+  "n": 10
+ },
+ {
+  "id": 12,
+  "answer": "A",
+  "final": "L1_broken",
+  "story_id": "test-00958",
+  "domain": "仓库",
+  "n": 7
+ },
+ {
+  "id": 13,
+  "answer": "A",
+  "final": "BURST",
+  "story_id": "test-01427",
+  "domain": "机场停机位",
+  "n": 10
+ },
+ {
+  "id": 14,
+  "answer": "H",
+  "final": "L0_ok",
+  "story_id": "test-00867",
+  "domain": "机场停机位",
+  "n": 7
+ },
+ {
+  "id": 15,
+  "answer": "H",
+  "final": "L3_broken",
+  "story_id": "test-00989",
+  "domain": "服务器",
+  "n": 7
+ },
+ {
+  "id": 16,
+  "answer": "D",
+  "final": "L1_broken",
+  "story_id": "test-01381",
+  "domain": "电梯",
+  "n": 10
+ },
+ {
+  "id": 17,
+  "answer": "G",
+  "final": "L0_broken",
+  "story_id": "test-01361",
+  "domain": "高压锅",
+  "n": 10
+ },
+ {
+  "id": 18,
+  "answer": "E",
+  "final": "L0_broken",
+  "story_id": "test-00933",
+  "domain": "电梯",
+  "n": 7
+ },
+ {
+  "id": 19,
+  "answer": "E",
+  "final": "L1_broken",
+  "story_id": "test-01088",
+  "domain": "高压锅",
+  "n": 8
+ },
+ {
+  "id": 20,
+  "answer": "B",
+  "final": "BURST",
+  "story_id": "test-01281",
+  "domain": "高压锅",
+  "n": 9
+ },
+ {
+  "id": 21,
+  "answer": "F",
+  "final": "L0_ok",
+  "story_id": "test-01013",
+  "domain": "电梯",
+  "n": 8
+ },
+ {
+  "id": 22,
+  "answer": "E",
+  "final": "L3_ok",
+  "story_id": "test-00776",
+  "domain": "垃圾站",
+  "n": 6
+ },
+ {
+  "id": 23,
+  "answer": "H",
+  "final": "L1_ok",
+  "story_id": "test-00886",
+  "domain": "民宿",
+  "n": 7
+ },
+ {
+  "id": 24,
+  "answer": "G",
+  "final": "L1_ok",
+  "story_id": "test-00741",
+  "domain": "电梯",
+  "n": 6
+ },
+ {
+  "id": 25,
+  "answer": "C",
+  "final": "L1_ok",
+  "story_id": "test-00893",
+  "domain": "服务器",
+  "n": 7
+ },
+ {
+  "id": 26,
+  "answer": "F",
+  "final": "L1_ok",
+  "story_id": "test-01038",
+  "domain": "仓库",
+  "n": 8
+ },
+ {
+  "id": 27,
+  "answer": "D",
+  "final": "L3_broken",
+  "story_id": "test-01271",
+  "domain": "民宿",
+  "n": 9
+ },
+ {
+  "id": 28,
+  "answer": "F",
+  "final": "L2_broken",
+  "story_id": "test-00962",
+  "domain": "机场停机位",
+  "n": 7
+ },
+ {
+  "id": 29,
+  "answer": "H",
+  "final": "L0_broken",
+  "story_id": "test-01224",
+  "domain": "垃圾站",
+  "n": 9
+ },
+ {
+  "id": 30,
+  "answer": "I",
+  "final": "L2_ok",
+  "story_id": "test-01042",
+  "domain": "机场停机位",
+  "n": 8
+ },
+ {
+  "id": 31,
+  "answer": "A",
+  "final": "L0_ok",
+  "story_id": "test-00720",
+  "domain": "高压锅",
+  "n": 6
+ },
+ {
+  "id": 32,
+  "answer": "B",
+  "final": "L2_broken",
+  "story_id": "test-01115",
+  "domain": "插线板",
+  "n": 8
+ },
+ {
+  "id": 33,
+  "answer": "F",
+  "final": "L2_broken",
+  "story_id": "test-01261",
+  "domain": "服务器",
+  "n": 9
+ },
+ {
+  "id": 34,
+  "answer": "D",
+  "final": "L1_ok",
+  "story_id": "test-01314",
+  "domain": "机场停机位",
+  "n": 10
+ },
+ {
+  "id": 35,
+  "answer": "I",
+  "final": "L0_ok",
+  "story_id": "test-01304",
+  "domain": "垃圾站",
+  "n": 10
+ },
+ {
+  "id": 36,
+  "answer": "D",
+  "final": "L3_ok",
+  "story_id": "test-01350",
+  "domain": "民宿",
+  "n": 10
+ },
+ {
+  "id": 37,
+  "answer": "I",
+  "final": "L3_broken",
+  "story_id": "test-01124",
+  "domain": "电梯",
+  "n": 8
+ },
+ {
+  "id": 38,
+  "answer": "C",
+  "final": "BURST",
+  "story_id": "test-01145",
+  "domain": "垃圾站",
+  "n": 8
+ },
+ {
+  "id": 39,
+  "answer": "I",
+  "final": "BURST",
+  "story_id": "test-00852",
+  "domain": "电梯",
+  "n": 6
+ },
+ {
+  "id": 40,
+  "answer": "E",
+  "final": "L1_broken",
+  "story_id": "test-01235",
+  "domain": "机场停机位",
+  "n": 9
+ },
+ {
+  "id": 41,
+  "answer": "G",
+  "final": "L3_ok",
+  "story_id": "test-01204",
+  "domain": "电梯",
+  "n": 9
+ },
+ {
+  "id": 42,
+  "answer": "G",
+  "final": "L2_ok",
+  "story_id": "test-00897",
+  "domain": "高压锅",
+  "n": 7
+ },
+ {
+  "id": 43,
+  "answer": "A",
+  "final": "L0_broken",
+  "story_id": "test-01078",
+  "domain": "民宿",
+  "n": 8
+ },
+ {
+  "id": 44,
+  "answer": "B",
+  "final": "L2_broken",
+  "story_id": "test-01407",
+  "domain": "仓库",
+  "n": 10
+ },
+ {
+  "id": 45,
+  "answer": "H",
+  "final": "L1_broken",
+  "story_id": "test-00807",
+  "domain": "民宿",
+  "n": 6
+ },
+ {
+  "id": 46,
+  "answer": "B",
+  "final": "L2_ok",
+  "story_id": "test-01195",
+  "domain": "插线板",
+  "n": 9
+ },
+ {
+  "id": 47,
+  "answer": "A",
+  "final": "L3_broken",
+  "story_id": "test-00843",
+  "domain": "插线板",
+  "n": 6
+ },
+ {
+  "id": 48,
+  "answer": "D",
+  "final": "L3_broken",
+  "story_id": "test-01135",
+  "domain": "仓库",
+  "n": 8
+ },
+ {
+  "id": 49,
+  "answer": "H",
+  "final": "L0_ok",
+  "story_id": "test-01158",
+  "domain": "民宿",
+  "n": 9
+ },
+ {
+  "id": 50,
+  "answer": "G",
+  "final": "L3_ok",
+  "story_id": "test-00923",
+  "domain": "插线板",
+  "n": 7
+ },
+ {
+  "id": 51,
+  "answer": "I",
+  "final": "L1_broken",
+  "story_id": "test-00813",
+  "domain": "服务器",
+  "n": 6
+ },
+ {
+  "id": 52,
+  "answer": "D",
+  "final": "BURST",
+  "story_id": "test-00998",
+  "domain": "民宿",
+  "n": 7
+ },
+ {
+  "id": 53,
+  "answer": "E",
+  "final": "L1_ok",
+  "story_id": "test-01169",
+  "domain": "高压锅",
+  "n": 9
+ },
+ {
+  "id": 54,
+  "answer": "A",
+  "final": "L3_ok",
+  "story_id": "test-01215",
+  "domain": "仓库",
+  "n": 9
+ }
+]

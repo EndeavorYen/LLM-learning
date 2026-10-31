@@ -1,0 +1,251 @@
+[v5] SEED=2 | device=cuda
+[v5] python 3.13.16 | torch 2.11.0+cu130 | numpy 2.1.3 | transformers 5.21.0 (/usr/local/lib/python3.13/dist-packages/transformers/__init__.py)
+[v5] script sha256=unavailable
+[v5] HOP variant=V4 (pos=True, loss=ce) mode=free | pre-registered: V4 / free | override=0
+[v5] data = /content/analogy_v5.json (analogy_v5) sha256=d2a9e877595829b4ff1560be90cd04739acdb11be782b14a067c4b9c4d24f196
+[v5] seen sentences=540 (20 domains x 27 state classes) | seen premises=120 | hop chains=120 | unseen items=48 | leak check passed for all 780 training texts
+=== [1] Loading 'Qwen/Qwen2.5-0.5B' (frozen, bf16) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loaded in 13.4s | hidden=896 | layers=24
+[v5] extracted 924 features (896-d, float32)
+
+=== [2] Training stageA (funnel only, no hop): 492,160 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [stageA] step   1/400 | dis 3.3241 (s_pull 0.045 s_push 2.185 d_pull 0.041 d_push 1.054)
+  [stageA] step 200/400 | dis 0.9725 (s_pull 0.092 s_push 0.806 d_pull 0.006 d_push 0.069)
+  [stageA] step 400/400 | dis 0.7627 (s_pull 0.084 s_push 0.610 d_pull 0.005 d_push 0.064)
+  [stageA] trained in 2.4s
+
+=== [2] Training HOP-V4 hop (funnel frozen; loss=ce, tau 0.1; pos=yes): 71,424 trainable params | 2000 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [HOP-V4] step    1/2000 | hop loss (ce) 4.0703 | cos=1.0095 ce=4.0703 acc=26/480 acc234=24/360
+V5_LOSS seed=2 model=HOP-V4 step=1 loss=4.0703 cos=1.0095 ce=4.0703 acc=26/480 acc234=24/360
+  [HOP-V4] step  500/2000 | hop loss (ce) 0.0115 | cos=0.1405 ce=0.0115 acc=480/480 acc234=360/360
+V5_LOSS seed=2 model=HOP-V4 step=500 loss=0.0115 cos=0.1405 ce=0.0115 acc=480/480 acc234=360/360
+  [HOP-V4] step 1000/2000 | hop loss (ce) 0.0093 | cos=0.1305 ce=0.0093 acc=480/480 acc234=360/360
+V5_LOSS seed=2 model=HOP-V4 step=1000 loss=0.0093 cos=0.1305 ce=0.0093 acc=480/480 acc234=360/360
+  [HOP-V4] step 2000/2000 | hop loss (ce) 0.0086 | cos=0.1256 ce=0.0086 acc=480/480 acc234=360/360
+V5_LOSS seed=2 model=HOP-V4 step=2000 loss=0.0086 cos=0.1256 ce=0.0086 acc=480/480 acc234=360/360
+  [HOP-V4] trained in 13.1s
+
+[v5] RANDOM HOP head: stage-A funnel + law_brain/next_law_proj + pos at the seed-2 init, untrained
+
+=== [2] Training V0 (Lab 09 joint): 563,264 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [V0] step   1/400 | total 5.7534 | dis 3.3241 (s_pull 0.045 s_push 2.185 d_pull 0.041 d_push 1.054) | hop 0.9717 | cos=0.9717 ce=3.3302 acc=21/480 acc234=1/360
+V5_LOSS seed=2 model=V0 step=1 loss=0.9717 cos=0.9717 ce=3.3302 acc=21/480 acc234=1/360
+  [V0] step 200/400 | total 1.9503 | dis 1.2270 (s_pull 0.079 s_push 1.089 d_pull 0.003 d_push 0.056) | hop 0.2893 | cos=0.2893 ce=1.7738 acc=177/480 acc234=149/360
+V5_LOSS seed=2 model=V0 step=200 loss=0.2893 cos=0.2893 ce=1.7738 acc=177/480 acc234=149/360
+  [V0] step 400/400 | total 1.5949 | dis 0.9645 (s_pull 0.088 s_push 0.820 d_pull 0.002 d_push 0.054) | hop 0.2522 | cos=0.2522 ce=0.8037 acc=350/480 acc234=250/360
+V5_LOSS seed=2 model=V0 step=400 loss=0.2522 cos=0.2522 ce=0.8037 acc=350/480 acc234=250/360
+  [V0] trained in 4.5s
+[v5] fingerprint seed=2: H_ALL=0x1.4b7abc716e954p+16 stageA=0x1.075fc783772b3p+8 hop=0x1.00c4a7dc9f57bp+8 v0=0x1.0c773e513aa0ep+8
+[check] funnel=stageA LAST BR-2 = 24/48 == 24/48: OK
+[check] funnel=stageA LAST BR-3 = 24/48 == 24/48: OK
+[check] funnel=stageA LAST BR-4 = 24/48 == 24/48: OK
+[v5] funnel=stageA max off-diagonal anchor cosine = 0.360 ((L3,S2) vs (L3,S4))
+[check] funnel=V0 LAST BR-2 = 24/48 == 24/48: OK
+[check] funnel=V0 LAST BR-3 = 24/48 == 24/48: OK
+[check] funnel=V0 LAST BR-4 = 24/48 == 24/48: OK
+[v5] funnel=V0 max off-diagonal anchor cosine = 0.541 ((L2,S0) vs (L3,S0))
+[v5] LAST and S0-RULE use the HOP head's s-space and anchors (stage-A funnel, frozen)
+[check] LAST BR2 = 24/48 == 24/48: OK
+[check] LAST DEC2 = 24/48 == 24/48: OK
+[check] LAST BR3 = 24/48 == 24/48: OK
+[check] LAST DEC3 = 24/48 == 24/48: OK
+[check] LAST BR4 = 24/48 == 24/48: OK
+[check] LAST DEC4 = 24/48 == 24/48: OK
+
+=== [6] Training Premise MLP (6 laws): 246,470 params | 120 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Premise MLP (6 laws)] step   1/400 | CE 2.1959 | train acc 0.192
+  [Premise MLP (6 laws)] step 200/400 | CE 0.0000 | train acc 1.000
+  [Premise MLP (6 laws)] step 400/400 | CE 0.0000 | train acc 1.000
+
+=== [6] Training Sentence MLP (27 states): 247,835 params | 540 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Sentence MLP (27 states)] step   1/400 | CE 3.5789 | train acc 0.028
+  [Sentence MLP (27 states)] step 200/400 | CE 0.0005 | train acc 1.000
+  [Sentence MLP (27 states)] step 400/400 | CE 0.0003 | train acc 1.000
+
+=== [8] Qwen LM ranking ===
+[v5] few-shot prefix (seen domain '城市供水'):
+老城区只靠一根总管进水，别无他路，总管中段被一团淤泥堵死了，从上游来的水被挡住，管里的压力往上顶，压力表的指针已经接近红线，接头崩开，水柱冲上路面，又淹了半条街。
+新城区管网连成环，哪段一堵水就自动绕行，总管中段被一团淤泥堵死了，水流开始在相邻的环状支管里绕行，支管已经接下全部水量，家家照常出水，前后几天，全城没有哪户人家断过水。
+这套泵组里转速和水压互相推高，没有限速保护，一台水泵的转速忽然偏了一点，转速随即把水压带高，水压又把转速催快，两者轮番抬升，偏离一次比一次大，不久泵组失控，到了不得不停机的地步。
+这套泵组装有恒压控制器，转速一偏就自动拉回，一台水泵的转速忽然偏了一点，控制器随即把转速调得更低一点，出口压力的偏差一次比一次小，不久水压稳稳落在设定值上。
+全城只从一座水库取水，没有第二水源，上游水库因检修停止了放水，水厂开始抽用清水池里的存水，清水池的水位一直往下掉，眼看见底了，到了第三天，全城只好分区停水。
+城里水库和江水两路互备，一路停水另一路即刻顶上，上游水库因检修停止了放水，取水泵开始改抽江边那一路的水，江水顶上了全部用量，龙头里一直有水，事后居民才听说水库停过，家里从未断水。
+
+[v5] Qwen zero-shot: BR2=28/48 BR3=27/48 BR4=23/48
+[v5] Qwen few-shot: BR2=29/48 BR3=30/48 BR4=25/48
+
+==========================================================================================================================================================================
+=== RESULTS seed=2 | HOP = V4 (pos, ce loss), free rollout (pre-registered V4/free) | 48 unseen items (8 domains x 6 laws) ===
+BR-k = branch choice at stage k (chance 24/48) | DEC-k = pairwise branch decision a vs b, independent of the candidate sentences | A-k = nearest anchor of ŝk is (law, k) (27 anchors) | FLIP-k = BR picks that change when s0 -> partner's s0 | PREM = 6-way premise law correct (chance 8/48)
+method                             BR-2   BR-3   BR-4      BR  DEC-2  DEC-3  DEC-4     DEC    A-2    A-3    A-4 FLIP-2 FLIP-3 FLIP-4   PREM
+-------------------------------------------------------------------------------------------------------------------------------------------
+HOP (V4, free) [primary]          38/48  43/48  40/48   84.0%  45/48  44/48  45/48   93.1%  40/48  41/48  41/48  28/48  38/48  32/48    -  
+RANDOM HOP (V4, free)             21/48  24/48  25/48   48.6%  24/48  23/48  24/48   49.3%   2/48   1/48   2/48  10/48  16/48  10/48    -  
+V0 joint (free) [secondary]       32/48  28/48  32/48   63.9%  36/48  32/48  31/48   68.8%  22/48   9/48  19/48  16/48  20/48  20/48    -  
+LAST                              24/48  24/48  24/48   50.0%  24/48  24/48  24/48   50.0%    -      -      -      -      -      -      -  
+S0-RULE                           38/48  43/48  39/48   83.3%  45/48  45/48  45/48   93.8%    -      -      -      -      -      -    39/48
+PREMISE-MLP                       42/48  42/48  45/48   89.6%  47/48  47/48  47/48   97.9%    -      -      -      -      -      -    43/48
+Qwen zero-shot                    28/48  27/48  23/48   54.2%    -      -      -       -      -      -      -      -      -      -      -  
+Qwen few-shot                     29/48  30/48  25/48   58.3%    -      -      -       -      -      -      -      -      -      -      -  
+-------------------------------------------------------------------------------------------------------------------------------------------
+LAST exactly 50% at every stage (BR and DEC): OK
+BR / DEC = mean of the three stages (%)
+
+=== HOP (V4, free) per-item detail (✓ = law correct; BR = anchor-mediated pick; DEC = pairwise decision; flip = BR pick after s0 -> partner's s0) ===
+domain     law | s0 near   | ŝ2 near   ŝ3 near   ŝ4 near   | BR 2/3/4             | DEC 2/3/4            | flip 2/3/4      
+足球比赛        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L0✓    L0✓    L1      | L0✓    L0✓    L0✓     | L1     L1     L1    
+足球比赛        L1 | (L1,S0)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L1✓     | L1✓    L1✓    L1✓     | L0     L0     L1    
+足球比赛        L2 | (L2,S0)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2✓    L2✓    L2✓     | L2✓    L2✓    L2✓     | L2     L2     L2    
+足球比赛        L3 | (L0,S4)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2     L2     L2      | L2     L2     L2      | L2     L2     L2    
+足球比赛        L4 | (L4,S0)   | (L4,S2)   (L4,S3)   (L4,S4)   | L4✓    L4✓    L4✓     | L4✓    L4✓    L4✓     | L4     L5     L5    
+足球比赛        L5 | (L5,S0)   | (L5,S2)   (L5,S3)   (L5,S4)   | L4     L5✓    L5✓     | L5✓    L5✓    L5✓     | L4     L4     L4    
+中学校园        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L0✓    L0✓    L0✓     | L0✓    L0✓    L0✓     | L1     L1     L1    
+中学校园        L1 | (L1,S0)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L1✓     | L1✓    L1✓    L1✓     | L0     L0     L0    
+中学校园        L2 | (L2,S0)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2✓    L2✓    L2✓     | L2✓    L2✓    L2✓     | L3     L3     L3    
+中学校园        L3 | (L3,S0)   | (L3,S2)   (L3,S3)   (L3,S4)   | L3✓    L3✓    L3✓     | L3✓    L3✓    L3✓     | L2     L2     L2    
+中学校园        L4 | (L4,S0)   | (L2,S2)   (L4,S3)   (L4,S4)   | L4✓    L4✓    L4✓     | L4✓    L4✓    L4✓     | L5     L5     L4    
+中学校园        L5 | (L3,S0)   | (L3,S2)   (L3,S3)   (L3,S4)   | L5✓    L5✓    L4      | L5✓    L4     L5✓     | L4     L4     L4    
+影视剧组        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L0✓    L0✓    L0✓     | L0✓    L0✓    L0✓     | L1     L1     L0    
+影视剧组        L1 | (L1,S0)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L0      | L1✓    L1✓    L1✓     | L0     L0     L0    
+影视剧组        L2 | (L2,S0)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2✓    L2✓    L2✓     | L2✓    L2✓    L2✓     | L3     L3     L3    
+影视剧组        L3 | (L3,S0)   | (L3,S2)   (L3,S3)   (L3,S4)   | L3✓    L3✓    L3✓     | L3✓    L3✓    L3✓     | L2     L2     L2    
+影视剧组        L4 | (L4,S0)   | (L4,S2)   (L4,S3)   (L4,S4)   | L4✓    L4✓    L4✓     | L4✓    L4✓    L4✓     | L4     L5     L5    
+影视剧组        L5 | (L5,S0)   | (L5,S2)   (L5,S3)   (L5,S4)   | L4     L5✓    L5✓     | L5✓    L5✓    L5✓     | L4     L4     L4    
+法院审判        L0 | (L1,S0)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1     L1     L1      | L1     L1     L1      | L1     L1     L1    
+法院审判        L1 | (L1,S0)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L1✓     | L1✓    L1✓    L1✓     | L1     L1     L1    
+法院审判        L2 | (L2,S0)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2✓    L3     L2✓     | L2✓    L2✓    L2✓     | L3     L3     L3    
+法院审判        L3 | (L0,S0)   | (L3,S2)   (L3,S3)   (L3,S4)   | L3✓    L3✓    L3✓     | L3✓    L3✓    L3✓     | L2     L3     L2    
+法院审判        L4 | (L0,S0)   | (L0,S2)   (L0,S3)   (L2,S4)   | L5     L4✓    L4✓     | L4✓    L4✓    L4✓     | L5     L5     L5    
+法院审判        L5 | (L1,S4)   | (L1,S2)   (L1,S3)   (L1,S4)   | L5✓    L5✓    L5✓     | L5✓    L5✓    L5✓     | L5     L4     L4    
+图书馆         L0 | (L4,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L0✓    L0✓    L0✓     | L0✓    L0✓    L0✓     | L1     L1     L1    
+图书馆         L1 | (L0,S2)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L1✓     | L1✓    L1✓    L1✓     | L0     L0     L0    
+图书馆         L2 | (L2,S0)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2✓    L3     L2✓     | L2✓    L2✓    L2✓     | L2     L3     L2    
+图书馆         L3 | (L4,S3)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2     L3✓    L2      | L2     L2     L2      | L2     L3     L2    
+图书馆         L4 | (L4,S0)   | (L4,S2)   (L4,S3)   (L4,S4)   | L4✓    L4✓    L4✓     | L4✓    L4✓    L4✓     | L5     L5     L5    
+图书馆         L5 | (L5,S0)   | (L5,S2)   (L5,S3)   (L5,S4)   | L5✓    L5✓    L5✓     | L5✓    L5✓    L5✓     | L4     L4     L4    
+考古发掘        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L1     L0✓    L0✓     | L0✓    L0✓    L0✓     | L1     L1     L1    
+考古发掘        L1 | (P0,S1)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L1✓     | L1✓    L1✓    L1✓     | L1     L0     L0    
+考古发掘        L2 | (L2,S0)   | (L2,S2)   (L2,S3)   (L2,S4)   | L3     L2✓    L2✓     | L2✓    L2✓    L2✓     | L3     L3     L3    
+考古发掘        L3 | (L3,S0)   | (L3,S2)   (L3,S3)   (L3,S4)   | L3✓    L3✓    L3✓     | L3✓    L3✓    L3✓     | L3     L2     L2    
+考古发掘        L4 | (L4,S0)   | (L4,S2)   (L4,S3)   (L4,S4)   | L4✓    L4✓    L4✓     | L4✓    L4✓    L4✓     | L5     L5     L5    
+考古发掘        L5 | (L5,S0)   | (L5,S2)   (L5,S3)   (L5,S4)   | L5✓    L5✓    L5✓     | L5✓    L5✓    L5✓     | L4     L4     L4    
+建筑工地        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L0✓    L0✓    L0✓     | L0✓    L0✓    L0✓     | L1     L1     L1    
+建筑工地        L1 | (L1,S0)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L1✓     | L1✓    L1✓    L1✓     | L0     L0     L0    
+建筑工地        L2 | (L0,S3)   | (L2,S2)   (L2,S3)   (L2,S4)   | L3     L3     L2✓     | L2✓    L2✓    L2✓     | L3     L3     L2    
+建筑工地        L3 | (L1,S3)   | (L1,S2)   (L1,S3)   (L1,S4)   | L3✓    L3✓    L2      | L3✓    L3✓    L3✓     | L3     L3     L2    
+建筑工地        L4 | (L4,S0)   | (L4,S2)   (L4,S3)   (L4,S4)   | L4✓    L4✓    L4✓     | L4✓    L4✓    L4✓     | L5     L5     L5    
+建筑工地        L5 | (L5,S0)   | (L5,S2)   (L5,S3)   (L5,S4)   | L5✓    L5✓    L5✓     | L5✓    L5✓    L5✓     | L4     L4     L4    
+游乐园         L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L0✓    L0✓    L0✓     | L0✓    L0✓    L0✓     | L1     L1     L0    
+游乐园         L1 | (L1,S0)   | (L1,S2)   (L1,S3)   (L1,S4)   | L1✓    L1✓    L0      | L1✓    L1✓    L1✓     | L0     L0     L0    
+游乐园         L2 | (L2,S0)   | (L2,S2)   (L2,S3)   (L2,S4)   | L2✓    L2✓    L2✓     | L2✓    L2✓    L2✓     | L3     L3     L3    
+游乐园         L3 | (L3,S0)   | (L3,S2)   (L3,S3)   (L3,S4)   | L3✓    L3✓    L3✓     | L3✓    L3✓    L3✓     | L2     L2     L2    
+游乐园         L4 | (L4,S0)   | (L4,S2)   (L4,S3)   (L4,S4)   | L4✓    L4✓    L4✓     | L4✓    L4✓    L4✓     | L4     L5     L5    
+游乐园         L5 | (L5,S0)   | (L5,S2)   (L5,S3)   (L5,S4)   | L4     L5✓    L5✓     | L5✓    L5✓    L5✓     | L4     L4     L4    
+
+=== Predicted laws per item (S0-RULE 6-way / S0-RULE DEC / PREMISE-MLP 6-way / PREMISE-MLP DEC / LAST) ===
+  足球比赛       L0 | S0-RULE L0 dec L0 | PREMISE-MLP L0 dec L0 | LAST s1 near (P0,S1)
+  足球比赛       L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (P0,S1)
+  足球比赛       L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (L0,S4)
+  足球比赛       L3 | S0-RULE L1 dec L2 | PREMISE-MLP L3 dec L3 | LAST s1 near (L0,S4)
+  足球比赛       L4 | S0-RULE L4 dec L4 | PREMISE-MLP L4 dec L4 | LAST s1 near (P2,S1)
+  足球比赛       L5 | S0-RULE L5 dec L5 | PREMISE-MLP L5 dec L5 | LAST s1 near (P2,S1)
+  中学校园       L0 | S0-RULE L0 dec L0 | PREMISE-MLP L0 dec L0 | LAST s1 near (L0,S3)
+  中学校园       L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (L0,S3)
+  中学校园       L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (P1,S1)
+  中学校园       L3 | S0-RULE L3 dec L3 | PREMISE-MLP L3 dec L3 | LAST s1 near (P1,S1)
+  中学校园       L4 | S0-RULE L4 dec L4 | PREMISE-MLP L4 dec L4 | LAST s1 near (P1,S1)
+  中学校园       L5 | S0-RULE L3 dec L5 | PREMISE-MLP L5 dec L5 | LAST s1 near (P1,S1)
+  影视剧组       L0 | S0-RULE L0 dec L0 | PREMISE-MLP L0 dec L0 | LAST s1 near (P0,S1)
+  影视剧组       L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (P0,S1)
+  影视剧组       L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (P1,S1)
+  影视剧组       L3 | S0-RULE L3 dec L3 | PREMISE-MLP L3 dec L3 | LAST s1 near (P1,S1)
+  影视剧组       L4 | S0-RULE L4 dec L4 | PREMISE-MLP L4 dec L4 | LAST s1 near (P2,S1)
+  影视剧组       L5 | S0-RULE L5 dec L5 | PREMISE-MLP L5 dec L5 | LAST s1 near (P2,S1)
+  法院审判       L0 | S0-RULE L1 dec L1 | PREMISE-MLP L0 dec L0 | LAST s1 near (P0,S1)
+  法院审判       L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (P0,S1)
+  法院审判       L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (L1,S0)
+  法院审判       L3 | S0-RULE L0 dec L3 | PREMISE-MLP L1 dec L3 | LAST s1 near (L1,S0)
+  法院审判       L4 | S0-RULE L0 dec L4 | PREMISE-MLP L0 dec L4 | LAST s1 near (L2,S4)
+  法院审判       L5 | S0-RULE L1 dec L5 | PREMISE-MLP L3 dec L5 | LAST s1 near (L2,S4)
+  图书馆        L0 | S0-RULE L4 dec L0 | PREMISE-MLP L0 dec L0 | LAST s1 near (L0,S2)
+  图书馆        L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (L0,S2)
+  图书馆        L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (P1,S1)
+  图书馆        L3 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (P1,S1)
+  图书馆        L4 | S0-RULE L4 dec L4 | PREMISE-MLP L4 dec L4 | LAST s1 near (P2,S1)
+  图书馆        L5 | S0-RULE L5 dec L5 | PREMISE-MLP L5 dec L5 | LAST s1 near (P2,S1)
+  考古发掘       L0 | S0-RULE L0 dec L0 | PREMISE-MLP L0 dec L0 | LAST s1 near (P0,S1)
+  考古发掘       L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (P0,S1)
+  考古发掘       L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (L5,S2)
+  考古发掘       L3 | S0-RULE L3 dec L3 | PREMISE-MLP L3 dec L3 | LAST s1 near (L5,S2)
+  考古发掘       L4 | S0-RULE L4 dec L4 | PREMISE-MLP L4 dec L4 | LAST s1 near (P2,S1)
+  考古发掘       L5 | S0-RULE L5 dec L5 | PREMISE-MLP L5 dec L5 | LAST s1 near (P2,S1)
+  建筑工地       L0 | S0-RULE L0 dec L0 | PREMISE-MLP L0 dec L0 | LAST s1 near (P0,S1)
+  建筑工地       L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (P0,S1)
+  建筑工地       L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (P0,S1)
+  建筑工地       L3 | S0-RULE L1 dec L3 | PREMISE-MLP L1 dec L3 | LAST s1 near (P0,S1)
+  建筑工地       L4 | S0-RULE L4 dec L4 | PREMISE-MLP L4 dec L4 | LAST s1 near (P2,S1)
+  建筑工地       L5 | S0-RULE L5 dec L5 | PREMISE-MLP L5 dec L5 | LAST s1 near (P2,S1)
+  游乐园        L0 | S0-RULE L0 dec L0 | PREMISE-MLP L0 dec L0 | LAST s1 near (P0,S1)
+  游乐园        L1 | S0-RULE L1 dec L1 | PREMISE-MLP L1 dec L1 | LAST s1 near (P0,S1)
+  游乐园        L2 | S0-RULE L2 dec L2 | PREMISE-MLP L2 dec L2 | LAST s1 near (P1,S1)
+  游乐园        L3 | S0-RULE L3 dec L3 | PREMISE-MLP L3 dec L3 | LAST s1 near (P1,S1)
+  游乐园        L4 | S0-RULE L4 dec L4 | PREMISE-MLP L4 dec L4 | LAST s1 near (P2,S1)
+  游乐园        L5 | S0-RULE L5 dec L5 | PREMISE-MLP L5 dec L5 | LAST s1 near (P2,S1)
+
+=== Diagnostics (secondary; NOT part of the registered criteria) ===
+  true law -> anchor picker (stage-A funnel = HOP space) [ceiling] BR2=41/48 BR3=45/48 BR4=44/48 mean  90.3%
+  true law -> anchor picker (V0 funnel) [ceiling]            BR2=36/48 BR3=43/48 BR4=45/48 mean  86.1%
+  true law -> MLP picker [ceiling]                           BR2=45/48 BR3=44/48 BR4=47/48 mean  94.4%
+  premise-MLP law -> anchor picker (stage-A funnel)          BR2=39/48 BR3=44/48 BR4=42/48 mean  86.8%
+  HOP DEC law at stage k -> MLP picker                       BR2=42/48 BR3=41/48 BR4=44/48 mean  88.2%
+  premise-MLP DEC law (a vs b) -> MLP picker                 BR2=44/48 BR3=44/48 BR4=46/48 mean  93.1%
+  seen-domain BR, HOP (V4, free)                             BR2=120/120 BR3=120/120 BR4=120/120 mean 100.0%
+  seen-domain BR, V0 joint (free)                            BR2=100/120 BR3=97/120 BR4=101/120 mean  82.8%
+  seen-domain BR, PREMISE-MLP                                BR2=120/120 BR3=120/120 BR4=120/120 mean 100.0%
+  eval-mode teacher-forced hop metrics on the seen chains (dropout off):
+    HOP-V4       cos=0.1105 ce=0.0066 acc=480/480 acc234=360/360
+    RANDOM HOP   cos=1.0096 ce=4.0723 acc=26/480 acc234=23/360
+    V0           cos=0.2321 ce=0.7243 acc=369/480 acc234=262/360
+  anchor geometry: funnel=stageA  max off-diagonal anchor cosine = 0.360 ((L3,S2) vs (L3,S4))
+  anchor geometry: funnel=V0      max off-diagonal anchor cosine = 0.541 ((L2,S0) vs (L3,S0))
+  LAST exactly 50% (BR and DEC, HOP s-space): OK | LAST BR check per funnel: stageA OK, V0 OK
+
+=== Training losses (stageA / V0 / MLPs: steps 1, 200, 400; HOP-V4 hop: steps 1, 500, 1000, 2000; train mode) ===
+  stageA                     step    1 | dis 3.3241 (s_pull 0.045 s_push 2.185 d_pull 0.041 d_push 1.054)
+  stageA                     step  200 | dis 0.9725 (s_pull 0.092 s_push 0.806 d_pull 0.006 d_push 0.069)
+  stageA                     step  400 | dis 0.7627 (s_pull 0.084 s_push 0.610 d_pull 0.005 d_push 0.064)
+  HOP-V4                     step    1 | hop loss (ce) 4.0703 | cos=1.0095 ce=4.0703 acc=26/480 acc234=24/360
+  HOP-V4                     step  500 | hop loss (ce) 0.0115 | cos=0.1405 ce=0.0115 acc=480/480 acc234=360/360
+  HOP-V4                     step 1000 | hop loss (ce) 0.0093 | cos=0.1305 ce=0.0093 acc=480/480 acc234=360/360
+  HOP-V4                     step 2000 | hop loss (ce) 0.0086 | cos=0.1256 ce=0.0086 acc=480/480 acc234=360/360
+  V0                         step    1 | total 5.7534 | dis 3.3241 (s_pull 0.045 s_push 2.185 d_pull 0.041 d_push 1.054) | hop 0.9717 | cos=0.9717 ce=3.3302 acc=21/480 acc234=1/360
+  V0                         step  200 | total 1.9503 | dis 1.2270 (s_pull 0.079 s_push 1.089 d_pull 0.003 d_push 0.056) | hop 0.2893 | cos=0.2893 ce=1.7738 acc=177/480 acc234=149/360
+  V0                         step  400 | total 1.5949 | dis 0.9645 (s_pull 0.088 s_push 0.820 d_pull 0.002 d_push 0.054) | hop 0.2522 | cos=0.2522 ce=0.8037 acc=350/480 acc234=250/360
+  Premise MLP (6 laws)       step    1 | CE 2.1959 | train acc 0.192
+  Premise MLP (6 laws)       step  200 | CE 0.0000 | train acc 1.000
+  Premise MLP (6 laws)       step  400 | CE 0.0000 | train acc 1.000
+  Sentence MLP (27 states)   step    1 | CE 3.5789 | train acc 0.028
+  Sentence MLP (27 states)   step  200 | CE 0.0005 | train acc 1.000
+  Sentence MLP (27 states)   step  400 | CE 0.0003 | train acc 1.000
+
+V5_CONFIG seed=2 variant=V4 mode=free override=0 data_sha=d2a9e877595829b4 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+V5_RESULT seed=2 method=hop BR2=38 BR3=43 BR4=40 DEC2=45 DEC3=44 DEC4=45 A2=40 A3=41 A4=41 FLIP2=28 FLIP3=38 FLIP4=32 PREM=-1
+V5_RESULT seed=2 method=random_hop BR2=21 BR3=24 BR4=25 DEC2=24 DEC3=23 DEC4=24 A2=2 A3=1 A4=2 FLIP2=10 FLIP3=16 FLIP4=10 PREM=-1
+V5_RESULT seed=2 method=v0_joint BR2=32 BR3=28 BR4=32 DEC2=36 DEC3=32 DEC4=31 A2=22 A3=9 A4=19 FLIP2=16 FLIP3=20 FLIP4=20 PREM=-1
+V5_RESULT seed=2 method=last BR2=24 BR3=24 BR4=24 DEC2=24 DEC3=24 DEC4=24 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=-1
+V5_RESULT seed=2 method=s0_rule BR2=38 BR3=43 BR4=39 DEC2=45 DEC3=45 DEC4=45 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=39
+V5_RESULT seed=2 method=premise_mlp BR2=42 BR3=42 BR4=45 DEC2=47 DEC3=47 DEC4=47 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=43
+V5_RESULT seed=2 method=qwen_zeroshot BR2=28 BR3=27 BR4=23 DEC2=-1 DEC3=-1 DEC4=-1 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=-1
+V5_RESULT seed=2 method=qwen_fewshot BR2=29 BR3=30 BR4=25 DEC2=-1 DEC3=-1 DEC4=-1 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=-1
+V5_DIAG seed=2 name=true_law_anchor_picker BR2=41 BR3=45 BR4=44
+V5_DIAG seed=2 name=true_law_anchor_picker_v0 BR2=36 BR3=43 BR4=45
+V5_DIAG seed=2 name=true_law_mlp_picker BR2=45 BR3=44 BR4=47
+V5_DIAG seed=2 name=premise_law_anchor_picker BR2=39 BR3=44 BR4=42
+V5_DIAG seed=2 name=hop_dec_law_mlp_picker BR2=42 BR3=41 BR4=44
+V5_DIAG seed=2 name=premise_dec_law_mlp_picker BR2=44 BR3=44 BR4=46
+V5_DIAG seed=2 name=seen_hop BR2=120 BR3=120 BR4=120 n=120
+V5_DIAG seed=2 name=seen_v0_joint BR2=100 BR3=97 BR4=101 n=120
+V5_DIAG seed=2 name=seen_premise_mlp BR2=120 BR3=120 BR4=120 n=120
+[v5] total time 55.3s

@@ -44,7 +44,9 @@ try:
     rt.execute_code("""
 import os, subprocess
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 os.makedirs('/content/minimind/out', exist_ok=True)
 os.makedirs('/content/minimind/dataset', exist_ok=True)
 print('MiniMind repo ready!', flush=True)

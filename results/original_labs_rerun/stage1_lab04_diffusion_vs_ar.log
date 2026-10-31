@@ -1,0 +1,54 @@
+=== [1] Training Original AR-MiniMind vs Modified Diffusion-MiniMind (400 Steps, GradClip=1.0, Cosine LR) ===
+[audit #16] budget AR-MiniMind: 400 steps x BS 32, AdamW lr 3e-4 -> 3e-5 cosine, clip 1.0
+[audit #16] budget Diffusion-MiniMind: 400 steps x BS 32, AdamW lr 3e-4 -> 3e-5 cosine, clip 1.0
+  [AR-MiniMind]        Step   1/400 | Loss: 8.8750 | Supervised Tokens/Pass: 100.0%
+  [AR-MiniMind]        Step 100/400 | Loss: 0.2461 | Supervised Tokens/Pass: 100.0%
+  [AR-MiniMind]        Step 200/400 | Loss: 0.0850 | Supervised Tokens/Pass: 100.0%
+  [AR-MiniMind]        Step 300/400 | Loss: 0.0757 | Supervised Tokens/Pass: 100.0%
+  [AR-MiniMind]        Step 400/400 | Loss: 0.0835 | Supervised Tokens/Pass: 100.0%
+  [Diffusion-MiniMind] Step   1/400 | Loss: 8.8750 | Supervised Tokens/Pass: 46.9%
+  [Diffusion-MiniMind] Step 100/400 | Loss: 1.5781 | Supervised Tokens/Pass: 43.9%
+  [Diffusion-MiniMind] Step 200/400 | Loss: 0.5547 | Supervised Tokens/Pass: 49.0%
+  [Diffusion-MiniMind] Step 300/400 | Loss: 0.2373 | Supervised Tokens/Pass: 46.2%
+  [Diffusion-MiniMind] Step 400/400 | Loss: 0.3496 | Supervised Tokens/Pass: 48.0%
+
+=== [Benchmark 1] Polaroid Photo Emergence: Step-by-Step Parallel Unmasking ===
+Prompt: 因为太阳光进入大气层时，
+  Step 0/6: 因为太阳光进入大气层时，[▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓][▓]
+  Step 1/6: 因为太阳光进入大气层时，[▓][▓][▓][▓][▓][▓][▓]，[▓][▓][▓][▓][▓][▓]，[▓][▓][▓]的天[▓][▓]
+  Step 2/6: 因为太阳光进入大气层时，蓝光[▓][▓][▓][▓][▓]，[▓][▓][▓][▓]散[▓]，[▓][▓][▓]的天[▓]
+  Step 3/6: 因为太阳光进入大气层时，蓝光的�[▓][▓][▓][▓]，[▓][▓][▓]分子散射，[▓]我们[▓]的天[▓]
+  Step 4/6: 因为太阳光进入大气层时，蓝光的��[▓][▓]短，容易[▓][▓]分子散射，所以我们[▓]的天[▓]
+  Step 5/6: 因为太阳光进入大气层时，蓝光的��[▓][▓]短，容易被空气分子散射，所以我们看到的天空
+  Step 6/6: 因为太阳光进入大气层时，蓝光的��长比较短，容易被空气分子散射，所以我们看到的天空
+
+=== [Benchmark 2] Generation Speed & Forward Passes (Generating 64 Tokens, Batch=8) ===
+  Diffusion (16 steps | 16 Forward Passes):  209.4 ms |  2445.0 tokens/s
+     sample[0] @ 16 steps: 连接连接在图像与与自然语言处理领域领域领域领域突破破破破破破破。图像图像识别识别与与突破。
+  Diffusion ( 8 steps |  8 Forward Passes):  123.3 ms |  4151.6 tokens/s
+     sample[0] @  8 steps: 连接连接在图像与与自然语言处理领域领域领域领域领域破破破破破破破。图像图像识别识别与识别破在在
+  Diffusion ( 4 steps |  4 Forward Passes):  108.9 ms |  4699.5 tokens/s
+     sample[0] @  4 steps: 连接，在图像与与自然语言处理领域领域领域领域领域领域破破破破破破。。图像识别识别识别识别识别图像图像。
+  AR + KV-Cache (64 steps | 64 Forward Passes):  835.9 ms |   612.5 tokens/s
+  AR No-Cache   (64 steps | 64 Forward Passes):  743.9 ms |   688.3 tokens/s
+     AR sample[0] (greedy, KV-cache): 周末周末周末下午我特地去了一��牙周末下午我特地去了一��牙科生牙科牙科牙科牙科诊牙科诊所，深度学习牙科诊所，请专业牙科诊所，请专业医生帮我检查牙�
+  [audit #16] speed comparison not at equal quality — see #12
+
+=== [Benchmark 3] Global Bidirectional Infilling (Seeing the Future Clue!) ===
+[audit #16] NOTE: cloze sentences are training sentences -> this tests memorized infilling (see #16)
+Clue in Suffix: '周末下午我特地去了一趟 [___] ，在书架上挑了两本最喜欢的科幻小说安静地阅读。' (Ground Truth: [图书馆])
+  -> AR-MiniMind greedy (Blind to Suffix) guessed: [生鲜超]
+  -> AR-MiniMind LL-rank (sees suffix via scoring): [图书馆]  LL=图书馆:-2.3, 牙科诊所:-24.5, 生鲜超市:-24.3
+  -> Diffusion-MiniMind (Full Sight) guessed: [图书馆]
+Clue in Suffix: '周末下午我特地去了一趟 [___] ，请专业医生帮我检查牙齿并清理了牙结石。' (Ground Truth: [牙科诊所])
+  -> AR-MiniMind greedy (Blind to Suffix) guessed: [生鲜超市]
+  -> AR-MiniMind LL-rank (sees suffix via scoring): [牙科诊所]  LL=图书馆:-34.9, 牙科诊所:-2.3, 生鲜超市:-14.2
+  -> Diffusion-MiniMind (Full Sight) guessed: [牙科诊所]
+Clue in Suffix: '周末下午我特地去了一趟 [___] ，买了新鲜的苹果、牛奶和面包准备做早餐。' (Ground Truth: [生鲜超市])
+  -> AR-MiniMind greedy (Blind to Suffix) guessed: [生鲜超市]
+  -> AR-MiniMind LL-rank (sees suffix via scoring): [生鲜超市]  LL=图书馆:-24.2, 牙科诊所:-14.6, 生鲜超市:-2.3
+  -> Diffusion-MiniMind (Full Sight) guessed: [生鲜超市]
+
+[Infilling Token Accuracy]: AR-MiniMind greedy = 4/11 (36.4%) vs Diffusion-MiniMind = 11/11 (100.0%)
+[Infilling Sentence Accuracy]: AR LL-rank (3-way) = 3/3 | AR greedy exact = 1/3 | Diffusion exact fill = 3/3
+[audit #16] NOTE: AR LL-rank is a 3-way choice (chance 1/3); diffusion is open-vocabulary but is told the answer length via the mask count.

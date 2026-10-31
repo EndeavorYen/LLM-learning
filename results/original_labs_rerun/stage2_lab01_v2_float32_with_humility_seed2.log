@@ -1,0 +1,122 @@
+[audit #7] SEED=2
+=== [1] Loading Official Pre-trained 'Qwen/Qwen2.5-0.5B' (494M Params, 24 Layers, 896-D Hidden State) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+Loaded in 12.8s! Hidden Dimension = 896, Layers = 24, Vocab = 151936
+[audit #13] SLOT_LEN=15 (longest slot text + 1)
+=== [2] Training Competitor A: Standard Qwen2.5-0.5B + LoRA SFT (1.38M LoRA params) ===
+[audit #16] Competitor A budget: 240 steps, cosine LR 0.0005 -> 5e-05, trainable params = 1,376,256
+  [Competitor A: Qwen2.5-0.5B + LoRA SFT] Step   1/240 | SFT Loss: 4.5784
+  [Competitor A: Qwen2.5-0.5B + LoRA SFT] Step  80/240 | SFT Loss: 0.0680
+  [Competitor A: Qwen2.5-0.5B + LoRA SFT] Step 160/240 | SFT Loss: 0.0676
+  [Competitor A: Qwen2.5-0.5B + LoRA SFT] Step 240/240 | SFT Loss: 0.0675
+
+=== [3] Training Competitor B: Dual-Brain Grafted Qwen2.5-0.5B (128-D Funnel + Fast/Slow Heads = 25.59M params) ===
+[audit #16] Competitor B budget: 240 steps, cosine LR 0.0012 -> 5e-05, trainable params = 25,593,920
+[audit #14] held out 16 unseen answer clauses from every loss
+  [Competitor B: Dual-Brain Qwen2.5-0.5B] Step   1/240 | Fast-Muscle: 12.3209 | Thought-Render: 11.9298 | Law-Hop: 0.8523 | Funnel-Ortho: 2.1560
+  [Competitor B: Dual-Brain Qwen2.5-0.5B] Step  80/240 | Fast-Muscle: 0.0014 | Thought-Render: 0.1426 | Law-Hop: 0.0391 | Funnel-Ortho: 0.1434
+  [Competitor B: Dual-Brain Qwen2.5-0.5B] Step 160/240 | Fast-Muscle: 0.0000 | Thought-Render: 0.0182 | Law-Hop: 0.0415 | Funnel-Ortho: 0.0733
+  [Competitor B: Dual-Brain Qwen2.5-0.5B] Step 240/240 | Fast-Muscle: 0.0000 | Thought-Render: 0.0171 | Law-Hop: 0.0731 | Funnel-Ortho: 0.0196
+
+====================================================================================================================
+=== [HEAD-TO-HEAD PK] Competitor A (Qwen2.5-0.5B + Standard LoRA) vs Competitor B (Dual-Brain Grafted Qwen2.5-0.5B) ===
+====================================================================================================================
+Evaluation Category                        | Qwen2.5-0.5B + Standard LoRA | Dual-Brain Qwen2.5-0.5B (Ours)
+----------------------------------------------------------------------------------------------------------
+1. 18T World Knowledge Retention (3)       |                        2 / 3 |  2 / 3 (base Qwen, Dual head not involved)
+2. Private Rote Secrets & Keys (6)         |                        1 / 6 |                          6 / 6
+3. Seen Engineering Systems (4)            |                        4 / 4 |                          4 / 4
+4. UNSEEN Systems Zero-Shot Analogy (8)    |                        0 / 8 |                          0 / 8
+----------------------------------------------------------------------------------------------------------
+TOTAL SCORE rows 2-4 (Out of 18 Tasks)     |                    5 / 18 ( 28%) |                     10 / 18 ( 56%)
+  [audit #16] LoRA incl. world knowledge: 7 / 21
+
+=== [Live Unseen System PK Outputs: Standard LoRA Qwen2.5-0.5B vs Dual-Brain Qwen2.5-0.5B] ===
+
+[反物質約束環-規律1] Premise: '反物质流在磁环内稳定束缚，当磁场畸变导致约束通道变窄时，'
+  Ground Truth                 : 磁环内部辐射压力就会急剧飙升，最终触发磁能泄压盾自动停机。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 约束通道内约束通路就会迅速枯竭，最终触发约束通道断流，
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 反磁场畸变导致约束通道变窄时，最终反物质泄源阀自动停机。路
+
+[反物質約束環-規律2] Premise: '注入器向磁环持续供能，当反物质注入源突然断流时，'
+  Ground Truth                 : 磁环内部等离子体就会迅速枯竭，最终触发备用聚变堆紧急补能。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 磁环就会迅速枯竭，最终触发约束通道自动停机。当约束通道
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 管道磁场畸变流约束通道变窄时，最终器向接环阀供能。，
+
+[神經植入晶片-規律1] Premise: '神经讯号在晶片内稳定传输，当突触阻抗导致讯号通道变窄时，'
+  Ground Truth                 : 晶片内部电位负荷就会急剧飙升，最终触发神经保护闸自动断电。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 晶片内讯号就会迅速枯竭，最终触发讯号通道变窄，
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 神经突触阻抗导致讯，通道变窄最终微电流泄源阀自动停机。窄时，".
+
+
+
+trägt
+
+[神經植入晶片-規律2] Premise: '生物电池向晶片持续供电，当微电流供给源突然断流时，'
+  Ground Truth                 : 晶片内部电荷储备就会迅速枯竭，最终触发备用压电模组紧急供电。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 晶片内就会迅速枯竭，最终触发晶片自动停机。晶片
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 神经突触压流急剧讯，通道变窄时，最终触发高压泄片阀自动停机，
+
+[星際曲速引擎-規律1] Premise: '曲速等离子在导管稳定循环，当引力波干扰导致导管变窄时，'
+  Ground Truth                 : 导管内部曲速场压就会急剧飙升，最终触发空间折叠阀自动停机。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 管道内部水压就会急剧飙升，最终触发高压泄流阀自动停机。
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 曲引力波干扰导致导管变窄时，最终暗高压泄阀阀自动停机，路
+
+[星際曲速引擎-規律2] Premise: '暗物质舱向导管持续供料，当暗物质输送阀突然断流时，'
+  Ground Truth                 : 导管内部曲速燃料就会迅速枯竭，最终触发备用反重力引擎紧急接管。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 自动停机。当暗物质舱向导管突然断流时，自动停
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 曲暗波干扰流导管变窄，，最终触发舱向导管持续供料，
+
+[人體微血管網-規律1] Premise: '血液在微血管稳定循环，当脂质斑块导致血管通道变窄时，'
+  Ground Truth                 : 微血管内部血压就会急剧飙升，最终触发血管扩张反射自动降压。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 最终触发血管通道突然断流，最终触发血管通道突然断流，最终触发
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 血液脂质斑块导致血管通道，窄，，最终触发状蓄血流突然断流封路。🏽:@"%@",
+
+[人體微血管網-規律2] Premise: '心室向微血管持续供血，当冠状动脉血流突然断流时，'
+  Ground Truth                 : 微血管内部血氧就会迅速枯竭，最终触发侧支循环血管紧急供血。
+  ❌ Qwen2.5-0.5B + LoRA SFT   : 外周血管突然变窄，最终触发血管通道突然断流，最终触发血管
+  ❌ Dual-Brain Qwen2.5 (🧠 128-D Thought Funnel (MinConf=0.0% < 85%)): 主脂质斑块流血管通道，窄，，最终触发备用蓄血管流紧急血。
+
+=== [audit #7] MECHANISM TEST (pre-registered, see issue #7) ===
+[audit #7] SEED=2 | items=8 | chance = 1/8 per item
+--- Dual-Brain (Competitor B) ---
+  A1  ŝ2 -> (correct law, stage 2): 8/8 (chance 1/8) | law-correct 8/8 | stage-correct 8/8
+  A2  ŝ3 -> (correct law, stage 3): 8/8 (chance 1/8) | law-correct 8/8 | stage-correct 8/8
+  D1  funnel: s0,s1 at (law,0),(law,1): 16/16 (chance 1/8) [diagnostic]
+  D2  held-out true c2 at (law,2): 7/8 (chance 1/8) [diagnostic]
+  B1  candidate rank, full (s+d): 7/8 (chance 1/8) | s-only: 8/8 (chance 1/8)
+  B2  candidate rank, full (s+d): 5/8 (chance 1/8) | s-only: 8/8 (chance 1/8)
+--- Qwen2.5-0.5B + LoRA (Competitor A), total log-likelihood of premise+candidate ---
+  B1  1/8 (chance 1/8)
+  B2  0/8 (chance 1/8) [conditioned on LoRA's own B1 pick]
+  [post-hoc] length-normalised B1 / B2: 1/8 / 0/8 (chance 1/8)
+  [post-hoc] held-out 4-way B1h / B2h (LoRA, normalised): 4/8 / 1/8 (chance 1/4)
+  [post-hoc] held-out 4-way B1h / B2h (Dual, s+d): 7/8 / 6/8 | s-only 8/8 / 8/8 (chance 1/4)
+--- Per-item nearest anchor / pick (✓ = expected) ---
+  [反物質約束環-規律1]
+    s0->(規律1,階段0) cos=0.995 ✓ | s1->(規律1,階段1) cos=0.990 ✓ | ŝ2->(規律1,階段2) cos=0.861 ✓ | ŝ3->(規律1,階段3) cos=0.943 ✓ | s(c2 true)->(規律1,階段2) cos=0.887 ✓ | s(c3 true)->(規律1,階段3) cos=0.987 ✓
+    Dual B1=(規律2,階段2) | Dual B2=(規律2,階段3) | Dual B1s=(規律1,階段2) ✓ | Dual B2s=(規律1,階段3) ✓ | LoRA B1=(規律1,階段1) | LoRA B2=(規律1,階段1)
+  [反物質約束環-規律2]
+    s0->(規律2,階段0) cos=0.995 ✓ | s1->(規律2,階段1) cos=0.997 ✓ | ŝ2->(規律2,階段2) cos=0.913 ✓ | ŝ3->(規律2,階段3) cos=0.951 ✓ | s(c2 true)->(規律2,階段2) cos=0.709 ✓ | s(c3 true)->(規律2,階段3) cos=0.797 ✓
+    Dual B1=(規律2,階段2) ✓ | Dual B2=(規律2,階段3) ✓ | Dual B1s=(規律2,階段2) ✓ | Dual B2s=(規律2,階段3) ✓ | LoRA B1=(規律2,階段1) | LoRA B2=(規律2,階段1)
+  [神經植入晶片-規律1]
+    s0->(規律1,階段0) cos=0.990 ✓ | s1->(規律1,階段1) cos=0.992 ✓ | ŝ2->(規律1,階段2) cos=0.861 ✓ | ŝ3->(規律1,階段3) cos=0.944 ✓ | s(c2 true)->(規律1,階段2) cos=0.740 ✓ | s(c3 true)->(規律1,階段3) cos=0.975 ✓
+    Dual B1=(規律1,階段2) ✓ | Dual B2=(規律1,階段3) ✓ | Dual B1s=(規律1,階段2) ✓ | Dual B2s=(規律1,階段3) ✓ | LoRA B1=(規律1,階段1) | LoRA B2=(規律1,階段1)
+  [神經植入晶片-規律2]
+    s0->(規律2,階段0) cos=0.991 ✓ | s1->(規律2,階段1) cos=0.997 ✓ | ŝ2->(規律2,階段2) cos=0.915 ✓ | ŝ3->(規律2,階段3) cos=0.953 ✓ | s(c2 true)->(規律1,階段1) cos=0.645 | s(c3 true)->(規律1,階段3) cos=0.848
+    Dual B1=(規律2,階段2) ✓ | Dual B2=(規律1,階段3) | Dual B1s=(規律2,階段2) ✓ | Dual B2s=(規律2,階段3) ✓ | LoRA B1=(規律2,階段2) ✓ | LoRA B2=(規律2,階段1)
+  [星際曲速引擎-規律1]
+    s0->(規律1,階段0) cos=0.991 ✓ | s1->(規律1,階段1) cos=0.993 ✓ | ŝ2->(規律1,階段2) cos=0.862 ✓ | ŝ3->(規律1,階段3) cos=0.944 ✓ | s(c2 true)->(規律1,階段2) cos=0.892 ✓ | s(c3 true)->(規律1,階段3) cos=0.983 ✓
+    Dual B1=(規律1,階段2) ✓ | Dual B2=(規律1,階段3) ✓ | Dual B1s=(規律1,階段2) ✓ | Dual B2s=(規律1,階段3) ✓ | LoRA B1=(規律1,階段1) | LoRA B2=(規律1,階段1)
+  [星際曲速引擎-規律2]
+    s0->(規律2,階段0) cos=0.997 ✓ | s1->(規律2,階段1) cos=0.994 ✓ | ŝ2->(規律2,階段2) cos=0.911 ✓ | ŝ3->(規律2,階段3) cos=0.947 ✓ | s(c2 true)->(規律2,階段2) cos=0.818 ✓ | s(c3 true)->(規律2,階段3) cos=0.822 ✓
+    Dual B1=(規律2,階段2) ✓ | Dual B2=(規律2,階段0) | Dual B1s=(規律2,階段2) ✓ | Dual B2s=(規律2,階段3) ✓ | LoRA B1=(規律2,階段0) | LoRA B2=(規律2,階段1)
+  [人體微血管網-規律1]
+    s0->(規律1,階段0) cos=0.993 ✓ | s1->(規律1,階段1) cos=0.995 ✓ | ŝ2->(規律1,階段2) cos=0.863 ✓ | ŝ3->(規律1,階段3) cos=0.946 ✓ | s(c2 true)->(規律1,階段2) cos=0.929 ✓ | s(c3 true)->(規律1,階段3) cos=0.965 ✓
+    Dual B1=(規律1,階段2) ✓ | Dual B2=(規律1,階段3) ✓ | Dual B1s=(規律1,階段2) ✓ | Dual B2s=(規律1,階段3) ✓ | LoRA B1=(規律1,階段1) | LoRA B2=(規律1,階段1)
+  [人體微血管網-規律2]
+    s0->(規律2,階段0) cos=0.994 ✓ | s1->(規律2,階段1) cos=0.991 ✓ | ŝ2->(規律2,階段2) cos=0.900 ✓ | ŝ3->(規律2,階段3) cos=0.944 ✓ | s(c2 true)->(規律2,階段2) cos=0.764 ✓ | s(c3 true)->(規律1,階段3) cos=0.676
+    Dual B1=(規律2,階段2) ✓ | Dual B2=(規律2,階段3) ✓ | Dual B1s=(規律2,階段2) ✓ | Dual B2s=(規律2,階段3) ✓ | LoRA B1=(規律2,階段0) | LoRA B2=(規律2,階段1)
+PROBE_RESULT seed=2 model=dual_brain A1=8 A2=8 D1=16/16 D2=7 B1=7 B2=5 B1s=8 B2s=8 B1h=7 B2h=6 B1hs=8 B2hs=8
+PROBE_RESULT seed=2 model=qwen_lora A1=-1 A2=-1 D1=-1/16 D2=-1 B1=1 B2=0 B1s=-1 B2s=-1 B1n=1 B2n=0 B1h=4 B2h=1

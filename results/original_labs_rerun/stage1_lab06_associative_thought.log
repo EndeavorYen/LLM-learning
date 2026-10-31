@@ -1,0 +1,43 @@
+[audit #13] MAX_SLOTS=14
+=== [1] Training Associative-Thought MiniMind (Latent Thought Hopping + Dual-Style Parallel Mapping) ===
+  Step   1/250 | Thought-Hop Loss: 6.9688 | Language-Map Loss: 8.9375 | Concept-Align Loss: 3.4062
+  Step  80/250 | Thought-Hop Loss: 0.5547 | Language-Map Loss: 1.0391 | Concept-Align Loss: 0.0078
+  Step 160/250 | Thought-Hop Loss: 0.2969 | Language-Map Loss: 0.0204 | Concept-Align Loss: 0.0078
+  Step 250/250 | Thought-Hop Loss: 0.2031 | Language-Map Loss: 0.0120 | Concept-Align Loss: 0.0078
+
+=== [1b] Training AR-MiniMind baseline (10 sequences, max len 37) ===
+[audit #16] budget Associative-Thought: 250 steps, AdamW lr 3e-4 -> 3e-5 cosine, clip 1.0, full batch of 5 chains
+[audit #16] budget AR-MiniMind        : 250 steps, AdamW lr 3e-4 -> 3e-5 cosine, clip 1.0, full batch of 10 sequences
+  [AR-MiniMind] Step   1/250 | LM Loss: 8.8750
+  [AR-MiniMind] Step  80/250 | LM Loss: 0.0933
+  [AR-MiniMind] Step 160/250 | LM Loss: 0.0913
+  [AR-MiniMind] Step 250/250 | LM Loss: 0.0913
+
+=== [Benchmark 1] Pure Mental Association Hopping (Thinking in 512-D Vectors, NOT Words!) ===
+Input Seed Thought z_1: [太阳光进入大气层] (1 single 512-D vector!)
+  Seed z_1   (Cosine to training target [mean det+con] = 100.8% | to detailed-only = 100.8%):
+     -> [自然映射 Detailed]: 因为太阳光进入大气层时，
+     -> [換句話說 Concise ]: 太阳光进大气层，
+  Hop 1 -> z_2 (Cosine to training target [mean det+con] =  96.9% | to detailed-only =  96.9%):
+     -> [自然映射 Detailed]: 并光做出准确的预测。
+     -> [換句話說 Concise ]: 蓝光精长预测
+  Hop 2 -> z_3 (Cosine to training target [mean det+con] =  94.9% | to detailed-only =  95.3%):
+     -> [自然映射 Detailed]: 容易被空气分子散射，，
+     -> [換句話說 Concise ]: 易被空气散射，，
+  Hop 3 -> z_4 (Cosine to training target [mean det+con] =  97.3% | to detailed-only =  97.3%):
+     -> [自然映射 Detailed]: 买了新鲜苹果和牛奶做早餐。
+     -> [換句話說 Concise ]: 买苹果牛奶做早餐。
+
+=== [Benchmark 2] Associative Branching: Same Opening Thought + Different Mental Intent -> Different Association Chains! ===
+  [心念意圖: 閱讀知識] Seed: '周末下午我特地出门，'  ==>  聯想第1跳: '去了一趟安静的图书馆，'  ==>  聯想第2跳: '请医生检查并清理了牙色。'
+  [心念意圖: 健康醫療] Seed: '周末下午我特地出门，'  ==>  聯想第1跳: '去了一趟安静的图书律，'  ==>  聯想第2跳: '请医生检查并清理了蓝色石'
+  [心念意圖: 美食早餐] Seed: '周末下午我特地出门，'  ==>  聯想第1跳: '去了一趟安静的图书律，'  ==>  聯想第2跳: '请医生检查并清理了牙色。'
+
+=== [Benchmark 3] Speed + Quality: trained AR-MiniMind vs Thought-Hopping + Parallel Mapping (chain 0) ===
+  Seed: '因为太阳光进入大气层时，' | GT remaining: ['蓝光的波长比较短，', '容易被空气分子散射，', '所以我们看到的天空是蓝色的。']
+  AR-MiniMind output    : '蓝光的波长比较短，容易被空气分子散射，所以我们看到的天空是蓝色的。'
+  Thought-path output   : ['并光做出准确的预测。', '容易被空气分子散射，，', '买了新鲜苹果和牛奶做早餐。']
+  AR-MiniMind (trained causal, max_new=34) : 338.41 ms (27 forward passes) | output 26 tokens | clause_match 3/3 [True, True, True]
+  Associative Thought (incl. seed+intent encoding) :  60.35 ms (4 backbone forward passes) | output 25 tokens | clause_match 1/3 [False, True, False]
+  [audit #16] tiny overfit setting (10 training sequences); timing compares paths at the quality shown above, not at equal quality.
+  [diagnostic, not a baseline] thought-model backbone generate (36 tokens): 425.16 ms

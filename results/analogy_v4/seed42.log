@@ -1,0 +1,228 @@
+[v4] SEED=42 | device=cuda
+[v4] data = /content/analogy_v4.json (analogy_v4)
+[v4] seen sentences=324 (12 domains x 27 state classes) | seen premises=72 | hop chains=72 | unseen items=48 | leak check passed for all 468 training texts
+=== [1] Loading 'Qwen/Qwen2.5-0.5B' (frozen, bf16) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Error while fetching `HF_TOKEN` secret value from your vault: 'Requesting secret HF_TOKEN timed out. Secrets can only be fetched when running from the Colab UI.'.
+  warnings.warn(f"\nError while fetching `HF_TOKEN` secret value from your vault: '{str(e)}'.")
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loaded in 30.6s | hidden=896 | layers=24
+[v4] extracted 660 features (896-d, float32)
+
+=== [2] Training HOP head: 563,264 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [HOP head] step   1/400 | total 5.6311 | dis 3.3226 (s_pull 0.052 s_push 2.179 d_pull 0.032 d_push 1.060) | hop 0.9234
+  [HOP head] step 200/400 | total 1.8303 | dis 1.4073 (s_pull 0.039 s_push 1.346 d_pull 0.001 d_push 0.021) | hop 0.1692
+  [HOP head] step 400/400 | total 1.6437 | dis 1.2071 (s_pull 0.045 s_push 1.144 d_pull 0.001 d_push 0.017) | hop 0.1747
+
+[v4] RANDOM HOP head: untrained, init with seed 42
+[v4] LAST and S0-RULE use the trained HOP head's s-space and anchors
+[check] LAST BR-2 = 24/48 == 24/48: OK
+[check] LAST BR-3 = 24/48 == 24/48: OK
+[check] LAST BR-4 = 24/48 == 24/48: OK
+
+=== [4] Training Premise MLP (6 laws): 246,470 params | 72 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Premise MLP (6 laws)] step   1/400 | CE 2.3476 | train acc 0.167
+  [Premise MLP (6 laws)] step 200/400 | CE 0.0000 | train acc 1.000
+  [Premise MLP (6 laws)] step 400/400 | CE 0.0000 | train acc 1.000
+
+=== [4] Training Sentence MLP (27 states): 247,835 params | 324 examples | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Sentence MLP (27 states)] step   1/400 | CE 3.7348 | train acc 0.040
+  [Sentence MLP (27 states)] step 200/400 | CE 0.0004 | train acc 1.000
+  [Sentence MLP (27 states)] step 400/400 | CE 0.0002 | train acc 1.000
+
+=== [5] Qwen LM ranking ===
+[v4] few-shot prefix (seen domain '城市供水'):
+老城区只靠一根总管进水，别无他路，总管中段被一团淤泥堵死了，从上游来的水被挡住，管里的压力往上顶，压力表的指针已经接近红线，接头崩开，水柱冲上路面，又淹了半条街。
+新城区管网连成环，哪段一堵水就自动绕行，总管中段被一团淤泥堵死了，水流开始在相邻的环状支管里绕行，支管已经接下全部水量，家家照常出水，前后几天，全城没有哪户人家断过水。
+这套泵组里转速和水压互相推高，没有限速保护，一台水泵的转速忽然偏了一点，转速随即把水压带高，水压又把转速催快，两者轮番抬升，偏离一次比一次大，不久泵组失控，到了不得不停机的地步。
+这套泵组装有恒压控制器，转速一偏就自动拉回，一台水泵的转速忽然偏了一点，控制器随即把转速调得更低一点，出口压力的偏差一次比一次小，不久水压稳稳落在设定值上。
+全城只从一座水库取水，没有第二水源，上游水库因检修停止了放水，水厂开始抽用清水池里的存水，清水池的水位一直往下掉，眼看见底了，到了第三天，全城只好分区停水。
+城里水库和江水两路互备，一路停水另一路即刻顶上，上游水库因检修停止了放水，取水泵开始改抽江边那一路的水，江水顶上了全部用量，龙头里一直有水，事后居民才听说水库停过，家里从未断水。
+
+[v4] Qwen zero-shot: BR2=30/48 BR3=26/48 BR4=29/48
+[v4] Qwen few-shot: BR2=27/48 BR3=26/48 BR4=27/48
+
+======================================================================================================================================================
+=== RESULTS seed=42 | 48 items (8 unseen domains x 6 laws) | BR-k = branch choice at stage k (chance 24/48) | A-k = nearest anchor of ŝk is (law, k) (27 anchors) | FLIP-k = picks that change when s0 -> partner's s0 | PREM = predicted law correct (chance 8/48) ===
+method                        BR-2    BR-3    BR-4       BR     A-2     A-3     A-4  FLIP-2  FLIP-3  FLIP-4     FLIP    PREM
+----------------------------------------------------------------------------------------------------------------------------
+HOP (anchor)                 26/48   24/48   24/48    51.4%   10/48    6/48    6/48    4/48    8/48    8/48    13.9%     -  
+HOP (direct cos) [secondary]   28/48   23/48   24/48    52.1%   10/48    6/48    6/48    8/48    6/48    4/48    12.5%     -  
+LAST                         24/48   24/48   24/48    50.0%     -       -       -       -       -       -        -       -  
+S0-RULE                      30/48   29/48   28/48    60.4%     -       -       -       -       -       -        -     28/48
+PREMISE-MLP                  32/48   39/48   39/48    76.4%     -       -       -       -       -       -        -     41/48
+Qwen zero-shot               30/48   26/48   29/48    59.0%     -       -       -       -       -       -        -       -  
+Qwen few-shot                27/48   26/48   27/48    55.6%     -       -       -       -       -       -        -       -  
+RANDOM HOP (anchor)          24/48   26/48   24/48    51.4%    0/48    1/48    0/48    0/48    4/48    0/48     2.8%     -  
+RANDOM HOP (direct cos) [secondary]   23/48   26/48   24/48    50.7%    0/48    1/48    0/48    2/48    4/48    0/48     4.2%     -  
+----------------------------------------------------------------------------------------------------------------------------
+LAST exactly 50% at every stage: OK
+BR = mean of BR-2..4 (%); FLIP = mean of FLIP-2..4 (%)
+
+=== HOP per-item detail (anchor-mediated picks; ✓ = law correct; flip = pick after s0 -> partner's s0) ===
+domain     law | s0 near   | ŝ2 near   ŝ3 near   ŝ4 near   | pick 2/3/4 (anchor)    | pick 2/3/4 (direct)    | flip 2/3/4 (anchor) 
+远洋航运        L0 | (L0,S0)   | (L1,S0)   (L0,S2)   (L0,S2)   | L0✓    L0✓    L0✓       | L0✓    L0✓    L0✓       | L0     L0     L0    
+远洋航运        L1 | (L0,S0)   | (L1,S0)   (L0,S2)   (L0,S3)   | L0     L0     L0        | L0     L0     L0        | L0     L0     L0    
+远洋航运        L2 | (L0,S3)   | (L0,S3)   (L0,S3)   (L0,S3)   | L2✓    L2✓    L2✓       | L2✓    L2✓    L2✓       | L3     L3     L3    
+远洋航运        L3 | (L2,S0)   | (L2,S2)   (L3,S4)   (L3,S4)   | L3✓    L3✓    L3✓       | L3✓    L3✓    L3✓       | L2     L2     L2    
+远洋航运        L4 | (L5,S2)   | (L4,S2)   (L4,S2)   (L5,S4)   | L5     L5     L4✓       | L5     L5     L4✓       | L5     L5     L4    
+远洋航运        L5 | (L5,S0)   | (L4,S2)   (L4,S2)   (L4,S2)   | L5✓    L5✓    L4        | L5✓    L5✓    L4        | L5     L5     L4    
+煤矿井下        L0 | (L1,S2)   | (L0,S2)   (L0,S3)   (L0,S3)   | L0✓    L0✓    L0✓       | L0✓    L0✓    L0✓       | L0     L1     L0    
+煤矿井下        L1 | (L1,S0)   | (L0,S2)   (L0,S2)   (L0,S3)   | L0     L1✓    L0        | L1✓    L0     L0        | L0     L0     L0    
+煤矿井下        L2 | (L0,S3)   | (L0,S4)   (L0,S4)   (L0,S4)   | L2✓    L3     L2✓       | L2✓    L3     L3        | L2     L3     L2    
+煤矿井下        L3 | (L1,S0)   | (L0,S4)   (L0,S4)   (L0,S4)   | L2     L3✓    L2        | L2     L3✓    L3✓       | L2     L3     L2    
+煤矿井下        L4 | (L0,S0)   | (L5,S4)   (L1,S4)   (L1,S4)   | L5     L4✓    L5        | L5     L4✓    L5        | L5     L4     L5    
+煤矿井下        L5 | (P2,S1)   | (L4,S2)   (L4,S2)   (L4,S2)   | L5✓    L4     L5✓       | L5✓    L4     L5✓       | L5     L4     L5    
+啤酒酿造        L0 | (L0,S0)   | (L0,S3)   (L0,S3)   (L0,S3)   | L0✓    L0✓    L0✓       | L0✓    L0✓    L0✓       | L0     L0     L0    
+啤酒酿造        L1 | (L1,S0)   | (L0,S3)   (L0,S3)   (L0,S3)   | L0     L0     L0        | L0     L0     L0        | L0     L0     L0    
+啤酒酿造        L2 | (L2,S0)   | (L0,S2)   (L0,S3)   (L0,S3)   | L3     L2✓    L2✓       | L2✓    L2✓    L2✓       | L3     L2     L2    
+啤酒酿造        L3 | (L3,S0)   | (L0,S2)   (L0,S3)   (L0,S3)   | L3✓    L2     L2        | L2     L2     L2        | L3     L2     L2    
+啤酒酿造        L4 | (L5,S2)   | (L4,S2)   (L5,S4)   (L5,S4)   | L4✓    L5     L5        | L4✓    L5     L4✓       | L4     L5     L4    
+啤酒酿造        L5 | (L5,S0)   | (L4,S2)   (L4,S2)   (L4,S2)   | L4     L5✓    L4        | L4     L5✓    L4        | L4     L5     L5    
+中央空调        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S3)   | L0✓    L0✓    L0✓       | L0✓    L0✓    L0✓       | L0     L0     L0    
+中央空调        L1 | (L1,S0)   | (L0,S2)   (L0,S3)   (L0,S3)   | L0     L0     L0        | L0     L0     L0        | L0     L0     L0    
+中央空调        L2 | (L0,S0)   | (L3,S4)   (L3,S4)   (L3,S4)   | L3     L3     L3        | L2✓    L3     L3        | L3     L3     L3    
+中央空调        L3 | (L3,S0)   | (L3,S4)   (L3,S4)   (L3,S4)   | L3✓    L3✓    L3✓       | L3✓    L3✓    L3✓       | L3     L3     L3    
+中央空调        L4 | (L5,S2)   | (L5,S4)   (L5,S4)   (L5,S4)   | L5     L5     L5        | L5     L5     L5        | L5     L5     L5    
+中央空调        L5 | (L5,S0)   | (L4,S2)   (L4,S2)   (L4,S2)   | L5✓    L5✓    L5✓       | L5✓    L5✓    L5✓       | L5     L5     L5    
+酒店经营        L0 | (L0,S0)   | (P0,S1)   (L4,S2)   (L4,S2)   | L0✓    L1     L1        | L0✓    L1     L1        | L0     L0     L0    
+酒店经营        L1 | (L0,S0)   | (L2,S0)   (L2,S2)   (L0,S4)   | L0     L0     L0        | L1✓    L0     L0        | L0     L1     L1    
+酒店经营        L2 | (L2,S0)   | (L2,S2)   (L2,S2)   (L2,S2)   | L2✓    L3     L3        | L2✓    L3     L3        | L2     L3     L3    
+酒店经营        L3 | (L2,S0)   | (L2,S2)   (L2,S2)   (L2,S2)   | L2     L3✓    L3✓       | L2     L3✓    L3✓       | L2     L3     L3    
+酒店经营        L4 | (L0,S0)   | (L4,S0)   (L4,S0)   (L5,S2)   | L4✓    L5     L5        | L4✓    L5     L5        | L4     L5     L5    
+酒店经营        L5 | (L0,S0)   | (L4,S0)   (L4,S0)   (L4,S0)   | L4     L5✓    L5✓       | L4     L5✓    L5✓       | L4     L5     L5    
+古城守备        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S3)   | L1     L0✓    L0✓       | L1     L0✓    L0✓       | L1     L0     L0    
+古城守备        L1 | (L1,S0)   | (L0,S2)   (L0,S2)   (L0,S3)   | L1✓    L0     L0        | L1✓    L0     L0        | L1     L0     L0    
+古城守备        L2 | (L0,S3)   | (L4,S2)   (L5,S4)   (L5,S4)   | L3     L2✓    L3        | L3     L2✓    L3        | L3     L2     L3    
+古城守备        L3 | (L1,S4)   | (L4,S2)   (L5,S4)   (L5,S4)   | L3✓    L2     L3✓       | L3✓    L2     L3✓       | L3     L2     L3    
+古城守备        L4 | (L4,S0)   | (L1,S2)   (L4,S2)   (L4,S2)   | L4✓    L4✓    L4✓       | L4✓    L4✓    L4✓       | L5     L4     L4    
+古城守备        L5 | (L4,S0)   | (L4,S2)   (L4,S2)   (L4,S2)   | L5✓    L4     L4        | L4     L4     L4        | L4     L4     L4    
+牧场畜牧        L0 | (L0,S0)   | (L0,S2)   (L0,S3)   (L0,S4)   | L0✓    L0✓    L0✓       | L0✓    L0✓    L0✓       | L0     L0     L1    
+牧场畜牧        L1 | (L0,S0)   | (L0,S2)   (L0,S3)   (L1,S4)   | L0     L0     L1✓       | L0     L0     L0        | L0     L0     L0    
+牧场畜牧        L2 | (L2,S0)   | (L2,S2)   (L3,S4)   (L3,S4)   | L2✓    L2✓    L3        | L2✓    L2✓    L3        | L2     L2     L3    
+牧场畜牧        L3 | (L5,S3)   | (L3,S4)   (L3,S4)   (L3,S4)   | L2     L2     L3✓       | L2     L2     L3✓       | L2     L2     L3    
+牧场畜牧        L4 | (L4,S0)   | (L4,S2)   (L4,S2)   (L4,S2)   | L4✓    L5     L5        | L5     L5     L5        | L4     L5     L5    
+牧场畜牧        L5 | (L5,S2)   | (L4,S2)   (L4,S2)   (L4,S2)   | L4     L5✓    L5✓       | L5✓    L5✓    L5✓       | L4     L5     L5    
+登山探险        L0 | (L1,S2)   | (L0,S2)   (L0,S3)   (L0,S3)   | L1     L0✓    L0✓       | L1     L0✓    L0✓       | L1     L0     L0    
+登山探险        L1 | (L0,S2)   | (L0,S2)   (L0,S3)   (L0,S3)   | L1✓    L0     L0        | L1✓    L0     L0        | L1     L0     L0    
+登山探险        L2 | (L1,S2)   | (L0,S4)   (L0,S4)   (L1,S4)   | L2✓    L2✓    L2✓       | L2✓    L3     L2✓       | L2     L2     L2    
+登山探险        L3 | (L1,S3)   | (L0,S4)   (L0,S4)   (L0,S4)   | L2     L2     L2        | L2     L2     L2        | L2     L2     L2    
+登山探险        L4 | (L5,S2)   | (L5,S4)   (L5,S4)   (L5,S4)   | L4✓    L5     L5        | L4✓    L4✓    L5        | L4     L4     L5    
+登山探险        L5 | (L5,S2)   | (L4,S2)   (L4,S2)   (L5,S4)   | L4     L4     L5✓       | L4     L4     L5✓       | L4     L5     L5    
+
+=== Predicted laws per item (S0-RULE / PREMISE-MLP / LAST) ===
+  远洋航运       L0 | S0-RULE L0 | PREMISE-MLP L0 | LAST s1 near (P0,S1)
+  远洋航运       L1 | S0-RULE L0 | PREMISE-MLP L0 | LAST s1 near (P0,S1)
+  远洋航运       L2 | S0-RULE L1 | PREMISE-MLP L2 | LAST s1 near (L3,S4)
+  远洋航运       L3 | S0-RULE L2 | PREMISE-MLP L3 | LAST s1 near (L3,S4)
+  远洋航运       L4 | S0-RULE L5 | PREMISE-MLP L4 | LAST s1 near (P2,S1)
+  远洋航运       L5 | S0-RULE L5 | PREMISE-MLP L5 | LAST s1 near (P2,S1)
+  煤矿井下       L0 | S0-RULE L1 | PREMISE-MLP L0 | LAST s1 near (P0,S1)
+  煤矿井下       L1 | S0-RULE L1 | PREMISE-MLP L1 | LAST s1 near (P0,S1)
+  煤矿井下       L2 | S0-RULE L1 | PREMISE-MLP L2 | LAST s1 near (L0,S3)
+  煤矿井下       L3 | S0-RULE L1 | PREMISE-MLP L5 | LAST s1 near (L0,S3)
+  煤矿井下       L4 | S0-RULE L0 | PREMISE-MLP L5 | LAST s1 near (L4,S4)
+  煤矿井下       L5 | S0-RULE L5 | PREMISE-MLP L5 | LAST s1 near (L4,S4)
+  啤酒酿造       L0 | S0-RULE L0 | PREMISE-MLP L0 | LAST s1 near (L0,S3)
+  啤酒酿造       L1 | S0-RULE L1 | PREMISE-MLP L1 | LAST s1 near (L0,S3)
+  啤酒酿造       L2 | S0-RULE L2 | PREMISE-MLP L2 | LAST s1 near (L2,S2)
+  啤酒酿造       L3 | S0-RULE L3 | PREMISE-MLP L3 | LAST s1 near (L2,S2)
+  啤酒酿造       L4 | S0-RULE L4 | PREMISE-MLP L4 | LAST s1 near (L4,S2)
+  啤酒酿造       L5 | S0-RULE L5 | PREMISE-MLP L5 | LAST s1 near (L4,S2)
+  中央空调       L0 | S0-RULE L0 | PREMISE-MLP L0 | LAST s1 near (P0,S1)
+  中央空调       L1 | S0-RULE L1 | PREMISE-MLP L1 | LAST s1 near (P0,S1)
+  中央空调       L2 | S0-RULE L0 | PREMISE-MLP L2 | LAST s1 near (L3,S3)
+  中央空调       L3 | S0-RULE L3 | PREMISE-MLP L3 | LAST s1 near (L3,S3)
+  中央空调       L4 | S0-RULE L4 | PREMISE-MLP L4 | LAST s1 near (P2,S1)
+  中央空调       L5 | S0-RULE L5 | PREMISE-MLP L5 | LAST s1 near (P2,S1)
+  酒店经营       L0 | S0-RULE L0 | PREMISE-MLP L4 | LAST s1 near (L4,S4)
+  酒店经营       L1 | S0-RULE L0 | PREMISE-MLP L3 | LAST s1 near (L4,S4)
+  酒店经营       L2 | S0-RULE L2 | PREMISE-MLP L2 | LAST s1 near (P1,S1)
+  酒店经营       L3 | S0-RULE L2 | PREMISE-MLP L3 | LAST s1 near (P1,S1)
+  酒店经营       L4 | S0-RULE L0 | PREMISE-MLP L0 | LAST s1 near (L5,S0)
+  酒店经营       L5 | S0-RULE L0 | PREMISE-MLP L5 | LAST s1 near (L5,S0)
+  古城守备       L0 | S0-RULE L0 | PREMISE-MLP L0 | LAST s1 near (P0,S1)
+  古城守备       L1 | S0-RULE L1 | PREMISE-MLP L1 | LAST s1 near (P0,S1)
+  古城守备       L2 | S0-RULE L1 | PREMISE-MLP L2 | LAST s1 near (L4,S4)
+  古城守备       L3 | S0-RULE L1 | PREMISE-MLP L3 | LAST s1 near (L4,S4)
+  古城守备       L4 | S0-RULE L4 | PREMISE-MLP L4 | LAST s1 near (L1,S0)
+  古城守备       L5 | S0-RULE L4 | PREMISE-MLP L5 | LAST s1 near (L1,S0)
+  牧场畜牧       L0 | S0-RULE L0 | PREMISE-MLP L0 | LAST s1 near (P0,S1)
+  牧场畜牧       L1 | S0-RULE L0 | PREMISE-MLP L1 | LAST s1 near (P0,S1)
+  牧场畜牧       L2 | S0-RULE L2 | PREMISE-MLP L2 | LAST s1 near (P1,S1)
+  牧场畜牧       L3 | S0-RULE L3 | PREMISE-MLP L3 | LAST s1 near (P1,S1)
+  牧场畜牧       L4 | S0-RULE L4 | PREMISE-MLP L4 | LAST s1 near (L4,S2)
+  牧场畜牧       L5 | S0-RULE L5 | PREMISE-MLP L5 | LAST s1 near (L4,S2)
+  登山探险       L0 | S0-RULE L1 | PREMISE-MLP L0 | LAST s1 near (L0,S4)
+  登山探险       L1 | S0-RULE L1 | PREMISE-MLP L1 | LAST s1 near (L0,S4)
+  登山探险       L2 | S0-RULE L0 | PREMISE-MLP L2 | LAST s1 near (L0,S4)
+  登山探险       L3 | S0-RULE L3 | PREMISE-MLP L3 | LAST s1 near (L0,S4)
+  登山探险       L4 | S0-RULE L5 | PREMISE-MLP L4 | LAST s1 near (L4,S2)
+  登山探险       L5 | S0-RULE L5 | PREMISE-MLP L4 | LAST s1 near (L4,S2)
+
+=== Training losses (steps 1 / 200 / 400) ===
+  HOP head                   step   1 | total 5.6311 | dis 3.3226 (s_pull 0.052 s_push 2.179 d_pull 0.032 d_push 1.060) | hop 0.9234
+  HOP head                   step 200 | total 1.8303 | dis 1.4073 (s_pull 0.039 s_push 1.346 d_pull 0.001 d_push 0.021) | hop 0.1692
+  HOP head                   step 400 | total 1.6437 | dis 1.2071 (s_pull 0.045 s_push 1.144 d_pull 0.001 d_push 0.017) | hop 0.1747
+  Premise MLP (6 laws)       step   1 | CE 2.3476 | train acc 0.167
+  Premise MLP (6 laws)       step 200 | CE 0.0000 | train acc 1.000
+  Premise MLP (6 laws)       step 400 | CE 0.0000 | train acc 1.000
+  Sentence MLP (27 states)   step   1 | CE 3.7348 | train acc 0.040
+  Sentence MLP (27 states)   step 200 | CE 0.0004 | train acc 1.000
+  Sentence MLP (27 states)   step 400 | CE 0.0002 | train acc 1.000
+
+=== Anchor geometry (27 anchors) ===
+  HOP head         max off-diagonal anchor cosine = 0.818  ((L0,S3) vs (L0,S4))
+  RANDOM HOP head  max off-diagonal anchor cosine = 0.997  ((L2,S3) vs (L3,S3))
+  HOP head anchor cosine matrix (rows/cols in class order):
+           (L0,S0)  (L1,S0)  (P0,S1)  (L0,S2)  (L1,S2)  (L0,S3)  (L1,S3)  (L0,S4)  (L1,S4)  (L2,S0)  (L3,S0)  (P1,S1)  (L2,S2)  (L3,S2)  (L2,S3)  (L3,S3)  (L2,S4)  (L3,S4)  (L4,S0)  (L5,S0)  (P2,S1)  (L4,S2)  (L5,S2)  (L4,S3)  (L5,S3)  (L4,S4)  (L5,S4)
+   (L0,S0)     1.00     0.81     0.38     0.40     0.70    -0.13    -0.19    -0.51    -0.93     0.41     0.35    -0.46    -0.03    -0.09    -0.14    -0.14    -0.81    -0.85     0.81     0.42    -0.18    -0.14     0.40    -0.45    -0.01    -0.72    -0.72
+   (L1,S0)     0.81     1.00     0.81     0.80     0.81     0.45    -0.05     0.07    -0.73     0.14    -0.12    -0.59    -0.00    -0.37    -0.01    -0.31    -0.43    -0.80     0.40     0.05    -0.35    -0.45    -0.08    -0.53    -0.41    -0.62    -0.87
+   (P0,S1)     0.38     0.81     1.00     0.80     0.49     0.71    -0.19     0.55    -0.34    -0.17    -0.47    -0.43    -0.07    -0.54     0.06    -0.41     0.12    -0.47    -0.02    -0.14    -0.25    -0.50    -0.41    -0.47    -0.73    -0.25    -0.72
+   (L0,S2)     0.40     0.80     0.80     1.00     0.80     0.82     0.21     0.45    -0.46     0.03    -0.42    -0.53     0.20    -0.37     0.35    -0.10    -0.13    -0.52    -0.10    -0.46    -0.64    -0.59    -0.44    -0.33    -0.48    -0.54    -0.80
+   (L1,S2)     0.70     0.81     0.49     0.80     1.00     0.45     0.40    -0.10    -0.70     0.09    -0.13    -0.77    -0.01    -0.33     0.05    -0.20    -0.62    -0.82     0.35    -0.13    -0.48    -0.22     0.09    -0.13     0.03    -0.65    -0.70
+   (L0,S3)    -0.13     0.45     0.71     0.82     0.45     1.00     0.40     0.82     0.11    -0.38    -0.75    -0.44     0.05    -0.50     0.27    -0.25     0.37    -0.13    -0.54    -0.64    -0.44    -0.49    -0.67    -0.05    -0.51    -0.03    -0.37
+   (L1,S3)    -0.19    -0.05    -0.19     0.21     0.40     0.40     1.00     0.09     0.25    -0.25    -0.22    -0.46    -0.01    -0.07    -0.15    -0.20    -0.11    -0.11    -0.31    -0.46    -0.25     0.07    -0.06     0.45     0.47     0.04     0.26
+   (L0,S4)    -0.51     0.07     0.55     0.45    -0.10     0.82     0.09     1.00     0.51    -0.46    -0.75     0.03     0.08    -0.35     0.30    -0.14     0.82     0.36    -0.79    -0.62    -0.22    -0.49    -0.84    -0.10    -0.70     0.32    -0.07
+   (L1,S4)    -0.93    -0.73    -0.34    -0.46    -0.70     0.11     0.25     0.51     1.00    -0.53    -0.36     0.36    -0.12     0.02    -0.11    -0.10     0.82     0.79    -0.75    -0.31     0.30     0.16    -0.36     0.42     0.03     0.81     0.81
+   (L2,S0)     0.41     0.14    -0.17     0.03     0.09    -0.38    -0.25    -0.46    -0.53     1.00     0.81     0.44     0.79     0.78     0.32     0.64    -0.53    -0.09     0.24    -0.08    -0.52    -0.46    -0.04    -0.63    -0.05    -0.77    -0.41
+   (L3,S0)     0.35    -0.12    -0.47    -0.42    -0.13    -0.75    -0.22    -0.75    -0.36     0.81     1.00     0.43     0.45     0.80    -0.19     0.35    -0.58    -0.07     0.42     0.27    -0.10    -0.01     0.37    -0.38     0.34    -0.46    -0.01
+   (P1,S1)    -0.46    -0.59    -0.43    -0.53    -0.77    -0.44    -0.46     0.03     0.36     0.44     0.43     1.00     0.57     0.74     0.33     0.66     0.38     0.80    -0.36    -0.17    -0.08    -0.26    -0.32    -0.31    -0.22     0.07     0.27
+   (L2,S2)    -0.03    -0.00    -0.07     0.20    -0.01     0.05    -0.01     0.08    -0.12     0.79     0.45     0.57     1.00     0.79     0.55     0.72    -0.07     0.29    -0.35    -0.62    -0.79    -0.74    -0.55    -0.60    -0.28    -0.61    -0.32
+   (L3,S2)    -0.09    -0.37    -0.54    -0.37    -0.33    -0.50    -0.07    -0.35     0.02     0.78     0.80     0.74     0.79     1.00     0.17     0.65    -0.19     0.42    -0.13    -0.25    -0.40    -0.31    -0.12    -0.39     0.14    -0.38     0.11
+   (L2,S3)    -0.14    -0.01     0.06     0.35     0.05     0.27    -0.15     0.30    -0.11     0.32    -0.19     0.33     0.55     0.17     1.00     0.81     0.15     0.32    -0.31    -0.52    -0.59    -0.50    -0.51    -0.18    -0.39    -0.35    -0.39
+   (L3,S3)    -0.14    -0.31    -0.41    -0.10    -0.20    -0.25    -0.20    -0.14    -0.10     0.64     0.35     0.66     0.72     0.65     0.81     1.00    -0.07     0.47    -0.16    -0.35    -0.51    -0.35    -0.26    -0.21    -0.07    -0.40    -0.13
+   (L2,S4)    -0.81    -0.43     0.12    -0.13    -0.62     0.37    -0.11     0.82     0.82    -0.53    -0.58     0.38    -0.07    -0.19     0.15    -0.07     1.00     0.72    -0.78    -0.35     0.19    -0.15    -0.63     0.11    -0.50     0.70     0.39
+   (L3,S4)    -0.85    -0.80    -0.47    -0.52    -0.82    -0.13    -0.11     0.36     0.79    -0.09    -0.07     0.80     0.29     0.42     0.32     0.47     0.72     1.00    -0.70    -0.38     0.03    -0.07    -0.45     0.14    -0.12     0.48     0.59
+   (L4,S0)     0.81     0.40    -0.02    -0.10     0.35    -0.54    -0.31    -0.79    -0.75     0.24     0.42    -0.36    -0.35    -0.13    -0.31    -0.16    -0.78    -0.70     1.00     0.81     0.30     0.38     0.81    -0.08     0.34    -0.36    -0.31
+   (L5,S0)     0.42     0.05    -0.14    -0.46    -0.13    -0.64    -0.46    -0.62    -0.31    -0.08     0.27    -0.17    -0.62    -0.25    -0.52    -0.35    -0.35    -0.38     0.81     1.00     0.78     0.63     0.80     0.13     0.29     0.19     0.11
+   (P2,S1)    -0.18    -0.35    -0.25    -0.64    -0.48    -0.44    -0.25    -0.22     0.30    -0.52    -0.10    -0.08    -0.79    -0.40    -0.59    -0.51     0.19     0.03     0.30     0.78     1.00     0.77     0.57     0.47     0.28     0.75     0.58
+   (L4,S2)    -0.14    -0.45    -0.50    -0.59    -0.22    -0.49     0.07    -0.49     0.16    -0.46    -0.01    -0.26    -0.74    -0.31    -0.50    -0.35    -0.15    -0.07     0.38     0.63     0.77     1.00     0.81     0.80     0.73     0.56     0.61
+   (L5,S2)     0.40    -0.08    -0.41    -0.44     0.09    -0.67    -0.06    -0.84    -0.36    -0.04     0.37    -0.32    -0.55    -0.12    -0.51    -0.26    -0.63    -0.45     0.81     0.80     0.57     0.81     1.00     0.42     0.75     0.05     0.22
+   (L4,S3)    -0.45    -0.53    -0.47    -0.33    -0.13    -0.05     0.45    -0.10     0.42    -0.63    -0.38    -0.31    -0.60    -0.39    -0.18    -0.21     0.11     0.14    -0.08     0.13     0.47     0.80     0.42     1.00     0.66     0.62     0.65
+   (L5,S3)    -0.01    -0.41    -0.73    -0.48     0.03    -0.51     0.47    -0.70     0.03    -0.05     0.34    -0.22    -0.28     0.14    -0.39    -0.07    -0.50    -0.12     0.34     0.29     0.28     0.73     0.75     0.66     1.00     0.12     0.54
+   (L4,S4)    -0.72    -0.62    -0.25    -0.54    -0.65    -0.03     0.04     0.32     0.81    -0.77    -0.46     0.07    -0.61    -0.38    -0.35    -0.40     0.70     0.48    -0.36     0.19     0.75     0.56     0.05     0.62     0.12     1.00     0.79
+   (L5,S4)    -0.72    -0.87    -0.72    -0.80    -0.70    -0.37     0.26    -0.07     0.81    -0.41    -0.01     0.27    -0.32     0.11    -0.39    -0.13     0.39     0.59    -0.31     0.11     0.58     0.61     0.22     0.65     0.54     0.79     1.00
+
+=== [review] diagnostics (secondary; not in the registered criteria) ===
+  premise-law -> anchor picker     BR2=28/48 BR3=37/48 BR4=36/48 mean  70.1%
+  true law -> anchor picker        BR2=29/48 BR3=41/48 BR4=39/48 mean  75.7%
+  true law -> MLP picker           BR2=36/48 BR3=41/48 BR4=42/48 mean  82.6%
+  seen-domain BR (training data, 72 items): HOP BR2=49/72 BR3=37/72 BR4=36/72 | PREMISE-MLP BR2=72/72 BR3=72/72 BR4=72/72
+  eval-mode teacher-forced hop loss on seen chains: 0.1704
+V4_DIAG seed=42 name=premise-law_->_anchor_picker BR2=28 BR3=37 BR4=36
+V4_DIAG seed=42 name=true_law_->_anchor_picker BR2=29 BR3=41 BR4=39
+V4_DIAG seed=42 name=true_law_->_MLP_picker BR2=36 BR3=41 BR4=42
+V4_DIAG seed=42 name=seen_hop BR2=49 BR3=37 BR4=36 n=72
+V4_DIAG seed=42 name=seen_premise_mlp BR2=72 BR3=72 BR4=72 n=72
+
+V4_RESULT seed=42 method=hop BR2=26 BR3=24 BR4=24 A2=10 A3=6 A4=6 FLIP2=4 FLIP3=8 FLIP4=8 PREM=-1
+V4_RESULT seed=42 method=hop_direct BR2=28 BR3=23 BR4=24 A2=10 A3=6 A4=6 FLIP2=8 FLIP3=6 FLIP4=4 PREM=-1
+V4_RESULT seed=42 method=last BR2=24 BR3=24 BR4=24 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=-1
+V4_RESULT seed=42 method=s0_rule BR2=30 BR3=29 BR4=28 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=28
+V4_RESULT seed=42 method=premise_mlp BR2=32 BR3=39 BR4=39 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=41
+V4_RESULT seed=42 method=qwen_zeroshot BR2=30 BR3=26 BR4=29 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=-1
+V4_RESULT seed=42 method=qwen_fewshot BR2=27 BR3=26 BR4=27 A2=-1 A3=-1 A4=-1 FLIP2=-1 FLIP3=-1 FLIP4=-1 PREM=-1
+V4_RESULT seed=42 method=random_hop BR2=24 BR3=26 BR4=24 A2=0 A3=1 A4=0 FLIP2=0 FLIP3=4 FLIP4=0 PREM=-1
+V4_RESULT seed=42 method=random_hop_direct BR2=23 BR3=26 BR4=24 A2=0 A3=1 A4=0 FLIP2=2 FLIP3=4 FLIP4=0 PREM=-1

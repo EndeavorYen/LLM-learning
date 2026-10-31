@@ -11,7 +11,9 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 sys.path.insert(0, '/content/minimind')
 os.makedirs('/content/minimind/out', exist_ok=True)
 
@@ -20,6 +22,25 @@ from model.model_minimind import MiniMindConfig, MiniMindForCausalLM
 
 tokenizer = AutoTokenizer.from_pretrained('/content/minimind/model')
 MASK_ID = 3  # Dedicated [MASK] token id
+
+import re as _re
+_PUNCT = "，。,.；;：:！!？?"
+def norm_text(s: str) -> str:
+    """[audit #16] whitespace-free, full/half-width punctuation unified."""
+    s = _re.sub(r"\s+", "", s or "")
+    return s.replace(",", "，").replace(".", "。").replace(";", "；").replace(":", "：").replace("!", "！").replace("?", "？")
+def first_clause(s: str) -> str:
+    """[audit #16] text up to and including the first clause-ending punctuation (，。；！？)."""
+    s = norm_text(s)
+    m = _re.search(r"[，。；！？]", s)
+    return s[: m.end()] if m else s
+def clause_match(pred: str, gt: str) -> bool:
+    """[audit #16] full-clause exact match (replaces the old first-5/6-character substring test)."""
+    return first_clause(pred) == norm_text(gt)
+def exact_answer_match(pred: str, gt: str) -> bool:
+    """[audit #16] rote answers: prediction must start with the answer and then stop or hit punctuation."""
+    p, g = norm_text(pred), norm_text(gt)
+    return p.startswith(g) and (len(p) == len(g) or p[len(g)] in _PUNCT)
 
 class DiffusionMiniMind(nn.Module):
     def __init__(self, config: MiniMindConfig, mask_token_id: int = MASK_ID):
@@ -129,6 +150,9 @@ diff_opt = torch.optim.AdamW(diff_model.parameters(), lr=3e-4, weight_decay=0.01
 
 STEPS = 400
 BS = 32
+# [audit #16] equal budgets: both models get the same steps, batch size, LR and cosine schedule.
+for _name in ("AR-MiniMind", "Diffusion-MiniMind"):
+    print(f"[audit #16] budget {_name}: {STEPS} steps x BS {BS}, AdamW lr 3e-4 -> 3e-5 cosine, clip 1.0", flush=True)
 
 t0 = time.time()
 ar_model.train()
@@ -199,20 +223,24 @@ torch.cuda.synchronize()
 t_ar_nocache = (time.time() - t0) * 1000
 
 t0 = time.time()
-_ = ar_model.generate(bench_prompt, max_new_tokens=GEN_LEN, use_cache=True, do_sample=False, eos_token_id=None)
+ar_bench_out = ar_model.generate(bench_prompt, max_new_tokens=GEN_LEN, use_cache=True, do_sample=False, eos_token_id=None)  # [audit #16] keep output for quality print
 torch.cuda.synchronize()
 t_ar_cache = (time.time() - t0) * 1000
 
 for d_steps in (16, 8, 4):
     t0 = time.time()
-    _ = diff_model.generate_diffusion(bench_prompt, total_len=8 + GEN_LEN, steps=d_steps)
+    d_canvas, _ = diff_model.generate_diffusion(bench_prompt, total_len=8 + GEN_LEN, steps=d_steps)
     torch.cuda.synchronize()
     t_diff = (time.time() - t0) * 1000
     tok_per_sec = (BENCH_BS * GEN_LEN) / (t_diff / 1000.0)
-    print(f"  Diffusion ({d_steps:2d} steps | {d_steps:2d} Forward Passes): {t_diff:6.1f} ms | {tok_per_sec:7.1f} tokens/s | Speedup vs AR(no-cache): {t_ar_nocache/t_diff:.2f}x | vs AR(KV-cache): {t_ar_cache/t_diff:.2f}x", flush=True)
+    # [audit #16] no "x faster" claim: fewer steps change output quality, so print a decoded sample per step count.
+    print(f"  Diffusion ({d_steps:2d} steps | {d_steps:2d} Forward Passes): {t_diff:6.1f} ms | {tok_per_sec:7.1f} tokens/s", flush=True)
+    print(f"     sample[0] @ {d_steps:2d} steps: {render_canvas(d_canvas[0, 8:])}", flush=True)
 
 print(f"  AR + KV-Cache (64 steps | 64 Forward Passes): {t_ar_cache:6.1f} ms | {(BENCH_BS*GEN_LEN)/(t_ar_cache/1000.0):7.1f} tokens/s", flush=True)
 print(f"  AR No-Cache   (64 steps | 64 Forward Passes): {t_ar_nocache:6.1f} ms | {(BENCH_BS*GEN_LEN)/(t_ar_nocache/1000.0):7.1f} tokens/s", flush=True)
+print(f"     AR sample[0] (greedy, KV-cache): {render_canvas(ar_bench_out[0, 8:])}", flush=True)  # [audit #16]
+print("  [audit #16] speed comparison not at equal quality — see #12", flush=True)
 
 print("\n=== [Benchmark 3] Global Bidirectional Infilling (Seeing the Future Clue!) ===", flush=True)
 test_cases = [
@@ -221,7 +249,19 @@ test_cases = [
     ("周末下午我特地去了一趟", "生鲜超市", "，买了新鲜的苹果、牛奶和面包准备做早餐。")
 ]
 
+# [audit #16] these three sentences are in base_sentences (trained x40), so this measures memorized infilling, not generalisation.
+print("[audit #16] NOTE: cloze sentences are training sentences -> this tests memorized infilling (see #16)", flush=True)
+
+@torch.inference_mode()
+def ar_seq_loglik(ids):
+    """[audit #16] total log-likelihood of ids[1:] given ids[:-1] under the causal AR model."""
+    t = torch.tensor([ids], device='cuda')
+    lp = F.log_softmax(ar_model(t).logits[0, :-1, :].float(), dim=-1)
+    return lp.gather(-1, t[0, 1:].unsqueeze(-1)).sum().item()
+
+candidates = [m for _, m, _ in test_cases]  # [audit #16] AR picks among the same 3 candidate fills
 ar_correct, diff_correct, total_masked = 0, 0, 0
+ar_sent_correct, diff_sent_correct, ar_greedy_sent_correct = 0, 0, 0
 for prefix_str, target_middle_str, suffix_str in test_cases:
     full_str = prefix_str + target_middle_str + suffix_str
     p_ids = [tokenizer.bos_token_id] + tokenizer(prefix_str, add_special_tokens=False).input_ids
@@ -252,10 +292,25 @@ for prefix_str, target_middle_str, suffix_str in test_cases:
     diff_correct += diff_hit
     total_masked += len(m_ids)
 
+    # [audit #16] fair AR protocol: score prefix + candidate + suffix (+EOS) by total log-likelihood, pick argmax.
+    cand_ll = []
+    for cand in candidates:
+        c_ids = ([tokenizer.bos_token_id] + tokenizer(prefix_str + cand + suffix_str, add_special_tokens=False).input_ids)[:SEQ_LEN - 1] + [tokenizer.eos_token_id]
+        cand_ll.append(ar_seq_loglik(c_ids))
+    ar_pick = candidates[max(range(len(candidates)), key=lambda i: cand_ll[i])]
+    ar_sent_correct += int(ar_pick == target_middle_str)
+    ar_greedy_sent_correct += int(ar_pred_ids == m_ids)
+    diff_sent_correct += int(diff_pred_ids == m_ids)  # [audit #16] sentence-level: fill exactly equals the answer
+
     print(f"Clue in Suffix: '{prefix_str} [___] {suffix_str}' (Ground Truth: [{target_middle_str}])", flush=True)
-    print(f"  -> AR-MiniMind (Blind to Suffix)   guessed: [{ar_pred_str}]", flush=True)
+    print(f"  -> AR-MiniMind greedy (Blind to Suffix) guessed: [{ar_pred_str}]", flush=True)
+    print(f"  -> AR-MiniMind LL-rank (sees suffix via scoring): [{ar_pick}]  LL={', '.join(f'{c}:{v:.1f}' for c, v in zip(candidates, cand_ll))}", flush=True)
     print(f"  -> Diffusion-MiniMind (Full Sight) guessed: [{diff_pred_str}]", flush=True)
 
-print(f"\n[Infilling Token Accuracy]: AR-MiniMind = {ar_correct}/{total_masked} ({ar_correct/total_masked*100:.1f}%) vs Diffusion-MiniMind = {diff_correct}/{total_masked} ({diff_correct/total_masked*100:.1f}%)!", flush=True)
+n_items = len(test_cases)
+print(f"\n[Infilling Token Accuracy]: AR-MiniMind greedy = {ar_correct}/{total_masked} ({ar_correct/total_masked*100:.1f}%) vs Diffusion-MiniMind = {diff_correct}/{total_masked} ({diff_correct/total_masked*100:.1f}%)", flush=True)
+# [audit #16] sentence-level accuracy with denominators
+print(f"[Infilling Sentence Accuracy]: AR LL-rank (3-way) = {ar_sent_correct}/{n_items} | AR greedy exact = {ar_greedy_sent_correct}/{n_items} | Diffusion exact fill = {diff_sent_correct}/{n_items}", flush=True)
+print("[audit #16] NOTE: AR LL-rank is a 3-way choice (chance 1/3); diffusion is open-vocabulary but is told the answer length via the mask count.", flush=True)
 
 torch.save(diff_model.state_dict(), '/content/minimind/out/diffusion_minimind_512.pth')

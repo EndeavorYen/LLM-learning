@@ -11,12 +11,33 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 if not os.path.exists('/content/minimind'):
-    subprocess.run(['git', 'clone', '--depth', '1', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    # [audit #17] pinned: 233d00f (2026-10-27) is the upstream HEAD that predates every original run
+    subprocess.run(['git', 'clone', '--filter=blob:none', 'https://github.com/jingyaogong/minimind.git', '/content/minimind'], check=True)
+    subprocess.run(['git', '-C', '/content/minimind', 'checkout', '-q', '233d00fa068ec2b8c0d4f07b703934d6391a5a73'], check=True)
 sys.path.insert(0, '/content/minimind')
 os.makedirs('/content/minimind/out', exist_ok=True)
 
 from transformers import AutoTokenizer
 from model.model_minimind import MiniMindConfig, MiniMindForCausalLM
+
+import re as _re
+_PUNCT = "，。,.；;：:！!？?"
+def norm_text(s: str) -> str:
+    """[audit #16] whitespace-free, full/half-width punctuation unified."""
+    s = _re.sub(r"\s+", "", s or "")
+    return s.replace(",", "，").replace(".", "。").replace(";", "；").replace(":", "：").replace("!", "！").replace("?", "？")
+def first_clause(s: str) -> str:
+    """[audit #16] text up to and including the first clause-ending punctuation (，。；！？)."""
+    s = norm_text(s)
+    m = _re.search(r"[，。；！？]", s)
+    return s[: m.end()] if m else s
+def clause_match(pred: str, gt: str) -> bool:
+    """[audit #16] full-clause exact match (replaces the old first-5/6-character substring test)."""
+    return first_clause(pred) == norm_text(gt)
+def exact_answer_match(pred: str, gt: str) -> bool:
+    """[audit #16] rote answers: prediction must start with the answer and then stop or hit punctuation."""
+    p, g = norm_text(pred), norm_text(gt)
+    return p.startswith(g) and (len(p) == len(g) or p[len(g)] in _PUNCT)
 
 tokenizer = AutoTokenizer.from_pretrained('/content/minimind/model')
 MASK_ID = 3
@@ -64,17 +85,37 @@ all_domains = [
     ])
 ]
 
-SLOT_LEN = 12
-PROMPT_LEN = 18
+# [audit #13] Lengths are derived from the data. The original hardcoded SLOT_LEN = 12 and
+# PROMPT_LEN = 16/18 silently truncated targets (e.g. "当血管壁堆积胆固醇变窄时，" is 18 tokens)
+# and premises (c0 + c1 is 23-27 tokens). Measured token lengths are listed in issue #13.
+def _tok_len(txt):
+    return len(tokenizer(txt, add_special_tokens=False).input_ids)
+_slot_texts = ([q for q, _ in rote_facts] + [a for _, a in rote_facts]
+               + [c for _, _, cs in all_domains for c in cs]
+               # seen premises are appended to rote_data and pass through pad_slot in the thought path
+               + [cs[0] + cs[1] for _, seen, cs in all_domains if seen])
+_prompt_texts = ([q for q, _ in rote_facts] + [cs[0] for _, _, cs in all_domains]
+                 + [cs[0] + cs[1] for _, _, cs in all_domains])
+SLOT_LEN = max(_tok_len(t) for t in _slot_texts) + 1      # +1 so every slot can end with [□]
+PROMPT_LEN = max(_tok_len(t) for t in _prompt_texts) + 1  # +1 for BOS
+AR_MAX_NEW_TOKENS = SLOT_LEN                              # AR may emit the longest answer in full
+print(f"[audit #13] SLOT_LEN={SLOT_LEN} PROMPT_LEN={PROMPT_LEN} AR_MAX_NEW_TOKENS={AR_MAX_NEW_TOKENS}", flush=True)
 
-def pad_slot(txt, length=SLOT_LEN):
-    ids = tokenizer(txt, add_special_tokens=False).input_ids[:length]
+def pad_slot(txt, length=None):
+    length = SLOT_LEN if length is None else length
+    ids = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(ids) > length:
+        raise ValueError(f"[audit #13] pad_slot would truncate {len(ids)} tokens to {length}: {txt!r}")
     val = [1]*len(ids) + [0]*(length - len(ids))
     pad = ids + [SLOT_PAD_ID]*(length - len(ids))
     return torch.tensor([pad], device='cuda'), torch.tensor([val], device='cuda')
 
-def pad_prompt(txt, length=PROMPT_LEN):
-    ids = [BOS_ID] + tokenizer(txt, add_special_tokens=False).input_ids[:length - 1]
+def pad_prompt(txt, length=None):
+    length = PROMPT_LEN if length is None else length
+    body = tokenizer(txt, add_special_tokens=False).input_ids
+    if len(body) + 1 > length:
+        raise ValueError(f"[audit #13] pad_prompt would truncate {len(body) + 1} tokens to {length}: {txt!r}")
+    ids = [BOS_ID] + body
     ids = [SLOT_PAD_ID]*(length - len(ids)) + ids
     return torch.tensor([ids], device='cuda')
 
@@ -93,6 +134,16 @@ dom_data = []
 for d_name, is_seen, clauses in all_domains:
     c_tensors = [pad_slot(c) for c in clauses]
     dom_data.append((d_name, is_seen, clauses, c_tensors))
+
+# [audit #14] Explicit (domain, stage) index list of clauses allowed in ANY loss: all stages of seen
+# domains, only premise stages 0/1 of unseen domains. Replaces the .view(N_dom, 4, D) grid.
+allowed_keys = [(di, sj) for di, (_, is_seen, clauses, _) in enumerate(dom_data)
+                for sj in range(len(clauses)) if is_seen or sj < 2]
+key2row = {k: r for r, k in enumerate(allowed_keys)}
+seen_doms = [di for di, (_, is_seen, _, _) in enumerate(dom_data) if is_seen]
+N_STAGE = len(dom_data[0][2])
+N_HELD_OUT = len(dom_data) * N_STAGE - len(allowed_keys)
+print(f"[audit #14] held out {N_HELD_OUT} unseen answer clauses from every loss", flush=True)
 
 # ==============================================================================
 # MODEL DEFINITIONS FOR THE 5-WAY BENCHMARK:
@@ -282,18 +333,30 @@ for d_name, is_seen, clauses, c_tensors in dom_data:
         ids = [BOS_ID] + tokenizer("".join(clauses), add_special_tokens=False).input_ids + [EOS_ID]
         ar_seqs.append(ids)
     else:
-        # For Unseen Domains, models ONLY see individual clauses (or c0->c1 premise), NEVER c1->c2!
-        ids_p = [BOS_ID] + tokenizer(clauses[0] + clauses[1], add_special_tokens=False).input_ids + [EOS_ID]
-        ids_c2 = [BOS_ID] + tokenizer(clauses[2], add_special_tokens=False).input_ids + [EOS_ID]
-        ar_seqs.append(ids_p); ar_seqs.append(ids_c2)
+        # For Unseen Domains, models ONLY see the c0->c1 premise, NEVER c1->c2!
+        # [audit #14] no EOS after the unseen premise (it taught AR to stop exactly where the answer begins),
+        # and the separate unseen stage-2 clause sequence is removed (it is a held-out answer clause).
+        ids_p = [BOS_ID] + tokenizer(clauses[0] + clauses[1], add_special_tokens=False).input_ids
+        ar_seqs.append(ids_p)
+        # Pure-Diffusion: c0 -> c1 pair is premise-only (both stage 0 and 1), same visibility as AR. Kept.
         diff_pairs.append((pad_prompt(clauses[0])[0], c_tensors[1][0][0]))
 
-# Train AR & Pure Diffusion (150 steps)
-opt_ar = torch.optim.AdamW(m_ar.parameters(), lr=3e-4)
-opt_diff = torch.optim.AdamW(m_diff.parameters(), lr=3e-4)
+# [audit #16] Equal training budget for all 5 models: largest step count used in this script (220),
+# cosine schedule 3e-4 -> 3e-5 for every model (AR/Diff were 150 steps at constant LR).
+TRAIN_STEPS = 220
+LR_MAX, LR_MIN = 3e-4, 3e-5
+def cosine_lr(step, steps=TRAIN_STEPS):
+    return LR_MIN + 0.5 * (LR_MAX - LR_MIN) * (1 + math.cos(math.pi * step / steps))
+
+opt_ar = torch.optim.AdamW(m_ar.parameters(), lr=LR_MAX)
+opt_diff = torch.optim.AdamW(m_diff.parameters(), lr=LR_MAX)
 dp_p = torch.stack([x[0] for x in diff_pairs]); dp_a = torch.stack([x[1] for x in diff_pairs])
 
-for step in range(1, 151):
+for name_b in ("AR-512", "Diff-512"):
+    print(f"[audit #16] budget {name_b}: {TRAIN_STEPS} steps, cosine LR {LR_MAX:g}->{LR_MIN:g}", flush=True)
+for step in range(1, TRAIN_STEPS + 1):
+    for o in (opt_ar, opt_diff):
+        for pg in o.param_groups: pg['lr'] = cosine_lr(step)
     opt_ar.zero_grad()
     loss_a = sum(m_ar(torch.tensor([s], device='cuda'), labels=torch.tensor([s], device='cuda')).loss for s in ar_seqs) / len(ar_seqs)
     loss_a.backward(); torch.nn.utils.clip_grad_norm_(m_ar.parameters(), 1.0); opt_ar.step()
@@ -303,12 +366,12 @@ for step in range(1, 151):
     loss_d.backward(); torch.nn.utils.clip_grad_norm_(m_diff.parameters(), 1.0); opt_diff.step()
 
 # Helper to train DualBrain (512 & 256) and PureThought (512)
-def train_dual_brain(model_inst, steps=200, train_fast_muscle=True):
-    opt_i = torch.optim.AdamW(model_inst.parameters(), lr=3e-4)
+def train_dual_brain(model_inst, steps=TRAIN_STEPS, train_fast_muscle=True):
+    opt_i = torch.optim.AdamW(model_inst.parameters(), lr=LR_MAX)
     model_inst.train()
     N_dom = len(dom_data)  # 6 domains
     for step in range(1, steps + 1):
-        lr = 3e-5 + 0.5 * (3e-4 - 3e-5) * (1 + math.cos(math.pi * step / steps))
+        lr = cosine_lr(step, steps)  # [audit #16] same schedule as AR/Diff
         for pg in opt_i.param_groups: pg['lr'] = lr
         opt_i.zero_grad()
         loss_total = 0.0
@@ -336,38 +399,44 @@ def train_dual_brain(model_inst, steps=200, train_fast_muscle=True):
             loss_total = loss_total + F.cross_entropy(logits_r.reshape(-1, logits_r.size(-1)), torch.stack(rt_a_t).reshape(-1), ignore_index=-100)
 
         # Unsupervised Slow-Feature Domain Invariance + Orthogonal Structure across 6 Domains x 4 States
+        # [audit #14] only allowed clauses (seen: all stages; unseen: stage 0/1) are encoded and trained
         all_ct, all_cv = [], []
-        for _, _, _, c_tensors in dom_data:
-            for ct, cv in c_tensors:
-                all_ct.append(ct[0]); all_cv.append(cv[0])
+        for di, sj in allowed_keys:
+            ct, cv = dom_data[di][3][sj]
+            all_ct.append(ct[0]); all_cv.append(cv[0])
         b_ct = torch.stack(all_ct); b_cv = torch.stack(all_cv)
         d_vec, s_vec = model_inst.encode_thought(b_ct, b_cv)
-        d_grid = d_vec.view(N_dom, 4, -1)
-        s_grid = s_vec.view(N_dom, 4, -1)
+        # [audit #14] explicit index lookup instead of .view(N_dom, 4, D); pairs with a held-out clause are skipped
+        def _d(di, sj): return d_vec[key2row[(di, sj)]]
+        def _s(di, sj): return s_vec[key2row[(di, sj)]]
+        def _ok(*keys): return all(k in key2row for k in keys)
 
         loss_dis = 0.0
         for dom_i in range(N_dom):
-            for st_j in range(1, 4):
-                loss_dis = loss_dis + (1.0 - (d_grid[dom_i, 0] * d_grid[dom_i, st_j]).sum())
+            for st_j in range(1, N_STAGE):
+                if _ok((dom_i, 0), (dom_i, st_j)):
+                    loss_dis = loss_dis + (1.0 - (_d(dom_i, 0) * _d(dom_i, st_j)).sum())
         for d_a in range(N_dom):
             for d_b in range(d_a + 1, N_dom):
-                loss_dis = loss_dis + F.relu((d_grid[d_a, 0] * d_grid[d_b, 0]).sum() + 0.1)
+                loss_dis = loss_dis + F.relu((_d(d_a, 0) * _d(d_b, 0)).sum() + 0.1)
 
-        for st_j in range(4):
+        for st_j in range(N_STAGE):
             for dom_i in range(1, N_dom):
-                loss_dis = loss_dis + (1.0 - (s_grid[0, st_j] * s_grid[dom_i, st_j]).sum())
-        for st_a in range(4):
-            for st_b in range(st_a + 1, 4):
+                if _ok((0, st_j), (dom_i, st_j)):
+                    loss_dis = loss_dis + (1.0 - (_s(0, st_j) * _s(dom_i, st_j)).sum())
+        for st_a in range(N_STAGE):
+            for st_b in range(st_a + 1, N_STAGE):
                 for dom_i in range(N_dom):
-                    loss_dis = loss_dis + F.relu((s_grid[dom_i, st_a] * s_grid[dom_i, st_b]).sum() + 0.1)
+                    if _ok((dom_i, st_a), (dom_i, st_b)):
+                        loss_dis = loss_dis + F.relu((_s(dom_i, st_a) * _s(dom_i, st_b)).sum() + 0.1)
 
         # Train causal law hopping ONLY on the 2 Seen Domains (Water & Highway)! NEVER on the 4 Unseen Domains!
-        s_seen = s_grid[:2, :, :]
+        s_seen = torch.stack([torch.stack([_s(di, sj) for sj in range(N_STAGE)]) for di in seen_doms])  # [audit #14]
         pred_s = model_inst.forward_struct_hop(s_seen[:, :-1, :])
         loss_hop = (1.0 - (pred_s * s_seen[:, 1:, :].detach()).sum(dim=-1)).mean()
 
         s2_d, s2_s, s2_c, s2_l = [], [], [], []
-        for idx in range(N_dom * 4):
+        for idx in range(len(allowed_keys)):  # [audit #14] was N_dom * 4 (rendered unseen stage 2/3)
             for m in (torch.rand(SLOT_LEN, device='cuda') < 0.5, torch.ones(SLOT_LEN, dtype=torch.bool, device='cuda')):
                 if not m.any(): m[0] = True
                 c = b_ct[idx].clone(); c[m] = MASK_ID
@@ -384,9 +453,12 @@ def train_dual_brain(model_inst, steps=200, train_fast_muscle=True):
     model_inst.eval()
 
 print("Training PureThought-512, DualBrain-512, and Tiny-DualBrain-256...", flush=True)
-train_dual_brain(m_pure_thought, steps=180, train_fast_muscle=False)
-train_dual_brain(m_dual_512, steps=200, train_fast_muscle=True)
-train_dual_brain(m_dual_256, steps=220, train_fast_muscle=True)
+# [audit #16] all three were 180 / 200 / 220 steps; now the shared TRAIN_STEPS budget
+for name_b in ("PureThought-512", "DualBrain-512", "Tiny-DualBrain-256"):
+    print(f"[audit #16] budget {name_b}: {TRAIN_STEPS} steps, cosine LR {LR_MAX:g}->{LR_MIN:g}", flush=True)
+train_dual_brain(m_pure_thought, steps=TRAIN_STEPS, train_fast_muscle=False)
+train_dual_brain(m_dual_512, steps=TRAIN_STEPS, train_fast_muscle=True)
+train_dual_brain(m_dual_256, steps=TRAIN_STEPS, train_fast_muscle=True)
 m_ar.eval(); m_diff.eval()
 
 # ==============================================================================
@@ -413,7 +485,7 @@ def eval_all():
         for q_s, gt_a in rote_facts:
             if mod is m_ar:
                 inp = torch.tensor([[BOS_ID] + tokenizer(q_s, add_special_tokens=False).input_ids], device='cuda')
-                out = mod.generate(inp, max_new_tokens=10, do_sample=False, use_cache=True)
+                out = mod.generate(inp, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
                 pred_s = clean_str(out[0, inp.size(1):])
             elif mod is m_diff:
                 out = mod.generate_slots(pad_prompt(q_s), steps=2)
@@ -427,7 +499,7 @@ def eval_all():
             else:
                 _, out = mod.probe_muscle(pad_prompt(q_s), steps=2)
                 pred_s = clean_str(out[0])
-            if pred_s == gt_a:
+            if exact_answer_match(pred_s, gt_a):  # [audit #16] same rote rule for every model
                 rote_ok += 1
 
         # 2. Test 2 Seen Domains + 4 Unseen Domains
@@ -436,7 +508,7 @@ def eval_all():
             gt_c2 = clauses[2]
             if mod is m_ar:
                 inp = torch.tensor([[BOS_ID] + tokenizer(p_str, add_special_tokens=False).input_ids], device='cuda')
-                out = mod.generate(inp, max_new_tokens=10, do_sample=False, use_cache=True)
+                out = mod.generate(inp, max_new_tokens=AR_MAX_NEW_TOKENS, do_sample=False, use_cache=True)
                 pred_s = clean_str(out[0, inp.size(1):])
             elif mod is m_diff:
                 out = mod.generate_slots(pad_prompt(p_str), steps=2)
@@ -452,10 +524,11 @@ def eval_all():
                     out = mod.solve_thought_analogy(c_tensors[0][0], c_tensors[0][1], c_tensors[1][0], c_tensors[1][1], steps=2)
                     pred_s = clean_str(out[0])
 
+            # [audit #16] full-clause match replaces the gt[:6] substring test
             if is_seen:
-                if gt_c2[:6] in pred_s: seen_ok += 1
+                if clause_match(pred_s, gt_c2): seen_ok += 1
             else:
-                if gt_c2[:6] in pred_s: unseen_ok += 1
+                if clause_match(pred_s, gt_c2): unseen_ok += 1
                 unseen_samples.append((d_name, pred_s, gt_c2))
 
         total_solved = rote_ok + seen_ok + unseen_ok
@@ -468,10 +541,13 @@ res = eval_all()
 print("\n====================================================================================================================", flush=True)
 print("=== [GRAND BENCHMARK] 5-WAY ARCHITECTURE & KNOWLEDGE DENSITY COMPARISON (Same Data, Tested on Unseen Analogy!) ===", flush=True)
 print("====================================================================================================================", flush=True)
-print(f"{'Model Architecture':<32} | {'Params':>7} | {'Rote (6)':>8} | {'Seen (2)':>8} | {'Unseen IQ (4)':>13} | {'Total (12)':>10} | {'Knowledge Density':>18}", flush=True)
-print("-" * 116, flush=True)
+print(f"{'Model Architecture':<32} | {'Params':>7} | {'Rote (6)':>8} | {'Seen (2)':>8} | {'Unseen IQ (4)':>13} | {'Total (12)':>10} | {'Knowledge Density':>18} | {'Density vs AR':>14}", flush=True)
+print("-" * 134, flush=True)
+# [audit #16] density ratio vs AR is printed unrounded; undefined when AR solved nothing
+_ar_dens = res["1. AR-MiniMind (8L, 512D)"][5]
 for k, (pm, r_ok, s_ok, u_ok, tot, dens, _) in res.items():
-    print(f"{k:<32} | {pm:6.2f}M | {r_ok:5d}/6  | {s_ok:5d}/2  | {u_ok:9d}/4   | {tot:6d}/12  | {dens:11.2f} tasks/M", flush=True)
+    ratio_s = repr(dens / _ar_dens) + "x" if _ar_dens > 0 else "n/a (AR solved 0)"
+    print(f"{k:<32} | {pm:6.2f}M | {r_ok:5d}/6  | {s_ok:5d}/2  | {u_ok:9d}/4   | {tot:6d}/12  | {dens:11.2f} tasks/M | {ratio_s}", flush=True)
 
 print("\n=== [Zero-Shot Unseen Domain Predictions: 5.6M Tiny Dual-Brain vs 30.0M AR-MiniMind vs 30.0M Pure-Diffusion] ===", flush=True)
 for idx_u in range(4):

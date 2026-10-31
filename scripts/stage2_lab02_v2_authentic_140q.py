@@ -40,6 +40,12 @@ mmlu_test = list(ds_mmlu_test)[:50]
 gsm_train = list(ds_gsm_train)[:100]
 gsm_test  = list(ds_gsm_test)[:40]
 
+# [audit #15] contamination check: does any ARC test question text appear in the ARC train slice used?
+def _qnorm(q): return re.sub(r"\s+", " ", q.strip().lower())
+_arc_train_q = {_qnorm(x['question']) for x in arc_train}
+_arc_overlap = sum(1 for x in arc_test if _qnorm(x['question']) in _arc_train_q)
+print(f"[audit #15] ARC test/train question overlap: {_arc_overlap}/{len(arc_test)} test questions appear in the {len(arc_train)}-item train slice", flush=True)
+
 print(f"Loaded in {time.time()-t0:.1f}s! Authentic Suite: MMLU (50q) + ARC-Challenge (50q) + GSM8K Generative Math (40q) = 140 Tasks", flush=True)
 
 CHOICE_LETTERS = ["A", "B", "C", "D"]
@@ -73,7 +79,7 @@ def eval_mmlu(soft_prefix_fn=None):
         ids = tokenizer.encode(prompt, return_tensors="pt").to("cuda")
         inp_emb = qwen_base.model.embed_tokens(ids)
         if soft_prefix_fn is not None:
-            sp = soft_prefix_fn(prompt, task_type="mmlu")
+            sp = soft_prefix_fn(item['question'])  # [audit #15] no task_type routing; same input (raw question) for every task
             if sp is not None:
                 inp_emb = torch.cat([sp.to(inp_emb.dtype), inp_emb], dim=1)
         logits = qwen_base(inputs_embeds=inp_emb).logits[0, -1, CHOICE_TOKEN_IDS].float()
@@ -83,7 +89,7 @@ def eval_mmlu(soft_prefix_fn=None):
     return correct
 
 @torch.no_grad()
-def eval_arc(soft_prefix_fn=None, thought_Bonus_fn=None):
+def eval_arc(soft_prefix_fn=None):  # [audit #15] law_sim bonus hook removed
     correct = 0
     for item in arc_test:
         choices = item['choices']['text']
@@ -93,14 +99,11 @@ def eval_arc(soft_prefix_fn=None, thought_Bonus_fn=None):
         ids = tokenizer.encode(prompt, return_tensors="pt").to("cuda")
         inp_emb = qwen_base.model.embed_tokens(ids)
         if soft_prefix_fn is not None:
-            sp = soft_prefix_fn(prompt, task_type="arc")
+            sp = soft_prefix_fn(item['question'])  # [audit #15] no task_type routing; same input (raw question) for every task
             if sp is not None:
                 inp_emb = torch.cat([sp.to(inp_emb.dtype), inp_emb], dim=1)
         logits = qwen_base(inputs_embeds=inp_emb).logits[0, -1, CHOICE_TOKEN_IDS].float()
         probs = F.log_softmax(logits, dim=-1)
-        if thought_Bonus_fn is not None:
-            bonus = thought_Bonus_fn(item['question'], choices)
-            probs = probs + torch.tensor(bonus, device='cuda', dtype=torch.float32)
         if int(probs.argmax().item()) == gt_idx:
             correct += 1
     return correct
@@ -122,6 +125,14 @@ def extract_last_num(text: str):
     m = re.findall(r"-?\d+(?:,\d+)*(?:\.\d+)?", text)
     return m[-1].replace(",", "") if m else ""
 
+def nums_equal(pred: str, gt: str, tol: float = 1e-4) -> bool:
+    """[audit #15] numeric comparison (e.g. '10.00' == '10', '1,000' == '1000') instead of exact string."""
+    try:
+        p, g = float(pred.replace(",", "")), float(gt.replace(",", ""))
+    except (ValueError, AttributeError):
+        return False
+    return abs(p - g) <= tol * max(1.0, abs(g))
+
 @torch.no_grad()
 def eval_gsm8k_generative(soft_prefix_fn=None):
     correct = 0
@@ -131,7 +142,7 @@ def eval_gsm8k_generative(soft_prefix_fn=None):
         ids = tokenizer.encode(prompt, return_tensors="pt").to("cuda")
         inp_emb = qwen_base.model.embed_tokens(ids)
         if soft_prefix_fn is not None:
-            sp = soft_prefix_fn(item['question'], task_type="gsm")
+            sp = soft_prefix_fn(item['question'])  # [audit #15] no task_type routing; same input (raw question) for every task
             if sp is not None:
                 inp_emb = torch.cat([sp.to(inp_emb.dtype), inp_emb], dim=1)
         # Fast greedy generation up to 96 new tokens, stop at '\n\n'
@@ -150,7 +161,7 @@ def eval_gsm8k_generative(soft_prefix_fn=None):
             cur_emb = torch.cat([cur_emb, next_emb], dim=1)
         gen_txt = tokenizer.decode(gen_ids, skip_special_tokens=True).split("\n\n")[0]
         pred_num = extract_last_num(gen_txt)
-        if pred_num == gt_num:
+        if nums_equal(pred_num, gt_num):  # [audit #15]
             correct += 1
     return correct
 
@@ -206,22 +217,42 @@ for item in arc_train:
 for item in gsm_train:
     lora_train_texts.append(f"Question: {item['question']}\nAnswer: {item['answer']}")
 
+# [audit #15] ONE shared training pool for LoRA and Dual-Brain: (question text used for the prefix, full SFT text).
+train_pool_q = [item['question'] for item in arc_train] + [item['question'] for item in gsm_train]
+assert len(train_pool_q) == len(lora_train_texts)
+# [audit #15] truncation raised from 160 (cut GSM '#### N' lines) to 384; report what is still cut.
+TRAIN_MAX_LEN = 384
+_raw_lens = [len(tokenizer(t).input_ids) for t in lora_train_texts]
+_n_cut = sum(1 for n in _raw_lens if n > TRAIN_MAX_LEN)
+_n_cut_hash = sum(1 for t in lora_train_texts if "####" in t and "####" not in tokenizer.decode(tokenizer(t, truncation=True, max_length=TRAIN_MAX_LEN).input_ids))
+print(f"[audit #15] train pool {len(lora_train_texts)} texts | max_length={TRAIN_MAX_LEN} | longest {max(_raw_lens)} tokens | still truncated: {_n_cut}/{len(lora_train_texts)} (GSM '####' line lost: {_n_cut_hash})", flush=True)
+
+# [audit #16] equal budgets: same steps, batch size and cosine schedule for both trained competitors (own LR values kept).
+TRAIN_STEPS, TRAIN_BS = 100, 16
+DUAL_MICRO_BS, DUAL_ACCUM = 4, 4  # [audit #16] 4 x 4 = TRAIN_BS (memory only)
+assert DUAL_MICRO_BS * DUAL_ACCUM == TRAIN_BS
+def cosine_lr(base_lr, step):
+    return base_lr * (0.1 + 0.9 * 0.5 * (1 + math.cos(math.pi * step / TRAIN_STEPS)))
+print(f"[audit #16] budget LoRA      : {TRAIN_STEPS} steps x BS {TRAIN_BS}, AdamW lr 5e-4 cosine -> 5e-5, clip 1.0", flush=True)
+print(f"[audit #16] budget Dual-Brain: {TRAIN_STEPS} steps x BS {TRAIN_BS} (grad-accum {DUAL_MICRO_BS}x{DUAL_ACCUM}), AdamW lr 8e-4 cosine -> 8e-5, clip 1.0", flush=True)
+
 print(f"\n=== [3] Training Competitor 2: Standard Qwen2.5-0.5B + LoRA SFT on ARC+GSM8K Train ({len(lora_train_texts)} samples) ===", flush=True)
 set_lora_enabled(True)
 opt_lora = torch.optim.AdamW(lora_params, lr=5e-4)
-enc_lora = tokenizer(lora_train_texts, return_tensors="pt", padding=True, truncation=True, max_length=160).to("cuda")
+enc_lora = tokenizer(lora_train_texts, return_tensors="pt", padding=True, truncation=True, max_length=TRAIN_MAX_LEN).to("cuda")  # [audit #15]
 lbl_lora = enc_lora.input_ids.clone()
 lbl_lora[enc_lora.attention_mask == 0] = -100
 
-for step in range(1, 101):
-    idx_b = torch.randint(0, enc_lora.input_ids.size(0), (32,), device='cuda')
+for step in range(1, TRAIN_STEPS + 1):
+    for pg in opt_lora.param_groups: pg['lr'] = cosine_lr(5e-4, step)  # [audit #16]
+    idx_b = torch.randint(0, enc_lora.input_ids.size(0), (TRAIN_BS,), device='cuda')
     opt_lora.zero_grad()
     out = qwen_base(input_ids=enc_lora.input_ids[idx_b], attention_mask=enc_lora.attention_mask[idx_b], labels=lbl_lora[idx_b])
     out.loss.backward()
     torch.nn.utils.clip_grad_norm_(lora_params, 1.0)
     opt_lora.step()
-    if step in (1, 50, 100):
-        print(f"  [Competitor 2: Standard LoRA] Step {step:3d}/100 | SFT Loss: {out.loss.item():.4f}", flush=True)
+    if step in (1, 50, TRAIN_STEPS):
+        print(f"  [Competitor 2: Standard LoRA] Step {step:3d}/{TRAIN_STEPS} | SFT Loss: {out.loss.item():.4f}", flush=True)
 
 lora_mmlu = eval_mmlu()
 lora_arc  = eval_arc()
@@ -294,14 +325,15 @@ h_arc_q   = extract_qwen_896_feature(arc_q_txts)
 h_arc_pos = extract_qwen_896_feature(arc_pos_txts)
 h_arc_neg = extract_qwen_896_feature(arc_neg_txts)
 
-gsm_q_txts = [x['question'] for x in gsm_train[:40]]
-gsm_a_txts = [f"Question: {x['question']}\nAnswer: {x['answer']}" for x in gsm_train[:40]]
-h_gsm_q    = extract_qwen_896_feature(gsm_q_txts)
-enc_gsm    = tokenizer(gsm_a_txts, return_tensors="pt", padding=True, truncation=True, max_length=128).to("cuda")
+# [audit #15] crib-note LM loss now uses the SAME pool as LoRA (all ARC + GSM train texts, was GSM[:40] at max_length 128).
+h_pool_q = extract_qwen_896_feature(train_pool_q)
+enc_pool = enc_lora  # identical tokenization / truncation (max_length=TRAIN_MAX_LEN)
+N_POOL   = enc_pool.input_ids.size(0)
 
 opt_dual = torch.optim.AdamW(dual_brain.parameters(), lr=8e-4, weight_decay=0.01)
 
-for step in range(1, 81):
+for step in range(1, TRAIN_STEPS + 1):
+    for pg in opt_dual.param_groups: pg['lr'] = cosine_lr(8e-4, step)  # [audit #16]
     opt_dual.zero_grad()
 
     # A. 128-D Orthogonal Funnel + Contrastive Law Hopping on ARC
@@ -315,59 +347,56 @@ for step in range(1, 81):
     loss_hop = F.relu(0.35 - (sim_pos - sim_neg)).mean()
     loss_ortho = (d_q * s_q).abs().mean() + (d_pos * s_pos).abs().mean()
 
-    # B. End-to-End Crib-Note Prefix Training through Frozen Qwen2.5 on GSM8K mini-batch!
-    b_idx = torch.randint(0, 40, (8,), device='cuda')
-    d_g, s_g = dual_brain.encode_ds(h_gsm_q[b_idx])
-    s_g_hat  = dual_brain.predict_solution_law(d_g, s_g)
-    crib_emb = dual_brain.make_crib_note(d_g, s_g_hat).to(torch.bfloat16)  # (8, 2, 896)
+    # B. End-to-End Crib-Note Prefix Training through Frozen Qwen2.5 on a mini-batch of the shared pool [audit #15]
+    # [audit #16] Gradient accumulation (MICRO_BS x ACCUM = TRAIN_BS): backprop through all of Qwen at
+    # 16 x 386 tokens ran out of memory on the L4; the effective batch and the training budget are unchanged.
+    (loss_hop + 0.5 * loss_ortho).backward()
+    b_idx = torch.randint(0, N_POOL, (TRAIN_BS,), device='cuda')
+    loss_crib_lm = 0.0
+    for mb in range(DUAL_ACCUM):
+        mb_idx = b_idx[mb * DUAL_MICRO_BS:(mb + 1) * DUAL_MICRO_BS]
+        d_g, s_g = dual_brain.encode_ds(h_pool_q[mb_idx])
+        s_g_hat  = dual_brain.predict_solution_law(d_g, s_g)
+        crib_emb = dual_brain.make_crib_note(d_g, s_g_hat).to(torch.bfloat16)  # (MICRO_BS, 2, 896)
 
-    tok_ids = enc_gsm.input_ids[b_idx]
-    tok_msk = enc_gsm.attention_mask[b_idx]
-    word_emb = qwen_base.model.embed_tokens(tok_ids)
-    full_emb = torch.cat([crib_emb, word_emb], dim=1)
-    prefix_msk = torch.ones((8, 2), dtype=tok_msk.dtype, device='cuda')
-    full_msk = torch.cat([prefix_msk, tok_msk], dim=1)
+        tok_ids = enc_pool.input_ids[mb_idx]
+        tok_msk = enc_pool.attention_mask[mb_idx]
+        word_emb = qwen_base.model.embed_tokens(tok_ids)
+        full_emb = torch.cat([crib_emb, word_emb], dim=1)
+        prefix_msk = torch.ones((len(mb_idx), 2), dtype=tok_msk.dtype, device='cuda')
+        full_msk = torch.cat([prefix_msk, tok_msk], dim=1)
 
-    lbls = tok_ids.clone()
-    lbls[tok_msk == 0] = -100
-    pad_lbl = torch.full((8, 2), -100, dtype=lbls.dtype, device='cuda')
-    full_lbls = torch.cat([pad_lbl, lbls], dim=1)
+        lbls = tok_ids.clone()
+        lbls[tok_msk == 0] = -100
+        pad_lbl = torch.full((len(mb_idx), 2), -100, dtype=lbls.dtype, device='cuda')
+        full_lbls = torch.cat([pad_lbl, lbls], dim=1)
 
-    out_qwen = qwen_base(inputs_embeds=full_emb, attention_mask=full_msk, labels=full_lbls)
-    loss_crib_lm = out_qwen.loss.float()
+        out_qwen = qwen_base(inputs_embeds=full_emb, attention_mask=full_msk, labels=full_lbls)
+        mb_loss = out_qwen.loss.float() / DUAL_ACCUM
+        mb_loss.backward()
+        loss_crib_lm = loss_crib_lm + mb_loss.detach()
+        del out_qwen, full_emb, word_emb, crib_emb
 
-    loss = loss_crib_lm + loss_hop + 0.5 * loss_ortho
-    loss.backward()
     torch.nn.utils.clip_grad_norm_(dual_brain.parameters(), 1.0)
     opt_dual.step()
 
-    if step in (1, 40, 80):
-        print(f"  [Competitor 3: Dual-Brain Crib-Note] Step {step:2d}/80 | Crib-LM Loss: {loss_crib_lm.item():.4f} | Law-Hop: {loss_hop.item():.4f} | Ortho(d_s): {loss_ortho.item():.4f}", flush=True)
+    if step in (1, 50, TRAIN_STEPS):
+        print(f"  [Competitor 3: Dual-Brain Crib-Note] Step {step:3d}/{TRAIN_STEPS} | Crib-LM Loss: {loss_crib_lm.item():.4f} | Law-Hop: {loss_hop.item():.4f} | Ortho(d_s): {loss_ortho.item():.4f}", flush=True)
 
 dual_brain.eval()
 
 @torch.no_grad()
-def dual_soft_prefix_fn(q_str: str, task_type: str = "arc"):
-    # OOD Humility Gate: For encyclopedic MMLU lookup, 100% fallback to untouched Qwen2.5!
-    if task_type == "mmlu":
-        return None
+def dual_soft_prefix_fn(q_str: str):
+    # [audit #15] applied uniformly to every question of every task (task_type routing / MMLU fallback removed)
     h_q = extract_qwen_896_feature([q_str])
     d_q, s_q = dual_brain.encode_ds(h_q)
     s_hat = dual_brain.predict_solution_law(d_q, s_q)
     return dual_brain.make_crib_note(d_q, s_hat)
 
-@torch.no_grad()
-def dual_thought_bonus_fn(q_raw: str, choices_list: list):
-    h_q = extract_qwen_896_feature([q_raw])
-    d_q, s_q = dual_brain.encode_ds(h_q)
-    s_hat = dual_brain.predict_solution_law(d_q, s_q)
-    h_c = extract_qwen_896_feature(choices_list)
-    d_c, s_c = dual_brain.encode_ds(h_c)
-    law_sim = (s_c * s_hat).sum(dim=-1)
-    return (0.25 * law_sim).tolist()
+# [audit #15] dual_thought_bonus_fn (0.25 * law_sim log-prob bonus on ARC) removed: all competitors share one protocol.
 
 dual_mmlu = eval_mmlu(soft_prefix_fn=dual_soft_prefix_fn)
-dual_arc  = eval_arc(soft_prefix_fn=dual_soft_prefix_fn, thought_Bonus_fn=dual_thought_bonus_fn)
+dual_arc  = eval_arc(soft_prefix_fn=dual_soft_prefix_fn)  # [audit #15] no bonus
 dual_gsm  = eval_gsm8k_generative(soft_prefix_fn=dual_soft_prefix_fn)
 
 print("\n==========================================================================================================================", flush=True)
@@ -382,6 +411,7 @@ print("-" * 128, flush=True)
 tot_base = base_mmlu + base_arc + base_gsm
 tot_lora = lora_mmlu + lora_arc + lora_gsm
 tot_dual = dual_mmlu + dual_arc + dual_gsm
+print(f"[audit #15] all three columns: identical prompts and scoring per task; Dual-Brain prefix applied to all 140 questions; ARC train/test overlap {_arc_overlap}/{len(arc_test)}", flush=True)
 print(f"{'OVERALL SCORE (Out of 140 Official Tasks)':<42} | {tot_base:13d}/140 ({tot_base/140*100:4.1f}%) | {tot_lora:15d}/140 ({tot_lora/140*100:4.1f}%) | {tot_dual:17d}/140 ({tot_dual/140*100:4.1f}%)", flush=True)
 
 os.makedirs('/content/out', exist_ok=True)

@@ -1,0 +1,38 @@
+[audit #13] SLOT_LEN=25 PROMPT_LEN=28 AR_MAX_NEW_TOKENS=25
+[audit #14] held out 8 unseen answer clauses from every loss
+Model Sizes: AR-512=30.03M | Diff-512=30.03M | PureThought-512=30.08M | DualBrain-512=31.93M | Tiny-DualBrain-256=5.46M
+[audit #16] budget AR-512: 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget Diff-512: 220 steps, cosine LR 0.0003->3e-05
+Training PureThought-512, DualBrain-512, and Tiny-DualBrain-256...
+[audit #16] budget PureThought-512: 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget DualBrain-512: 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget Tiny-DualBrain-256: 220 steps, cosine LR 0.0003->3e-05
+
+====================================================================================================================
+=== [GRAND BENCHMARK] 5-WAY ARCHITECTURE & KNOWLEDGE DENSITY COMPARISON (Same Data, Tested on Unseen Analogy!) ===
+====================================================================================================================
+Model Architecture               |  Params | Rote (6) | Seen (2) | Unseen IQ (4) | Total (12) |  Knowledge Density |  Density vs AR
+--------------------------------------------------------------------------------------------------------------------------------------
+1. AR-MiniMind (8L, 512D)        |  30.03M |     6/6  |     2/2  |         0/4   |      8/12  |        0.27 tasks/M | 1.0x
+2. Pure-Diffusion (8L, 512D)     |  30.03M |     6/6  |     2/2  |         0/4   |      8/12  |        0.27 tasks/M | 1.0x
+3. Pure-Thought LCM (8L, 512D)   |  30.08M |     6/6  |     2/2  |         0/4   |      8/12  |        0.27 tasks/M | 0.9981739449119659x
+4. Dual-Brain (8L, 512D)         |  31.93M |     6/6  |     2/2  |         0/4   |      8/12  |        0.25 tasks/M | 0.9402512445987222x
+5. Tiny Dual-Brain (4L, 256D)    |   5.46M |     6/6  |     2/2  |         0/4   |      8/12  |        1.46 tasks/M | 5.4969652942141405x
+
+=== [Zero-Shot Unseen Domain Predictions: 5.6M Tiny Dual-Brain vs 30.0M AR-MiniMind vs 30.0M Pure-Diffusion] ===
+Unseen Domain [人體醫學] Ground Truth: '血管内血压就会急剧升高，'
+  -> 30.0M AR-MiniMind         : '，，最终，最终导致，最终导致，最终导致，最终导致，最终导致在'
+  -> 30.0M Pure-Diffusion      : '急急水内内急，，，，，，，，，，，'
+  ->  5.6M Tiny Dual-Brain (Ours): '，，，，，，，，，，'
+Unseen Domain [網路通訊] Ground Truth: '网络延迟与拥塞急剧升高，'
+  -> 30.0M AR-MiniMind         : '当�时，路段，最终导致，最终导致，最终导致车流�管管内水流瘫'
+  -> 30.0M Pure-Diffusion      : '，，剧，'
+  ->  5.6M Tiny Dual-Brain (Ours): '，，，急，，，高，，'
+Unseen Domain [工廠產線] Ground Truth: '产线积压負荷急剧升高，'
+  -> 30.0M AR-MiniMind         : '当关键工位故障产能变窄时，当窄时，最终导致，最终导致，最终导致'
+  -> 30.0M Pure-Diffusion      : '产剧，'
+  ->  5.6M Tiny Dual-Brain (Ours): '，，，，，，，，，，，'
+Unseen Domain [呼吸系統] Ground Truth: '呼吸道阻力就会急剧升高，'
+  -> 30.0M AR-MiniMind         : '当支，当支，当支，当支变窄时，最终导致，最终窄时，最终'
+  -> 30.0M Pure-Diffusion      : '内水压剧急支气升，，'
+  ->  5.6M Tiny Dual-Brain (Ours): '，，，，，，，，，，'

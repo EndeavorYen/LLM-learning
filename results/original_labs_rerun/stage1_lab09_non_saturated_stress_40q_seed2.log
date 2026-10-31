@@ -1,0 +1,116 @@
+[audit #7] SEED=2
+[audit #13] SLOT_LEN=19 PROMPT_LEN=28 AR_MAX_NEW_TOKENS=19
+Models instantiated:
+  AR-512                :  30.03M params
+  Diff-512              :  30.03M params
+  PureThought-LCM-512   :  30.11M params
+  Micro-Dual-128        :   1.31M params
+  Tiny-Dual-256         :   5.46M params
+  Full-Dual-512         :  31.93M params
+[audit #14] held out 16 unseen answer clauses from every loss
+[audit #16] budget AR-512                : 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget Diff-512              : 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget PureThought-LCM-512   : 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget Micro-Dual-128        : 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget Tiny-Dual-256         : 220 steps, cosine LR 0.0003->3e-05
+[audit #16] budget Full-Dual-512         : 220 steps, cosine LR 0.0003->3e-05
+  [AR-512]   step    1/220 loss=8.8750 lr=3.00e-04
+  [Diff-512] step    1/220 loss=8.7500 lr=3.00e-04
+  [AR-512]   step  110/220 loss=0.1807 lr=1.65e-04
+  [Diff-512] step  110/220 loss=0.0170 lr=1.65e-04
+  [AR-512]   step  220/220 loss=0.1719 lr=3.00e-05
+  [Diff-512] step  220/220 loss=0.0119 lr=3.00e-05
+Training competing models on the 36-Task Multi-Law & High-Entropy Stress Suite...
+[audit #14] held out 16 unseen answer clauses from every loss (PureThought-LCM-512; 32 clauses used)
+  [PureThought-LCM-512] step    1/220 loss=30.5000 hop=1.1094 dis=1.9531 lr=3.00e-04
+  [PureThought-LCM-512] step  110/220 loss=1.0391 hop=0.3242 dis=0.0294 lr=1.65e-04
+  [PureThought-LCM-512] step  220/220 loss=0.8164 hop=0.3008 dis=0.0060 lr=3.00e-05
+[audit #14] held out 16 unseen answer clauses from every loss (Micro-Dual-128; 32 clauses used)
+  [Micro-Dual-128] step    1/220 loss=39.7500 hop=1.0156 dis=2.2344 lr=3.00e-04
+  [Micro-Dual-128] step  110/220 loss=14.6875 hop=0.3613 dis=0.0864 lr=1.65e-04
+  [Micro-Dual-128] step  220/220 loss=12.8125 hop=0.3379 dis=0.0576 lr=3.00e-05
+[audit #14] held out 16 unseen answer clauses from every loss (Tiny-Dual-256; 32 clauses used)
+  [Tiny-Dual-256] step    1/220 loss=40.7500 hop=1.0078 dis=2.0781 lr=3.00e-04
+  [Tiny-Dual-256] step  110/220 loss=2.5312 hop=0.0381 dis=0.0250 lr=1.65e-04
+  [Tiny-Dual-256] step  220/220 loss=0.8633 hop=0.0283 dis=0.0100 lr=3.00e-05
+[audit #14] held out 16 unseen answer clauses from every loss (Full-Dual-512; 32 clauses used)
+  [Full-Dual-512] step    1/220 loss=39.5000 hop=0.9883 dis=2.0938 lr=3.00e-04
+  [Full-Dual-512] step  110/220 loss=0.1152 hop=0.0228 dis=0.0183 lr=1.65e-04
+  [Full-Dual-512] step  220/220 loss=0.0425 hop=0.0072 dis=0.0005 lr=3.00e-05
+
+======================================================================================================================================================
+=== [NON-SATURATED STRESS BENCHMARK] 36 SCORED TASKS ACROSS 4 TIERS (Tier 3 = 2 latent hops; Tier4-compound is info only, NOT in total) ===
+======================================================================================================================================================
+Model Architecture             |  Params | Tier1:16 Serials | Tier2:8 MultiLaw |   Tier3:8 2-Hop | Tier4:4 EmgCode |    Total (36) |   IQ Density | [info] T2&Code /8
+------------------------------------------------------------------------------------------------------------------------------------------------------
+1. AR-MiniMind (8L,512D)       |  30.03M |      16/16 (100%) |       0/8  (  0%) |        0/8  (  0%) |        4/4  (100%) |   20/36 ( 56%) |    0.67 t/M |            0/8
+2. Pure-Diffusion (8L,512D)    |  30.03M |      12/16 ( 75%) |       0/8  (  0%) |        0/8  (  0%) |        4/4  (100%) |   16/36 ( 44%) |    0.53 t/M |            0/8
+3. Pure-Thought LCM (512D)     |  30.11M |       7/16 ( 44%) |       0/8  (  0%) |        0/8  (  0%) |        4/4  (100%) |   11/36 ( 31%) |    0.37 t/M |            0/8
+4. Micro Dual-Brain (2L,128D)  |   1.31M |       0/16 (  0%) |       0/8  (  0%) |        0/8  (  0%) |        0/4  (  0%) |    0/36 (  0%) |    0.00 t/M |            0/8
+5. Tiny Dual-Brain (4L,256D)   |   5.46M |      16/16 (100%) |       0/8  (  0%) |        0/8  (  0%) |        4/4  (100%) |   20/36 ( 56%) |    3.66 t/M |            0/8
+6. Full Dual-Brain (8L,512D)   |  31.93M |       0/16 (  0%) |       0/8  (  0%) |        0/8  (  0%) |        4/4  (100%) |    4/36 ( 11%) |    0.13 t/M |            0/8
+
+======================================================================================================================================================
+=== [audit #7] MECHANISM TEST (pre-registered, see issue #7) ===
+======================================================================================================================================================
+[audit #7] SEED=2  |  8 items = 4 unseen domains x 2 laws  |  anchors = mean s over seen-domain clauses per (law, stage)  |  hop noise 0
+--- AR-512 ---
+  A1/A2/D1/D2           : n/a (no thought vector)
+  B1                    : 0/8 (chance 1/8)
+  B2 (after own B1 pick): 0/8 (chance 1/8)   [info] B2-direct after c0+c1: 0/8
+  [post-hoc] length-normalised B1 / B2: 0/8 / 0/8 (chance 1/8)
+--- Diff-512 ---
+  A1/A2/D1/D2           : n/a (no thought vector)
+  B1                    : 5/8 (chance 1/8)
+  B2 (after own B1 pick): 3/8 (chance 1/8)   [info] B2-direct after c0+c1: 0/8
+  [post-hoc] length-normalised B1 / B2: 5/8 / 3/8 (chance 1/8)
+--- PureThought-LCM-512 ---
+  A1 (s^2 -> (law,2))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  A2 (s^3 -> (law,3))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  D1 (s0,s1 localised)  : 16/16 (chance 1/8)   [diagnostic]
+  D2 (true c2 localised): 8/8 (chance 1/8)   [diagnostic]
+  B1 full / s-only      : 0/8 / 8/8 (chance 1/8)
+  B2 full / s-only      : 2/8 / 5/8 (chance 1/8)
+--- Micro-Dual-128 ---
+  A1 (s^2 -> (law,2))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  A2 (s^3 -> (law,3))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  D1 (s0,s1 localised)  : 16/16 (chance 1/8)   [diagnostic]
+  D2 (true c2 localised): 8/8 (chance 1/8)   [diagnostic]
+  B1 full / s-only      : 2/8 / 8/8 (chance 1/8)
+  B2 full / s-only      : 1/8 / 4/8 (chance 1/8)
+--- Tiny-Dual-256 ---
+  A1 (s^2 -> (law,2))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  A2 (s^3 -> (law,3))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  D1 (s0,s1 localised)  : 16/16 (chance 1/8)   [diagnostic]
+  D2 (true c2 localised): 8/8 (chance 1/8)   [diagnostic]
+  B1 full / s-only      : 6/8 / 8/8 (chance 1/8)
+  B2 full / s-only      : 1/8 / 6/8 (chance 1/8)
+--- Full-Dual-512 ---
+  A1 (s^2 -> (law,2))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  A2 (s^3 -> (law,3))   : 8/8 (chance 1/8)   law-correct 8/8, stage-correct 8/8
+  D1 (s0,s1 localised)  : 16/16 (chance 1/8)   [diagnostic]
+  D2 (true c2 localised): 8/8 (chance 1/8)   [diagnostic]
+  B1 full / s-only      : 1/8 / 8/8 (chance 1/8)
+  B2 full / s-only      : 2/8 / 6/8 (chance 1/8)
+--- nearest-anchor labels per item (Tiny-Dual-256; LxSy = law x, stage y) ---
+  domain     law |   s0   s1 |  s^2  s^3 |   c2 | B1pk B2pk | expected
+  人體醫學         0 | L0S0 L0S1 | L0S2 L0S3 | L0S2 | L0S2 L0S1 | L0S0 L0S1 L0S2 L0S3
+  人體醫學         1 | L1S0 L1S1 | L1S2 L1S3 | L1S2 | L1S2 L1S0 | L1S0 L1S1 L1S2 L1S3
+  網路通訊         0 | L0S0 L0S1 | L0S2 L0S3 | L0S2 | L0S2 L0S3 | L0S0 L0S1 L0S2 L0S3
+  網路通訊         1 | L1S0 L1S1 | L1S2 L1S3 | L1S2 | L1S2 L0S3 | L1S0 L1S1 L1S2 L1S3
+  工廠產線         0 | L0S0 L0S1 | L0S2 L0S3 | L0S2 | L0S2 L0S0 | L0S0 L0S1 L0S2 L0S3
+  工廠產線         1 | L1S0 L1S1 | L1S2 L1S3 | L1S2 | L1S2 L1S0 | L1S0 L1S1 L1S2 L1S3
+  呼吸系統         0 | L0S0 L0S1 | L0S2 L0S3 | L0S2 | L0S0 L1S0 | L0S0 L0S1 L0S2 L0S3
+  呼吸系統         1 | L1S0 L1S1 | L1S2 L1S3 | L1S2 | L0S0 L0S0 | L1S0 L1S1 L1S2 L1S3
+  [post-hoc] AR-512 held-out 4-way B1h / B2h: 5/8 / 3/8 (chance 1/4)
+PROBE_RESULT seed=2 model=AR-512 A1=-1 A2=-1 D1=-1 D2=-1 B1=0 B2=0 B1s=-1 B2s=-1 B1n=0 B2n=0 B1h=5 B2h=3 B1hs=-1 B2hs=-1
+  [post-hoc] Diff-512 held-out 4-way B1h / B2h: 5/8 / 4/8 (chance 1/4)
+PROBE_RESULT seed=2 model=Diff-512 A1=-1 A2=-1 D1=-1 D2=-1 B1=5 B2=3 B1s=-1 B2s=-1 B1n=5 B2n=3 B1h=5 B2h=4 B1hs=-1 B2hs=-1
+  [post-hoc] PureThought-LCM-512 held-out 4-way B1h / B2h: 5/8 / 4/8 (chance 1/4) | s-only 8/8 / 5/8
+PROBE_RESULT seed=2 model=PureThought-LCM-512 A1=8 A2=8 D1=16/16 D2=8 B1=0 B2=2 B1s=8 B2s=5 B1n=-1 B2n=-1 B1h=5 B2h=4 B1hs=8 B2hs=5
+  [post-hoc] Micro-Dual-128 held-out 4-way B1h / B2h: 6/8 / 4/8 (chance 1/4) | s-only 8/8 / 4/8
+PROBE_RESULT seed=2 model=Micro-Dual-128 A1=8 A2=8 D1=16/16 D2=8 B1=2 B2=1 B1s=8 B2s=4 B1n=-1 B2n=-1 B1h=6 B2h=4 B1hs=8 B2hs=4
+  [post-hoc] Tiny-Dual-256 held-out 4-way B1h / B2h: 8/8 / 5/8 (chance 1/4) | s-only 8/8 / 6/8
+PROBE_RESULT seed=2 model=Tiny-Dual-256 A1=8 A2=8 D1=16/16 D2=8 B1=6 B2=1 B1s=8 B2s=6 B1n=-1 B2n=-1 B1h=8 B2h=5 B1hs=8 B2hs=6
+  [post-hoc] Full-Dual-512 held-out 4-way B1h / B2h: 8/8 / 4/8 (chance 1/4) | s-only 8/8 / 6/8
+PROBE_RESULT seed=2 model=Full-Dual-512 A1=8 A2=8 D1=16/16 D2=8 B1=1 B2=2 B1s=8 B2s=6 B1n=-1 B2n=-1 B1h=8 B2h=4 B1hs=8 B2hs=6

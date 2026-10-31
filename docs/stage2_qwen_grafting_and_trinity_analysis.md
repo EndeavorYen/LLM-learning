@@ -1,5 +1,8 @@
 # Stage 2 工業級預訓練模型微創嫁接、公開基準對決與「三合一完整體」深度技術報告
 
+> [!WARNING]
+> **稽核完成（2026-11-01）**：本報告的 benchmark 結論經修正後重跑，**主要宣稱不成立**，本文保留作為研究歷程的紀錄。問題來源：未知領域答案句洩漏（[#14](https://github.com/EndeavorYen/LLM-learning/issues/14)）、長度截斷（[#13](https://github.com/EndeavorYen/LLM-learning/issues/13)）、計分過寬與對照組不公平（[#16](https://github.com/EndeavorYen/LLM-learning/issues/16)）、寫死路由（[#15](https://github.com/EndeavorYen/LLM-learning/issues/15)）。重跑結果見 [`results/original_labs_rerun/`](../results/original_labs_rerun/README.md)，之後重建的驗證實驗與目前結論見 **[`audit_findings.md`](audit_findings.md)**。
+
 本文件完整記錄我們將 **Stage 1（MiniMind 白盒沙盒）** 研發出的「正交意念雙腦 + 雙向 Block-Diffusion」架構，透過**微創器官嫁接手術（Surgical Organ Grafting）** 移植到官方預訓練模型 **`Qwen/Qwen2.5-0.5B`（4.94 億參數、24 層、896 維隱藏空間、18 兆字預訓練常識、151,936 詞表）** 的完整過程、底層原理拆解、國際公開基準（`MMLU` / `ARC-Challenge` / `GSM8K`）實測分析、以及後續 **Stage 3 & Stage 4 四大開放 Issue 攻堅藍圖**。
 
 ---
@@ -116,7 +119,7 @@ flowchart TD
 
 | 國際公開基準 (HuggingFace Official Split) | 1. 官方原版 `Qwen2.5-0.5B` | 2. `Qwen2.5-0.5B + 標準 LoRA` | 3. `Dual-Brain Qwen2.5-0.5B` (小抄導航版) | 科學意義與核心發現 |
 | :--- | :---: | :---: | :---: | :--- |
-| **1. `cais/mmlu` (50題百科通識)** | **20 / 50 (`40.0%`)** | ❌ 15 / 50 (`30.0%`) | ✅ **20 / 50 (`40.0%`)** | **標準 LoRA 嚴重失憶 (-10%)**；雙腦謙遜閘門遇到百科題自動退回原版腦，達成 **0% 災難性遺忘**！ |
+| **1. `cais/mmlu` (50題百科通識)** | **20 / 50 (`40.0%`)** | ❌ 15 / 50 (`30.0%`) | ✅ **20 / 50 (`40.0%`)** | **標準 LoRA 嚴重失憶 (-10%)**；雙腦謙遜閘門遇到百科題自動退回原版腦，達成 **0% 災難性遺忘**！<br/>**［稽核更正 [#15](https://github.com/EndeavorYen/LLM-learning/issues/15)］退回原版是依 `task_type == "mmlu"` 寫死，並非閘門判斷，此結論不成立。** |
 | **2. `ai2_arc` (`ARC-Challenge`, 50題科學推理)** | 23 / 50 (`46.0%`) | 22 / 50 (`44.0%`) | 🏆 **27 / 50 (`54.0%`)** | **科學推理暴增 `+8.0%`（勝過 LoRA `+10.0%`）！**<br/>因為科學選擇題剛好是「單步因果跳躍 ($s_q \to \hat{s}_{\text{ans}}$)」，128 維窄漏斗成功幫大學生排除字面誘答！ |
 | **3. `openai/gsm8k` (40題手寫多步數學)** | **12 / 40 (`30.0%`)** | ❌ 2 / 40 (`5.0%`) | ⚠️ **7 / 40 (`17.5%`)**<br/>*(若由閘門退回原版則為 `30.0%`)* | **關鍵實證：多步算術不能壓成「1 顆靜態節點」！**<br/>GSM8K 需要連續多顆算術節點 ($s_1 \to s_2 \to s_3$)，硬壓成 1 顆點貼在句首反而干擾逐步算式生成！ |
 
