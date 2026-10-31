@@ -1,0 +1,34 @@
+=== [1] Loading Official 'Qwen/Qwen2.5-0.5B' & Authentic Open-LLM Leaderboard Suite (MMLU + ARC-Challenge + GSM8K) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Loading weights:   0%|          | 0/290 [00:00<?, ?it/s]
+[audit #15] ARC test/train question overlap: 0/50 test questions appear in the 100-item train slice
+Loaded in 22.8s! Authentic Suite: MMLU (50q) + ARC-Challenge (50q) + GSM8K Generative Math (40q) = 140 Tasks
+
+=== [2] Evaluating Competitor 1: Official Pre-trained Qwen/Qwen2.5-0.5B (Baseline) ===
+  [Competitor 1: Official Qwen2.5-0.5B] MMLU: 20/50 (40%) | ARC-Challenge: 23/50 (46%) | GSM8K (Generative): 13/40 (32.5%)
+[audit #15] train pool 200 texts | max_length=384 | longest 437 tokens | still truncated: 1/200 (GSM '####' line lost: 1)
+[audit #16] budget LoRA      : 100 steps x BS 16, AdamW lr 5e-4 cosine -> 5e-5, clip 1.0
+[audit #16] budget Dual-Brain: 100 steps x BS 16 (grad-accum 4x4), AdamW lr 8e-4 cosine -> 8e-5, clip 1.0
+
+=== [3] Training Competitor 2: Standard Qwen2.5-0.5B + LoRA SFT on ARC+GSM8K Train (200 samples) ===
+  [Competitor 2: Standard LoRA] Step   1/100 | SFT Loss: 1.3222
+  [Competitor 2: Standard LoRA] Step  50/100 | SFT Loss: 0.5946
+  [Competitor 2: Standard LoRA] Step 100/100 | SFT Loss: 0.2846
+  [Competitor 2: Qwen2.5-0.5B + Standard LoRA] MMLU: 15/50 (30%) | ARC-Challenge: 21/50 (42%) | GSM8K (Generative): 3/40 (7.5%)
+
+=== [4] Training Competitor 3: Dual-Brain Crib-Note Qwen2.5-0.5B End-to-End ===
+  [Competitor 3: Dual-Brain Crib-Note] Step   1/100 | Crib-LM Loss: 1.1613 | Law-Hop: 0.3639 | Ortho(d_s): 0.0213
+  [Competitor 3: Dual-Brain Crib-Note] Step  50/100 | Crib-LM Loss: 0.7760 | Law-Hop: 0.0010 | Ortho(d_s): 0.0043
+  [Competitor 3: Dual-Brain Crib-Note] Step 100/100 | Crib-LM Loss: 0.6473 | Law-Hop: 0.0000 | Ortho(d_s): 0.0025
+
+==========================================================================================================================
+=== [AUTHENTIC MINI OPEN-LLM LEADERBOARD] Official MMLU (50q) + ARC-Challenge (50q) + Generative GSM8K (40q) ===
+==========================================================================================================================
+Open-Source Benchmark                      | 1. Official Qwen2.5-0.5B | 2. Qwen2.5 + Standard LoRA | 3. Dual-Brain Qwen2.5 (Ours)
+--------------------------------------------------------------------------------------------------------------------------------
+1. MMLU (50q Encyclopedic Lookup)          |             20/50 (40.0%) |               15/50 (30.0%) |                 22/50 (44.0%)
+2. ARC-Challenge (50q Science Reasoning)   |             23/50 (46.0%) |               21/50 (42.0%) |                 23/50 (46.0%)
+3. GSM8K (40q Step-by-Step Math Gen)       |             13/40 (32.5%) |                3/40 ( 7.5%) |                  9/40 (22.5%)
+--------------------------------------------------------------------------------------------------------------------------------
+[audit #15] all three columns: identical prompts and scoring per task; Dual-Brain prefix applied to all 140 questions; ARC train/test overlap 0/50
+OVERALL SCORE (Out of 140 Official Tasks)  |            56/140 (40.0%) |              39/140 (27.9%) |                54/140 (38.6%)

@@ -1,7 +1,7 @@
 # LLM Learning: 從零白盒解剖到後 Transformer 原創實驗的實戰路徑
 
 > [!WARNING]
-> **稽核中，以下成果數據待重跑驗證（2026-10-30）。** 原始腳本補上後的程式碼稽核發現，多項結論目前不被證據支持：
+> **稽核完成（2026-11-01）：原始成果數據經修正後重跑，主要宣稱不成立；本頁以下的舊數字保留作為歷史紀錄。** 原始腳本補上後的程式碼稽核發現：
 >
 > | 宣稱 | 問題 | 追蹤 |
 > | :--- | :--- | :--- |
@@ -11,9 +11,12 @@
 > | 逆向克漏字 6/6 vs 0/6、AR 基線 0 分 | 對照組的評測協定讓它不可能答對；前 5 字比對過寬 | [#16](https://github.com/EndeavorYen/LLM-learning/issues/16) |
 > | 速度 10.36x / 4.24x / 14.23x / 8.11x | 未在同等品質下量測或比較對象不對等 | [#12](https://github.com/EndeavorYen/LLM-learning/issues/12) |
 >
-> 修正進度見 [#18](https://github.com/EndeavorYen/LLM-learning/issues/18)。在重跑完成前，下方數字請視為**未經驗證的初步紀錄**。
+> 修正後的重跑結果見 [`results/original_labs_rerun/`](results/original_labs_rerun/README.md)；完整的稽核與驗證總結見 **[`docs/audit_findings.md`](docs/audit_findings.md)**。
 >
-> **已通過預先登錄驗證的結果（2026-10-31，[#21](https://github.com/EndeavorYen/LLM-learning/issues/21)）：** 在 8 個從未用過的領域上，雙腦的聯想跳躍（law_brain）只看前兩句的 64 維狀態，就能往後推 3 步並選對分支 **85%**（機率 50%，Qwen 0.5B 直接排序 54–58%）。前提是採用兩段式訓練：先訓練漏斗並凍結，再訓練跳躍。原本的聯合訓練只有 59%。它與直接分類整段前提的分類器相當（88.9%，差 −3.9 分），但沒有超越。詳見 [`results/analogy_v5/README.md`](results/analogy_v5/README.md)。
+> **目前經事先登錄驗證的結論（2026-11-01）：**
+> - **在概念層多步推理（聯想跳躍）有效**：8 個全新領域上，跳躍只看前兩句的 64 維狀態往後推 3 步，選對分支 **85%**（機率 50%，Qwen 0.5B 直接排序 54–58%）；需採兩段式訓練（先訓練漏斗並凍結，再訓練跳躍），原本的聯合訓練只有 59%（[#21](https://github.com/EndeavorYen/LLM-learning/issues/21)）。
+> - **不死背、能泛化**：需要依序推理的狀態追蹤題，跳躍只用 1–4 步訓練，推到 10 步仍 99.8%；一次讀完全文的模型只剩 32–48%（見過的領域；[#23](https://github.com/EndeavorYen/LLM-learning/issues/23)）。
+> - **瓶頸在「觸類旁通」**：換到新領域時，模型認不出新領域的句子對應哪個抽象概念（句子辨識 41–69%），所有方法都失敗；64 維漏斗也沒有比原始 896 維特徵更好或更穩（[#22](https://github.com/EndeavorYen/LLM-learning/issues/22)）。下一步專攻這一點。
 
 本專案以 **Google Colab (NVIDIA L4 GPU)** 為雲端算力引擎，結合本地權重管理與 GitHub 版本控制，從最底層的隨機初始化權重（Pre-training）出發，不僅完整實作現代主流 LLM 四大訓練階段（Pretrain / SFT / LoRA / DPO），更在 **Stage 1 白盒沙盒** 中針對自迴歸 Transformer 的底層限制展開了 **5 輪後 Transformer 架構演進實驗（Diffusion LLM $\rightarrow$ Block Diffusion & 局部修圖 $\rightarrow$ 意念球量化與聯想 $\rightarrow$ 信心閘門雙腦與高知識密度架構）**。
 
@@ -54,7 +57,7 @@
 
 ## 📊 Stage 1 核心實驗成果摘要 (Colab L4 實測)
 
-> ⚠️ **待重跑**：本表數字來自原始一次性執行，受 [#13](https://github.com/EndeavorYen/LLM-learning/issues/13)–[#16](https://github.com/EndeavorYen/LLM-learning/issues/16) 的問題影響，尚未驗證。
+> ⚠️ **已重跑，下表為原始數字（歷史紀錄）**：受 [#13](https://github.com/EndeavorYen/LLM-learning/issues/13)–[#16](https://github.com/EndeavorYen/LLM-learning/issues/16) 的問題影響，修正後的重跑結果見 [`results/original_labs_rerun/`](results/original_labs_rerun/README.md)，主要宣稱不成立。
 
 | 編號 | 實驗主題 | Notebook 連結 | 本地備份權重 (`checkpoints/stage1_minimind/`) | 核心實測突破指標 (NVIDIA L4) |
 | :---: | :--- | :--- | :--- | :--- |
@@ -72,7 +75,7 @@
 
 ## 🚀 Stage 2 工業級預訓練模型嫁接與對決成果 (Qwen2.5-0.5B on Colab L4)
 
-> ⚠️ **待重跑**：本表數字來自原始一次性執行，受 [#13](https://github.com/EndeavorYen/LLM-learning/issues/13)–[#16](https://github.com/EndeavorYen/LLM-learning/issues/16) 的問題影響，尚未驗證。
+> ⚠️ **已重跑，下表為原始數字（歷史紀錄）**：受 [#13](https://github.com/EndeavorYen/LLM-learning/issues/13)–[#16](https://github.com/EndeavorYen/LLM-learning/issues/16) 的問題影響，修正後的重跑結果見 [`results/original_labs_rerun/`](results/original_labs_rerun/README.md)，主要宣稱不成立。
 
 | 編號 | 實驗主題 | Notebook 連結 | 本地備份權重 (`checkpoints/stage2_qwen/`) | 核心實測突破指標 (NVIDIA L4) |
 | :---: | :--- | :--- | :--- | :--- |
@@ -98,5 +101,7 @@
 | :--- | :--- | :--- | :---: |
 | **Stage 1** | 白盒拆解 MiniMind 與後 Transformer 架構突圍 | Pretrain/SFT/LoRA/DPO + Diffusion/Block-Diffusion/意念雙腦 9 大實驗 | ✅ **已完成** |
 | **Stage 2** | 工業級預訓練模型微創嫁接與公開基準對決 | `Qwen2.5-0.5B` 嫁接 128D 意念腦 + 雙向 Block-Diffusion (`Full-Trinity 96% vs 29%`, `ARC +8%`) | ✅ **已完成** |
+| **稽核與驗證** | 從測試集開始重建可信的驗證流程 | 修正洩漏 / 截斷 / 不公平對照、事先登錄的類比與聯想測試 v2–v5、拆解實驗、狀態追蹤前導（[總結](docs/audit_findings.md)） | ✅ **已完成** |
+| **B1：觸類旁通** | 把新領域的句子可靠地對到抽象概念 | 句子 → 抽象事件 / 規律的跨領域辨識，目標單句 ≥ 95%，再回到新領域的多步推理測試 | 🔜 **下一步** |
 | **Stage 3** | 野生語料自監督意念對齊 & 內建極致知識密度 | 攻克 [Issue #1](https://github.com/EndeavorYen/LLM-learning/issues/1) & [Issue #4](https://github.com/EndeavorYen/LLM-learning/issues/4)：免人工標籤對比聚類 + 內建 $O(1)$ 稀疏微記憶槽（提升裸機密度、降低 Cost） | 🔜 **準備進入** |
 | **Stage 4** | 動態多節點思維鏈 & 流形錨點校準 | 攻克 [Issue #2](https://github.com/EndeavorYen/LLM-learning/issues/2) & [Issue #3](https://github.com/EndeavorYen/LLM-learning/issues/3)：多步數學/邏輯動態節點拆解 ($s_1 \to \dots \to s_k$) + 長鏈防飄移校準 | ⚪ 待開始 |

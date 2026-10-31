@@ -1,7 +1,7 @@
 # Stage 1 白盒解剖與後 Transformer 架構演進研究報告
 
 > [!WARNING]
-> **稽核中（2026-10-30）**：本報告的 benchmark 結論待重跑驗證。主要問題：未知領域答案句洩漏進解碼頭訓練（[#14](https://github.com/EndeavorYen/LLM-learning/issues/14)）、長度截斷與 AR 生成長度不足（[#13](https://github.com/EndeavorYen/LLM-learning/issues/13)）、計分過寬與對照組協定不公平（[#16](https://github.com/EndeavorYen/LLM-learning/issues/16)）。總覽見 [#18](https://github.com/EndeavorYen/LLM-learning/issues/18)。
+> **稽核完成（2026-11-01）**：本報告的 benchmark 結論經修正後重跑，**主要宣稱不成立**，本文保留作為研究歷程的紀錄。問題來源：未知領域答案句洩漏（[#14](https://github.com/EndeavorYen/LLM-learning/issues/14)）、長度截斷（[#13](https://github.com/EndeavorYen/LLM-learning/issues/13)）、計分過寬與對照組不公平（[#16](https://github.com/EndeavorYen/LLM-learning/issues/16)）、寫死路由（[#15](https://github.com/EndeavorYen/LLM-learning/issues/15)）。重跑結果見 [`results/original_labs_rerun/`](../results/original_labs_rerun/README.md)，之後重建的驗證實驗與目前結論見 **[`audit_findings.md`](audit_findings.md)**。
 
 本文件完整記錄我們在 **Stage 1（MiniMind 白盒實驗室）** 從零開始建立主流 LLM 訓練流水線（Pretrain / SFT / LoRA / DPO），並進一步針對現有自迴歸 Transformer 的底層缺陷（「Tokenizer 拆字窠臼」、「左到右單向眼罩」、「死背字面缺乏觸類旁通」、「知識密度低落」）進行 **5 輪架構改造與實證 Benchmark** 的完整研究路程。
 

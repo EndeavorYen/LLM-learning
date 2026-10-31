@@ -112,3 +112,7 @@ $$\mathcal{L}_{\text{total}} = 1.0 \cdot \mathcal{L}_{\text{s1}} + 2.0 \cdot \ma
    - 當時跑完 21 題測試集後，我們從測試集 Log 觀察到：8 道未知系統題中，有 2 道題（`反物質約束環-規律2` 的 `MinConf=86.7%` 與 `星際曲速引擎-規律1` 的 `MinConf=96.5%`）因為超過了 `85%` 門檻，被誤判進入系統一快思頭，吐出了錯誤的水管句子（當時未知系統得分為 `5/8`，總分為 `16/21 = 76%`）。
    - **正因為看到了第一輪測試集上的這 2 個 False Positives**，我們才在 **第二輪（[`scripts/stage2_lab01_v2_float32_with_humility.py`](../scripts/stage2_lab01_v2_float32_with_humility.py)，`Step 458`）** 新增了 `loss_humility = F.relu(max_conf_ood - 0.35).mean()` 並將 `dual_head` 改為 `float32`，才使未知系統得分從 `5/8` 提升至 `7/8`（總分 `18/21 = 86%`）。
    - 我們將 `v1`（無謙遜閘門，`16/21`）與 `v2`（加謙遜閘門，`18/21`）兩支原始腳本**全部保留在 `scripts/` 目錄中**，供審閱者直接比對。
+
+## 4. 稽核後新增的驗證實驗（2026-10-31 ~ 11-01）
+
+稽核後的驗證實驗（類比 v2–v5、消融、跳躍可學性、空間 × 推理拆解、狀態追蹤前導）各有獨立腳本、固定 sha 的資料、3 個 seed 的紀錄與事先登錄的規格，索引見 [`audit_findings.md`](audit_findings.md) 的「檔案索引」。每個腳本都可用 `AUDIT_SEED=42 python scripts/<腳本>.py` 重跑（Colab L4；資料路徑會自動尋找 `/content/` 或 `benchmarks/`）。

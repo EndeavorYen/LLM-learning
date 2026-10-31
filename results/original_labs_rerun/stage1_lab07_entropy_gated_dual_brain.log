@@ -1,0 +1,48 @@
+[audit #13] SLOT_LEN=19 PROMPT_LEN=28 AR_MAX_NEW_TOKENS=19
+=== [1] Training Entropy-Gated Dual-Brain MiniMind (With Orthogonal State Repulsion s_i _|_ s_j) ===
+[audit #14] held out 2 unseen answer clauses from every loss (4 strings incl. detailed + concise styles)
+  Step   1/220 | Muscle-Mem Loss: 8.9375 | Thought-Render Loss: 9.0000 | Law-Hop Loss: 1.0156 | Disentangle Loss: 17.6250
+  Step  70/220 | Muscle-Mem Loss: 0.0325 | Thought-Render Loss: 0.3164 | Law-Hop Loss: 0.0189 | Disentangle Loss: 0.6289
+  Step 140/220 | Muscle-Mem Loss: 0.0054 | Thought-Render Loss: 0.0079 | Law-Hop Loss: 0.0098 | Disentangle Loss: -0.0082
+  Step 220/220 | Muscle-Mem Loss: 0.0050 | Thought-Render Loss: 0.0073 | Law-Hop Loss: 0.0065 | Disentangle Loss: 0.0090
+
+====================================================================================================
+=== [Breakthrough Test 1] AUTOMATIC CONFIDENCE ROUTING: MUSCLE MEMORY (MinConf >= 0.85) vs THOUGHT LAYER ===
+====================================================================================================
+[Familiar Phone #1] Prompt: '请问妈妈的手机号码是？'
+  -> Router : ⚡ [MUSCLE MEMORY FAST PATH] (Weakest-Token Confidence= 98.8% >= 85%)
+  -> Output : 0912-888-168
+  -> exact_answer_match vs '0912-888-168': True
+[Familiar Phone #2] Prompt: '请问妈妈的家里电话是？'
+  -> Router : ⚡ [MUSCLE MEMORY FAST PATH] (Weakest-Token Confidence= 98.8% >= 85%)
+  -> Output : 02-2345-6789
+  -> exact_answer_match vs '02-2345-6789': True
+[Familiar Phone #3] Prompt: '请问爸爸的手机号码是？'
+  -> Router : ⚡ [MUSCLE MEMORY FAST PATH] (Weakest-Token Confidence= 99.2% >= 85%)
+  -> Output : 0933-777-999
+  -> exact_answer_match vs '0933-777-999': True
+[Familiar Phone #4] Prompt: '请问爸爸的家里电话是？'
+  -> Router : ⚡ [MUSCLE MEMORY FAST PATH] (Weakest-Token Confidence= 98.8% >= 85%)
+  -> Output : 04-8765-4321
+  -> exact_answer_match vs '04-8765-4321': True
+[Familiar Water Pipe] Prompt: '水流在水管中稳定流动，当水管内壁结垢变窄时，'
+  -> Router : ⚡ [MUSCLE MEMORY FAST PATH] (Weakest-Token Confidence= 99.2% >= 85%)
+  -> Output : 管内水压就会急剧升高。
+  -> exact_answer_match vs '管内水压就会急剧升高。': True
+[UNSEEN Medical Analogy] Prompt: '血液在血管中正常循环，当血管壁堆积胆固醇变窄时，'
+  -> Router : 🧠 [ESCALATE TO THOUGHT LAYER!] (Weakest-Token Confidence= 17.9% < 85% -> Hesitation Detected!)
+  -> (What Blind Muscle-Memory Would Have Hallucinated: '管管管管管急，，')
+  -> Thought Layer Zero-Shot Analogy (Detailed): 管内内管就就会剧剧高高高。血血血管管�中中中循环，。。，
+  -> Thought Layer Zero-Shot Analogy (Concise ): 血内管管急，血血血管管。
+  -> clause_match (Detailed) vs held-out '血管内血压就会急剧升高，': False
+  -> clause_match (Concise ) vs held-out '血管血压急升，': False
+  -> Thought-layer stage-2 score: 0/2
+
+====================================================================================================
+=== [Breakthrough Test 2] CONSOLIDATION (熟能生巧：把意念層推導出的新知識下沉固化為肌肉記憶！) ===
+====================================================================================================
+Distillation target (thought layer, not GT): '管内内管就就会剧剧高高高。' | clause_match vs held-out '血管内血压就会急剧升高，': False
+Before Consolidation (Unseen Medical Problem): Weakest-Token Confidence =  17.9% (< 85% -> Escalate to Thought Layer)
+After  Consolidation (Practiced 25 times)    : Weakest-Token Confidence =  94.5% (>= 85% -> Muscle Memory)
+  -> Instant Muscle-Memory Output: 管内内就就就会剧高高高。
+  -> clause_match vs held-out '血管内血压就会急剧升高，': False
