@@ -31,19 +31,21 @@ DETAIL_MODEL = "Qwen/Qwen2.5-7B-Instruct"  # per-item table printed for this mod
 # ==============================================================================
 # [0] Data (same loading and item set as Lab 04)
 # ==============================================================================
-_DATA_CANDIDATES = ["/content/analogy_v2.json", "benchmarks/analogy_v2.json"]
+# [v3] env ANALOGY_FILE selects the data set (default: v2)
+ANALOGY_FILE = os.environ.get("ANALOGY_FILE", "analogy_v2.json")
+_DATA_CANDIDATES = [f"/content/{ANALOGY_FILE}", f"benchmarks/{ANALOGY_FILE}"]
 try:
-    _DATA_CANDIDATES.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "benchmarks", "analogy_v2.json"))
+    _DATA_CANDIDATES.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "benchmarks", ANALOGY_FILE))
 except NameError:
     pass
 DATA_PATH = next((p for p in _DATA_CANDIDATES if os.path.exists(p)), None)
 if DATA_PATH is None:
-    raise FileNotFoundError(f"analogy_v2.json not found in {_DATA_CANDIDATES}")
+    raise FileNotFoundError(f"{ANALOGY_FILE} not found in {_DATA_CANDIDATES}")
 with open(DATA_PATH, encoding="utf-8") as f:
     DATA = json.load(f)
 print(f"[lab05] data = {DATA_PATH} ({DATA.get('version')})", flush=True)
 
-N_LAWS, N_STAGES, N_PHR = 3, 4, 2
+N_LAWS, N_STAGES = 3, 4
 LAWS = DATA["laws"]
 assert len(LAWS) == N_LAWS and all(int(LAWS[i]["id"]) == i and len(LAWS[i]["stages"]) == N_STAGES for i in range(N_LAWS))
 SEEN_DOMS = [d["name"] for d in DATA["seen_domains"]]
@@ -55,9 +57,9 @@ for dom in DATA["seen_domains"]:
         cells = dom["chains"][str(law)]
         assert len(cells) == N_STAGES
         for st in range(N_STAGES):
-            for ph in range(N_PHR):
+            for ph in range(len(cells[st])):
                 SEEN.append((cells[st][ph], dom["name"], law, st, ph))
-assert len(SEEN) == 72
+N_SEEN = len(SEEN)
 
 UNSEEN = {}  # (ui, law, stage) -> text
 ITEMS = []   # (ui, law)
@@ -232,7 +234,7 @@ for MODEL_ID in MODELS:
         print(f"  MCQ time {time.time()-t0:.1f}s", flush=True)
 
     print(f"  MCQ unseen S2 = {mcq_s2}/36 (per-rotation {rot_s2}/108) | S3 = {mcq_s3}/36 (per-rotation {rot_s3}/108) | chance 12/36", flush=True)
-    print(f"  MCQ seen = {mcq_seen}/72 | by stage S0..S3 = {seen_by_stage} (each /18)", flush=True)
+    print(f"  MCQ seen = {mcq_seen}/{N_SEEN} | by stage S0..S3 = {seen_by_stage} (each /{N_SEEN // N_STAGES})", flush=True)
     print(f"  MCQ cue-swap: meaning-correct {cue_mean}/9 | follows-cue {cue_cue}/9", flush=True)
     print(f"  MCQ letter choice counts over 216 unseen queries: A={pos_count[0]} B={pos_count[1]} C={pos_count[2]}", flush=True)
     print("  cue-swap per item (true / cue law | preds per rotation):", flush=True)
@@ -259,7 +261,7 @@ for MODEL_ID in MODELS:
                 print(f"    [{dn} L{law} S{st} p{ph}] {['L'+str(p) for p in seen_preds[i]]} | {txt}", flush=True)
 
     line = (f"ANS_RESULT model={MODEL_ID} B1_zero={B1z} B2_zero={B2z} B1_few={B1f} B2_few={B2f} "
-            f"MCQ_S2={mcq_s2} MCQ_S3={mcq_s3} MCQ_seen={mcq_seen}/72 CUE_mean={cue_mean} CUE_cue={cue_cue}")
+            f"MCQ_S2={mcq_s2} MCQ_S3={mcq_s3} MCQ_seen={mcq_seen}/{N_SEEN} CUE_mean={cue_mean} CUE_cue={cue_cue}")
     ALL_RESULTS.append(line)
     print(line, flush=True)
     print(f"  model total time {time.time()-t_model:.1f}s", flush=True)
