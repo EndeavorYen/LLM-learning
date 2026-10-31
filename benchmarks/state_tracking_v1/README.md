@@ -5,8 +5,8 @@ The task is one domain-general rule, told through 24 everyday systems in templat
 
 | file | what | sha256 |
 |---|---|---|
-| `templates.json` | 24 domains, hand-written sentences (16 train, 8 test) | `70cd6523a334933223bfe8e5a9e1f67c20c7454a39a146261a4c7b00105bb1c1` |
-| `stories.json` | generated stories, `python tools/gen_state_tracking.py` | `0093238e104c34ab80d111ec7fc31355a767f4da3be6a30a45aae120d42399fd` |
+| `templates.json` | 24 domains, hand-written sentences (16 train, 8 test) | `1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70` |
+| `stories.json` | generated stories, `python tools/gen_state_tracking.py` | `ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108` |
 
 `stories.json` records the sha256 of the `templates.json` it was built from (`templates_sha256`); the
 generator is deterministic (seed 20261031, plain Python, no torch) and reproduces the file byte for byte.

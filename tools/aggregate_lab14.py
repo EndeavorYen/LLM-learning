@@ -39,7 +39,7 @@ def die(msg: str):
     sys.exit("aggregate_lab14: refused (see ERROR above)")
 
 
-paths = sys.argv[1:]
+paths = [p for p in sys.argv[1:] if not p.startswith("--")]
 if not paths or any(p.startswith("-") for p in paths):
     sys.exit(__doc__)
 
@@ -98,10 +98,18 @@ if extra:
 shas = {s: cfg[s].get("data_sha") for s in REQUIRED_SEEDS}
 if len(set(shas.values())) != 1 or None in shas.values():
     die(f"data_sha differs across seeds: {shas}")
-for k in ("script_sha", "env"):
-    vs = {s: cfg[s].get(k, "?") for s in REQUIRED_SEEDS}
-    if len(set(vs.values())) > 1:
-        print(f"WARNING: L14_CONFIG {k} differs across seeds: {vs}")
+# [review S4] the registered data file (#23 amendment, commit d20be68)
+REGISTERED_DATA_SHA = "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108"
+if "--allow-unregistered" not in sys.argv and shas[REQUIRED_SEEDS[0]] != REGISTERED_DATA_SHA:
+    die(f"data_sha {shas[REQUIRED_SEEDS[0]]} is not the registered file {REGISTERED_DATA_SHA} "
+        f"(pass --allow-unregistered for test data)")
+_ss = {s: cfg[s].get("script_sha", "?") for s in REQUIRED_SEEDS}
+if len(set(_ss.values())) > 1:
+    die(f"script_sha differs across seeds: {_ss}")
+print(f"script_sha (all seeds): {_ss[REQUIRED_SEEDS[0]]}")
+_ev = {s: cfg[s].get("env", "?") for s in REQUIRED_SEEDS}
+if len(set(_ev.values())) > 1:
+    print(f"WARNING: L14_CONFIG env differs across seeds: {_ev}")
 
 problems = []
 for s in REQUIRED_SEEDS:
@@ -243,6 +251,10 @@ print(f"P4  {mlabel(a)} LONG {fmt(T_LONG[a])} - {mlabel(b)} LONG {fmt(T_LONG[b])
 print("\n=== validity quantities (issue #23; numbers only, no verdict) ===")
 print(f"V1  val_seen n=1-4: {mlabel(PRIMARY)} {fmt(val('val_seen', PRIMARY, SHORT_N))} | ONE-STEP-TF/- "
       f"{fmt(val('val_seen', ('ONE-STEP-TF', '-'), SHORT_N))}")
+for _mm in (PRIMARY, ('ONE-STEP-TF', '-')):  # [review N2] the bar applies at every n = 1..4
+    _pn = [(n, *cnt('val_seen', _mm, n)) for n in SHORT_N]
+    print(f"    {mlabel(_mm)} per n: " + " ".join(f"n{n}={100 * c / t:.2f}% ({c}/{t})" for n, c, t in _pn)
+          + f" | min {min(100 * c / t for _n, c, t in _pn):.2f}%")
 print(f"V2  test LONG: BAG/- {fmt(T_LONG[('BAG', '-')])}")
 print(f"V3  blind judge: external (not in these logs)")
 print(f"V4  val_seen LONG: SYMBOLIC/snap {fmt(val('val_seen', ('SYMBOLIC', 'snap'), LONG_N))}")

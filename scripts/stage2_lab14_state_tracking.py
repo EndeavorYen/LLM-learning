@@ -17,9 +17,11 @@
 #          13 sentence classes: 8 init classes (level x safeguard) + 5 event types. No d-branch.
 # Models (all trained on the train split only; Lab 12 seed_all placement before every model init and training run):
 #   HOP-<in>-d<D>  in in {R896, F64}, D in {64, 896}. h_0 learned (normalised). Step t: h = normalize(W2 GELU(W1
-#                  [h; proj(x_t)] + b1) + b2), hidden 256, proj = Linear(D_in, D); step 1 reads the init sentence,
+#                  [h; proj(x_t)] + b1) + b2), hidden max(256, D) [review S2], proj = Linear(D_in, D); step 1 reads the init
+#                  state part,
 #                  steps 2..n+1 the events. Readout: 9 learned anchors A (normalised), logits = h A^T / 0.1, CE at every
-#                  step against `states` (mean over all valid (story, step) pairs). AdamW 1e-3 -> 1e-4 cosine, 3000
+#                  step against `states` (mean over all valid (story, step) pairs) + 1.0 * (1 - cos(h_t, A[y_t])) [amendment
+#                  2026-11-01]. AdamW 1e-3 -> 1e-4 cosine, 3000
 #                  steps, full batch padded at the end (padding never reaches a valid step), clip 1.0, wd 0.01, BPTT
 #                  through the free state. Inference with the same weights: free (h fed back as is) or snap (h <- its
 #                  nearest anchor before it is fed back; a step's prediction is the same in both modes, only what is
@@ -31,7 +33,8 @@
 #   ONE-STEP-QWEN  Lab 12 MLP (896 -> 256 -> 64 -> 9) on the raw whole-text feature of every training prefix
 #                  (label = state after the prefix); Lab 12 train_mlp recipe with 1000 steps.
 #   BAG            the same MLP recipe on [one-hot init class (8); counts of IN, OUT, BREAK, FIX, NOOP] of every prefix.
-#   LAST           majority lookup (init class, last event type) over the training prefixes; unseen key -> MAJORITY.
+#   LAST           majority lookup by the LAST EVENT TYPE only (registered definition; k = 0 -> key None) over the
+#                  training prefixes; unseen key -> MAJORITY. [review S1]
 #   MAJORITY       majority class of the training prefix labels. Ties (here and in LAST) -> lowest class index.
 #   "Every prefix" = k = 0..n events, n + 1 prefixes per training story: exactly the (story, step) set and weighting
 #   of the per-step CE of HOP / SYMBOLIC / ONE-STEP-TF (asserted).
@@ -244,20 +247,20 @@ SENTS_OF = {sp: [] for sp in SPLITS}  # unique sentences per split, in order of 
 
 # [amendment 2026-11-01] expected state part of every init sentence, from templates.json (if present)
 STATE_PART = {}
-for _tp in ["/content/templates.json", "benchmarks/state_tracking_v1/templates.json"]:
-    if os.path.exists(_tp):
-        with open(_tp, encoding="utf-8") as _f:
-            for _d in json.load(_f)["domains"]:
-                for _lv, _lt in enumerate(_d["init"]["level"]):
-                    for _sg, _st in _d["init"]["safeguard"].items():
-                        STATE_PART[(_d["name"], _lv, _sg)] = _lt + "，" + _st + "。"
-        print(f"[l14] init state parts checked against {_tp} ({len(STATE_PART)} entries)", flush=True)
-        break
+if os.path.exists(_TPL_PATH):  # [review S3] the templates.json next to stories.json (cwd-independent)
+    with open(_TPL_PATH, encoding="utf-8") as _f:
+        for _d in json.load(_f)["domains"]:
+            for _lv, _lt in enumerate(_d["init"]["level"]):
+                for _sg, _st in _d["init"]["safeguard"].items():
+                    STATE_PART[(_d["name"], _lv, _sg)] = _lt + "，" + _st + "。"
+    print(f"[l14] init state parts checked against {_TPL_PATH} ({len(STATE_PART)} entries)", flush=True)
+else:
+    print("[l14] WARNING: templates.json not found next to stories.json: init state parts NOT cross-checked", flush=True)
 
 
 def init_state_text(st) -> str:
     """[amendment 2026-11-01] Model input for the init sentence: only its state part (level + safeguard), i.e. the text
-    after the single '；'. The rules clause before it is identical in every story of a domain and carries no story
+    after the LAST '；'. The rules clause before it is identical in every story of a domain and carries no story
     information; at ~90 tokens it would dominate the mean-pooled feature. It is removed for EVERY method (per-sentence
     models and ONE-STEP-QWEN alike); the human judge still sees the full sentence. The generator builds
     init_text = rules + "；" + level + "，" + safeguard + "。" and the level / safeguard parts contain no '；', so the state
@@ -267,6 +270,8 @@ def init_state_text(st) -> str:
         raise RuntimeError(f"DATA ERROR: init_text has no '；': {t!r}")
     part = t.rsplit("；", 1)[1]
     want = STATE_PART.get((st["domain"], int(st["init_level"]), st["init_safeguard"]))
+    if STATE_PART and want is None:
+        raise RuntimeError(f"DATA ERROR: no template state part for {(st['domain'], st['init_level'], st['init_safeguard'])}")
     if want is not None and part != want:
         raise RuntimeError(f"DATA ERROR: init state part {part!r} != templates {want!r}")
     return part
@@ -580,7 +585,9 @@ class Hop(nn.Module):
         super().__init__()
         self.proj = nn.Identity() if symbolic else nn.Linear(d_in, d_state)
         d_x = d_in if symbolic else d_state
-        self.cell = nn.Sequential(nn.Linear(d_state + d_x, HOP_HIDDEN), nn.GELU(), nn.Linear(HOP_HIDDEN, d_state))
+        # [review S2 / amendment] hidden width max(256, D): with 256 a D=896 state would only span 257 dimensions
+        hid = max(HOP_HIDDEN, d_state)
+        self.cell = nn.Sequential(nn.Linear(d_state + d_x, hid), nn.GELU(), nn.Linear(hid, d_state))
         self.h0 = nn.Parameter(torch.randn(d_state))
         self.anchors = nn.Parameter(torch.randn(N_CLS, d_state))
 
@@ -628,7 +635,8 @@ def n_params(m) -> int:
 
 
 def train_seq(tag: str, build, X: torch.Tensor, tgt: torch.Tensor):
-    """[lab14] HOP / SYMBOLIC / ONE-STEP-TF: CE at every valid step (mean over all valid (story, step) pairs), AdamW
+    """[lab14] HOP / SYMBOLIC / ONE-STEP-TF: CE at every valid step (mean over all valid (story, step) pairs);
+    HOP / SYMBOLIC add HOP_ALIGN * mean(1 - cos(h_t, A[y_t])) ([amendment 2026-11-01]). AdamW
     1e-3 -> 1e-4 cosine, SEQ_STEPS full batch, clip 1.0, wd 0.01. HOP trains with the free state (BPTT)."""
     seed_all(SEED)  # before model init
     model = build().to(DEVICE).float()
@@ -652,16 +660,19 @@ def train_seq(tag: str, build, X: torch.Tensor, tgt: torch.Tensor):
             # feeds back inputs of the kind seen in training (CE alone leaves h far from every anchor)
             _A = F.normalize(model.anchors, p=2, dim=-1)
             _cos = (H * _A[tgt.clamp(min=0)]).sum(-1)
-            loss = loss + HOP_ALIGN * (1.0 - _cos[valid]).mean()
+            _ce, _al = loss, (1.0 - _cos[valid]).mean()
+            loss = _ce + HOP_ALIGN * _al
         else:
             logits = model(X)
             loss = F.cross_entropy(logits.reshape(-1, N_CLS), tgt.reshape(-1), ignore_index=-100)
+            _ce, _al = loss, None
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         if step in SEQ_LOG_STEPS:
             hit = (logits.argmax(-1) == tgt)[valid]
-            msg = f"CE {loss.item():.4f} | train step acc {int(hit.sum())}/{hit.numel()} (train mode)"
+            msg = (f"CE {_ce.item():.4f}" + (f" align {_al.item():.4f} total {loss.item():.4f}" if _al is not None else "")
+                   + f" | train step acc {int(hit.sum())}/{hit.numel()} (train mode)")
             LOSS_LOG.append((tag, step, msg))
             print(f"  [{tag}] step {step:4d}/{SEQ_STEPS} | {msg}", flush=True)
     model.eval()
@@ -775,14 +786,14 @@ MAJ_CLS = majority(PREFIX_LABEL)
 _last_lab = defaultdict(list)
 for (i, k), y in zip(TRAIN_PREFIXES, PREFIX_LABEL):
     st = STORIES["train"][i]
-    _last_lab[(init_cls(st), st["events"][k - 1] if k > 0 else None)].append(y)
+    _last_lab[st["events"][k - 1] if k > 0 else None].append(y)  # [review S1] last event only
 LAST_TABLE = {key: majority(v) for key, v in _last_lab.items()}
-print(f"\n[l14] MAJORITY = {CLASSES[MAJ_CLS]} | LAST lookup: {len(LAST_TABLE)} (init class, last event) keys",
+print(f"\n[l14] MAJORITY = {CLASSES[MAJ_CLS]} | LAST lookup: {len(LAST_TABLE)} (last event) keys",
       flush=True)
 
 
 def last_predict(st, k: int) -> int:
-    return LAST_TABLE.get((init_cls(st), st["events"][k - 1] if k > 0 else None), MAJ_CLS)
+    return LAST_TABLE.get(st["events"][k - 1] if k > 0 else None, MAJ_CLS)
 
 
 with torch.no_grad():  # [lab14] reproducibility fingerprint (exact float sums; compare re-runs on the same hardware)
