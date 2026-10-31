@@ -8,8 +8,12 @@ domains. Plain Python, no torch:  python tools/validate_analogy_v2.py [path]
 
 Pre-registered acceptance thresholds (set before any model is run on v2):
   T1  lexical law accuracy on unseen stage-2/3 clauses (stage given, 3-way, chance 33%)  <= 50%
-  T2  lexical held-out pick (stage-2 or stage-3 target among the 6 never-trained
-      stage-2/3 clauses of the same unseen domain, chance 17%)                          <= 33%
+  T2  lexical held-out pick: for a stage-2 or stage-3 target, pick among the 6 never-trained
+      stage-2/3 clauses of the same unseen domain; score = the pick has the target LAW.
+      Stage may be recoverable from generic markers that T3 allows ("最终", "当……时"),
+      so law accuracy is what matters (chance 33%)                                      <= 50%
+      (Revised 2026-10-31 before any model was run on v2: the first version scored the
+      exact (law, stage) pick against <= 33%, which generic stage markers alone reach.)
   T3  no substring of >= 2 characters shared by every seen phrasing of a (law, stage)
       cell and by half or more of that cell's unseen clauses (cue-word leak)
   T4  structure: 3 laws x 4 stages; every seen cell has >= 2 phrasings; >= 10 unseen domains
@@ -104,7 +108,7 @@ def lexical_scores(seen, unseen, n, mode):
             # T2: which of the 6 held-out stage-2/3 clauses of this domain looks most like (law, st)?
             cands = [(l2, s2) for l2 in range(N_LAWS) for s2 in (2, 3)]
             pick = max(cands, key=lambda k: class_sim(by_dom[name][k[0]][k[1]], law, st))
-            t2_hit += pick == (law, st)
+            t2_hit += pick[0] == law
             t2_n += 1
     return t1_hit, t1_n, t2_hit, t2_n
 
@@ -147,11 +151,11 @@ def main(path=DEFAULT):
     for n in (1, 2):
         for mode in ("nn", "centroid"):
             a, an, b, bn = lexical_scores(seen, unseen, n, mode)
-            print(f"   lexical n={n} {mode:8s}: law|stage {a}/{an} ({a/an:.0%})   held-out pick {b}/{bn} ({b/bn:.0%})")
+            print(f"   lexical n={n} {mode:8s}: law|stage {a}/{an} ({a/an:.0%})   held-out pick law {b}/{bn} ({b/bn:.0%})")
             best_t1, best_t2 = max(best_t1, a / an), max(best_t2, b / bn)
-    t1, t2 = best_t1 <= 0.50, best_t2 <= 0.33
+    t1, t2 = best_t1 <= 0.50, best_t2 <= 0.50
     print(f"T1 lexical law accuracy (best variant) {best_t1:.0%} <= 50%: {'PASS' if t1 else 'FAIL'}  (chance 33%)")
-    print(f"T2 lexical held-out pick (best variant) {best_t2:.0%} <= 33%: {'PASS' if t2 else 'FAIL'}  (chance 17%)")
+    print(f"T2 lexical held-out pick, law correct (best variant) {best_t2:.0%} <= 50%: {'PASS' if t2 else 'FAIL'}  (chance 33%)")
     leaks = cue_leaks(seen, unseen)
     print(f"T3 shared cue substrings: {'PASS' if not leaks else 'FAIL'}")
     for law, st, sub, frac in leaks[:20]:
