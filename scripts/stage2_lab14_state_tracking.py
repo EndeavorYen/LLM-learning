@@ -666,6 +666,39 @@ def train_mlp(tag: str, X: torch.Tensor, y: torch.Tensor, n_out: int, steps: int
     return m, n_par
 
 
+@torch.no_grad()
+def check_architectures():
+    """[lab14] Architecture checks on freshly built models and TRAIN inputs, BEFORE any training (a failure is a code bug
+    and costs nothing; every model is re-seeded before its own init, so this does not change any result). Tolerances
+    are loose (1e-4) because a real violation gives O(1) differences."""
+    seed_all(SEED)
+    hop = Hop(H_DIM, 896).to(DEVICE).float().eval()
+    rows = (torch.arange(16 * 11, device=DEVICE) % N_TRAIN_SENT).view(16, 11)  # train sentence rows only, no padding
+    X = X_R896[rows]                                                           # (16, 11, 896)
+    ls, fed_s = hop(X, mode="snap", return_fed=True)
+    _lf, fed_f = hop(X, mode="free", return_fed=True)
+    A = F.normalize(hop.anchors, p=2, dim=-1)
+    # snap: every fed-back state IS an anchor, namely the arg-max of that step's logits; free: it is not
+    assert torch.equal(fed_s, A[ls.argmax(-1)]), "snap must feed back the nearest anchor"
+    assert not torch.allclose(fed_f, A[_lf.argmax(-1)], atol=1e-4), "free must feed back the state itself"
+    # ONE-STEP-TF is causal: changing the inputs from position 2 on leaves positions 0..1 unchanged
+    tf = OneStepTF(H_DIM, 64).to(DEVICE).float().eval()
+    X2 = X.clone()
+    X2[:, 2:] = X_R896[(rows[:, 2:] + 1) % N_TRAIN_SENT]                     # other train sentences from position 2 on
+    o1, o2 = tf(X), tf(X2)
+    assert torch.allclose(o1[:, :2], o2[:, :2], atol=1e-4, rtol=1e-4), "ONE-STEP-TF must be causal"
+    assert not torch.allclose(o1[:, 2:], o2[:, 2:], atol=1e-4, rtol=1e-4), "ONE-STEP-TF must read later inputs"
+    # ... and has no positional information: a constant input sequence gives the same output at every position
+    assert not any("pos" in k for k, _ in tf.named_parameters()), "ONE-STEP-TF must have no position table"
+    oc = tf(X[:, :1].expand(-1, 11, -1).contiguous())
+    assert torch.allclose(oc, oc[:, :1].expand_as(oc), atol=1e-4, rtol=1e-4), "ONE-STEP-TF must have no positions"
+    print("[l14] architecture checks passed (fresh models, train inputs): snap feeds back exactly the nearest anchor, "
+          "free the state itself; ONE-STEP-TF is causal and position-free", flush=True)
+
+
+check_architectures()
+
+
 # ==============================================================================
 # [5] Training (train split only)
 # ==============================================================================
@@ -790,35 +823,6 @@ for (meth, mode) in METHODS:
 for (meth, mode) in METHODS:  # every method is evaluated on the same stories
     for sp in EVAL_SPLITS:
         assert [RES[(meth, mode)][sp][n][1] for n in ALL_N] == [RES[METHODS[0]][sp][n][1] for n in ALL_N]
-
-
-# ---- [lab14] unit checks on the trained models (cheap; a failure is a code bug) ----
-@torch.no_grad()
-def _check_models():
-    hop, space = SEQ_MODELS["HOP-R896-d896"]
-    X = seq_input(space, "test")[:16]
-    lf, fed_f = hop(X, mode="free", return_fed=True)
-    ls, fed_s = hop(X, mode="snap", return_fed=True)
-    A = F.normalize(hop.anchors, p=2, dim=-1)
-    # snap: every fed-back state IS an anchor (exactly), namely the arg-max of that step's logits
-    assert torch.equal(fed_s, A[ls.argmax(-1)]), "snap must feed back the nearest anchor"
-    # step 1 is identical in both modes (nothing has been fed back yet)
-    assert torch.equal(lf[:, 0], ls[:, 0])
-    # ONE-STEP-TF is causal: changing inputs from position 5 on leaves positions 0..4 unchanged
-    tf, _ = SEQ_MODELS["ONE-STEP-TF"]
-    Xt = seq_input("R896", "test")[:16]
-    X2 = Xt.clone()
-    X2[:, 5:] = torch.flip(X2[:, 5:], dims=[0])
-    o1, o2 = tf(Xt), tf(X2)
-    assert torch.allclose(o1[:, :5], o2[:, :5], atol=1e-5, rtol=0), "ONE-STEP-TF must be causal"
-    # ... and has no positional information: a constant input sequence gives the same output at every position
-    oc = tf(Xt[:, :1].expand(-1, 11, -1).contiguous())
-    assert torch.allclose(oc, oc[:, :1].expand_as(oc), atol=1e-5, rtol=0), "ONE-STEP-TF must have no positions"
-
-
-_check_models()
-print("[l14] model checks passed: snap feeds back exactly the nearest anchor; ONE-STEP-TF is causal and "
-      "position-free", flush=True)
 
 
 # ==============================================================================
