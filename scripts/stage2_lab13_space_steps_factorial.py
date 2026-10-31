@@ -1152,9 +1152,10 @@ if SEED in LAB12_LOGGED:
               f"{'MATCH' if FINGERPRINT[_k] == _v else 'DIFF'} (hardware-dependent, not asserted)", flush=True)
     REPRO_OK = all(a == b for _n, a, b in _rows)
     if DEVICE == "cuda":
-        assert REPRO_OK, (f"Lab 13 F64 HOP / PREMISE-MLP do not reproduce Lab 12's logged numbers for seed {SEED} on "
-                          f"{ENV_TAG} (the log was made on a Colab L4 with torch 2.11.0+cu130)")
-        print(f"[check] Lab 12 reproduction ASSERTED: OK", flush=True)
+        # [main review] exploratory run: a mismatch (e.g. a changed Colab image) is reported loudly, not fatal,
+        # so the stress tests still run; the reader must treat a DIFF seed as not comparable to Lab 12.
+        print(f"[check] Lab 12 reproduction on CUDA: {'OK' if REPRO_OK else '!!! DIFF -- NOT COMPARABLE TO LAB 12 !!!'}"
+              f" ({ENV_TAG}; Lab 12 log: Colab L4, torch 2.11.0+cu130)", flush=True)
     else:
         print(f"[l13] CPU run: the Lab 12 reproduction is printed, not asserted", flush=True)
 else:
@@ -1382,7 +1383,7 @@ print(f"params = trainable parameters of the method itself (HOP: the hop only). 
       f"({FUNNEL_PARAMS:,} params, trained once, shared by F64 HOP and F64 ONE-STEP) and the common sentence-MLP picker "
       f"({sum(p.numel() for p in sent_mlp.parameters()):,} params).", flush=True)
 print(f"X1-ONLY exactly 50% in every space (unseen and seen): {'OK' if X1_OK else 'FAIL'} | Lab 12 reproduction: "
-      f"{ {None: 'n/a', True: 'MATCH', False: 'DIFF'}[REPRO_OK] }{' (asserted)' if DEVICE == 'cuda' and REPRO_OK else ''}",
+      f"{ {None: 'n/a', True: 'MATCH', False: 'DIFF'}[REPRO_OK] }{' (checked on CUDA)' if DEVICE == 'cuda' else ''}",
       flush=True)
 
 print(f"\n=== STRESS T1: input noise H' = H + alpha*sigma*eps on the unseen s0 / s1 / premise rows; mean DEC-2/3/4 "
