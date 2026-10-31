@@ -165,17 +165,19 @@ def _read_first(cands, what):
 def load_st():
     """state_tracking_v1: the sentence table of the 16 TRAIN domains, built from templates.json; the test stories are
     dropped unread; test-domain template strings go into `forbidden` only (for the leak assertion)."""
-    path, raw, sha = _read_first(["/content/stories.json", "benchmarks/state_tracking_v1/stories.json"]
-                                 + _script_dir_candidates("benchmarks", "state_tracking_v1", "stories.json"),
-                                 "stories.json")
+    dirs = ["/content", "benchmarks/state_tracking_v1"] + _script_dir_candidates("benchmarks", "state_tracking_v1")
+    st_dir = next((d for d in dirs if os.path.exists(os.path.join(d, "stories.json"))
+                   and os.path.exists(os.path.join(d, "templates.json"))), None)
+    if st_dir is None:
+        raise FileNotFoundError(f"no directory with both stories.json and templates.json in {dirs}")
+    path, raw, sha = _read_first([os.path.join(st_dir, "stories.json")], "stories.json")
     assert sha == EXPECTED_ST_SHA256, f"stories.json is not the registered file: {sha}"
     data = json.loads(raw.decode("utf-8"))
     assert data.get("version") == "state_tracking_v1", data.get("version")
     assert data["classes"] == CLASSES, f"DATA ERROR: classes {data['classes']}"
     assert set(data["splits"]) == {"train", "val_seen", "test"}, set(data["splits"])
     data["splits"].pop("test")                     # test stories: never read in Lab 15
-    tpl_path = os.path.join(os.path.dirname(path), "templates.json")
-    _p, tpl_raw, tpl_sha = _read_first([tpl_path], "templates.json (next to stories.json)")
+    _p, tpl_raw, tpl_sha = _read_first([os.path.join(st_dir, "templates.json")], "templates.json")
     assert tpl_sha == data.get("templates_sha256") == EXPECTED_TPL_SHA256, \
         f"templates.json is not the registered file: {tpl_sha} (stories.json records {data.get('templates_sha256')})"
     tpl = json.loads(tpl_raw.decode("utf-8"))
@@ -260,7 +262,7 @@ def load_st():
                                        f"in the train-domain table with that class and domain")
                 used.add(t)
     cnt = Counter(cls)
-    log(f"[l15] st: stories.json sha256={sha} | templates.json sha256={tpl_sha} | {len(train_doms)} train domains "
+    log(f"[l15] st: {st_dir}/stories.json sha256={sha} | templates.json sha256={tpl_sha} | {len(train_doms)} train domains "
         f"(templates.json == stories' train split; {n_test_doms} test domains NOT used) | {len(texts)} sentences "
         f"({len(texts) // len(train_doms)} per domain); {len(used)} of them occur in the {n_story} train / val_seen "
         f"stories, all of which are in the table | per class: "
@@ -321,7 +323,7 @@ def load_v5():
         assert sorted(c for c, dd in zip(cls, dom) if dd == d) == list(range(27)), d
     cls_names = [f"{'L' if k == 'L' else 'P'}{i}S{s}" for (k, i, s) in class_keys]
     stage = [class_keys[c][2] for c in cls]
-    log(f"[l15] v5: analogy_v5.json sha256={sha} | {len(names)} seen domains (unseen_domains dropped unread) | "
+    log(f"[l15] v5: {path} sha256={sha} | {len(names)} seen domains (unseen_domains dropped unread) | "
         f"{len(texts)} sentences, 27 classes x 20 domains")
     return dict(name="v5", sha=sha, texts=texts, cls=cls, dom=dom, doms=sorted(names), n_cls=27, cls_names=cls_names,
                 stage=stage)
