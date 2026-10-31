@@ -92,9 +92,11 @@ FORBIDDEN = {ALL_TEXTS[g] for g in UNSEEN_IDX.values()} | {ALL_TEXTS[c[0]] for c
 
 def assert_not_forbidden(text: str):
     """No unseen-domain or cue-swap sentence may ever enter a loss."""
-    assert text not in FORBIDDEN, f"LEAK: unseen/cue-swap sentence in training data: {text!r}"
+    if text in FORBIDDEN:
+        raise RuntimeError(f"LEAK: unseen/cue-swap sentence in training data: {text!r}")
     for t in FORBIDDEN:
-        assert t not in text, f"LEAK: unseen/cue-swap sentence inside training text: {t!r}"
+        if t in text:
+            raise RuntimeError(f"LEAK: unseen/cue-swap sentence inside training text: {t!r}")
 
 
 for (g, *_rest) in SEEN:
@@ -144,14 +146,15 @@ class LoRALinear(nn.Module):
         self.orig = orig_linear
         self.scale = alpha / r
         in_f, out_f = orig_linear.in_features, orig_linear.out_features
-        self.lora_A = nn.Parameter(torch.randn(in_f, r, device='cuda', dtype=torch.bfloat16) * 0.02)
-        self.lora_B = nn.Parameter(torch.zeros(r, out_f, device='cuda', dtype=torch.bfloat16))
+        # [review] float32 master weights: bf16 parameters drop AdamW updates once the LR decays
+        self.lora_A = nn.Parameter(torch.randn(in_f, r, device='cuda', dtype=torch.float32) * 0.02)
+        self.lora_B = nn.Parameter(torch.zeros(r, out_f, device='cuda', dtype=torch.float32))
         self.enabled = True
 
     def forward(self, x):
         res = self.orig(x)
         if self.enabled:
-            res = res + (x @ self.lora_A @ self.lora_B) * self.scale
+            res = res + (x @ self.lora_A.to(x.dtype) @ self.lora_B.to(x.dtype)) * self.scale
         return res
 
 
@@ -269,16 +272,20 @@ def train_head(tag: str, law_labels):
 dual_head, n_dual_trainable = train_head("Dual head", TRUE_LAW)
 
 # ---- Shuffled-label head: per seen domain, a random permutation of law labels applied to the whole chain ----
-_perm_rng = random.Random(SEED)
-SHUF_PERM = []
-for di in range(N_SEEN_DOM):
-    perm = list(range(N_LAWS))
-    _perm_rng.shuffle(perm)
-    SHUF_PERM.append(perm)
+# [review] Latin square: independent random permutations often agreed across domains (e.g. seed 2 gave two
+# identical permutations), which kept a majority cross-domain law mapping. With a cyclic shift per domain,
+# every training label maps to a different true law in each seen domain, so no law correspondence survives.
+_off = random.Random(SEED).randrange(N_LAWS)
+SHUF_PERM = [[(l + di + _off) % N_LAWS for l in range(N_LAWS)] for di in range(N_SEEN_DOM)]
+for _lbl in range(N_LAWS):
+    _true = [SHUF_PERM[di].index(_lbl) for di in range(N_SEEN_DOM)]
+    if len(set(_true)) != N_SEEN_DOM:
+        raise RuntimeError(f"shuffled-label control keeps a law correspondence for label {_lbl}: {_true}")
 print(f"\n[v2] shuffled-label permutations (true law -> training label), per seen domain: "
       + "; ".join(f"{SEEN_DOMS[di]}: {SHUF_PERM[di]}" for di in range(N_SEEN_DOM)), flush=True)
 SHUF_LAW = [SHUF_PERM[d][law] for (_g, d, law, _s, _p) in SEEN]
 shuf_head, _ = train_head("Shuffled-label head", SHUF_LAW)
+print("[v2] note: the shuffled-label head shuffles the funnel's law labels only; its hop loss still trains on real seen chains", flush=True)
 
 # ---- Random head: same architecture, untrained ----
 seed_all(SEED)
@@ -361,6 +368,12 @@ raw_sc, _, raw_cue, _ = eval_space(F.normalize(H_ALL, p=2, dim=-1), None)
 for k in ("A1", "A1x", "A2", "A2x"):
     raw_sc[k] = -1
 RESULTS["Raw-Qwen kNN"] = raw_sc
+# [review] extra row: raw features centred on the mean of the SEEN features only (no unseen statistics)
+_mu_seen = H_ALL[torch.tensor([g for (g, *_r) in SEEN], device=H_ALL.device)].mean(dim=0, keepdim=True)
+rawc_sc, _, rawc_cue, _ = eval_space(F.normalize(H_ALL - _mu_seen, p=2, dim=-1), None)
+for k in ("A1", "A1x", "A2", "A2x"):
+    rawc_sc[k] = -1
+RESULTS["Raw-Qwen kNN (centred)"] = rawc_sc
 
 # ---- Lexical control (pure Python, char unigram Jaccard; same tokenisation as tools/validate_analogy_v2.py) ----
 _PUNCT = set("，。,.；;：:！!？? 、")
@@ -409,10 +422,14 @@ RESULTS["Lexical"] = lex_sc
 # ---- Qwen scoring controls: mean log-prob of the candidate tokens given the prompt ----
 @torch.no_grad()
 def cand_mean_logprob(prompt: str, cand: str) -> float:
+    # [review] Tokenise prompt and candidate separately and concatenate: tokenising prompt+cand lets Qwen's
+    # pre-tokenizer glue the prompt's final "，" onto the candidate's first characters, which shifts the span.
     p_ids = tokenizer(prompt).input_ids
-    f_ids = tokenizer(prompt + cand).input_ids
-    n_c = len(f_ids) - len(p_ids)
-    assert 1 <= n_c < len(f_ids), (prompt, cand, n_c)
+    c_ids = tokenizer(cand).input_ids
+    f_ids = p_ids + c_ids
+    n_c = len(c_ids)
+    if not (1 <= n_c < len(f_ids)):
+        raise RuntimeError(f"bad candidate span: {prompt!r} {cand!r} {n_c}")
     ids = torch.tensor([f_ids], device="cuda")
     lp = F.log_softmax(qwen_base(input_ids=ids).logits.float()[0, :-1, :], dim=-1)
     tok_lp = lp.gather(-1, ids[0, 1:].unsqueeze(-1))[:, 0]
@@ -493,19 +510,19 @@ def cell(v, n):
 
 print("\n" + "=" * 100, flush=True)
 print(f"=== RESULTS seed={SEED} | 36 items (12 unseen domains x 3 laws) | law-correct counts | chance per column = 12/36 (1/3) ===", flush=True)
-print(f"{'method':<22}" + "".join(f"{c:>8}" for c in COLS), flush=True)
+print(f"{'method':<24}" + "".join(f"{c:>8}" for c in COLS), flush=True)
 print("-" * (22 + 8 * len(COLS)), flush=True)
 for name, sc in RESULTS.items():
-    print(f"{name:<22}" + "".join(f"{cell(sc[c], 36):>8}" for c in COLS), flush=True)
+    print(f"{name:<24}" + "".join(f"{cell(sc[c], 36):>8}" for c in COLS), flush=True)
 print("-" * (22 + 8 * len(COLS)), flush=True)
 print("exact (law, stage) nearest-anchor counts (chance 3/36 under 12 anchors):", flush=True)
-for name in ("Dual head", "Shuffled-label head", "Random head", "Raw-Qwen kNN"):
+for name in ("Dual head", "Shuffled-label head", "Random head", "Raw-Qwen kNN", "Raw-Qwen kNN (centred)"):
     sc = RESULTS[name]
     print(f"  {name:<22} D1x={cell(sc['D1x'], 36)}  D2x={cell(sc['D2x'], 36)}  A1x={cell(sc['A1x'], 36)}  A2x={cell(sc['A2x'], 36)}", flush=True)
 
 print(f"\n=== CUE-SWAP (9 items; classify law among the 3 anchors/classes of the item's stage; chance 3/9) ===", flush=True)
 print(f"{'method':<22}{'meaning-correct':>18}{'follows-cue':>14}", flush=True)
-for name in ("Dual head", "Shuffled-label head", "Random head", "Raw-Qwen kNN", "Lexical"):
+for name in ("Dual head", "Shuffled-label head", "Random head", "Raw-Qwen kNN", "Raw-Qwen kNN (centred)", "Lexical"):
     sc = RESULTS[name]
     print(f"{name:<22}{cell(sc['C_mean'], 9):>18}{cell(sc['C_cue'], 9):>14}", flush=True)
 print("per item (true law / cue law | Dual / Raw / Lexical predicted law):", flush=True)
@@ -528,7 +545,7 @@ for i, k in enumerate(ANCHOR_KEYS):
     print(f"{lbl(k):>8} " + " ".join(f"{_gram[i, j]:>8.2f}" for j in range(len(ANCHOR_KEYS))), flush=True)
 
 METHOD_TAGS = {"Dual head": "dual", "Shuffled-label head": "shuffled", "Random head": "random",
-               "Raw-Qwen kNN": "raw_knn", "Lexical": "lexical", "Qwen zero-shot": "qwen_zeroshot",
+               "Raw-Qwen kNN": "raw_knn", "Raw-Qwen kNN (centred)": "raw_knn_centred", "Lexical": "lexical", "Qwen zero-shot": "qwen_zeroshot",
                "Qwen few-shot": "qwen_fewshot", "LoRA": "lora"}
 print("", flush=True)
 for name, sc in RESULTS.items():
