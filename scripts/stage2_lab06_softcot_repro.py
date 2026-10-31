@@ -180,6 +180,8 @@ for ex in gsm_train:
     tgt = tok(tgt_text, add_special_tokens=False)["input_ids"] + [IM_END_ID]
     ctx = len(pre) + N_SOFT + len(suf)
     room = MAX_LEN - ctx
+    if room <= 0:
+        raise RuntimeError(f"prompt alone exceeds MAX_LEN={MAX_LEN}: {ctx} tokens")  # [review]
     if len(tgt) > room:
         n_trunc += 1
         tgt = tgt[:max(room, 0)]
@@ -251,6 +253,18 @@ def norm_diag(tag):
 
 
 norm_diag("before training")
+W0 = proj.weight.detach().clone()  # [review] to report how far the projection moves
+
+
+@torch.no_grad()
+def probe_loss(n_batches=8):
+    """[review] mean training loss on a fixed probe set (first 32 train items), before vs after training."""
+    vals = [train_micro(list(range(i * MICRO_BS, (i + 1) * MICRO_BS))).item() for i in range(n_batches)]
+    return sum(vals) / len(vals)
+
+
+backbone.eval(); LOSS0 = probe_loss(); backbone.train()
+print(f"[softcot] probe loss before training (first {8 * MICRO_BS} train items): {LOSS0:.4f}", flush=True)
 t_train = time.time()
 run_loss, run_n = 0.0, 0
 for step in range(1, STEPS + 1):
@@ -268,6 +282,10 @@ for step in range(1, STEPS + 1):
         run_loss, run_n = 0.0, 0
 print(f"[softcot] training time: {(time.time()-t_train)/60:.1f} min", flush=True)
 norm_diag("after training")
+backbone.eval(); LOSS1 = probe_loss(); backbone.train()
+_dw = ((proj.weight.detach() - W0).norm() / W0.norm()).item()
+print(f"[softcot] probe loss after training: {LOSS1:.4f} (before {LOSS0:.4f}); "
+      f"relative projection change ||dW||/||W0|| = {_dw:.4f}", flush=True)
 
 os.makedirs("/content", exist_ok=True)
 PROJ_PATH = f"/content/softcot_proj_seed{SEED}.pt"
@@ -345,7 +363,12 @@ def run_condition(cond):
                 off = L - len(s)
                 slot[r, off + s0: off + s0 + N_SOFT] = True
         ids, mask, slot = ids.to(DEV), mask.to(DEV), slot.to(DEV)
-        soft = proj(soft_thoughts([EVAL[i][0] for i in idx])) if cond == "softcot" else None
+        if cond == "softcot":
+            soft = proj(soft_thoughts([EVAL[i][0] for i in idx]))
+        elif cond == "cot_unk_mean":  # [review] neutral placeholder: mean of the ordinary token embeddings
+            soft = MEAN_EMB.view(1, 1, -1).expand(len(idx), N_SOFT, -1)
+        else:
+            soft = None
         embeds = splice(ids, slot, soft)  # cot_unk: slots keep embed(<|endoftext|>)
         gen = backbone.generate(inputs_embeds=embeds, attention_mask=mask, max_new_tokens=MAX_NEW,
                                 do_sample=False, temperature=None, top_p=None, top_k=None,
@@ -357,8 +380,36 @@ def run_condition(cond):
     return outs
 
 
+# [review] <|endoftext|> is a trained document-boundary token, not a neutral [UNK]; a second placeholder
+# variant uses the mean of the ordinary token embeddings so a weak CoT-Unk cannot inflate SoftCoT's gain.
+MEAN_EMB = EMB.weight[:151643].float().mean(dim=0).to(EMB.weight.dtype)
+
+
+@torch.no_grad()
+def batching_check(n=3):
+    """[review] greedy output for n questions must be identical batched (left-padded) and one by one."""
+    qs = list(range(n))
+    batched = []
+    seqs = [PARTS[i][0] + PARTS[i][1] for i in qs]
+    ids, mask = left_pad(seqs, PAD_ID)
+    gen = backbone.generate(inputs_embeds=EMB(ids.to(DEV)), attention_mask=mask.to(DEV), max_new_tokens=128,
+                            do_sample=False, temperature=None, top_p=None, top_k=None, repetition_penalty=1.0,
+                            eos_token_id=[IM_END_ID, PH_ID], pad_token_id=PAD_ID)
+    batched = tok.batch_decode(gen, skip_special_tokens=True)
+    same = 0
+    for i, s in zip(qs, seqs):
+        ids1 = torch.tensor([s], device=DEV)
+        g1 = backbone.generate(inputs_embeds=EMB(ids1), attention_mask=torch.ones_like(ids1), max_new_tokens=128,
+                               do_sample=False, temperature=None, top_p=None, top_k=None, repetition_penalty=1.0,
+                               eos_token_id=[IM_END_ID, PH_ID], pad_token_id=PAD_ID)
+        same += int(tok.batch_decode(g1, skip_special_tokens=True)[0] == batched[i])
+    print(f"[softcot] batching check (left padding vs unbatched, first 128 tokens): {same}/{n} identical", flush=True)
+
+
+batching_check()
+
 RES = {}
-for cond in ("cot", "cot_unk", "softcot"):
+for cond in ("cot", "cot_unk", "cot_unk_mean", "softcot"):
     texts = run_condition(cond)
     preds = [extract(x) for x in texts]
     ok = [correct(p, g) for p, (_, g) in zip(preds, EVAL)]
@@ -382,6 +433,8 @@ b1, c1, p_unk = mcnemar_exact(RES["softcot"]["ok"], RES["cot_unk"]["ok"])
 b2, c2, p_cot = mcnemar_exact(RES["softcot"]["ok"], RES["cot"]["ok"])
 print(f"[softcot] McNemar SoftCoT vs CoT-Unk: softcot-only={b1} unk-only={c1} p={p_unk:.4g}", flush=True)
 print(f"[softcot] McNemar SoftCoT vs CoT    : softcot-only={b2} cot-only={c2} p={p_cot:.4g}", flush=True)
+b3, c3, p_unkm = mcnemar_exact(RES["softcot"]["ok"], RES["cot_unk_mean"]["ok"])
+print(f"[softcot] McNemar SoftCoT vs CoT-Unk(mean emb): softcot-only={b3} unkmean-only={c3} p={p_unkm:.4g}", flush=True)
 for a, b in (("softcot", "cot_unk"), ("softcot", "cot"), ("cot_unk", "cot")):
     diff = sum(1 for x, y in zip(RES[a]["texts"], RES[b]["texts"]) if x != y)
     print(f"[softcot] outputs differ {a} vs {b}: {diff}/{EVAL_N}", flush=True)
@@ -400,4 +453,6 @@ for cond in RES:
 print(f"\n[softcot] total wall time: {(time.time()-T_START)/60:.1f} min", flush=True)
 print(f"SOFTCOT_RESULT seed={SEED} steps={STEPS} eval_n={EVAL_N} "
       f"cot={sum(RES['cot']['ok'])} cot_unk={sum(RES['cot_unk']['ok'])} "
-      f"softcot={sum(RES['softcot']['ok'])} p_vs_unk={p_unk:.6g} p_vs_cot={p_cot:.6g}", flush=True)
+      f"cot_unk_mean={sum(RES['cot_unk_mean']['ok'])} softcot={sum(RES['softcot']['ok'])} "
+      f"p_vs_unk={p_unk:.6g} p_vs_unkmean={p_unkm:.6g} p_vs_cot={p_cot:.6g} "
+      f"loss0={LOSS0:.4f} loss1={LOSS1:.4f} dW={_dw:.4f}", flush=True)
