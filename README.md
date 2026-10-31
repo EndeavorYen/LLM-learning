@@ -12,6 +12,8 @@
 > | 速度 10.36x / 4.24x / 14.23x / 8.11x | 未在同等品質下量測或比較對象不對等 | [#12](https://github.com/EndeavorYen/LLM-learning/issues/12) |
 >
 > 修正進度見 [#18](https://github.com/EndeavorYen/LLM-learning/issues/18)。在重跑完成前，下方數字請視為**未經驗證的初步紀錄**。
+>
+> **已通過預先登錄驗證的結果（2026-10-31，[#21](https://github.com/EndeavorYen/LLM-learning/issues/21)）：** 在 8 個從未用過的領域上，雙腦的聯想跳躍（law_brain）只看前兩句的 64 維狀態，就能往後推 3 步並選對分支 **85%**（機率 50%，Qwen 0.5B 直接排序 54–58%）。前提是採用兩段式訓練：先訓練漏斗並凍結，再訓練跳躍。原本的聯合訓練只有 59%。它與直接分類整段前提的分類器相當（88.9%，差 −3.9 分），但沒有超越。詳見 [`results/analogy_v5/README.md`](results/analogy_v5/README.md)。
 
 本專案以 **Google Colab (NVIDIA L4 GPU)** 為雲端算力引擎，結合本地權重管理與 GitHub 版本控制，從最底層的隨機初始化權重（Pre-training）出發，不僅完整實作現代主流 LLM 四大訓練階段（Pretrain / SFT / LoRA / DPO），更在 **Stage 1 白盒沙盒** 中針對自迴歸 Transformer 的底層限制展開了 **5 輪後 Transformer 架構演進實驗（Diffusion LLM $\rightarrow$ Block Diffusion & 局部修圖 $\rightarrow$ 意念球量化與聯想 $\rightarrow$ 信心閘門雙腦與高知識密度架構）**。
 

@@ -1,0 +1,99 @@
+config:
+  seed=42 variant=V4 mode=free override=0 data_sha=d2a9e877595829b4 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+  seed=1 variant=V4 mode=free override=0 data_sha=d2a9e877595829b4 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+  seed=2 variant=V4 mode=free override=0 data_sha=d2a9e877595829b4 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+
+=== per-method means over 3 seeds (% of 48 unseen items; exact counts / 432 in brackets) ===
+method            BR mean  DEC mean      BR-2      BR-3      BR-4     DEC-2     DEC-3     DEC-4      FLIP      PREM   BR count
+hop                84.95%    91.20%    81.94%    87.50%    85.42%    92.36%    90.97%    90.28%    71.76%         -   367/432
+random_hop         49.54%    51.85%    50.00%    47.92%    50.69%    54.86%    47.92%    52.78%    31.48%         -   214/432
+v0_joint           58.80%    64.81%    60.42%    56.94%    59.03%    65.28%    67.36%    61.81%    25.93%         -   254/432
+last               50.00%    50.00%    50.00%    50.00%    50.00%    50.00%    50.00%    50.00%         -         -   216/432
+s0_rule            85.42%    93.75%    81.94%    88.89%    85.42%    93.75%    93.75%    93.75%         -    81.94%   369/432
+premise_mlp        88.89%    97.92%    86.81%    88.89%    90.97%    97.92%    97.92%    97.92%         -    88.89%   384/432
+qwen_zeroshot      54.17%         -    58.33%    56.25%    47.92%         -         -         -         -         -   234/432
+qwen_fewshot       58.33%         -    60.42%    62.50%    52.08%         -         -         -         -         -   252/432
+
+=== per-seed values (counts out of 48; -1 = n/a; BR/DEC = mean of stages 2-4, count out of 144) ===
+method          seed    BR2    BR3    BR4   DEC2   DEC3   DEC4     A2     A3     A4  FLIP2  FLIP3  FLIP4   PREM        BR    (cnt)       DEC
+hop               42     38     40     41     42     42     42     39     39     40     28     36     34     -1    82.64%  119/144    87.50%
+hop                1     42     43     42     46     45     43     41     41     41     36     38     40     -1    88.19%  127/144    93.06%
+hop                2     38     43     40     45     44     45     40     41     41     28     38     32     -1    84.03%  121/144    93.06%
+random_hop        42     29     27     23     31     30     30      0      1      3     18     22     14     -1    54.86%   79/144    63.19%
+random_hop         1     22     18     25     24     16     22      0      2      2     16     16     14     -1    45.14%   65/144    43.06%
+random_hop         2     21     24     25     24     23     24      2      1      2     10     16     10     -1    48.61%   70/144    49.31%
+v0_joint          42     25     25     25     25     29     27      6      7      1     10      6      6     -1    52.08%   75/144    56.25%
+v0_joint           1     30     29     28     33     36     31     17     10     16     12     14      8     -1    60.42%   87/144    69.44%
+v0_joint           2     32     28     32     36     32     31     22      9     19     16     20     20     -1    63.89%   92/144    68.75%
+last              42     24     24     24     24     24     24     -1     -1     -1     -1     -1     -1     -1    50.00%   72/144    50.00%
+last               1     24     24     24     24     24     24     -1     -1     -1     -1     -1     -1     -1    50.00%   72/144    50.00%
+last               2     24     24     24     24     24     24     -1     -1     -1     -1     -1     -1     -1    50.00%   72/144    50.00%
+s0_rule           42     38     42     43     46     46     46     -1     -1     -1     -1     -1     -1     39    85.42%  123/144    95.83%
+s0_rule            1     42     43     41     44     44     44     -1     -1     -1     -1     -1     -1     40    87.50%  126/144    91.67%
+s0_rule            2     38     43     39     45     45     45     -1     -1     -1     -1     -1     -1     39    83.33%  120/144    93.75%
+premise_mlp       42     42     44     44     47     47     47     -1     -1     -1     -1     -1     -1     43    90.28%  130/144    97.92%
+premise_mlp        1     41     42     42     47     47     47     -1     -1     -1     -1     -1     -1     42    86.81%  125/144    97.92%
+premise_mlp        2     42     42     45     47     47     47     -1     -1     -1     -1     -1     -1     43    89.58%  129/144    97.92%
+qwen_zeroshot     42     28     27     23     -1     -1     -1     -1     -1     -1     -1     -1     -1     -1    54.17%   78/144         -
+qwen_zeroshot      1     28     27     23     -1     -1     -1     -1     -1     -1     -1     -1     -1     -1    54.17%   78/144         -
+qwen_zeroshot      2     28     27     23     -1     -1     -1     -1     -1     -1     -1     -1     -1     -1    54.17%   78/144         -
+qwen_fewshot      42     29     30     25     -1     -1     -1     -1     -1     -1     -1     -1     -1     -1    58.33%   84/144         -
+qwen_fewshot       1     29     30     25     -1     -1     -1     -1     -1     -1     -1     -1     -1     -1    58.33%   84/144         -
+qwen_fewshot       2     29     30     25     -1     -1     -1     -1     -1     -1     -1     -1     -1     -1    58.33%   84/144         -
+
+=== diagnostics (secondary), per seed ===
+name                         seed    n    BR2    BR3    BR4      mean     (cnt)
+true_law_anchor_picker         42   48     41     45     47    92.36%   133/144
+true_law_anchor_picker          1   48     45     45     45    93.75%   135/144
+true_law_anchor_picker          2   48     41     45     44    90.28%   130/144
+true_law_anchor_picker       mean   48                         92.13%   398/432
+true_law_anchor_picker_v0      42   48     32     38     37    74.31%   107/144
+true_law_anchor_picker_v0       1   48     38     44     46    88.89%   128/144
+true_law_anchor_picker_v0       2   48     36     43     45    86.11%   124/144
+true_law_anchor_picker_v0    mean   48                         83.10%   359/432
+true_law_mlp_picker            42   48     43     44     45    91.67%   132/144
+true_law_mlp_picker             1   48     44     45     45    93.06%   134/144
+true_law_mlp_picker             2   48     45     44     47    94.44%   136/144
+true_law_mlp_picker          mean   48                         93.06%   402/432
+premise_law_anchor_picker      42   48     38     42     45    86.81%   125/144
+premise_law_anchor_picker       1   48     43     44     42    89.58%   129/144
+premise_law_anchor_picker       2   48     39     44     42    86.81%   125/144
+premise_law_anchor_picker    mean   48                         87.73%   379/432
+hop_dec_law_mlp_picker         42   48     38     40     40    81.94%   118/144
+hop_dec_law_mlp_picker          1   48     42     42     41    86.81%   125/144
+hop_dec_law_mlp_picker          2   48     42     41     44    88.19%   127/144
+hop_dec_law_mlp_picker       mean   48                         85.65%   370/432
+premise_dec_law_mlp_picker     42   48     42     44     44    90.28%   130/144
+premise_dec_law_mlp_picker      1   48     43     44     44    90.97%   131/144
+premise_dec_law_mlp_picker      2   48     44     44     46    93.06%   134/144
+premise_dec_law_mlp_picker   mean   48                         91.44%   395/432
+seen_hop                       42  120    120    120    120   100.00%   360/360
+seen_hop                        1  120    120    120    120   100.00%   360/360
+seen_hop                        2  120    120    120    120   100.00%   360/360
+seen_hop                     mean  120                        100.00% 1080/1080
+seen_v0_joint                  42  120     65     63     61    52.50%   189/360
+seen_v0_joint                   1  120    103    103    104    86.11%   310/360
+seen_v0_joint                   2  120    100     97    101    82.78%   298/360
+seen_v0_joint                mean  120                         73.80%  797/1080
+seen_premise_mlp               42  120    120    120    120   100.00%   360/360
+seen_premise_mlp                1  120    120    120    120   100.00%   360/360
+seen_premise_mlp                2  120    120    120    120   100.00%   360/360
+seen_premise_mlp             mean  120                        100.00% 1080/1080
+
+=== quantities named in the pre-registration (exact; the criteria are applied by the reader) ===
+  HOP BR, seed 42                                               82.64%   (119/144)
+  HOP BR, seed 1                                                88.19%   (127/144)
+  HOP BR, seed 2                                                84.03%   (121/144)
+  HOP BR, mean over seeds                                       84.95%   (367/432)
+  RANDOM HOP BR, mean over seeds                                49.54%   (214/432)
+  HOP seen-domain BR, seed 42 (stages 120/120/120 of 120)      100.00%   (360/360)
+  HOP seen-domain BR, seed 1 (stages 120/120/120 of 120)       100.00%   (360/360)
+  HOP seen-domain BR, seed 2 (stages 120/120/120 of 120)       100.00%   (360/360)
+  LAST seed 42: BR2=24 BR3=24 BR4=24 DEC2=24 DEC3=24 DEC4=24   (exactly 50% requires every value == 24)
+  LAST seed 1: BR2=24 BR3=24 BR4=24 DEC2=24 DEC3=24 DEC4=24   (exactly 50% requires every value == 24)
+  LAST seed 2: BR2=24 BR3=24 BR4=24 DEC2=24 DEC3=24 DEC4=24   (exactly 50% requires every value == 24)
+  D = HOP BR - PREMISE-MLP BR (points)                           -3.94   (counts 367 - 384 = -17 of 432)
+  HOP BR - V0 BR (points)                                       +26.16   (counts 367 - 254 = +113 of 432)
+  D seed 42 (points)                                             -7.64   (counts 119 - 130 = -11 of 144)
+  D seed 1 (points)                                             +1.39   (counts 127 - 125 = +2 of 144)
+  D seed 2 (points)                                             -5.56   (counts 121 - 129 = -8 of 144)
