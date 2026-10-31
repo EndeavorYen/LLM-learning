@@ -6,8 +6,9 @@
 #   BREAK / FIX / NOOP; train = seen domains, n = 1..4; val_seen = seen domains, n = 1..10; test = unseen domains,
 #   n = 1..10. Every label is re-derived with the rule simulator `simulate` and must equal the file (data error).
 # Features: frozen Qwen2.5-0.5B (bf16), last hidden state mean-pooled (Lab 12 extractor).
-#   per sentence  every unique init / event sentence, max_length 64; no truncation (asserted from token counts)
-#   whole story   init_text + event texts concatenated with no separator (like Lab 12's premise s0+s1), max_length 512
+#   per sentence  every unique init (STATE PART only, [amendment 2026-11-01]) / event sentence, max_length 128;
+#                 no truncation (asserted from token counts)
+#   whole story   init state part + event texts concatenated with no separator (like Lab 12's premise s0+s1), max_length 512
 #                 (asserted), for every TRAINING PREFIX and every val_seen / test story (ONE-STEP-QWEN only)
 #   Train-split texts, val_seen-only texts and test texts are extracted in separate padded batches (never mixed).
 #   R896 = normalize(h - mu); mu = mean feature of the unique TRAIN-split sentences.
@@ -95,7 +96,8 @@ HEAD_STEPS, HEAD_LR, HEAD_LR_FLOOR = 400, 1e-3, 1e-4  # Lab 12 schedule (funnel;
 MLP_STEPS = 1000                                      # ONE-STEP-QWEN / BAG
 CE_TAU = 0.1
 HOP_HIDDEN = 256
-SENT_MAXLEN, STORY_MAXLEN = 64, 512
+SENT_MAXLEN, STORY_MAXLEN = 128, 512  # [amendment 2026-11-01] 64 -> 128 (state part of the init sentence <= ~40 tokens)
+HOP_ALIGN = 1.0  # [amendment 2026-11-01] weight of the anchor-alignment term (1 - cos(h_t, A[y_t])) for HOP / SYMBOLIC
 FEAT_BATCH = 64                                       # Lab 12 extraction batch size
 SHORT_N, N5, LONG_N, ALL_N = (1, 2, 3, 4), 5, (6, 7, 8, 9, 10), tuple(range(1, 11))
 STEP_N = 10                                           # per-step curves on the test stories with n = 10
@@ -104,7 +106,7 @@ LOSS_LOG = []                                         # (tag, step, message)
 # ==============================================================================
 # [0] Data ([lab14]; file handling as Lab 12)
 # ==============================================================================
-EXPECTED_STORIES_SHA256 = None  # will be pinned to the committed stories.json before the registered run (issue #23)
+EXPECTED_STORIES_SHA256 = "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108"  # registered file (#23, commit d20be68)
 _DATA_CANDIDATES = ["/content/stories.json", "benchmarks/state_tracking_v1/stories.json"]
 try:
     _DATA_CANDIDATES.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "benchmarks",
@@ -240,9 +242,39 @@ SENT_DOMS = defaultdict(set)
 SENTS_OF = {sp: [] for sp in SPLITS}  # unique sentences per split, in order of first appearance
 
 
+# [amendment 2026-11-01] expected state part of every init sentence, from templates.json (if present)
+STATE_PART = {}
+for _tp in ["/content/templates.json", "benchmarks/state_tracking_v1/templates.json"]:
+    if os.path.exists(_tp):
+        with open(_tp, encoding="utf-8") as _f:
+            for _d in json.load(_f)["domains"]:
+                for _lv, _lt in enumerate(_d["init"]["level"]):
+                    for _sg, _st in _d["init"]["safeguard"].items():
+                        STATE_PART[(_d["name"], _lv, _sg)] = _lt + "，" + _st + "。"
+        print(f"[l14] init state parts checked against {_tp} ({len(STATE_PART)} entries)", flush=True)
+        break
+
+
+def init_state_text(st) -> str:
+    """[amendment 2026-11-01] Model input for the init sentence: only its state part (level + safeguard), i.e. the text
+    after the single '；'. The rules clause before it is identical in every story of a domain and carries no story
+    information; at ~90 tokens it would dominate the mean-pooled feature. It is removed for EVERY method (per-sentence
+    models and ONE-STEP-QWEN alike); the human judge still sees the full sentence. The generator builds
+    init_text = rules + "；" + level + "，" + safeguard + "。" and the level / safeguard parts contain no '；', so the state
+    part is the text after the LAST '；' (the rules clause itself may contain '；'). Checked against templates.json."""
+    t = st["init_text"]
+    if "；" not in t:
+        raise RuntimeError(f"DATA ERROR: init_text has no '；': {t!r}")
+    part = t.rsplit("；", 1)[1]
+    want = STATE_PART.get((st["domain"], int(st["init_level"]), st["init_safeguard"]))
+    if want is not None and part != want:
+        raise RuntimeError(f"DATA ERROR: init state part {part!r} != templates {want!r}")
+    return part
+
+
 def story_sentences(st):
-    """[lab14] [(text, sentence class)] for [init, e1, ..., en]."""
-    return [(st["init_text"], init_cls(st))] + [(t, N_INIT + EVENTS.index(e))
+    """[lab14] [(text, sentence class)] for [init state part, e1, ..., en]."""
+    return [(init_state_text(st), init_cls(st))] + [(t, N_INIT + EVENTS.index(e))
                                                 for e, t in zip(st["events"], st["event_texts"])]
 
 
@@ -270,8 +302,9 @@ assert not FORBIDDEN_SENT & (TRAIN_SENT_SET | set(SENTS_OF["val_seen"])), \
 
 
 def story_text(st, k=None) -> str:
-    """[lab14] Whole-story text: init_text + the first k event texts (all if k is None), no separator (Lab 12 premise)."""
-    return st["init_text"] + "".join(st["event_texts"] if k is None else st["event_texts"][:k])
+    """[lab14] Whole-story text: init state part ([amendment 2026-11-01]) + the first k event texts (all if k is None),
+    no separator (Lab 12 premise)."""
+    return init_state_text(st) + "".join(st["event_texts"] if k is None else st["event_texts"][:k])
 
 
 # every training prefix (story index, k events), k = 0..n
@@ -612,8 +645,17 @@ def train_seq(tag: str, build, X: torch.Tensor, tgt: torch.Tensor):
         for pg in opt.param_groups:
             pg['lr'] = cosine_lr(step, SEQ_STEPS, SEQ_LR, SEQ_LR_FLOOR)
         opt.zero_grad()
-        logits = model(X)  # HOP: free mode
-        loss = F.cross_entropy(logits.reshape(-1, N_CLS), tgt.reshape(-1), ignore_index=-100)
+        if isinstance(model, Hop):  # HOP / SYMBOLIC: free mode; fed-back states = the free states h_t
+            logits, H = model(X, return_fed=True)
+            loss = F.cross_entropy(logits.reshape(-1, N_CLS), tgt.reshape(-1), ignore_index=-100)
+            # [amendment 2026-11-01] anchor alignment: pull h_t onto its class anchor, so that snapping at inference
+            # feeds back inputs of the kind seen in training (CE alone leaves h far from every anchor)
+            _A = F.normalize(model.anchors, p=2, dim=-1)
+            _cos = (H * _A[tgt.clamp(min=0)]).sum(-1)
+            loss = loss + HOP_ALIGN * (1.0 - _cos[valid]).mean()
+        else:
+            logits = model(X)
+            loss = F.cross_entropy(logits.reshape(-1, N_CLS), tgt.reshape(-1), ignore_index=-100)
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
