@@ -1,0 +1,12 @@
+[lab10] data=/content/analogy_v4.json model=Qwen/Qwen2.5-7B-Instruct
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Error while fetching `HF_TOKEN` secret value from your vault: 'Requesting secret HF_TOKEN timed out. Secrets can only be fetched when running from the Colab UI.'.
+  warnings.warn(f"\nError while fetching `HF_TOKEN` secret value from your vault: '{str(e)}'.")
+[lab10] loaded in 18.1s
+
+=== s1 only (validity check) | 48 items per stage | correct under both orders (chance 25%) | per-order correct /96 (chance 50%) | 23s ===
+  stage 2: both-orders 17/48 (35.4%) | per-order 48/96 (50.0%)
+  stage 3: both-orders 22/48 (45.8%) | per-order 48/96 (50.0%)
+  stage 4: both-orders 23/48 (47.9%) | per-order 48/96 (50.0%)
+  letter A chosen 144/288
+V4_GATE mode=s1only k2=17 k3=22 k4=23 k2_order=48 k3_order=48 k4_order=48 n=48
