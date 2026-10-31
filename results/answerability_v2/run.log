@@ -1,0 +1,222 @@
+[lab05] SEED=42 (nothing is sampled; seeds set for completeness)
+[lab05] data = /content/analogy_v2.json (analogy_v2)
+[lab05] seen=72 | unseen items=36 | cue-swap=9
+[lab05] few-shot prefix:
+自来水沿着主干管道平稳输送，一处阀门附近的管段被泥沙堵住了，上游管道内的水压急剧飙升，最终泄压阀自动打开放水。
+水库持续向水厂输送原水，一次滑坡切断了引水渠道，清水池中的储水迅速枯竭，到头来全城停水，只能启用应急水井。
+泵站和管网的压力保持着动态平衡，某台水泵的转速出现了轻微波动，偏差引发水锤，水锤反过来扩大偏差，整个泵站紧急停机。
+
+[lab05] MCQ prompt example (rotation 0):
+下面是三种因果规律，每种规律都依次经历四个阶段：
+A. 阻塞增压：物质在通道中正常流动 → 通道变窄或被阻塞 → 内部压力、负荷或积压急剧累积 → 流动停止或泄压机制触发
+B. 供给中断枯竭：源头稳定供给 → 源头突然被切断 → 储备逐渐耗尽 → 服务中止或备用接管
+C. 正反馈失控：系统处于稳定平衡 → 出现微小扰动 → 扰动自我放大 → 失控、崩溃或紧急停机
+
+领域：<领域>
+句子：<句子>
+
+这个句子描述的是哪一种规律中的某个阶段？只回答一个字母（A、B 或 C）。
+
+====================================================================================================
+=== Model Qwen/Qwen2.5-0.5B | bf16 | eval | MCQ format: plain text ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Error while fetching `HF_TOKEN` secret value from your vault: 'Requesting secret HF_TOKEN timed out. Secrets can only be fetched when running from the Colab UI.'.
+  warnings.warn(f"\nError while fetching `HF_TOKEN` secret value from your vault: '{str(e)}'.")
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+  loaded in 26.8s | layers=24 | hidden=896
+  [ranking zero-shot] B1=20/36 B2=17/36
+  [ranking few-shot] B1=18/36 B2=15/36
+  ranking time 15.2s
+  MCQ time 15.2s
+  MCQ unseen S2 = 0/36 (per-rotation 36/108) | S3 = 0/36 (per-rotation 36/108) | chance 12/36
+  MCQ seen = 0/72 | by stage S0..S3 = [0, 0, 0, 0] (each /18)
+  MCQ cue-swap: meaning-correct 0/9 | follows-cue 0/9
+  MCQ letter choice counts over 216 unseen queries: A=216 B=0 C=0
+  cue-swap per item (true / cue law | preds per rotation):
+    [工厂产线 S2] true L0 cue L1 | ['L0', 'L1', 'L2'] | 堵点前的工件把缓存区的空位迅速耗尽，
+    [光纤网络 S1] true L0 cue L1 | ['L0', 'L1', 'L2'] | 一条链路突然被切掉一半带宽，
+    [化学反应釜 S3] true L0 cue L2 | ['L0', 'L1', 'L2'] | 最终釜内压力失控，安全阀紧急起跳。
+    [金融市场 S2] true L1 cue L2 | ['L0', 'L1', 'L2'] | 备付金被挤兑得一轮比一轮少，
+    [人体循环 S1] true L1 cue L0 | ['L0', 'L1', 'L2'] | 供血的动脉突然被血栓堵住了，
+    [农田灌溉 S3] true L1 cue L0 | ['L0', 'L1', 'L2'] | 结果灌溉完全停止，只能等备用水车。
+    [社交媒体传播 S2] true L2 cue L0 | ['L0', 'L1', 'L2'] | 转发量急剧飙升，飙升又引来更多转发，
+    [生态系统 S1] true L2 cue L0 | ['L0', 'L1', 'L2'] | 少量煤灰落在冰面，挡住了部分反光，
+    [计算机内存 S3] true L2 cue L1 | ['L0', 'L1', 'L2'] | 最终空闲内存迅速枯竭，系统彻底崩溃。
+ANS_RESULT model=Qwen/Qwen2.5-0.5B B1_zero=20 B2_zero=17 B1_few=18 B2_few=15 MCQ_S2=0 MCQ_S3=0 MCQ_seen=0/72 CUE_mean=0 CUE_cue=0
+  model total time 57.2s
+
+====================================================================================================
+=== Model Qwen/Qwen2.5-0.5B-Instruct | bf16 | eval | MCQ format: chat template ===
+  loaded in 6.8s | layers=24 | hidden=896
+  [ranking zero-shot] B1=19/36 B2=16/36
+  [ranking few-shot] B1=19/36 B2=16/36
+  ranking time 14.0s
+  MCQ time 15.0s
+  MCQ unseen S2 = 0/36 (per-rotation 36/108) | S3 = 2/36 (per-rotation 38/108) | chance 12/36
+  MCQ seen = 3/72 | by stage S0..S3 = [0, 0, 0, 3] (each /18)
+  MCQ cue-swap: meaning-correct 0/9 | follows-cue 1/9
+  MCQ letter choice counts over 216 unseen queries: A=212 B=0 C=4
+  cue-swap per item (true / cue law | preds per rotation):
+    [工厂产线 S2] true L0 cue L1 | ['L0', 'L1', 'L2'] | 堵点前的工件把缓存区的空位迅速耗尽，
+    [光纤网络 S1] true L0 cue L1 | ['L0', 'L1', 'L2'] | 一条链路突然被切掉一半带宽，
+    [化学反应釜 S3] true L0 cue L2 | ['L0', 'L1', 'L2'] | 最终釜内压力失控，安全阀紧急起跳。
+    [金融市场 S2] true L1 cue L2 | ['L0', 'L1', 'L2'] | 备付金被挤兑得一轮比一轮少，
+    [人体循环 S1] true L1 cue L0 | ['L0', 'L1', 'L2'] | 供血的动脉突然被血栓堵住了，
+    [农田灌溉 S3] true L1 cue L0 | ['L0', 'L1', 'L2'] | 结果灌溉完全停止，只能等备用水车。
+    [社交媒体传播 S2] true L2 cue L0 | ['L0', 'L1', 'L2'] | 转发量急剧飙升，飙升又引来更多转发，
+    [生态系统 S1] true L2 cue L0 | ['L0', 'L1', 'L2'] | 少量煤灰落在冰面，挡住了部分反光，
+    [计算机内存 S3] true L2 cue L1 | ['L2', 'L1', 'L1'] | 最终空闲内存迅速枯竭，系统彻底崩溃。
+ANS_RESULT model=Qwen/Qwen2.5-0.5B-Instruct B1_zero=19 B2_zero=16 B1_few=19 B2_few=16 MCQ_S2=0 MCQ_S3=2 MCQ_seen=3/72 CUE_mean=0 CUE_cue=1
+  model total time 35.8s
+
+====================================================================================================
+=== Model Qwen/Qwen2.5-1.5B-Instruct | bf16 | eval | MCQ format: chat template ===
+  loaded in 13.3s | layers=28 | hidden=1536
+  [ranking zero-shot] B1=27/36 B2=18/36
+  [ranking few-shot] B1=22/36 B2=18/36
+  ranking time 16.9s
+  MCQ time 18.2s
+  MCQ unseen S2 = 6/36 (per-rotation 46/108) | S3 = 2/36 (per-rotation 39/108) | chance 12/36
+  MCQ seen = 16/72 | by stage S0..S3 = [0, 3, 11, 2] (each /18)
+  MCQ cue-swap: meaning-correct 3/9 | follows-cue 3/9
+  MCQ letter choice counts over 216 unseen queries: A=202 B=5 C=9
+  cue-swap per item (true / cue law | preds per rotation):
+    [工厂产线 S2] true L0 cue L1 | ['L0', 'L1', 'L0'] | 堵点前的工件把缓存区的空位迅速耗尽，
+    [光纤网络 S1] true L0 cue L1 | ['L0', 'L1', 'L1'] | 一条链路突然被切掉一半带宽，
+    [化学反应釜 S3] true L0 cue L2 | ['L2', 'L1', 'L2'] | 最终釜内压力失控，安全阀紧急起跳。
+    [金融市场 S2] true L1 cue L2 | ['L0', 'L1', 'L2'] | 备付金被挤兑得一轮比一轮少，
+    [人体循环 S1] true L1 cue L0 | ['L0', 'L1', 'L1'] | 供血的动脉突然被血栓堵住了，
+    [农田灌溉 S3] true L1 cue L0 | ['L0', 'L1', 'L1'] | 结果灌溉完全停止，只能等备用水车。
+    [社交媒体传播 S2] true L2 cue L0 | ['L0', 'L1', 'L2'] | 转发量急剧飙升，飙升又引来更多转发，
+    [生态系统 S1] true L2 cue L0 | ['L0', 'L1', 'L2'] | 少量煤灰落在冰面，挡住了部分反光，
+    [计算机内存 S3] true L2 cue L1 | ['L1', 'L1', 'L1'] | 最终空闲内存迅速枯竭，系统彻底崩溃。
+ANS_RESULT model=Qwen/Qwen2.5-1.5B-Instruct B1_zero=27 B2_zero=18 B1_few=22 B2_few=18 MCQ_S2=6 MCQ_S3=2 MCQ_seen=16/72 CUE_mean=3 CUE_cue=3
+  model total time 48.3s
+
+====================================================================================================
+=== Model Qwen/Qwen2.5-7B-Instruct | bf16 | eval | MCQ format: chat template ===
+Downloading bytes:           |  0.00B            
+Reconstructing (incomplete total...): |          |  0.00B /  0.00B            
+  loaded in 48.8s | layers=28 | hidden=3584
+  [ranking zero-shot] B1=20/36 B2=17/36
+  [ranking few-shot] B1=27/36 B2=19/36
+  ranking time 34.3s
+  MCQ time 46.0s
+  MCQ unseen S2 = 30/36 (per-rotation 91/108) | S3 = 24/36 (per-rotation 71/108) | chance 12/36
+  MCQ seen = 56/72 | by stage S0..S3 = [9, 14, 17, 16] (each /18)
+  MCQ cue-swap: meaning-correct 5/9 | follows-cue 4/9
+  MCQ letter choice counts over 216 unseen queries: A=77 B=74 C=65
+  cue-swap per item (true / cue law | preds per rotation):
+    [工厂产线 S2] true L0 cue L1 | ['L0', 'L0', 'L0'] | 堵点前的工件把缓存区的空位迅速耗尽，
+    [光纤网络 S1] true L0 cue L1 | ['L0', 'L0', 'L0'] | 一条链路突然被切掉一半带宽，
+    [化学反应釜 S3] true L0 cue L2 | ['L2', 'L2', 'L2'] | 最终釜内压力失控，安全阀紧急起跳。
+    [金融市场 S2] true L1 cue L2 | ['L1', 'L1', 'L2'] | 备付金被挤兑得一轮比一轮少，
+    [人体循环 S1] true L1 cue L0 | ['L0', 'L0', 'L0'] | 供血的动脉突然被血栓堵住了，
+    [农田灌溉 S3] true L1 cue L0 | ['L0', 'L1', 'L1'] | 结果灌溉完全停止，只能等备用水车。
+    [社交媒体传播 S2] true L2 cue L0 | ['L2', 'L2', 'L2'] | 转发量急剧飙升，飙升又引来更多转发，
+    [生态系统 S1] true L2 cue L0 | ['L0', 'L0', 'L0'] | 少量煤灰落在冰面，挡住了部分反光，
+    [计算机内存 S3] true L2 cue L1 | ['L1', 'L1', 'L1'] | 最终空闲内存迅速枯竭，系统彻底崩溃。
+
+=== Qwen/Qwen2.5-7B-Instruct per-item detail (MCQ preds per rotation r0/r1/r2; ranking picks; * = law correct) ===
+domain     law st | MCQ r0/r1/r2   maj  | rank0  rankF  | sentence
+人体循环        L0 S2 | L0/L0/L0       *    | L0*    L0*    | 心室每次收缩都格外吃力，
+人体循环        L0 S3 | L0/L0/L0       *    | L1     L0*    | 随后侧支血管长了出来，绕开了堵塞。
+人体循环        L1 S2 | L1/L1/L1       *    | L1*    L1*    | 肝糖原很快所剩无几，
+人体循环        L1 S3 | L1/L1/L1       *    | L1*    L1*    | 身体转而分解脂肪供能。
+人体循环        L2 S2 | L2/L2/L2       *    | L1     L2*    | 代谢加快产热，产热反过来推高体温，
+人体循环        L2 S3 | L2/L2/L2       *    | L1     L2*    | 最终高热惊厥，必须立即降温抢救。
+呼吸系统        L0 S2 | L0/L0/L0       *    | L1     L0*    | 肺泡里的残气呼不出去，胸腔鼓胀，
+呼吸系统        L0 S3 | L0/L0/L0       *    | L0*    L0*    | 结果肺泡终于胀破，形成气胸。
+呼吸系统        L1 S2 | L1/L1/L1       *    | L1*    L1*    | 肺里余留的氧气很快消耗殆尽，
+呼吸系统        L1 S3 | L1/L1/L1       *    | L0     L2     | 到头来他咬住同伴递来的副呼吸器。
+呼吸系统        L2 S2 | L2/L2/L2       *    | L1     L1     | 喘得急便头晕，头晕便喘得愈急，
+呼吸系统        L2 S3 | L0/L2/L0            | L2*    L2*    | 随后过度换气，人当场昏厥。
+光纤网络        L0 S2 | L0/L0/L0       *    | L2     L2     | 路由器缓冲区里的分组越攒越多，
+光纤网络        L0 S3 | L0/L0/L0       *    | L0*    L0*    | 设备只能丢弃新包，连接被重置。
+光纤网络        L1 S2 | L0/L0/L0            | L2     L2     | 已缓冲的视频片段一秒秒播完，
+光纤网络        L1 S3 | L0/L0/L0            | L0     L1*    | 最终画面卡住，切换到卫星线路。
+光纤网络        L2 S2 | L2/L2/L2       *    | L2*    L2*    | 重传挤占带宽造成丢包，丢包再催生重传，
+光纤网络        L2 S3 | L0/L0/L0            | L0     L0     | 结果整体吞吐跌到近乎为零，运维只得隔离节点。
+工厂产线        L0 S2 | L0/L0/L0       *    | L0*    L0*    | 前道送来的半成品在工位旁码得满满当当，
+工厂产线        L0 S3 | L0/L0/L0       *    | L2     L2     | 到头来工位前后全部歇工待修。
+工厂产线        L1 S2 | L1/L1/L1       *    | L1*    L1*    | 仓库里的芯片眼看着越来越少，
+工厂产线        L1 S3 | L1/L1/L1       *    | L2     L2     | 随后工厂只好拿替代料号顶上。
+工厂产线        L2 S2 | L2/L2/L2       *    | L2*    L2*    | 控制器拼命加热，炉温越高读数漂移越严重，
+工厂产线        L2 S3 | L2/L2/L2       *    | L2*    L2*    | 炉温冲破上限，炉子被强行熄火。
+供应链物流       L0 S2 | L0/L0/L0       *    | L1     L1     | 两端待航的船只把锚地塞得满满的，
+供应链物流       L0 S3 | L0/L0/L1       *    | L2     L2     | 最终港口宣布暂停接收新船。
+供应链物流       L1 S2 | L1/L1/L1       *    | L1*    L1*    | 超市冷柜里的蔬菜很快被抢购一空，
+供应链物流       L1 S3 | L1/L0/L1       *    | L1*    L2     | 结果门店从外省的仓库拉货补上货架。
+供应链物流       L2 S2 | L2/L2/L2       *    | L2*    L2*    | 各级经销商层层加码，订单滚雪球般膨胀，
+供应链物流       L2 S3 | L0/L1/L2            | L2*    L2*    | 到头来库存泛滥成灾，上下游一片狼藉。
+金融市场        L0 S2 | L0/L0/L0       *    | L1     L1     | 待结算的指令一笔笔压在系统中，
+金融市场        L0 S3 | L1/L0/L0       *    | L1     L1     | 随后结算中心宣布当日暂停受理。
+金融市场        L1 S2 | L1/L1/L1       *    | L2     L1*    | 银行的备付金被提款逐步掏空，
+金融市场        L1 S3 | L1/L1/L1       *    | L1*    L1*    | 银行停止兑付，存款保险基金出面兜底。
+金融市场        L2 S2 | L2/L2/L2       *    | L2*    L2*    | 下跌触发止损盘，抛售压低股价，再逼出新的止损，
+金融市场        L2 S3 | L0/L2/L2       *    | L2*    L2*    | 最终股价一泻千里，交易所宣布停牌。
+生态系统        L0 S2 | L0/L0/L0       *    | L1     L0*    | 坝下等着上溯的鱼群越聚越多，
+生态系统        L0 S3 | L0/L0/L0       *    | L1     L1     | 结果管理处开启鱼道，放鱼群过坝。
+生态系统        L1 S2 | L1/L1/L1       *    | L1*    L1*    | 湖水年复一年地减少，
+生态系统        L1 S3 | L1/L1/L1       *    | L1*    L1*    | 到头来湖泊干涸，鸟类迁往别处。
+生态系统        L2 S2 | L2/L2/L2       *    | L2*    L2*    | 冰面缩小使海水吸热，海水升温再融掉冰面，
+生态系统        L2 S3 | L2/L2/L2       *    | L2*    L1     | 随后冰盖大片消融，北极气候彻底转型。
+化学反应釜       L0 S2 | L0/L0/L0       *    | L0*    L0*    | 釜中气体排不出去，压力表指针不停攀高，
+化学反应釜       L0 S3 | L0/L0/L0       *    | L0*    L0*    | 爆破片随即破裂，排出多余气体。
+化学反应釜       L1 S2 | L1/L2/L2            | L0     L0     | 釜里残余的催化剂被反应逐渐消耗，
+化学反应釜       L1 S3 | L0/L0/L0            | L0     L0     | 最终反应停滞，备用泵被切换上线。
+化学反应釜       L2 S2 | L2/L2/L2       *    | L0     L2*    | 温度升高加速反应，反应释热推高温度，
+化学反应釜       L2 S3 | L2/L2/L2       *    | L0     L2*    | 结果温度一发不可收拾，反应釜泄爆。
+森林火灾        L0 S2 | L0/L2/L2            | L0*    L0*    | 林下积聚的烟和热越来越浓，
+森林火灾        L0 S3 | L0/L0/L2       *    | L0*    L0*    | 到头来热气冲破树冠，引燃了树冠火。
+森林火灾        L1 S2 | L1/L0/L1       *    | L1*    L2     | 火线前方残余的燃料很快烧光，
+森林火灾        L1 S3 | L0/L2/L2            | L1*    L2     | 随后火势自行熄灭。
+森林火灾        L2 S2 | L2/L2/L2       *    | L0     L2*    | 火势旺盛抽动气流，气流反哺火势，
+森林火灾        L2 S3 | L2/L2/L2       *    | L0     L2*    | 形成火旋风，扑救人员仓皇撤离。
+社交媒体传播      L0 S2 | L0/L0/L2       *    | L0*    L0*    | 未审的帖子攒到了几十万篇，
+社交媒体传播      L0 S3 | L0/L0/L0       *    | L2     L2     | 最终系统暂停新帖提交。
+社交媒体传播      L1 S2 | L1/L0/L0            | L1*    L1*    | 存着的旧视频被粉丝一条条刷完，
+社交媒体传播      L1 S3 | L1/L2/L0            | L2     L2     | 结果粉丝流向其他替代账号。
+社交媒体传播      L2 S2 | L2/L2/L2       *    | L2*    L2*    | 转发换来推荐，推荐再换来转发，
+社交媒体传播      L2 S3 | L0/L0/L0            | L2*    L2*    | 到头来话题刷屏霸榜，平台被迫限流。
+计算机内存       L0 S2 | L0/L0/L0       *    | L0*    L0*    | 等着拿锁的线程越聚越多，
+计算机内存       L0 S3 | L2/L2/L2            | L2     L2     | 随后看门狗超时，强制重启服务。
+计算机内存       L1 S2 | L0/L2/L2            | L2     L2     | 空闲堆空间被新对象一块块吃掉，
+计算机内存       L1 S3 | L0/L0/L0            | L2     L2     | 进程报出内存不足，退而使用磁盘交换。
+计算机内存       L2 S2 | L0/L2/L0            | L1     L2*    | 内存紧张导致频繁换页，换页再拖慢回收，
+计算机内存       L2 S3 | L0/L0/L0            | L2*    L2*    | 最终机器卡到无法响应，内核强杀进程。
+农田灌溉        L0 S2 | L0/L0/L0       *    | L0*    L0*    | 闸前水位节节攀高，渠堤吃不消，
+农田灌溉        L0 S3 | L0/L0/L0       *    | L0*    L0*    | 结果渠堤决口，洪水漫进庄稼地。
+农田灌溉        L1 S2 | L1/L1/L1       *    | L0     L1*    | 水窖里的余水浇了几块田就用光了，
+农田灌溉        L1 S3 | L1/L1/L1       *    | L0     L2     | 到头来只能靠拉水车临时救急浇灌。
+农田灌溉        L2 S2 | L0/L2/L2       *    | L0     L0     | 盐分伤苗使地表裸露，蒸发便把盐分提到表土，
+农田灌溉        L2 S3 | L0/L0/L2            | L0     L0     | 随后土地盐碱化，田地被迫撂荒。
+  (rank0/rankF on S2 rows = B1 pick; on S3 rows = B2 pick, conditioned on the model's own B1 pick)
+  seen sentences not majority-correct:
+    [水利管网 L0 S0 p0] ['L0', 'L1', 'L2'] | 自来水沿着主干管道平稳输送，
+    [水利管网 L0 S3 p1] ['L1', 'L1', 'L1'] | 结果管道爆裂，供水完全中断。
+    [水利管网 L1 S0 p0] ['L0', 'L1', 'L2'] | 水库持续向水厂输送原水，
+    [水利管网 L2 S0 p0] ['L0', 'L0', 'L2'] | 泵站和管网的压力保持着动态平衡，
+    [水利管网 L2 S0 p1] ['L0', 'L0', 'L2'] | 各条支管的流量彼此稳定匹配，
+    [水利管网 L2 S1 p1] ['L0', 'L0', 'L0'] | 一个调压阀被调偏了一点点，
+    [城市交通 L2 S0 p1] ['L0', 'L0', 'L2'] | 各路口的通行能力与需求大致相当，
+    [城市交通 L2 S1 p0] ['L0', 'L0', 'L0'] | 前车突然急刹了一下，
+    [城市交通 L2 S2 p1] ['L0', 'L0', 'L0'] | 拥堵迫使车辆绕行，绕行加重了别处的拥堵，
+    [城市交通 L2 S3 p0] ['L0', 'L0', 'L0'] | 最终全城路网陷入大面积锁死。
+    [电力电网 L1 S0 p0] ['L0', 'L1', 'L2'] | 发电厂持续向电网输送电力，
+    [电力电网 L1 S0 p1] ['L0', 'L1', 'L2'] | 风电场源源不断地供应电能，
+    [电力电网 L1 S1 p0] ['L2', 'L2', 'L2'] | 主力机组突然跳机脱网，
+    [电力电网 L1 S1 p1] ['L0', 'L1', 'L2'] | 一场风暴让风机全部停转，
+    [电力电网 L2 S0 p0] ['L0', 'L1', 'L2'] | 电网频率稳定在五十赫兹附近，
+    [电力电网 L2 S0 p1] ['L0', 'L1', 'L2'] | 发电与用电始终保持着平衡，
+ANS_RESULT model=Qwen/Qwen2.5-7B-Instruct B1_zero=20 B2_zero=17 B1_few=27 B2_few=19 MCQ_S2=30 MCQ_S3=24 MCQ_seen=56/72 CUE_mean=5 CUE_cue=4
+  model total time 129.1s
+
+====================================================================================================
+=== SUMMARY (k/36 unless noted; chance 12/36; cue-swap /9; Lab 04 0.5B base reference: B1 zero 20, few 18) ===
+ANS_RESULT model=Qwen/Qwen2.5-0.5B B1_zero=20 B2_zero=17 B1_few=18 B2_few=15 MCQ_S2=0 MCQ_S3=0 MCQ_seen=0/72 CUE_mean=0 CUE_cue=0
+ANS_RESULT model=Qwen/Qwen2.5-0.5B-Instruct B1_zero=19 B2_zero=16 B1_few=19 B2_few=16 MCQ_S2=0 MCQ_S3=2 MCQ_seen=3/72 CUE_mean=0 CUE_cue=1
+ANS_RESULT model=Qwen/Qwen2.5-1.5B-Instruct B1_zero=27 B2_zero=18 B1_few=22 B2_few=18 MCQ_S2=6 MCQ_S3=2 MCQ_seen=16/72 CUE_mean=3 CUE_cue=3
+ANS_RESULT model=Qwen/Qwen2.5-7B-Instruct B1_zero=20 B2_zero=17 B1_few=27 B2_few=19 MCQ_S2=30 MCQ_S3=24 MCQ_seen=56/72 CUE_mean=5 CUE_cue=4
+[lab05] total time 271.6s
