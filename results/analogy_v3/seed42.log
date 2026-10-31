@@ -1,0 +1,147 @@
+[v3] SEED=42
+[v3] data = /content/analogy_v3.json (analogy_v3)
+[v3] seen sentences=216 | unseen items=36 | cue-swap=9 | leak check passed for all 216 seen training sentences
+=== [1] Loading 'Qwen/Qwen2.5-0.5B' (frozen, bf16) ===
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Error while fetching `HF_TOKEN` secret value from your vault: 'Requesting secret HF_TOKEN timed out. Secrets can only be fetched when running from the Colab UI.'.
+  warnings.warn(f"\nError while fetching `HF_TOKEN` secret value from your vault: '{str(e)}'.")
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loaded in 24.5s | hidden=896 | layers=24
+[v3] extracted 369 features (896-d, float32)
+[v3] hop chains: 54 (seen domains 15 x laws 3 x aligned phrasings)
+
+=== [2] Training Dual head: 563,264 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Dual head] step   1/400 | total 5.6401 | dis 3.3247 (s_pull 0.058 s_push 2.179 d_pull 0.036 d_push 1.051) | hop 0.9262
+  [Dual head] step 200/400 | total 0.8727 | dis 0.5982 (s_pull 0.051 s_push 0.507 d_pull 0.002 d_push 0.038) | hop 0.1098
+  [Dual head] step 400/400 | total 0.6259 | dis 0.4429 (s_pull 0.041 s_push 0.363 d_pull 0.001 d_push 0.037) | hop 0.0732
+
+[v2] shuffled-label permutations (true law -> training label), per seen domain: 水利管网: [2, 0, 1]; 城市交通: [0, 1, 2]; 电力电网: [1, 2, 0]; 人体循环: [2, 0, 1]; 呼吸系统: [0, 1, 2]; 光纤网络: [1, 2, 0]; 工厂产线: [2, 0, 1]; 供应链物流: [0, 1, 2]; 金融市场: [1, 2, 0]; 生态系统: [2, 0, 1]; 化学反应釜: [0, 1, 2]; 森林火灾: [1, 2, 0]; 社交媒体传播: [2, 0, 1]; 计算机内存: [0, 1, 2]; 农田灌溉: [1, 2, 0]
+
+=== [2] Training Shuffled-label head: 563,264 trainable params | 400 steps full batch | AdamW lr 0.001 -> 0.0001 cosine | clip 1.0 ===
+  [Shuffled-label head] step   1/400 | total 5.6496 | dis 3.3341 (s_pull 0.060 s_push 2.187 d_pull 0.036 d_push 1.051) | hop 0.9262
+  [Shuffled-label head] step 200/400 | total 1.4619 | dis 0.8299 (s_pull 0.080 s_push 0.713 d_pull 0.001 d_push 0.037) | hop 0.2528
+  [Shuffled-label head] step 400/400 | total 1.1604 | dis 0.5283 (s_pull 0.069 s_push 0.422 d_pull 0.001 d_push 0.036) | hop 0.2528
+[v2] note: the shuffled-label head shuffles the funnel's law labels only; its hop loss still trains on real seen chains
+
+[v2] Random head: untrained, init with seed 42
+[v3] trainable params: Dual head = 563,264 | LoRA = 1,376,256
+
+=== [3] Qwen scoring controls (LoRA disabled) ===
+[v2] few-shot prefix:
+自来水沿着主干管道平稳输送，一处阀门附近的管段被泥沙堵住了，上游管道内的水压急剧飙升，最终泄压阀自动打开放水。
+水库持续向水厂输送原水，一次滑坡切断了引水渠道，清水池中的储水迅速枯竭，到头来全城停水，只能启用应急水井。
+泵站和管网的压力保持着动态平衡，某台水泵的转速出现了轻微波动，偏差引发水锤，水锤反过来扩大偏差，整个泵站紧急停机。
+
+[v3] Qwen zero-shot: B1=18/36 B2=17/36
+[v3] Qwen few-shot: B1=17/36 B2=16/36
+
+=== [4] Training LoRA: 1,376,256 trainable params | 400 steps | batch 16 | lr 0.0005 -> 5e-05 cosine ===
+  [LoRA] step   1/400 | LM loss 4.2879
+  [LoRA] step 200/400 | LM loss 0.0216
+  [LoRA] step 400/400 | LM loss 0.0215
+[v3] LoRA (zero-shot prompt, LoRA enabled): B1=18/36 B2=19/36
+
+====================================================================================================
+=== RESULTS seed=42 | 36 items (12 unseen domains x 3 laws) | law-correct counts | chance per column = 12/36 (1/3) ===
+method                        D1      D2      A1      A2      R1      B1      B2     B1a     B2a
+----------------------------------------------------------------------------------------------
+Dual head                  24/36   32/36   29/36   31/36   24/36   27/36   22/36   27/36   26/36
+Shuffled-label head         8/36   15/36   11/36   11/36    8/36   11/36    9/36    9/36   13/36
+Random head                20/36   22/36    8/36   14/36   20/36   12/36   13/36   11/36   12/36
+Raw-Qwen kNN               16/36   20/36     -       -     16/36   12/36   13/36   12/36   13/36
+Raw-Qwen kNN (centred)     18/36   21/36     -       -     18/36   17/36   14/36   17/36   14/36
+Lexical                      -     17/36     -       -     31/36   15/36   13/36   15/36   13/36
+Qwen zero-shot               -       -       -       -       -     18/36   17/36   18/36   17/36
+Qwen few-shot                -       -       -       -       -     17/36   16/36   17/36   16/36
+LoRA                         -       -       -       -       -     18/36   19/36   18/36   19/36
+----------------------------------------------------------------------------------------------
+exact (law, stage) nearest-anchor counts (chance 3/36 under 12 anchors):
+  Dual head              D1x=23/36  D2x=30/36  A1x=21/36  A2x=28/36
+  Shuffled-label head    D1x= 4/36  D2x=14/36  A1x= 6/36  A2x= 8/36
+  Random head            D1x= 7/36  D2x=17/36  A1x= 7/36  A2x=13/36
+  Raw-Qwen kNN           D1x= 5/36  D2x=18/36  A1x=  -    A2x=  -  
+  Raw-Qwen kNN (centred) D1x= 4/36  D2x=20/36  A1x=  -    A2x=  -  
+
+=== CUE-SWAP (9 items; classify law among the 3 anchors/classes of the item's stage; chance 3/9) ===
+method                   meaning-correct   follows-cue
+Dual head                            7/9           2/9
+Shuffled-label head                  3/9           3/9
+Random head                          5/9           1/9
+Raw-Qwen kNN                         7/9           0/9
+Raw-Qwen kNN (centred)               8/9           0/9
+Lexical                              3/9           5/9
+per item (true law / cue law | Dual / Raw / Lexical predicted law):
+  [鱼缸水族 S2] true L0 cue L2 | Dual L0 Raw L1 Lex L1 | 过滤桶里的水压一轮比一轮高，
+  [汽车发动机 S1] true L0 cue L1 | Dual L0 Raw L0 Lex L1 | 排气管口突然被泥浆糊死，废气断了出路，
+  [演唱会人群 S3] true L0 cue L1 | Dual L0 Raw L0 Lex L0 | 最终备用出口打开，憋住的人群泄了出去。
+  [物业电梯 S2] true L1 cue L0 | Dual L1 Raw L1 Lex L1 | 电池电量被一趟趟运行越压越低，
+  [空间站 S1] true L1 cue L0 | Dual L1 Raw L1 Lex L0 | 一场事故卡住了发射，补给船上不了天，
+  [鱼缸水族 S3] true L1 cue L2 | Dual L1 Raw L1 Lex L2 | 停电久了，主人紧急换上电池气泵供氧。
+  [音响扩声 S2] true L2 cue L0 | Dual L0 Raw L2 Lex L0 | 声音在话筒和音箱间来回循环，越积越响，
+  [蜂群 S1] true L2 cue L1 | Dual L1 Raw L0 Lex L1 | 一只蜂受惊，巢里的平静突然被打断，
+  [空间站 S3] true L2 cue L1 | Dual L2 Raw L2 Lex L2 | 结果空间站翻滚失控，连备用推进器也压不住。
+
+=== Dual head per-item detail (✓ = law correct) ===
+domain     law | s1 nearest | ŝ2 nearest | B1 pick  | B2 pick 
+餐厅后厨        L0 | (L0,S1) ✓  | (L0,S3) ✓  | L0 ✓     | L0 ✓
+餐厅后厨        L1 | (L0,S2)    | (L1,S3) ✓  | L1 ✓     | L0  
+餐厅后厨        L2 | (L0,S2)    | (L2,S3) ✓  | L2 ✓     | L2 ✓
+医院急诊        L0 | (L1,S3)    | (L1,S3)    | L1       | L1  
+医院急诊        L1 | (L1,S1) ✓  | (L1,S3) ✓  | L1 ✓     | L1 ✓
+医院急诊        L2 | (L2,S1) ✓  | (L2,S2) ✓  | L2 ✓     | L2 ✓
+蜂群          L0 | (L0,S1) ✓  | (L0,S2) ✓  | L0 ✓     | L0 ✓
+蜂群          L1 | (L1,S1) ✓  | (L1,S2) ✓  | L1 ✓     | L1 ✓
+蜂群          L2 | (L2,S1) ✓  | (L2,S2) ✓  | L2 ✓     | L2 ✓
+物业电梯        L0 | (L1,S3)    | (L0,S1) ✓  | L2       | L2  
+物业电梯        L1 | (L0,S1)    | (L1,S2) ✓  | L1 ✓     | L0  
+物业电梯        L2 | (L0,S1)    | (L0,S2)    | L2 ✓     | L0  
+音响扩声        L0 | (L0,S1) ✓  | (L0,S2) ✓  | L0 ✓     | L2  
+音响扩声        L1 | (L0,S1)    | (L2,S2)    | L0       | L2  
+音响扩声        L2 | (L1,S3)    | (L1,S1)    | L2 ✓     | L0  
+演唱会人群       L0 | (L0,S1) ✓  | (L0,S2) ✓  | L0 ✓     | L0 ✓
+演唱会人群       L1 | (L1,S1) ✓  | (L1,S2) ✓  | L1 ✓     | L1 ✓
+演唱会人群       L2 | (L2,S1) ✓  | (L0,S3)    | L0       | L0  
+火山地质        L0 | (L1,S1)    | (L1,S2)    | L1       | L0 ✓
+火山地质        L1 | (L1,S1) ✓  | (L1,S2) ✓  | L1 ✓     | L1 ✓
+火山地质        L2 | (L0,S1)    | (L2,S2) ✓  | L2 ✓     | L0  
+汽车发动机       L0 | (L0,S1) ✓  | (L0,S2) ✓  | L0 ✓     | L0 ✓
+汽车发动机       L1 | (L1,S1) ✓  | (L1,S2) ✓  | L1 ✓     | L1 ✓
+汽车发动机       L2 | (L2,S1) ✓  | (L2,S2) ✓  | L0       | L2 ✓
+空间站         L0 | (L0,S1) ✓  | (L0,S2) ✓  | L2       | L0 ✓
+空间站         L1 | (L2,S3)    | (L1,S1) ✓  | L1 ✓     | L2  
+空间站         L2 | (L2,S1) ✓  | (L2,S2) ✓  | L2 ✓     | L0  
+恒星演化        L0 | (L0,S1) ✓  | (L2,S2)    | L2       | L2  
+恒星演化        L1 | (L1,S2) ✓  | (L1,S3) ✓  | L1 ✓     | L1 ✓
+恒星演化        L2 | (L0,S2)    | (L2,S3) ✓  | L1       | L2 ✓
+鱼缸水族        L0 | (L0,S1) ✓  | (L0,S2) ✓  | L0 ✓     | L0 ✓
+鱼缸水族        L1 | (L1,S1) ✓  | (L1,S2) ✓  | L1 ✓     | L1 ✓
+鱼缸水族        L2 | (L2,S1) ✓  | (L2,S2) ✓  | L2 ✓     | L0  
+气象天气        L0 | (L0,S1) ✓  | (L0,S2) ✓  | L0 ✓     | L0 ✓
+气象天气        L1 | (L1,S1) ✓  | (L1,S2) ✓  | L1 ✓     | L1 ✓
+气象天气        L2 | (L2,S1) ✓  | (L2,S2) ✓  | L2 ✓     | L2 ✓
+
+=== Dual head anchor cosine matrix (12 x 12, rows/cols = (law, stage), law-major) ===
+          (L0,S0)  (L0,S1)  (L0,S2)  (L0,S3)  (L1,S0)  (L1,S1)  (L1,S2)  (L1,S3)  (L2,S0)  (L2,S1)  (L2,S2)  (L2,S3)
+ (L0,S0)     1.00     0.10     0.13     0.13     0.10    -0.25    -0.48    -0.13     0.14    -0.46     0.11    -0.64
+ (L0,S1)     0.10     1.00     0.15     0.14    -0.38     0.14     0.03    -0.50    -0.36     0.15    -0.19    -0.49
+ (L0,S2)     0.13     0.15     1.00     0.15    -0.51    -0.63     0.14    -0.05     0.13    -0.09     0.12    -0.25
+ (L0,S3)     0.13     0.14     0.15     1.00    -0.60     0.13    -0.40     0.13    -0.35    -0.52    -0.10     0.13
+ (L1,S0)     0.10    -0.38    -0.51    -0.60     1.00     0.12     0.13     0.12     0.12     0.01    -0.06    -0.19
+ (L1,S1)    -0.25     0.14    -0.63     0.13     0.12     1.00    -0.01    -0.14    -0.64    -0.05     0.10     0.11
+ (L1,S2)    -0.48     0.03     0.14    -0.40     0.13    -0.01     1.00     0.11    -0.23     0.14    -0.10    -0.08
+ (L1,S3)    -0.13    -0.50    -0.05     0.13     0.12    -0.14     0.11     1.00    -0.02    -0.16    -0.42     0.14
+ (L2,S0)     0.14    -0.36     0.13    -0.35     0.12    -0.64    -0.23    -0.02     1.00     0.12    -0.09     0.14
+ (L2,S1)    -0.46     0.15    -0.09    -0.52     0.01    -0.05     0.14    -0.16     0.12     1.00    -0.10     0.14
+ (L2,S2)     0.11    -0.19     0.12    -0.10    -0.06     0.10    -0.10    -0.42    -0.09    -0.10     1.00     0.14
+ (L2,S3)    -0.64    -0.49    -0.25     0.13    -0.19     0.11    -0.08     0.14     0.14     0.14     0.14     1.00
+
+V3_RESULT seed=42 method=dual D1=24 D2=32 A1=29 A2=31 R1=24 B1=27 B2=22 B1a=27 B2a=26 C_mean=7 C_cue=2
+V3_RESULT seed=42 method=shuffled D1=8 D2=15 A1=11 A2=11 R1=8 B1=11 B2=9 B1a=9 B2a=13 C_mean=3 C_cue=3
+V3_RESULT seed=42 method=random D1=20 D2=22 A1=8 A2=14 R1=20 B1=12 B2=13 B1a=11 B2a=12 C_mean=5 C_cue=1
+V3_RESULT seed=42 method=raw_knn D1=16 D2=20 A1=-1 A2=-1 R1=16 B1=12 B2=13 B1a=12 B2a=13 C_mean=7 C_cue=0
+V3_RESULT seed=42 method=raw_knn_centred D1=18 D2=21 A1=-1 A2=-1 R1=18 B1=17 B2=14 B1a=17 B2a=14 C_mean=8 C_cue=0
+V3_RESULT seed=42 method=lexical D1=-1 D2=17 A1=-1 A2=-1 R1=31 B1=15 B2=13 B1a=15 B2a=13 C_mean=3 C_cue=5
+V3_RESULT seed=42 method=qwen_zeroshot D1=-1 D2=-1 A1=-1 A2=-1 R1=-1 B1=18 B2=17 B1a=18 B2a=17 C_mean=-1 C_cue=-1
+V3_RESULT seed=42 method=qwen_fewshot D1=-1 D2=-1 A1=-1 A2=-1 R1=-1 B1=17 B2=16 B1a=17 B2a=16 C_mean=-1 C_cue=-1
+V3_RESULT seed=42 method=lora D1=-1 D2=-1 A1=-1 A2=-1 R1=-1 B1=18 B2=19 B1a=18 B2a=19 C_mean=-1 C_cue=-1
