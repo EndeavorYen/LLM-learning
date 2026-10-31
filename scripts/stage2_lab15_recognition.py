@@ -49,8 +49,11 @@
 #   event: 5 options (IN, OUT, BREAK, FIX, NOOP). init: (a) level 0..3 (A-D) and (b) safeguard 正常 / 失效 (A, B);
 #   correct = (a) and (b) both right in both orders; orderN = (a) and (b) both right in order N. Prompt = domain name +
 #   sentence + question + options.
-# Machine lines: L15_FOLD, L15_FEAT, L15_CV (+ fit counts), L15_STAGE (v5 per stage), L15_ZS / L15_ZSPART / L15_ZSCLS,
-#   then L15_CONFIG as the LAST line (run complete). Aggregate: python tools/aggregate_lab15.py lab15.log [...]
+# Preflight (before any weights are downloaded): every tokenizer loads, no model text exceeds 128 tokens, and the Q7
+#   letters A-E are single tokens; extraction re-checks all of it.
+# Machine lines: L15_FOLD, L15_FEAT, L15_CV (registered fields + fit_correct / fit_total = training accuracy),
+#   L15_STAGE (v5 per stage 0..4), L15_ZS / L15_ZSPART (init level / safeguard) / L15_ZSCLS (per class), then
+#   L15_CONFIG as the LAST line (run complete). Aggregate: python tools/aggregate_lab15.py lab15.log [...]
 # Run (Colab, one GPU >= 24 GB for the 7B model):  python stage2_lab15_recognition.py > lab15.log
 #   Optional LAB15_MODELS=Q05,Q15,Q7,BGE (default: all) runs a subset of the encoder models, e.g. to split the run over
 #   two sessions; the aggregator merges the logs and refuses duplicates. The zero-shot runs only when Q7 is loaded.
@@ -454,6 +457,32 @@ def free_gpu():
     gc.collect()
     if DEVICE == "cuda":
         torch.cuda.empty_cache()
+
+
+def preflight(models, data: dict, guard: LeakGuard):
+    """Fail fast, before any model weights are downloaded: every tokenizer loads, no model text exceeds SENT_MAXLEN,
+    and (Q7) the zero-shot letters are single tokens and the chat template works. extract() re-checks everything."""
+    for code in models:
+        mid, kind = MODELS[code]
+        tok = AutoTokenizer.from_pretrained(mid)
+        worst = 0
+        for pooling in (QWEN_POOLINGS if kind == "qwen" else ("cls",)):
+            for name in DATASETS:
+                for s in data[name]["texts"]:
+                    t = model_text(pooling, s)
+                    guard.check(s, t)
+                    worst = max(worst, len(tok(t).input_ids))
+        if worst > SENT_MAXLEN:
+            raise RuntimeError(f"DATA ERROR: {code}: a model text has {worst} tokens > max_length {SENT_MAXLEN}")
+        msg = ""
+        if code == ZS_MODEL:
+            letter_token_ids(tok, LETTERS)
+            i = int(np.argmax([len(s) for s in data["st"]["texts"]]))
+            q = mcq(data["st"]["dom"][i], data["st"]["texts"][i], ZS_EVENT_Q, ZS_EVENT_OPTS)
+            guard.check(data["st"]["texts"][i], q)
+            p = tok.apply_chat_template([{"role": "user", "content": q}], tokenize=False, add_generation_prompt=True)
+            msg = f" | zero-shot: letters A-E are single tokens, longest event prompt {len(tok(p).input_ids)} tokens"
+        log(f"[l15] preflight {code}: tokenizer ok, longest model text {worst} tokens (limit {SENT_MAXLEN}){msg}")
 
 
 def run_model(code: str, data: dict, guard: LeakGuard, zs_fn=None):
@@ -881,6 +910,7 @@ def main():
             n_held = sum(d in fo[f] for d in data[name]["dom"])
             log(f"  fold {f}: held out {fo[f]} ({n_held} sentences) | pool order {po[f]}")
             log(f"L15_FOLD data={name} fold={f} heldout={','.join(fo[f])} pool={','.join(po[f])}")
+    preflight(models, data, guard)
 
     # ---- encoders: features once, one model at a time; CV right after each model is freed ----
     results = defaultdict(dict)
