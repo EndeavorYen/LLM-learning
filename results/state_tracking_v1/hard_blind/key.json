@@ -1,0 +1,1730 @@
+[
+ {
+  "id": 1,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "鱼缸-HEDGE-BREAK",
+  "domain": "鱼缸",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 2,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水塔-OTHER-IN",
+  "domain": "水塔",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 3,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "充电宝-TEMP-BREAK",
+  "domain": "充电宝",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 4,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "停车场-TEMP-BREAK",
+  "domain": "停车场",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 5,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "充电宝-TEMP-FIX",
+  "domain": "充电宝",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 6,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "冷库-HEDGE-IN",
+  "domain": "冷库",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 7,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "粮仓-NEG-BREAK",
+  "domain": "粮仓",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 8,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "公交站台-NEG-FIX",
+  "domain": "公交站台",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 9,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "冷库-NEG-FIX",
+  "domain": "冷库",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 10,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "急诊留观室-OTHER-OUT",
+  "domain": "急诊留观室",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 11,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "电动车充电棚-HEDGE-IN",
+  "domain": "电动车充电棚",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 12,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "公交站台-TEMP-FIX",
+  "domain": "公交站台",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 13,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "公交站台-NEG-IN",
+  "domain": "公交站台",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 14,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "冷库-NEG-OUT",
+  "domain": "冷库",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 15,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "停车场-NEG-BREAK",
+  "domain": "停车场",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 16,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "充电宝-NEG-BREAK",
+  "domain": "充电宝",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 17,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "流浪狗收容所-TEMP-OUT",
+  "domain": "流浪狗收容所",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 18,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水库-NEG-FIX",
+  "domain": "水库",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 19,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "电动车充电棚-OTHER-IN",
+  "domain": "电动车充电棚",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 20,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "货车-TEMP-IN",
+  "domain": "货车",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 21,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "电动车充电棚-NEG-BREAK",
+  "domain": "电动车充电棚",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 22,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "货车-HEDGE-IN",
+  "domain": "货车",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 23,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "鱼缸-TEMP-OUT",
+  "domain": "鱼缸",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 24,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水库-OTHER-IN",
+  "domain": "水库",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 25,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "油罐-HEDGE-IN",
+  "domain": "油罐",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 26,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "油罐-HEDGE-BREAK",
+  "domain": "油罐",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 27,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "公交站台-TEMP-BREAK",
+  "domain": "公交站台",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 28,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "粮仓-NEG-OUT",
+  "domain": "粮仓",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 29,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "水库-TEMP-BREAK",
+  "domain": "水库",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 30,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "冷库-TEMP-BREAK",
+  "domain": "冷库",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 31,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "急诊留观室-TEMP-OUT",
+  "domain": "急诊留观室",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 32,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "充电宝-OTHER-IN",
+  "domain": "充电宝",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 33,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "充电宝-NEG-OUT",
+  "domain": "充电宝",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 34,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "流浪狗收容所-TEMP-FIX",
+  "domain": "流浪狗收容所",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 35,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "货车-NEG-FIX",
+  "domain": "货车",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 36,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "鱼缸-NEG-BREAK",
+  "domain": "鱼缸",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 37,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "便桥-NEG-IN",
+  "domain": "便桥",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 38,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "鱼缸-OTHER-IN",
+  "domain": "鱼缸",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 39,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "鱼缸-HEDGE-IN",
+  "domain": "鱼缸",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 40,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "粮仓-HEDGE-BREAK",
+  "domain": "粮仓",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 41,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水塔-NEG-BREAK",
+  "domain": "水塔",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 42,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "冷库-OTHER-OUT",
+  "domain": "冷库",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 43,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "流浪狗收容所-HEDGE-BREAK",
+  "domain": "流浪狗收容所",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 44,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "水库-TEMP-FIX",
+  "domain": "水库",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 45,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "货车-HEDGE-BREAK",
+  "domain": "货车",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 46,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水库-NEG-BREAK",
+  "domain": "水库",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 47,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "粮仓-TEMP-IN",
+  "domain": "粮仓",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 48,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "公交站台-OTHER-OUT",
+  "domain": "公交站台",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 49,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "水库-HEDGE-IN",
+  "domain": "水库",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 50,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "过山车排队区-HEDGE-BREAK",
+  "domain": "过山车排队区",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 51,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "手机存储-NEG-BREAK",
+  "domain": "手机存储",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 52,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "急诊留观室-NEG-BREAK",
+  "domain": "急诊留观室",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 53,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "便桥-HEDGE-IN",
+  "domain": "便桥",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 54,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "货车-OTHER-OUT",
+  "domain": "货车",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 55,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "便桥-NEG-BREAK",
+  "domain": "便桥",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 56,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "油罐-TEMP-IN",
+  "domain": "油罐",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 57,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "停车场-HEDGE-IN",
+  "domain": "停车场",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 58,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "过山车排队区-HEDGE-IN",
+  "domain": "过山车排队区",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 59,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "手机存储-OTHER-IN",
+  "domain": "手机存储",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 60,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "手机存储-HEDGE-BREAK",
+  "domain": "手机存储",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 61,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "手机存储-TEMP-IN",
+  "domain": "手机存储",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 62,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "电动车充电棚-TEMP-OUT",
+  "domain": "电动车充电棚",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 63,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "过山车排队区-TEMP-FIX",
+  "domain": "过山车排队区",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 64,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "电动车充电棚-TEMP-IN",
+  "domain": "电动车充电棚",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 65,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "电动车充电棚-NEG-IN",
+  "domain": "电动车充电棚",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 66,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "粮仓-NEG-IN",
+  "domain": "粮仓",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 67,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "充电宝-TEMP-OUT",
+  "domain": "充电宝",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 68,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "鱼缸-TEMP-FIX",
+  "domain": "鱼缸",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 69,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "便桥-HEDGE-BREAK",
+  "domain": "便桥",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 70,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "手机存储-NEG-OUT",
+  "domain": "手机存储",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 71,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "流浪狗收容所-TEMP-BREAK",
+  "domain": "流浪狗收容所",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 72,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "停车场-NEG-IN",
+  "domain": "停车场",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 73,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "停车场-NEG-OUT",
+  "domain": "停车场",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 74,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "充电宝-NEG-FIX",
+  "domain": "充电宝",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 75,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "冷库-NEG-BREAK",
+  "domain": "冷库",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 76,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水塔-NEG-FIX",
+  "domain": "水塔",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 77,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "充电宝-TEMP-IN",
+  "domain": "充电宝",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 78,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "油罐-NEG-FIX",
+  "domain": "油罐",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 79,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "货车-TEMP-FIX",
+  "domain": "货车",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 80,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "充电宝-HEDGE-BREAK",
+  "domain": "充电宝",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 81,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "流浪狗收容所-NEG-FIX",
+  "domain": "流浪狗收容所",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 82,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "货车-OTHER-IN",
+  "domain": "货车",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 83,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "停车场-HEDGE-BREAK",
+  "domain": "停车场",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 84,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "电动车充电棚-TEMP-FIX",
+  "domain": "电动车充电棚",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 85,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "急诊留观室-NEG-OUT",
+  "domain": "急诊留观室",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 86,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "冷库-TEMP-FIX",
+  "domain": "冷库",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 87,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "油罐-OTHER-OUT",
+  "domain": "油罐",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 88,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "粮仓-OTHER-IN",
+  "domain": "粮仓",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 89,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "冷库-TEMP-OUT",
+  "domain": "冷库",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 90,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "油罐-OTHER-IN",
+  "domain": "油罐",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 91,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "粮仓-OTHER-OUT",
+  "domain": "粮仓",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 92,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "水塔-TEMP-FIX",
+  "domain": "水塔",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 93,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "过山车排队区-NEG-OUT",
+  "domain": "过山车排队区",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 94,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "过山车排队区-TEMP-BREAK",
+  "domain": "过山车排队区",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 95,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "手机存储-TEMP-OUT",
+  "domain": "手机存储",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 96,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "鱼缸-TEMP-BREAK",
+  "domain": "鱼缸",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 97,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "电动车充电棚-NEG-FIX",
+  "domain": "电动车充电棚",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 98,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "公交站台-NEG-BREAK",
+  "domain": "公交站台",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 99,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "油罐-NEG-BREAK",
+  "domain": "油罐",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 100,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "流浪狗收容所-HEDGE-IN",
+  "domain": "流浪狗收容所",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 101,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "油罐-TEMP-OUT",
+  "domain": "油罐",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 102,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "过山车排队区-NEG-IN",
+  "domain": "过山车排队区",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 103,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "便桥-NEG-OUT",
+  "domain": "便桥",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 104,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "停车场-TEMP-FIX",
+  "domain": "停车场",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 105,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水库-OTHER-OUT",
+  "domain": "水库",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 106,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "电动车充电棚-NEG-OUT",
+  "domain": "电动车充电棚",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 107,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水塔-OTHER-OUT",
+  "domain": "水塔",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 108,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "鱼缸-NEG-IN",
+  "domain": "鱼缸",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 109,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "手机存储-NEG-FIX",
+  "domain": "手机存储",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 110,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "冷库-OTHER-IN",
+  "domain": "冷库",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 111,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "流浪狗收容所-NEG-OUT",
+  "domain": "流浪狗收容所",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 112,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "急诊留观室-TEMP-BREAK",
+  "domain": "急诊留观室",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 113,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "流浪狗收容所-OTHER-OUT",
+  "domain": "流浪狗收容所",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 114,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "鱼缸-NEG-FIX",
+  "domain": "鱼缸",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 115,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "公交站台-TEMP-IN",
+  "domain": "公交站台",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 116,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "鱼缸-NEG-OUT",
+  "domain": "鱼缸",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 117,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "油罐-TEMP-FIX",
+  "domain": "油罐",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 118,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "过山车排队区-NEG-BREAK",
+  "domain": "过山车排队区",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 119,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "鱼缸-TEMP-IN",
+  "domain": "鱼缸",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 120,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "水塔-HEDGE-BREAK",
+  "domain": "水塔",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 121,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "粮仓-HEDGE-IN",
+  "domain": "粮仓",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 122,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "公交站台-TEMP-OUT",
+  "domain": "公交站台",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 123,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "货车-TEMP-BREAK",
+  "domain": "货车",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 124,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "水塔-TEMP-BREAK",
+  "domain": "水塔",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 125,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "过山车排队区-OTHER-IN",
+  "domain": "过山车排队区",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 126,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "过山车排队区-TEMP-OUT",
+  "domain": "过山车排队区",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 127,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "货车-NEG-IN",
+  "domain": "货车",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 128,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水库-NEG-OUT",
+  "domain": "水库",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 129,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "便桥-NEG-FIX",
+  "domain": "便桥",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 130,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "冷库-HEDGE-BREAK",
+  "domain": "冷库",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 131,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "便桥-TEMP-BREAK",
+  "domain": "便桥",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 132,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "过山车排队区-OTHER-OUT",
+  "domain": "过山车排队区",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 133,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "电动车充电棚-TEMP-BREAK",
+  "domain": "电动车充电棚",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 134,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "粮仓-NEG-FIX",
+  "domain": "粮仓",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 135,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "电动车充电棚-HEDGE-BREAK",
+  "domain": "电动车充电棚",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 136,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "停车场-TEMP-IN",
+  "domain": "停车场",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 137,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "急诊留观室-OTHER-IN",
+  "domain": "急诊留观室",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 138,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "便桥-TEMP-FIX",
+  "domain": "便桥",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 139,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "公交站台-OTHER-IN",
+  "domain": "公交站台",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 140,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "电动车充电棚-OTHER-OUT",
+  "domain": "电动车充电棚",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 141,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "公交站台-NEG-OUT",
+  "domain": "公交站台",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 142,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "手机存储-TEMP-BREAK",
+  "domain": "手机存储",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 143,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "冷库-TEMP-IN",
+  "domain": "冷库",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 144,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "便桥-OTHER-OUT",
+  "domain": "便桥",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 145,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "便桥-TEMP-OUT",
+  "domain": "便桥",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 146,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "水塔-TEMP-IN",
+  "domain": "水塔",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 147,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "便桥-TEMP-IN",
+  "domain": "便桥",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 148,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水塔-NEG-OUT",
+  "domain": "水塔",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 149,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "油罐-NEG-IN",
+  "domain": "油罐",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 150,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "过山车排队区-TEMP-IN",
+  "domain": "过山车排队区",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 151,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "公交站台-HEDGE-BREAK",
+  "domain": "公交站台",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 152,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "冷库-NEG-IN",
+  "domain": "冷库",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 153,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "便桥-OTHER-IN",
+  "domain": "便桥",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 154,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "急诊留观室-TEMP-FIX",
+  "domain": "急诊留观室",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 155,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "粮仓-TEMP-FIX",
+  "domain": "粮仓",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 156,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "流浪狗收容所-OTHER-IN",
+  "domain": "流浪狗收容所",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 157,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "水库-HEDGE-BREAK",
+  "domain": "水库",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 158,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "充电宝-OTHER-OUT",
+  "domain": "充电宝",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 159,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "停车场-OTHER-OUT",
+  "domain": "停车场",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 160,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "货车-NEG-OUT",
+  "domain": "货车",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 161,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水塔-NEG-IN",
+  "domain": "水塔",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 162,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "手机存储-NEG-IN",
+  "domain": "手机存储",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 163,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "水库-TEMP-IN",
+  "domain": "水库",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 164,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "手机存储-HEDGE-IN",
+  "domain": "手机存储",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 165,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "水库-NEG-IN",
+  "domain": "水库",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 166,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "停车场-OTHER-IN",
+  "domain": "停车场",
+  "category": "OTHER",
+  "surface": "IN"
+ },
+ {
+  "id": 167,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "急诊留观室-NEG-IN",
+  "domain": "急诊留观室",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 168,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "流浪狗收容所-NEG-BREAK",
+  "domain": "流浪狗收容所",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 169,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "停车场-NEG-FIX",
+  "domain": "停车场",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 170,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "水库-TEMP-OUT",
+  "domain": "水库",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 171,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "手机存储-OTHER-OUT",
+  "domain": "手机存储",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 172,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "粮仓-TEMP-OUT",
+  "domain": "粮仓",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 173,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "货车-NEG-BREAK",
+  "domain": "货车",
+  "category": "NEG",
+  "surface": "BREAK"
+ },
+ {
+  "id": 174,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "油罐-TEMP-BREAK",
+  "domain": "油罐",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 175,
+  "answer": "D",
+  "label": "FIX",
+  "hard_id": "手机存储-TEMP-FIX",
+  "domain": "手机存储",
+  "category": "TEMP",
+  "surface": "FIX"
+ },
+ {
+  "id": 176,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "油罐-NEG-OUT",
+  "domain": "油罐",
+  "category": "NEG",
+  "surface": "OUT"
+ },
+ {
+  "id": 177,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "停车场-TEMP-OUT",
+  "domain": "停车场",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 178,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "公交站台-HEDGE-IN",
+  "domain": "公交站台",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 179,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "急诊留观室-NEG-FIX",
+  "domain": "急诊留观室",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 180,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "水塔-TEMP-OUT",
+  "domain": "水塔",
+  "category": "TEMP",
+  "surface": "OUT"
+ },
+ {
+  "id": 181,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "水塔-HEDGE-IN",
+  "domain": "水塔",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 182,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "充电宝-NEG-IN",
+  "domain": "充电宝",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 183,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "过山车排队区-NEG-FIX",
+  "domain": "过山车排队区",
+  "category": "NEG",
+  "surface": "FIX"
+ },
+ {
+  "id": 184,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "急诊留观室-TEMP-IN",
+  "domain": "急诊留观室",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 185,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "流浪狗收容所-NEG-IN",
+  "domain": "流浪狗收容所",
+  "category": "NEG",
+  "surface": "IN"
+ },
+ {
+  "id": 186,
+  "answer": "A",
+  "label": "IN",
+  "hard_id": "流浪狗收容所-TEMP-IN",
+  "domain": "流浪狗收容所",
+  "category": "TEMP",
+  "surface": "IN"
+ },
+ {
+  "id": 187,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "急诊留观室-HEDGE-BREAK",
+  "domain": "急诊留观室",
+  "category": "HEDGE",
+  "surface": "BREAK"
+ },
+ {
+  "id": 188,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "充电宝-HEDGE-IN",
+  "domain": "充电宝",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 189,
+  "answer": "C",
+  "label": "BREAK",
+  "hard_id": "粮仓-TEMP-BREAK",
+  "domain": "粮仓",
+  "category": "TEMP",
+  "surface": "BREAK"
+ },
+ {
+  "id": 190,
+  "answer": "E",
+  "label": "NOOP",
+  "hard_id": "鱼缸-OTHER-OUT",
+  "domain": "鱼缸",
+  "category": "OTHER",
+  "surface": "OUT"
+ },
+ {
+  "id": 191,
+  "answer": "F",
+  "label": "UNCERTAIN",
+  "hard_id": "急诊留观室-HEDGE-IN",
+  "domain": "急诊留观室",
+  "category": "HEDGE",
+  "surface": "IN"
+ },
+ {
+  "id": 192,
+  "answer": "B",
+  "label": "OUT",
+  "hard_id": "货车-TEMP-OUT",
+  "domain": "货车",
+  "category": "TEMP",
+  "surface": "OUT"
+ }
+]
