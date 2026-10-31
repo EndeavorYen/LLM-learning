@@ -88,10 +88,11 @@
 ## 🔬 開放研究議題追蹤 (Open Research Issues)
 
 我們在 Stage 1 實驗中發掘出的 3 個後 Transformer 世代核心開放問題，已建立於 GitHub Issues 持續深入探索：
+- 🎯 **[Issue #25：B1 觸類旁通——把新領域的句子可靠地對到抽象概念](https://github.com/EndeavorYen/LLM-learning/issues/25)**（目前主線）
 - 📌 **[Issue #1：無監督野生語料的「自動結構與意念對齊」](https://github.com/EndeavorYen/LLM-learning/issues/1)** *(Unsupervised Structural Alignment in the Wild)*
 - 📌 **[Issue #2：多層次意念的「動態顆粒度伸縮」](https://github.com/EndeavorYen/LLM-learning/issues/2)** *(Dynamic & Hierarchical Thought Granularity)*
 - 📌 **[Issue #3：超長聯想鏈的「腦波流形飄移與錨點校準」](https://github.com/EndeavorYen/LLM-learning/issues/3)** *(Latent Drift in Long-Horizon Thought Chains)*
-- 📌 **[Issue #4：資訊瓶頸效應與高維度意念空間抗噪校準（為何 5.5M 小雙腦擊敗 32M 大雙腦？）](https://github.com/EndeavorYen/LLM-learning/issues/4)** *(Information Bottleneck & Dimensional Noise Scaling)*
+- 📌 **[Issue #4：資訊瓶頸效應與高維度意念空間抗噪校準（為何 5.5M 小雙腦擊敗 32M 大雙腦？）](https://github.com/EndeavorYen/LLM-learning/issues/4)** *(Information Bottleneck & Dimensional Noise Scaling)* — **已結案：公平重跑後反常現象消失，「低維度比較抗噪」未獲支持**
 
 ---
 
