@@ -83,7 +83,9 @@ def run(with_s0: bool):
 
 
 N = len(DATA["unseen_domains"]) * len(LAWS)
-for with_s0 in (True, False):
+# env LAB10_MODES: "gate" (s0+s1), "s1only", or "both" (default) -- lets the two parts run as separate, shorter jobs
+_modes = os.environ.get("LAB10_MODES", "both")
+for with_s0 in [m for m, name in ((True, "gate"), (False, "s1only")) if _modes in (name, "both")]:
     t = time.time()
     res, per_order, letter_a, wrong = run(with_s0)
     tag = "s0+s1 (gate)" if with_s0 else "s1 only (validity check)"
