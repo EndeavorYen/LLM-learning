@@ -29,7 +29,8 @@ def main(argv):
     files = [a for a in argv[1:] if not a.startswith("--")]
     res = defaultdict(lambda: defaultdict(lambda: [0, 0]))      # system -> key -> [c, t] (summed over seeds)
     per_story = defaultdict(dict)                                # (system, seed) -> id -> ok
-    extra, sent, errs, configs = {}, defaultdict(lambda: [0, 0]), defaultdict(lambda: [0, 0]), []
+    extra, sent, errs, configs = defaultdict(int), defaultdict(lambda: [0, 0]), defaultdict(lambda: [0, 0]), []
+    errs1, bycount = defaultdict(lambda: [0, 0]), defaultdict(lambda: [0, 0])
     for fn in files:
         for line in open(fn, encoding="utf-8"):
             line = line.rstrip("\n")
@@ -40,11 +41,12 @@ def main(argv):
                         c, t = map(int, v.split("/"))
                         res[d["system"]][k][0] += c
                         res[d["system"]][k][1] += t
-                for k in ("no_answer", "gen_tokens", "sec"):
+                for k in ("no_answer", "closed", "gen_tokens", "sec"):
                     if k in d:
-                        extra[(d["system"], k)] = d[k]
+                        extra[(d["system"], k)] += int(d[k])
             elif line.startswith("L19_STORY "):
                 d = kv(line)
+                assert d["id"] not in per_story[(d["system"], d["seed"])], f"duplicate story line {d['system']} {d['id']}"
                 per_story[(d["system"], d["seed"])][d["id"]] = int(d["ok"])
             elif line.startswith("L19_SENT "):
                 for k, v in kv(line).items():
@@ -52,12 +54,13 @@ def main(argv):
                         c, t = map(int, v.split("/"))
                         sent[k][0] += c
                         sent[k][1] += t
-            elif line.startswith("L19_ERRS ") and "harm_by_variant" in line:
+            elif line.startswith("L19_ERRS "):
+                dst = errs if " harm_by_variant " in line else (errs1 if " harm1_by_variant " in line else bycount)
                 for k, v in kv(line).items():
                     if "/" in v:
                         c, t = map(int, v.split("/"))
-                        errs[k][0] += c
-                        errs[k][1] += t
+                        dst[k][0] += c
+                        dst[k][1] += t
             elif line.startswith("L19_CONFIG "):
                 configs.append(kv(line))
     if len(configs) != len(files) and not partial:
@@ -67,9 +70,15 @@ def main(argv):
             sys.exit(f"story sha {c.get('data_sha_story')}")
         if "FAKE" in c.get("env", "") and not partial:
             sys.exit("stub run")
-    jobs = sorted((c.get("job"), c.get("seed")) for c in configs)
-    if not partial and jobs != sorted([("eye", s) for s in SEEDS] + [("direct", "0"), ("think", "0")]):
-        sys.exit(f"jobs {jobs} != eye x 3 seeds + direct + think")
+    jobs = sorted((c.get("job"), c.get("seed")) for c in configs if c.get("job") != "think")
+    if not partial and jobs != sorted([("eye", s) for s in SEEDS] + [("direct", "0")]):
+        sys.exit(f"jobs {jobs} != eye x 3 seeds + direct (+ think parts)")
+    if not partial:  # [review 9] coverage
+        for key in [("EYE+EXEC", s) for s in SEEDS] + [("7B-DIRECT", "0")]:
+            if len(per_story.get(key, {})) != 3080:
+                sys.exit(f"{key}: {len(per_story.get(key, {}))} stories, expected 3080")
+        if len(per_story.get(("QWEN3-8B-THINK", "0"), {})) != 660:
+            sys.exit("thinking model: the parts do not cover the 660 stories exactly once")
     if partial:
         print("!!! PARTIAL: not the registered result\n")
 
@@ -84,15 +93,26 @@ def main(argv):
     for s in SYSTEMS:
         r = res.get(s)
         if r and s != "QWEN3-8B-THINK":
-            print(f"{s:15s} " + " ".join(f"{n}:{pct(r.get(f'len{n}')):5.1f}" for n in range(1, 13)))
+            print(f"{s:15s} " + " ".join(f"{n}:{pct(r.get(f'nlen{n}')):5.1f}" for n in range(1, 13)) + "   (normal only)")
     if sent:
         print("\nEye sentence accuracy on the story pool (3 seeds): " + " ".join(
             f"{k}={pct(v):.1f}" for k, v in sorted(sent.items())))
     if errs:
         print("Misread sentences that made the story wrong, by variant (wrong stories / misreads): " + " ".join(
             f"{k}={v[0]}/{v[1]}" for k, v in sorted(errs.items(), key=lambda kv_: -kv_[1][1])))
+    if errs1:
+        print("Stories with exactly ONE misread, made wrong by it (wrong / stories): " + " ".join(
+            f"{k}={v[0]}/{v[1]}" for k, v in sorted(errs1.items(), key=lambda kv_: -kv_[1][1])))
+    for grp in ("normal", "trap"):
+        rows = {int(k[len(grp):]): v for k, v in bycount.items() if k.startswith(grp)}
+        if rows:
+            dist = " ".join(f"{k}:{v[0]}/{v[1]}" for k, v in sorted(rows.items()))
+            hk = [v for k, v in rows.items() if k >= 1]
+            harmless = 100.0 * sum(v[0] for v in hk) / max(sum(v[1] for v in hk), 1)
+            print(f"{grp}: misread sentences per story -> final right / stories: {dist} | stories with >= 1 misread "
+                  f"still right: {harmless:.1f}%")
     for k, v in sorted(extra.items()):
-        print(f"{k[0]} {k[1]} = {v}")
+        print(f"{k[0]} {k[1]} = {v}" + (f" ({100.0 * v / 660:.1f}% of 660)" if k[1] in ("no_answer", "closed") else ""))
 
     think = per_story.get(("QWEN3-8B-THINK", "0"), {})
     sub_normal = [i for i in think if "/N" in i]

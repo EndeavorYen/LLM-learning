@@ -9,8 +9,10 @@
 #   practice, same training data and recipe), readout C with each domain's FIXED first support sentence per event type;
 #   EYE+EXEC = argmax events -> Lab 14 simulate; EYE+HOP = a GRU (64) trained on abstract one-hot event stories of
 #   length 1-4 (3000 steps), fed the eye's 5-way probabilities. direct: Qwen2.5-7B-Instruct letter scoring over 9 states,
-#   both option orders. think: Qwen3-8B, thinking mode, greedy, <= 2048 new tokens, answer = last '答案：X'; subset of
-#   660 stories (all traps + normal length 8-12, index 0-1).
+#   both option orders. think: Qwen3-8B, thinking mode, <= 2048 new tokens, answer = last '答案：X' after </think>;
+#   subset of 660 stories (all traps + normal length 8-12, index 0-1). [pre-run amendment, review] sampling as the Qwen3
+#   card recommends for thinking mode (T 0.6, top-p 0.95, top-k 20, fixed torch seed per batch) instead of greedy; an
+#   answer counts only if the thinking closed; LAB19_THINK_PART i/n shards the 660 stories over VMs.
 # Judgement (EYE+EXEC, normal stories LONG 8-12): >= 90% and not below Qwen3-8B-THINK on the same stories -> usable;
 #   < 75% -> accumulation too large; otherwise partly usable.
 # Machine lines: L19_LORA, L19_SENT, L19_HOP, L19_RES, L19_ERRS, L19_STORY, then L19_CONFIG as the LAST line.
@@ -78,7 +80,8 @@ EXPECTED_RTEST2_SHA256 = "904a97b811942ef95efede95d367603364e3542a2ff2f6ac6737f4
 EXPECTED_RTEST_SHA256 = "49616f38581105d0c69c6e9b1509d8d763027fdb3d3b7ec199ea8a07d03c4c4a"
 EXPECTED_STORY_SHA256 = "69c5866bf9e4f4715bde1dfff4c9660d7fbc409d0498d73f7258cc0ab9650be6"
 SEEDS19 = (42, 1, 2)
-THINK_MAX_NEW = 2048   # accepted: validator PASS, blind 1256/1256 (one annotator row-shift re-checked 20/20)
+THINK_MAX_NEW = 2048   # registered thinking budget
+THINK_SAMPLING = dict(do_sample=True, temperature=0.6, top_p=0.95, top_k=20)  # [review 2] Qwen3 card: no greedy in thinking mode
 
 # (copied from Lab 15) classes
 CLASSES = ["L0_ok", "L1_ok", "L2_ok", "L3_ok", "L0_broken", "L1_broken", "L2_broken", "L3_broken", "BURST"]
@@ -1064,8 +1067,10 @@ class StoryTally:
         self.c = defaultdict(lambda: [0, 0])
 
     def add(self, s, ok):
-        for k in (f"len{s['length']}", s["kind"], length_band(s["length"]) + ("" if s["kind"] == "normal" else "_trap"),
-                  "all"):
+        keys = [f"len{s['length']}", s["kind"], length_band(s["length"]) + ("" if s["kind"] == "normal" else "_trap"), "all"]
+        if s["kind"] == "normal":
+            keys.append(f"nlen{s['length']}")  # [review 8] normal stories only
+        for k in keys:
             self.c[k][0] += int(ok)
             self.c[k][1] += 1
 
@@ -1199,7 +1204,8 @@ def run_eye(stories, seed, guard_texts_extra):
     F_st, _c, _d = extract17(tok, backbone, texts, eye, guard, f"{eye}/s{seed}/stories", False)
     F_tr, F_st = F_tr.to(DEVICE), F_st.to(DEVICE)
     lora_off(mods)
-    log(f"L19_LORA seed={seed} loss={','.join(trace)} sec={time.time() - t1:.1f} longest_tokens={worst}")
+    log(f"L19_LORA seed={seed} loss={','.join(trace)} sec={time.time() - t1:.1f} longest_tokens={worst} "
+        f"fp={float(F_tr.double().sum()).hex()}")  # [review 4] compare with L18B_LORA eye=Q15 cell=A1B0
     models, mu = train_heads(tr, F_tr, seed, None)
     probs = torch.zeros(len(texts), N_EV, device=DEVICE)
     for d in stories["domains"]:
@@ -1224,7 +1230,8 @@ def run_eye(stories, seed, guard_texts_extra):
     log(f"L19_HOP seed={seed} abstract_onehot_len1-12_acc={hop_acc:.4f}")
     ex, hp, orc = StoryTally(), StoryTally(), StoryTally()
     harm = defaultdict(lambda: [0, 0])      # variant -> [stories made wrong when this variant was misread, misreads]
-    nerr = defaultdict(lambda: [0, 0])      # number of misread sentences -> [final right, stories]
+    nerr = defaultdict(lambda: [0, 0])      # (kind group, number of misread sentences) -> [final right, stories]
+    harm1 = defaultdict(lambda: [0, 0])     # variant -> [stories wrong, stories] among stories with exactly ONE misread
     for s in stories["stories"]:
         lab = [x["label"] for x in s["sentences"]]
         p = [EVENTS[pred[idx[x["text"]]]] for x in s["sentences"]]
@@ -1232,8 +1239,13 @@ def run_eye(stories, seed, guard_texts_extra):
         ok = simulate(s["init_level"], s["init_safeguard"], p) == s["final"]
         ex.add(s, ok)
         k = sum(a != b for a, b in zip(lab, p))
-        nerr[k][0] += int(ok)
-        nerr[k][1] += 1
+        grp = "normal" if s["kind"] == "normal" else "trap"
+        nerr[(grp, k)][0] += int(ok)
+        nerr[(grp, k)][1] += 1
+        if k == 1:
+            v1 = [x["var"] for x, a, b in zip(s["sentences"], lab, p) if a != b][0]
+            harm1[v1][0] += int(not ok)
+            harm1[v1][1] += 1
         for x, a, b in zip(s["sentences"], lab, p):
             if a != b:
                 harm[x["var"]][1] += 1
@@ -1246,7 +1258,8 @@ def run_eye(stories, seed, guard_texts_extra):
     log(f"L19_RES seed={seed} system=ORACLE+EXEC {orc.line()}")
     log(f"L19_RES seed={seed} system=EYE+EXEC {ex.line()}")
     log(f"L19_RES seed={seed} system=EYE+HOP {hp.line()}")
-    log(f"L19_ERRS seed={seed} by_count " + " ".join(f"{k}={a}/{b}" for k, (a, b) in sorted(nerr.items())))
+    log(f"L19_ERRS seed={seed} by_count " + " ".join(f"{g}{k}={a}/{b}" for (g, k), (a, b) in sorted(nerr.items())))
+    log(f"L19_ERRS seed={seed} harm1_by_variant " + " ".join(f"{k}={a}/{b}" for k, (a, b) in sorted(harm1.items())))
     log(f"L19_ERRS seed={seed} harm_by_variant " + " ".join(f"{k}={a}/{b}" for k, (a, b) in sorted(harm.items())))
     for s in stories["stories"]:   # per-story outcome for the reasoning-model comparison subset
         p = [EVENTS[pred[idx[x["text"]]]] for x in s["sentences"]]
@@ -1259,7 +1272,7 @@ def state_option(d, cls):
     if cls == "BURST":
         return f"{d['name']}已经永久损坏（爆掉了）"
     lv, sg = int(cls[1]), cls.split("_")[1]
-    amount = f"是空的（零{d['measure']}）" if lv == 0 else f"有{LEVEL_WORD[lv]}{d['measure']}"
+    amount = f"是空的（一{d['measure']}也没有）" if lv == 0 else f"有{LEVEL_WORD[lv]}{d['measure']}"
     return f"{d['name']}里{amount}，{d['ok'] if sg == 'ok' else d['broken']}"
 
 
@@ -1304,7 +1317,7 @@ def run_llm_direct(stories, guard_unused):
             q = story_prompt(d, s, order, False)
             prompt = tok.apply_chat_template([{"role": "user", "content": q}], tokenize=False, add_generation_prompt=True)
             with torch.no_grad():
-                lp = F.log_softmax(model(input_ids=torch.tensor([tok(prompt).input_ids], device=DEVICE)).logits.float()[0, -1], -1)
+                lp = F.log_softmax(model(input_ids=torch.tensor([tok(prompt).input_ids], device=DEVICE)).logits[0, -1].float(), -1)
             sc = [max(float(lp[t]) for t in ids9[j]) for j in range(9)]
             res.append(order[max(range(9), key=lambda j: (sc[j], -j))])
         ok = res[0] == res[1] == SI[s["final"]]
@@ -1332,8 +1345,10 @@ def run_llm_think(stories, guard_unused):
     dom = {d["name"]: d for d in stories["domains"]}
     sub = think_subset(stories)
     assert len(sub) == 660, len(sub)
+    part, nparts = (int(x) for x in os.environ.get("LAB19_THINK_PART", "0/1").split("/"))  # [review 5] shards
+    sub = sub[part::nparts]
     tl, tl_dir = StoryTally(), StoryTally()
-    n_noans, gen_tokens = 0, 0
+    n_noans, gen_tokens, n_closed = 0, 0, 0
     t0 = time.time()
     B = int(os.environ.get("LAB19_THINK_BATCH", "8"))
     import re
@@ -1342,23 +1357,27 @@ def run_llm_think(stories, guard_unused):
         prompts = [tok.apply_chat_template([{"role": "user", "content": story_prompt(dom[s["domain"]], s, list(range(9)), True)}],
                                            tokenize=False, add_generation_prompt=True, enable_thinking=True) for s in chunk]
         enc = tok(prompts, return_tensors="pt", padding=True).to(DEVICE)
+        torch.manual_seed(1900 + b + 100000 * part)
         with torch.no_grad():
-            out = model.generate(input_ids=enc.input_ids, attention_mask=enc.attention_mask, max_new_tokens=THINK_MAX_NEW, do_sample=False, temperature=None, top_p=None,
-                                 top_k=None, pad_token_id=tok.pad_token_id)
+            out = model.generate(input_ids=enc.input_ids, attention_mask=enc.attention_mask, max_new_tokens=THINK_MAX_NEW,
+                                 pad_token_id=tok.pad_token_id, **THINK_SAMPLING)
         for s, row in zip(chunk, out[:, enc.input_ids.shape[1]:]):
             n_tok = int((row != tok.pad_token_id).sum())
             gen_tokens += n_tok
             text = tok.decode(row, skip_special_tokens=True)
+            closed = "</think>" in text      # [review 1] an answer only counts after the thinking closed
+            n_closed += int(closed)
             tail = text.split("</think>")[-1]
-            m = re.findall(r"答案[:：]\s*([A-I])", tail)
+            m = re.findall(r"答案\s*[:：]\s*[*＊\s]*([A-I])", tail) if closed else []
             ans = LETTERS9.index(m[-1]) if m else -1
             n_noans += int(ans < 0)
             ok = ans == SI[s["final"]]
             tl.add(s, ok)
-            log(f"L19_STORY seed=0 system=QWEN3-8B-THINK id={s['id']} ok={int(ok)} answered={int(ans >= 0)} gen_tokens={n_tok}")
+            log(f"L19_STORY seed=0 system=QWEN3-8B-THINK id={s['id']} ok={int(ok)} answered={int(ans >= 0)} "
+                f"closed={int(closed)} gen_tokens={n_tok}")
         if b % (B * 10) == 0:
             log(f"[l19] think {b + len(chunk)}/{len(sub)} ({time.time() - t0:.0f}s)")
-    log(f"L19_RES seed=0 system=QWEN3-8B-THINK {tl.line()} no_answer={n_noans} gen_tokens={gen_tokens} "
+    log(f"L19_RES seed=0 system=QWEN3-8B-THINK part={part}/{nparts} {tl.line()} no_answer={n_noans} closed={n_closed} gen_tokens={gen_tokens} "
         f"sec={time.time() - t0:.0f}")
 
 
@@ -1395,8 +1414,9 @@ def main():
     else:
         run_llm_think(stories, None)
     log(f"[l19] total time {time.time() - t_start:.1f}s")
-    log(f"L19_CONFIG job={job} seed={seed} data_sha_story={EXPECTED_STORY_SHA256} env={env_tag} script_sha={script_sha} "
-        f"think_max_new={THINK_MAX_NEW}")
+    log(f"L19_CONFIG job={job} seed={seed} part={os.environ.get('LAB19_THINK_PART', '0/1')} "
+        f"data_sha_story={EXPECTED_STORY_SHA256} env={env_tag} script_sha={script_sha} think_max_new={THINK_MAX_NEW} "
+        f"think_batch={os.environ.get('LAB19_THINK_BATCH', '8')}")
 
 
 if __name__ == "__main__":
