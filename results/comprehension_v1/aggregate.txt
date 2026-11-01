@@ -1,0 +1,90 @@
+cell (eye lora hard method) | normal | item_CUE | CUE-n | item_STR | pair_DIR | pair_REAL | pair_SYS | pair_MENTION | pair_DIRREAL
+------------------------------------------------------------------------------------------------------------------------
+Q15    L0 H0 ZERO |  88.72 |  87.78 |  -0.94 |  52.08 |  58.33 |   5.56 |   0.00 |  91.67 |  26.67
+Q15    L0 H0 C    |  90.53 |  89.00 |  -1.53 |  54.58 |  60.42 |   3.52 |   0.00 |  85.28 |  26.28
+Q15    L0 H1 ZERO |  85.76 |  81.67 |  -4.10 |  54.17 |  56.94 |  58.33 |  33.33 | 100.00 |  57.78
+Q15    L0 H1 C    |  88.54 |  83.61 |  -4.93 |  56.46 |  63.19 |  64.81 |  38.61 |  81.39 |  64.17
+Q15    L1 H0 ZERO |  98.09 |  97.78 |  -0.31 |  70.14 |  81.94 |   4.63 |   0.00 |  94.44 |  35.56
+Q15    L1 H0 C    |  98.27 |  97.28 |  -0.99 |  70.14 |  81.94 |   4.35 |   0.00 |  92.78 |  35.39
+Q15    L1 H1 ZERO |  95.14 |  91.11 |  -4.03 |  70.14 |  79.17 |  65.74 |  38.89 | 100.00 |  71.11
+Q15    L1 H1 C    |  95.31 |  91.33 |  -3.98 |  70.28 |  80.14 |  66.11 |  40.00 | 100.00 |  71.72
+Q3E    L0 H0 ZERO |  83.16 |  85.00 |  +1.84 |  51.39 |  51.39 |  12.96 |   0.00 |  75.00 |  28.33
+Q3E    L0 H0 C    |  87.02 |  86.83 |  -0.18 |  48.19 |  50.14 |   6.48 |   2.78 |  78.61 |  23.94
+Q3E    L0 H1 ZERO |  82.47 |  80.56 |  -1.91 |  58.33 |  47.22 |  44.44 |  33.33 |  83.33 |  45.56
+Q3E    L0 H1 C    |  85.23 |  84.17 |  -1.06 |  52.85 |  50.97 |  45.19 |  47.78 |  86.67 |  47.50
+Q3E    L1 H0 ZERO |  95.66 |  93.89 |  -1.77 |  65.97 |  72.22 |   1.85 |   0.00 | 100.00 |  30.00
+Q3E    L1 H0 C    |  95.93 |  93.89 |  -2.04 |  65.83 |  72.22 |   1.39 |   1.67 | 100.00 |  29.72
+Q3E    L1 H1 ZERO |  94.79 |  90.56 |  -4.24 |  61.11 |  73.61 |  55.56 |  52.78 | 100.00 |  62.78
+Q3E    L1 H1 C    |  94.98 |  90.56 |  -4.42 |  60.56 |  73.19 |  55.56 |  56.11 | 100.00 |  62.61
+Q7     L0 H0 ZERO |  90.10 |  86.67 |  -3.44 |  52.08 |  59.72 |   6.48 |   0.00 |  91.67 |  27.78
+Q7     L0 H0 C    |  92.16 |  90.89 |  -1.27 |  52.71 |  66.81 |   4.35 |   0.00 |  92.50 |  29.33
+Q7     L0 H1 ZERO |  88.89 |  83.33 |  -5.56 |  50.00 |  54.17 |  55.56 |  27.78 |  91.67 |  55.00
+Q7     L0 H1 C    |  89.14 |  87.78 |  -1.36 |  55.07 |  65.56 |  59.44 |  18.61 |  91.39 |  61.89
+7B-ZS0 L0 H0 ZS0  |  58.33 |  66.67 |  +8.33 |  52.08 |  29.17 |  13.89 |   8.33 |  58.33 |  20.00
+7B-ICL L0 H0 ICL  |  92.28 |  90.83 |  -1.45 |  56.25 |  77.08 |  22.22 |   4.17 |  91.67 |  44.17
+
+REAL pairs by form (actual vs ...), and per-label item accuracy
+Q15    L0 H0 ZERO | REAL negated=0.0 intended=0.0 hypothetical=16.7 | normal IN=70 OUT=93 BREAK=94 FIX=89 NOOP=100 | CUE IN=78 OUT=92 BREAK=100 FIX=83 NOOP=86 | init 95.1
+Q15    L0 H0 C    | REAL negated=0.0 intended=0.0 hypothetical=10.6 | normal IN=80 OUT=92 BREAK=96 FIX=92 NOOP=95 | CUE IN=79 OUT=97 BREAK=100 FIX=87 NOOP=82 | init 91.9
+Q15    L0 H1 ZERO | REAL negated=83.3 intended=83.3 hypothetical=8.3 | normal IN=67 OUT=88 BREAK=94 FIX=89 NOOP=94 | CUE IN=50 OUT=83 BREAK=100 FIX=83 NOOP=92 | init 93.8
+Q15    L0 H1 C    | REAL negated=84.4 intended=85.8 hypothetical=24.2 | normal IN=76 OUT=89 BREAK=96 FIX=91 NOOP=94 | CUE IN=61 OUT=88 BREAK=99 FIX=86 NOOP=83 | init 90.6
+Q15    L1 H0 ZERO | REAL negated=13.9 intended=0.0 hypothetical=0.0 | normal IN=97 OUT=100 BREAK=99 FIX=96 NOOP=98 | CUE IN=100 OUT=97 BREAK=100 FIX=97 NOOP=94 | init 100.0
+Q15    L1 H0 C    | REAL negated=13.1 intended=0.0 hypothetical=0.0 | normal IN=97 OUT=100 BREAK=99 FIX=97 NOOP=99 | CUE IN=100 OUT=96 BREAK=100 FIX=99 NOOP=92 | init 100.0
+Q15    L1 H1 ZERO | REAL negated=83.3 intended=83.3 hypothetical=30.6 | normal IN=89 OUT=99 BREAK=96 FIX=94 NOOP=97 | CUE IN=81 OUT=86 BREAK=100 FIX=94 NOOP=94 | init 99.3
+Q15    L1 H1 C    | REAL negated=83.9 intended=82.8 hypothetical=31.7 | normal IN=88 OUT=99 BREAK=97 FIX=95 NOOP=98 | CUE IN=83 OUT=86 BREAK=100 FIX=96 NOOP=91 | init 99.3
+Q3E    L0 H0 ZERO | REAL negated=38.9 intended=0.0 hypothetical=0.0 | normal IN=55 OUT=93 BREAK=92 FIX=82 NOOP=97 | CUE IN=72 OUT=83 BREAK=100 FIX=86 NOOP=83 | init 95.8
+Q3E    L0 H0 C    | REAL negated=19.4 intended=0.0 hypothetical=0.0 | normal IN=69 OUT=88 BREAK=97 FIX=92 NOOP=93 | CUE IN=79 OUT=83 BREAK=99 FIX=88 NOOP=85 | init 97.2
+Q3E    L0 H1 ZERO | REAL negated=72.2 intended=61.1 hypothetical=0.0 | normal IN=60 OUT=89 BREAK=92 FIX=83 NOOP=92 | CUE IN=67 OUT=67 BREAK=92 FIX=92 NOOP=86 | init 94.4
+Q3E    L0 H1 C    | REAL negated=78.9 intended=56.1 hypothetical=0.6 | normal IN=67 OUT=81 BREAK=96 FIX=92 NOOP=94 | CUE IN=74 OUT=78 BREAK=93 FIX=85 NOOP=91 | init 96.2
+Q3E    L1 H0 ZERO | REAL negated=5.6 intended=0.0 hypothetical=0.0 | normal IN=90 OUT=98 BREAK=97 FIX=94 NOOP=98 | CUE IN=92 OUT=100 BREAK=100 FIX=86 NOOP=92 | init 100.0
+Q3E    L1 H0 C    | REAL negated=4.2 intended=0.0 hypothetical=0.0 | normal IN=91 OUT=99 BREAK=98 FIX=95 NOOP=98 | CUE IN=92 OUT=100 BREAK=100 FIX=86 NOOP=92 | init 100.0
+Q3E    L1 H1 ZERO | REAL negated=83.3 intended=83.3 hypothetical=0.0 | normal IN=87 OUT=97 BREAK=99 FIX=94 NOOP=98 | CUE IN=86 OUT=89 BREAK=100 FIX=89 NOOP=89 | init 100.0
+Q3E    L1 H1 C    | REAL negated=83.3 intended=83.3 hypothetical=0.0 | normal IN=87 OUT=97 BREAK=99 FIX=95 NOOP=98 | CUE IN=86 OUT=88 BREAK=100 FIX=89 NOOP=89 | init 100.0
+Q7     L0 H0 ZERO | REAL negated=2.8 intended=0.0 hypothetical=16.7 | normal IN=62 OUT=98 BREAK=100 FIX=94 NOOP=100 | CUE IN=58 OUT=100 BREAK=100 FIX=92 NOOP=83 | init 90.3
+Q7     L0 H0 C    | REAL negated=0.3 intended=0.0 hypothetical=12.8 | normal IN=78 OUT=96 BREAK=97 FIX=96 NOOP=96 | CUE IN=80 OUT=100 BREAK=100 FIX=91 NOOP=83 | init 91.6
+Q7     L0 H1 ZERO | REAL negated=75.0 intended=83.3 hypothetical=8.3 | normal IN=59 OUT=100 BREAK=100 FIX=94 NOOP=94 | CUE IN=33 OUT=100 BREAK=100 FIX=92 NOOP=92 | init 88.9
+Q7     L0 H1 C    | REAL negated=76.4 intended=88.1 hypothetical=13.9 | normal IN=67 OUT=95 BREAK=97 FIX=96 NOOP=94 | CUE IN=57 OUT=99 BREAK=100 FIX=91 NOOP=92 | init 92.4
+7B-ZS0 L0 H0 ZS0  | REAL negated=16.7 intended=25.0 hypothetical=0.0 | normal IN=38 OUT=31 BREAK=69 FIX=61 NOOP=100 | CUE IN=58 OUT=42 BREAK=67 FIX=67 NOOP=100 | init nan
+7B-ICL L0 H0 ICL  | REAL negated=29.2 intended=33.3 hypothetical=4.2 | normal IN=100 OUT=93 BREAK=85 FIX=82 NOOP=100 | CUE IN=100 OUT=96 BREAK=79 FIX=79 NOOP=100 | init nan
+
+REGISTERED best small-eye cell (method C): Q15 LoRA=1 hard=1: DIR+REAL pairs 71.72%, CUE 91.33% vs normal 95.31% (CUE lower by 3.98) -> 部分看懂
+auxiliary: best cell including the Q7 eye: Q15 LoRA=1 hard=1: DIR+REAL pairs 71.72%, CUE 91.33% vs normal 95.31% (CUE lower by 3.98) -> 部分看懂
+
+Items of that cell right in < 50% of (seed, draw) scorings: item kind gold -> predictions
+  产蛋箱/CUE-1                    CUE     IN    -> IN:5 OUT:1 NOOP:24
+  产蛋箱/DIR-2b                   DIR     IN    -> OUT:30
+  产蛋箱/REAL-BREAK-hypothetical  REAL    NOOP  -> BREAK:20 NOOP:10
+  产蛋箱/SYS-1a                   SYS     IN    -> IN:5 NOOP:25
+  打印机纸盒/DIR-2b                 DIR     IN    -> OUT:30
+  打印机纸盒/REAL-IN-hypothetical   REAL    NOOP  -> IN:17 FIX:9 NOOP:4
+  打印机纸盒/STR-1                  STR     IN    -> IN:11 OUT:9 NOOP:10
+  打印机纸盒/STR-4                  STR     OUT   -> IN:5 NOOP:25
+  打印机纸盒/SYS-1a                 SYS     IN    -> NOOP:30
+  打印机纸盒/SYS-2a                 SYS     OUT   -> BREAK:3 NOOP:27
+  育苗盘/DIR-1a                   DIR     IN    -> IN:8 OUT:22
+  育苗盘/REAL-IN-hypothetical     REAL    NOOP  -> IN:21 NOOP:9
+  育苗盘/STR-2                    STR     IN    -> IN:12 NOOP:18
+  育苗盘/SYS-2b                   SYS     NOOP  -> OUT:26 NOOP:4
+  船闸/CUE-3                     CUE     OUT   -> NOOP:30
+  船闸/REAL-BREAK-hypothetical   REAL    NOOP  -> BREAK:20 NOOP:10
+  船闸/REAL-IN-hypothetical      REAL    NOOP  -> IN:30
+  船闸/STR-1                     STR     IN    -> NOOP:30
+  船闸/STR-4                     STR     OUT   -> NOOP:30
+  船闸/STR-6                     STR     BREAK -> FIX:30
+  船闸/STR-7                     STR     NOOP  -> IN:10 OUT:10 NOOP:10
+  船闸/STR-8                     STR     NOOP  -> OUT:30
+  船闸/SYS-2b                    SYS     NOOP  -> OUT:20 NOOP:10
+  衣帽架/DIR-2a                   DIR     OUT   -> OUT:10 NOOP:20
+  衣帽架/REAL-BREAK-hypothetical  REAL    NOOP  -> BREAK:30
+  衣帽架/STR-2                    STR     IN    -> NOOP:30
+  衣帽架/STR-4                    STR     OUT   -> NOOP:30
+  衣帽架/STR-7                    STR     NOOP  -> IN:20 OUT:2 NOOP:8
+  衣帽架/SYS-1a                   SYS     IN    -> NOOP:30
+  衣帽架/SYS-2a                   SYS     OUT   -> NOOP:30
+  露营地/CUE-9                    CUE     NOOP  -> OUT:21 NOOP:9
+  露营地/REAL-BREAK-actual        REAL    BREAK -> BREAK:10 NOOP:20
+  露营地/REAL-IN-actual           REAL    IN    -> IN:1 NOOP:29
+  露营地/STR-2                    STR     IN    -> IN:5 NOOP:25
+  露营地/STR-6                    STR     BREAK -> BREAK:11 FIX:11 NOOP:8
+  露营地/STR-7                    STR     NOOP  -> OUT:21 NOOP:9
+  露营地/STR-8                    STR     NOOP  -> OUT:30
