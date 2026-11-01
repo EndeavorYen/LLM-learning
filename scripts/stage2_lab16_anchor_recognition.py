@@ -52,11 +52,13 @@
 #   Aggregate: python tools/aggregate_lab16.py lab16_*.log
 # Run (Colab GPU; the 7B needs >= 24 GB):  LAB16_PART=A python stage2_lab16_anchor_recognition.py > a.log
 #   LAB16_MODELS=Q05,Q15,BGE / Q7 splits a part over sessions (the aggregator merges and refuses duplicates).
+# Determinism (review L8): torch.use_deterministic_algorithms(True, warn_only=True), CUBLAS_WORKSPACE_CONFIG=:4096:8.
 # Copied code is marked "(copied from Lab 15)"; everything else is new for Lab 16.
 # ==============================================================================
 import os, sys, gc, time, math, random, json, hashlib
 from collections import Counter, defaultdict
 import numpy as np
+os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")  # [review L8] before CUDA is initialised
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -64,6 +66,7 @@ import transformers
 from transformers import AutoTokenizer, AutoModelForCausalLM, AutoModel
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+torch.use_deterministic_algorithms(True, warn_only=True)  # [review L8] deterministic kernels where they exist
 
 
 def log(msg: str = ""):
@@ -545,7 +548,11 @@ def load_extra(st: dict):
     doms = x["domains"]
     names = [d["name"] for d in doms]
     assert len(doms) == N_EXTRA and len(set(names)) == N_EXTRA, names
-    assert not set(names) & set(st["doms"]), "an extra domain has a registered domain's name"
+    _tp, tpl_raw, _ts = _read_first([os.path.join(st["st_dir"], "templates.json")], "templates.json")
+    reg_names = [d["name"] for d in json.loads(tpl_raw.decode("utf-8"))["domains"]]  # [review L5] all 24 (16 + 8)
+    assert len(reg_names) == 24 and not any(a in b or b in a for a in names for b in reg_names), \
+        "an extra domain name equals or contains a registered (train or test) domain name"
+    del tpl_raw
     texts, cls, dom = [], [], []
     for d in doms:
         assert d["split"] == "train", d["name"]
@@ -604,9 +611,10 @@ def preflight16(part: str, models, data: dict, guard: LeakGuard):
             letter_token_ids(tok, LETTERS)
             st = data["st"]
             d0 = st["doms"][0]
-            ex = [(st["texts"][i], ZS_EVENT_OPTS[st["cls"][i] - N_INIT]) for i in range(len(st["texts"]))
-                  if st["dom"][i] == d0 and st["cls"][i] >= N_INIT][:N_EV]
-            q = icl_mcq(d0, ex, ex[0][0], ZS_EVENT_OPTS)
+            rows5 = ev_rows_by_class(st, d0)  # [review L4] one example per event type, as in run_icl
+            ex = [(st["texts"][r[0]], ZS_EVENT_OPTS[e]) for e, r in enumerate(rows5)]
+            q = icl_mcq(d0, ex, st["texts"][rows5[0][1]], ZS_EVENT_OPTS)
+            guard.check(st["texts"][rows5[0][1]], q)
             p = tok.apply_chat_template([{"role": "user", "content": q}], tokenize=False, add_generation_prompt=True)
             msg = f" | ICL: letters A-E single tokens, an example prompt has {len(tok(p).input_ids)} tokens"
         log(f"[l16] preflight {code}: tokenizer ok, longest model text {worst} tokens (limit {SENT_MAXLEN}){msg}")

@@ -1,7 +1,11 @@
 """Aggregate the machine lines of Lab 16 (scripts/stage2_lab16_anchor_recognition.py; pre-registered on issue #25,
 "第一步之一 c / d"). Numbers and the registered quantities only; the decision is applied by the reader.
 
-Usage: python tools/aggregate_lab16.py lab16_a1.log [lab16_a2.log ...]     (all logs of ONE part)
+Usage: python tools/aggregate_lab16.py [--partial] [--test] [--a-best METHOD] lab16_1.log [lab16_2.log ...]
+  (all logs of ONE part). Part B requires --a-best = the best anchor method of the part A aggregate (registered:
+  the shape rule applies to ZERO-MLP 13-way and to that method).
+  --partial  accept logs that do not cover every encoder of the part (every table is then labelled PARTIAL).
+  --test     accept FAKE-stub logs and differing script shas (CPU stub tests only).
 
 Refuses (exit status 1):
   - a log without its final L16_CONFIG line, logs of different parts, a data sha that is not pinned, seeds other
@@ -9,7 +13,11 @@ Refuses (exit status 1):
   - an encoder covered by two logs, a duplicate machine line (e.g. a log passed twice), L16_FOLD lines that differ;
   - a missing line for any covered encoder (every method x k x s x fold x seed; init, hard, confusion, 7B lines);
   - query totals that differ across methods / encoders for the same (k, s, fold, seed) (all must score the same
-    sentences), or old + new counts that do not add up.
+    sentences), totals other than the expected ones (review L2), or old + new counts that do not add up;
+  - [review D2] an encoder of the part not covered (unless --partial), a Q7 log of part A without the 7B lines;
+  - [review L1] different script shas or a FAKE stub (unless --test).
+Best combination of part A (registered, s=1, k=12): the 6 ANCHOR methods only (review D3, #25 note of 2026-11-01);
+  ZERO-MLP / ZERO-FUNNEL are reference rows and 7B-ICL is a reference.
 Accuracy = exact counts pooled over folds x seeds x draws.
 """
 import math
@@ -26,10 +34,15 @@ PARTS = {"A": dict(folds=4, ks=(4, 8, 12), reg_k=12, shots=(1, 2, 3),
                    encs=("Q05-mean", "Q05-prompt", "Q15-mean", "Q15-prompt", "Q7-mean", "Q7-prompt", "BGE")),
          "B": dict(folds=7, ks=(4, 6, 8, 12, 16, 20, 24), reg_k=12, shots=(1,), encs=("Q15-prompt", "Q7-prompt", "BGE"))}
 METHODS = ["ZERO-MLP", "ZERO-FUNNEL", "RAW-NN", "MLP-NN", "FUNNEL-NN", "C-MLP", "C-MLP-NN", "C-FUNNEL-NN"]
+ANCHOR_METHODS = METHODS[2:]   # [review D3] methods that use the new domain's examples
+N_HELD = 4                     # held-out domains per fold
+N_EV_DOM = 32                  # event sentences per domain
+N_INIT_DOM = 8
+HARD_PER_DOM = {"NEG": 4, "OTHER": 2, "TEMP": 4}
 INIT_METHODS = ["ZERO-MLP", "C-MLP"]
 HARD_CATS = ("NEG", "OTHER", "TEMP")
 EVENTS = ("IN", "OUT", "BREAK", "FIX", "NOOP")
-N_DOMS = {"A": 16}
+N_EV = 5
 ICL_DRAWS = 2
 
 
@@ -50,9 +63,19 @@ def fp(x, w=8):
     return f"{'-':>{w}}" if x is None else f"{x:{w}.2f}"
 
 
-paths = sys.argv[1:]
+argv = sys.argv[1:]
+PARTIAL = "--partial" in argv
+TEST = "--test" in argv
+A_BEST = None
+if "--a-best" in argv:
+    i = argv.index("--a-best")
+    A_BEST = argv[i + 1]
+    del argv[i:i + 2]
+paths = [a for a in argv if a not in ("--partial", "--test")]
 if not paths:
     sys.exit(__doc__)
+if A_BEST is not None and A_BEST not in ANCHOR_METHODS:
+    sys.exit(f"--a-best must be one of {ANCHOR_METHODS}")
 cfgs, folds = [], {}
 CV13, SHOT, INIT, HARD, CONF, ICL = {}, {}, {}, {}, {}, {}
 enc_of_log = {}
@@ -119,12 +142,23 @@ for path, c in cfgs:
         die(f"{path}: shots {c['shots']} != part {part}'s {P['shots']}")
 if len(folds) != P["folds"]:
     die(f"{len(folds)} L16_FOLD lines, part {part} has {P['folds']} folds")
+fold_doms = {d for kv in folds.values() for d in kv["heldout"].split(",")}
 encs = [e for e in P["encs"] if e in enc_of_log]
 missing_encs = [e for e in P["encs"] if e not in enc_of_log]
 FOLDS = [str(f) for f in range(P["folds"])]
 envs = {c["env"] for _p, c in cfgs}
 shas = {c["script_sha"] for _p, c in cfgs}
 icl_on = any(c["icl"] == "1" for _p, c in cfgs)
+if missing_encs and not PARTIAL:
+    die(f"encoders of part {part} not covered: {missing_encs} (pass every log, or --partial)")
+for path, c in cfgs:  # [review D2] the 7B reference must come with the Q7 session of part A
+    if part == "A" and "Q7" in c["models"].split(",") and c["icl"] != "1":
+        die(f"{path}: part A log with Q7 but without the 7B lines (icl=0)")
+if (len(shas) > 1 or len(envs) > 1 and len({e.split(',gpu=')[0] for e in envs}) > 1) and not TEST:
+    die(f"script sha / environment differ across logs: {shas} {envs} (--test to override)")
+if any("FAKE" in e for e in envs) and not TEST:
+    die("FAKE transformers stub in a log: a test run, not a registered run (--test to override)")
+PART_TAG = " [PARTIAL: not every encoder covered]" if missing_encs else ""
 
 # ---- completeness and consistency ---------------------------------------------------------------------------------
 for e in encs:
@@ -157,16 +191,28 @@ for (e, m, k, s, f, sd), kv in SHOT.items():
     key = (k, s, f, sd)
     if ref_tot.setdefault(key, t) != t:
         die(f"L16_SHOT query totals differ for k={k} s={s} fold={f} seed={sd}")
+for key, t in ref_tot.items():  # [review L2] expected totals
+    if t != N_HELD * int(DRAWS) * (N_EV_DOM - N_EV * key[1]):
+        die(f"L16_SHOT total {t} for k={key[0]} s={key[1]} fold={key[2]} seed={key[3]} != expected")
+for key, kv in CV13.items():
+    if int(kv["total"]) != N_HELD * (N_EV_DOM + N_INIT_DOM):
+        die(f"L16_CV13 {key}: total {kv['total']} != {N_HELD * (N_EV_DOM + N_INIT_DOM)}")
+for key, kv in INIT.items():
+    if int(kv["total"]) != N_HELD * N_INIT_DOM * int(DRAWS):
+        die(f"L16_INIT {key}: total {kv['total']} != {N_HELD * N_INIT_DOM * int(DRAWS)}")
+for key, kv in HARD.items():
+    if int(kv["total"]) != N_HELD * HARD_PER_DOM[key[4]] * int(DRAWS):
+        die(f"L16_HARD {key}: total {kv['total']} != expected")
 if icl_on:
     if part != "A":
         die("7B lines in a part B log")
-    n_icl = sum(1 for k in ICL if k[0] == "ICL")
-    n_zs0 = sum(1 for k in ICL if k[0] == "ZS0")
-    if n_icl != N_DOMS["A"] * ICL_DRAWS or n_zs0 != n_icl:
-        die(f"7B lines: {n_icl} ICL / {n_zs0} ZS0, expected {N_DOMS['A'] * ICL_DRAWS} each")
+    want = {(t, d, str(r)) for t in ("ICL", "ZS0") for d in fold_doms for r in range(ICL_DRAWS)}
+    if set(ICL) != want:
+        die(f"7B lines: got {len(ICL)} keys, expected ICL and ZS0 for the {len(fold_doms)} train domains x "
+            f"{ICL_DRAWS} draws (missing {sorted(want - set(ICL))[:3]}, unexpected {sorted(set(ICL) - want)[:3]})")
     for (_t, d, r), kv in ICL.items():
-        if ICL[("ZS0", d, r)]["total"] != ICL[("ICL", d, r)]["total"]:
-            die(f"ICL and ZS0 query totals differ for {d} draw {r}")
+        if int(kv["total"]) != N_EV_DOM - N_EV:
+            die(f"7B {_t} {d} draw {r}: total {kv['total']} != {N_EV_DOM - N_EV}")
 
 
 # ---- helpers ------------------------------------------------------------------------------------------------------
@@ -206,7 +252,10 @@ def k_for(acc, target=95.0, ks=None):
     sxx = sum((x - mx) ** 2 for x in xs)
     b = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx
     a = my - b * mx
-    return b, (2 ** ((target - a) / b) if b > 0 else float("inf"))
+    if b <= 0:
+        return b, float("inf")
+    e = (target - a) / b          # [review D1] no OverflowError on a nearly flat curve
+    return b, (2 ** e if e < 60 else float("inf"))
 
 
 # ---- report -------------------------------------------------------------------------------------------------------
@@ -219,7 +268,8 @@ if any("FAKE" in e for e in envs):
     print("  WARNING: FAKE transformers stub in at least one log (TEST RUN)")
 if missing_encs:
     print(f"  NOTE: encoders not covered: {missing_encs}")
-print("Accuracy = exact counts pooled over folds x seeds x draws; held-out = domains never used to train. NO decision.")
+print("Accuracy = exact counts pooled over folds x seeds x draws; held-out = domains never used to train. NO decision."
+      + PART_TAG)
 RK = P["reg_k"]
 print("\n" + "=" * 110)
 
@@ -230,13 +280,19 @@ if part == "A":
         print(f"{'encoder':<12}" + "".join(f"{m:>13}" for m in METHODS))
         for e in encs:
             print(f"{e:<12}" + "".join(fp(acc_shot(e, m, RK, s), 13) for m in METHODS))
-    cand = [(acc_shot(e, m, RK, 1), e, m) for e in encs for m in METHODS]
-    cand.sort(reverse=True)
+    cand = [(acc_shot(e, m, RK, 1), e, m) for e in encs for m in ANCHOR_METHODS]   # [review D3]
+    cand.sort(key=lambda x: (-x[0], P["encs"].index(x[1]), METHODS.index(x[2])))
     best_a, best_e, best_m = cand[0]
     bc, bt = shot(best_e, best_m, RK, 1)
     zc, zt = shot(best_e, "ZERO-MLP", RK, 1)
-    print(f"\n--- registered quantities (s=1, k={RK}, event sentences; 7B-ICL excluded) ---")
+    print(f"\n--- registered quantities (s=1, k={RK}, event sentences; anchor methods only, ZERO-* and 7B-ICL are "
+          f"references){PART_TAG} ---")
     print(f"  best combination: {best_e} + {best_m} = {best_a:.2f}% ({bc}/{bt})")
+    exact_ties = [f"{e} + {m}" for a, e, m in cand[1:] if a == best_a]
+    if exact_ties:
+        print(f"  EXACT TIE with: {', '.join(exact_ties)}")
+    zb = max((acc_shot(e, m, RK, 1), e, m) for e in encs for m in ("ZERO-MLP", "ZERO-FUNNEL"))
+    print(f"  best reference without examples: {zb[1]} + {zb[2]} = {zb[0]:.2f}%")
     ties = [f"{e} + {m} {a:.2f}%" for a, e, m in cand[1:6]]
     print(f"  next five: {'; '.join(ties)}")
     print(f"  ZERO-MLP with the same encoder ({best_e}) on the same queries: {pct(zc, zt):.2f}% ({zc}/{zt})")
@@ -263,7 +319,8 @@ if part == "A":
     for e in encs:
         c, t, ec, et, ic, it = cv13(e, RK, ("correct", "total", "ev_correct", "ev_total", "init_correct", "init_total"))
         print(f"  {e:<12} all {pct(c, t):6.2f}% ({c}/{t}) | events {pct(ec, et):6.2f}% | init {pct(ic, it):6.2f}%")
-    print(f"\n--- initial-state sentences, 8-way, s=1 draws, k={RK} ---")
+    print(f"\n--- initial-state sentences, 8-way, s=1 draws, k={RK} (counts include the 10 draws: ZERO-MLP repeats "
+          f"the same predictions 10 times) ---")
     for e in encs:
         cells = []
         for m in INIT_METHODS:
@@ -271,7 +328,7 @@ if part == "A":
             t = sum(int(INIT[(e, m, RK, f, sd)]["total"]) for f in FOLDS for sd in SEEDS)
             cells.append(f"{m} {pct(c, t):6.2f}% ({c}/{t})")
         print(f"  {e:<12} " + " | ".join(cells))
-    print(f"\n--- hard cases on held-out domains, s=1, k={RK}: % correct [% literal event] ---")
+    print(f"\n--- hard cases on held-out domains, s=1, k={RK}: % correct [% literal event] (pooled over the 10 draws) ---")
     print(f"{'encoder + method':<28}{'NEG -> NOOP':>18}{'OTHER -> NOOP':>18}{'TEMP':>10}")
     for e in encs:
         for m in METHODS:
@@ -305,6 +362,17 @@ if part == "A":
 
 else:  # part B
     ks = P["ks"]
+    if A_BEST is None:
+        die("part B needs --a-best METHOD (the best anchor method of the part A aggregate; review D4)")
+    print(f"=== REGISTERED shape rule: ZERO-MLP 13-way and the part A best method ({A_BEST}, s=1, events 5-way) ==="
+          + PART_TAG)
+    print(f"{'row':<34}" + "".join(f"{'k=' + str(k):>8}" for k in ks) + f"{'g1':>8}{'g2':>8}   shape")
+    for e in encs:
+        for lab_row, acc in ((f"{e} ZERO-MLP-13", {k: pct(*cv13(e, k)) for k in ks}),
+                             (f"{e} {A_BEST}", {k: acc_shot(e, A_BEST, k, 1) for k in ks})):
+            g1, g2, lab = shape(acc)
+            print(f"{lab_row:<34}" + "".join(fp(acc[k]) for k in ks) + f"{g1:8.2f}{g2:8.2f}   {lab}")
+    print("\n--- descriptive below (not registered) ---\n")
     print(f"=== ZERO-MLP 13-way on all held-out sentences (Lab 15's quantity) by number of training domains k ===")
     print(f"{'encoder':<12}" + "".join(f"{'k=' + str(k):>8}" for k in ks) + f"{'g1':>8}{'g2':>8}   shape")
     for e in encs:
