@@ -18,6 +18,10 @@
 # Factor B (noise practice): one noised copy per training row (an unrelated template NOOP sentence of ANOTHER training
 #   domain joined with '，' before / after, rng per seed). LoRA: 24 batch rows also encoded noised; loss += mean(1 - cos)
 #   + symmetric KL of the auxiliary head. Head: noised rows added with the same labels (centred like their own row).
+#   [pre-run amendments, review] the 24 noised rows are 24 of the 96 batch rows (picked with a separate rng, so all
+#   cells share the batch order); they run in a second forward pass with stop-gradient on the clean side (so the long
+#   noised rows do not pad the whole batch); '？' rows always get the noise before (~53% before overall); gradient
+#   checkpointing on (use_reentrant False) and SENT_MAXLEN 256 for memory / the longer prompts.
 # Readout: ZERO / C (C primary; support = one per event type from the test domain's support, 10 draws).
 # Metrics (per test): group_all (base + taught variants, same draw), normal (base), var_*, HYPO, NOOPSENT; Lab 17b probe.
 # Judgement (registered; test v2, readout C; best cell over 2 x 2 x eyes by group_all):
@@ -27,6 +31,7 @@
 #   Aggregate: python tools/aggregate_lab18b.py lab18b_*.log
 # ==============================================================================
 import os, sys, gc, time, math, random, json, hashlib
+os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")  # [review 18b-1]
 from collections import Counter, defaultdict
 import numpy as np
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
@@ -726,6 +731,10 @@ def train_lora(eye, tok, backbone, mods, rows, guard, seed, cell, noised=None, t
     params = [p for m in mods for p in (m.A, m.B)] + list(head.parameters())
     opt = torch.optim.AdamW(params, lr=LORA_LR, weight_decay=0.0)
     rng = random.Random(tag_seed)
+    # [review 18b-2] separate generator for the noised-row pick, so B-on cells keep the B-off batch order
+    nrng = random.Random(int(hashlib.sha256(f"18b-noisepick|{eye}|{seed}".encode()).hexdigest()[:8], 16))
+    backbone.train()  # [review 18b-1] enables gradient checkpointing (attention dropout is 0 in these models); LoRA
+    #                   dropout is controlled by its own flag; main() calls model.eval() after training
     by_dom = defaultdict(list)
     groups = defaultdict(lambda: defaultdict(list))
     for r, (d, g) in enumerate(zip(rows["dom"], rows["gid"])):
@@ -749,7 +758,7 @@ def train_lora(eye, tok, backbone, mods, rows, guard, seed, cell, noised=None, t
             rest = [r for r in by_dom[d] if r not in set(part)]
             batch += part + rng.sample(rest, LORA_PER_DOM - len(part))
         texts = [rows["texts"][r] for r in batch]
-        nz = rng.sample(range(len(batch)), NOISE_PER_STEP) if noised is not None else []
+        nz = nrng.sample(range(len(batch)), NOISE_PER_STEP) if noised is not None else []
         ntexts = [noised[batch[i]] for i in nz]
         mt = [model_text(eye, s) for s in texts + ntexts]
         for s, t in zip(texts + ntexts, mt):
@@ -1112,6 +1121,8 @@ def main():
         backbone = backbone_of(eye, model)
         assert model.config.hidden_size == dim, (eye, model.config.hidden_size)
         mods = inject_lora(backbone)
+        if hasattr(model, "gradient_checkpointing_enable"):  # [review 18b-1] memory: same numbers, less activation memory
+            model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
         n_layers = getattr(model.config, "num_hidden_layers", None)
         if "FAKE" not in getattr(transformers, "__version__", ""):
             assert len(mods) == len(LORA_TARGETS) * n_layers, (len(mods), n_layers)

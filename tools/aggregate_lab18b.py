@@ -11,7 +11,8 @@ import re
 import sys
 from collections import defaultdict
 
-REG = {"data_sha_st": "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108",
+REG = {"templates_sha": "1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70",
+       "data_sha_st": "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108",
        "data_sha_extra": "f44dc28a2a2df593981c919949b47e13304a814cec4e960123564206190ca7cf",
        "data_sha_hard": "e145539bc8b37133a226a5d390e6cfebc2492d85e2cc090501d8464fc5afe8aa",
        "data_sha_hard_extra": "e31ad5839bbc1133c6d3e6e5caec6a5125a4ffd9bcffbf330fb793b58416fc53",
@@ -69,8 +70,9 @@ def main(argv):
             sys.exit("logs come from different script versions")
         if sorted(e for c in configs for e in c.get("eyes", "").split(",")) != sorted(EYES):
             sys.exit("eyes across logs != Q15, Q3E once each")
-        miss = [(t, e, c, m) for t in ("v2", "v1") for e in EYES for c in CELLS for m in ("ZERO", "C")
+        miss = [(t, e, c, m, "all") for t in ("v2", "v1") for e in EYES for c in CELLS for m in ("ZERO", "C")
                 if (t, e, c, m, "all") not in res]
+        miss += [("v2", e, c, "C", sd) for e in EYES for c in CELLS for sd in SEEDS if ("v2", e, c, "C", sd) not in res]
         if miss:
             sys.exit(f"missing cells: {miss}")
     if partial:
