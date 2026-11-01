@@ -1,0 +1,265 @@
+Lab 16 part A aggregate | logs: results/recognition_v2/partA_l16_A1.log, results/recognition_v2/partA_l16_A2.log
+  results/recognition_v2/partA_l16_A1.log: encs=Q05-mean,Q05-prompt,Q15-mean,Q15-prompt,BGE icl=0 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+  results/recognition_v2/partA_l16_A2.log: encs=Q7-mean,Q7-prompt icl=1 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+Accuracy = exact counts pooled over folds x seeds x draws; held-out = domains never used to train. NO decision.
+
+==============================================================================================================
+=== event sentences, 5-way, k=12, s=1 example(s) per event type | queries pooled: 12960 ===
+encoder          ZERO-MLP  ZERO-FUNNEL       RAW-NN       MLP-NN    FUNNEL-NN        C-MLP     C-MLP-NN  C-FUNNEL-NN
+Q05-mean            70.64        71.88        47.69        64.65        64.41        73.58        63.63        65.19
+Q05-prompt          74.37        71.36        61.75        72.99        67.17        79.83        72.59        69.20
+Q15-mean            79.82        75.29        52.82        73.60        73.67        82.78        72.65        74.26
+Q15-prompt          86.32        85.64        75.89        82.72        82.03        89.48        82.21        82.14
+Q7-mean             81.03        77.89        51.98        75.11        75.52        86.14        75.78        77.94
+Q7-prompt           89.24        84.33        76.42        87.21        86.01        92.71        87.08        86.03
+BGE                 83.08        82.52        68.79        80.39        79.38        87.30        80.00        79.21
+=== event sentences, 5-way, k=12, s=2 example(s) per event type | queries pooled: 10560 ===
+encoder          ZERO-MLP  ZERO-FUNNEL       RAW-NN       MLP-NN    FUNNEL-NN        C-MLP     C-MLP-NN  C-FUNNEL-NN
+Q05-mean            70.14        71.66        52.29        69.75        69.29        74.19        68.79        71.61
+Q05-prompt          74.12        71.26        70.26        78.54        73.16        80.84        77.81        76.38
+Q15-mean            79.41        74.96        59.22        79.08        78.38        83.90        78.20        79.91
+Q15-prompt          85.82        85.14        83.42        87.68        85.92        89.71        87.41        86.32
+Q7-mean             80.63        77.50        58.23        80.75        81.34        87.01        81.34        83.92
+Q7-prompt           88.77        84.13        84.91        90.93        90.35        93.58        91.69        90.27
+BGE                 82.72        82.15        79.11        85.68        85.27        87.68        85.71        85.10
+=== event sentences, 5-way, k=12, s=3 example(s) per event type | queries pooled: 8160 ===
+encoder          ZERO-MLP  ZERO-FUNNEL       RAW-NN       MLP-NN    FUNNEL-NN        C-MLP     C-MLP-NN  C-FUNNEL-NN
+Q05-mean            69.71        70.97        55.13        71.68        72.73        74.33        71.64        74.68
+Q05-prompt          73.53        70.32        73.58        80.72        75.26        80.70        79.64        78.33
+Q15-mean            79.24        74.41        63.05        81.78        81.08        84.01        81.15        82.99
+Q15-prompt          85.98        84.75        86.83        88.70        87.75        89.98        89.55        88.26
+Q7-mean             80.72        77.38        62.01        83.48        82.88        87.35        84.15        85.86
+Q7-prompt           88.95        83.76        88.90        92.13        91.09        93.66        92.61        91.45
+BGE                 82.84        82.29        83.31        87.10        86.47        87.59        87.14        86.96
+
+--- registered quantities (s=1, k=12, event sentences; anchor methods only, ZERO-* and 7B-ICL are references) ---
+  best combination: Q7-prompt + C-MLP = 92.71% (12015/12960)
+  best reference without examples: Q7-prompt + ZERO-MLP = 89.24%
+  next five: Q15-prompt + C-MLP 89.48%; BGE + C-MLP 87.30%; Q7-prompt + MLP-NN 87.21%; Q7-prompt + C-MLP-NN 87.08%; Q7-mean + C-MLP 86.14%
+  ZERO-MLP with the same encoder (Q7-prompt) on the same queries: 89.24% (11565/12960)
+  gain = +3.47 points
+  per fold (pooled over seeds x draws): f0=93.70% f1=93.30% f2=90.59% f3=93.24%
+  per seed: 42=92.59% 1=92.73% 2=92.80%
+
+--- gain over ZERO-MLP of the same encoder (points), s=1, k=12 ---
+encoder       ZERO-FUNNEL       RAW-NN       MLP-NN    FUNNEL-NN        C-MLP     C-MLP-NN  C-FUNNEL-NN
+Q05-mean             1.24       -22.96        -6.00        -6.23         2.94        -7.01        -5.46
+Q05-prompt          -3.01       -12.62        -1.37        -7.20         5.46        -1.77        -5.17
+Q15-mean            -4.54       -27.00        -6.23        -6.16         2.96        -7.17        -5.56
+Q15-prompt          -0.68       -10.43        -3.60        -4.29         3.16        -4.10        -4.18
+Q7-mean             -3.15       -29.05        -5.93        -5.51         5.11        -5.25        -3.09
+Q7-prompt           -4.91       -12.82        -2.03        -3.23         3.47        -2.15        -3.20
+BGE                 -0.56       -14.29        -2.69        -3.70         4.22        -3.08        -3.87
+
+--- k-curves, s=1 (%): k=4 / k=8 / k=12 ---
+  Q05-mean + ZERO-MLP          61.94   68.10   70.64
+  Q05-mean + ZERO-FUNNEL       60.95   66.71   71.88
+  Q05-mean + RAW-NN            47.69   47.67   47.69
+  Q05-mean + MLP-NN            60.41   64.18   64.65
+  Q05-mean + FUNNEL-NN         57.72   64.20   64.41
+  Q05-mean + C-MLP             68.40   71.07   73.58
+  Q05-mean + C-MLP-NN          60.52   63.06   63.63
+  Q05-mean + C-FUNNEL-NN       58.44   64.73   65.19
+  Q05-prompt + ZERO-MLP        65.70   69.63   74.37
+  Q05-prompt + ZERO-FUNNEL     60.68   66.81   71.36
+  Q05-prompt + RAW-NN          61.59   61.92   61.75
+  Q05-prompt + MLP-NN          70.01   72.05   72.99
+  Q05-prompt + FUNNEL-NN       62.26   66.49   67.17
+  Q05-prompt + C-MLP           73.71   77.58   79.83
+  Q05-prompt + C-MLP-NN        69.83   71.47   72.59
+  Q05-prompt + C-FUNNEL-NN     64.07   66.45   69.20
+  Q15-mean + ZERO-MLP          68.33   75.66   79.82
+  Q15-mean + ZERO-FUNNEL       66.40   69.75   75.29
+  Q15-mean + RAW-NN            52.99   52.31   52.82
+  Q15-mean + MLP-NN            67.56   71.51   73.60
+  Q15-mean + FUNNEL-NN         68.30   71.50   73.67
+  Q15-mean + C-MLP             77.18   80.01   82.78
+  Q15-mean + C-MLP-NN          68.71   71.68   72.65
+  Q15-mean + C-FUNNEL-NN       68.29   73.04   74.26
+  Q15-prompt + ZERO-MLP        79.78   84.18   86.32
+  Q15-prompt + ZERO-FUNNEL     78.53   82.40   85.64
+  Q15-prompt + RAW-NN          76.00   75.79   75.89
+  Q15-prompt + MLP-NN          80.66   82.44   82.72
+  Q15-prompt + FUNNEL-NN       77.88   82.01   82.03
+  Q15-prompt + C-MLP           87.72   89.34   89.48
+  Q15-prompt + C-MLP-NN        81.37   82.49   82.21
+  Q15-prompt + C-FUNNEL-NN     79.37   82.49   82.14
+  Q7-mean + ZERO-MLP           70.42   76.77   81.03
+  Q7-mean + ZERO-FUNNEL        68.22   71.26   77.89
+  Q7-mean + RAW-NN             52.07   52.01   51.98
+  Q7-mean + MLP-NN             70.03   73.59   75.11
+  Q7-mean + FUNNEL-NN          68.14   71.21   75.52
+  Q7-mean + C-MLP              80.32   82.61   86.14
+  Q7-mean + C-MLP-NN           73.08   75.02   75.78
+  Q7-mean + C-FUNNEL-NN        69.77   73.58   77.94
+  Q7-prompt + ZERO-MLP         82.72   87.78   89.24
+  Q7-prompt + ZERO-FUNNEL      76.19   83.65   84.33
+  Q7-prompt + RAW-NN           76.67   76.66   76.42
+  Q7-prompt + MLP-NN           84.53   86.72   87.21
+  Q7-prompt + FUNNEL-NN        81.94   85.24   86.01
+  Q7-prompt + C-MLP            89.46   92.02   92.71
+  Q7-prompt + C-MLP-NN         86.00   87.04   87.08
+  Q7-prompt + C-FUNNEL-NN      81.93   86.32   86.03
+  BGE + ZERO-MLP               73.72   80.75   83.08
+  BGE + ZERO-FUNNEL            71.24   79.46   82.52
+  BGE + RAW-NN                 69.11   69.14   68.79
+  BGE + MLP-NN                 76.84   79.35   80.39
+  BGE + FUNNEL-NN              72.60   78.24   79.38
+  BGE + C-MLP                  83.64   86.46   87.30
+  BGE + C-MLP-NN               77.92   80.64   80.00
+  BGE + C-FUNNEL-NN            72.57   77.01   79.21
+
+--- s-curves at k=12 (%): s=1 / 2 / 3 ---
+  Q05-mean + ZERO-MLP          70.64   70.14   69.71
+  Q05-mean + ZERO-FUNNEL       71.88   71.66   70.97
+  Q05-mean + RAW-NN            47.69   52.29   55.13
+  Q05-mean + MLP-NN            64.65   69.75   71.68
+  Q05-mean + FUNNEL-NN         64.41   69.29   72.73
+  Q05-mean + C-MLP             73.58   74.19   74.33
+  Q05-mean + C-MLP-NN          63.63   68.79   71.64
+  Q05-mean + C-FUNNEL-NN       65.19   71.61   74.68
+  Q05-prompt + ZERO-MLP        74.37   74.12   73.53
+  Q05-prompt + ZERO-FUNNEL     71.36   71.26   70.32
+  Q05-prompt + RAW-NN          61.75   70.26   73.58
+  Q05-prompt + MLP-NN          72.99   78.54   80.72
+  Q05-prompt + FUNNEL-NN       67.17   73.16   75.26
+  Q05-prompt + C-MLP           79.83   80.84   80.70
+  Q05-prompt + C-MLP-NN        72.59   77.81   79.64
+  Q05-prompt + C-FUNNEL-NN     69.20   76.38   78.33
+  Q15-mean + ZERO-MLP          79.82   79.41   79.24
+  Q15-mean + ZERO-FUNNEL       75.29   74.96   74.41
+  Q15-mean + RAW-NN            52.82   59.22   63.05
+  Q15-mean + MLP-NN            73.60   79.08   81.78
+  Q15-mean + FUNNEL-NN         73.67   78.38   81.08
+  Q15-mean + C-MLP             82.78   83.90   84.01
+  Q15-mean + C-MLP-NN          72.65   78.20   81.15
+  Q15-mean + C-FUNNEL-NN       74.26   79.91   82.99
+  Q15-prompt + ZERO-MLP        86.32   85.82   85.98
+  Q15-prompt + ZERO-FUNNEL     85.64   85.14   84.75
+  Q15-prompt + RAW-NN          75.89   83.42   86.83
+  Q15-prompt + MLP-NN          82.72   87.68   88.70
+  Q15-prompt + FUNNEL-NN       82.03   85.92   87.75
+  Q15-prompt + C-MLP           89.48   89.71   89.98
+  Q15-prompt + C-MLP-NN        82.21   87.41   89.55
+  Q15-prompt + C-FUNNEL-NN     82.14   86.32   88.26
+  Q7-mean + ZERO-MLP           81.03   80.63   80.72
+  Q7-mean + ZERO-FUNNEL        77.89   77.50   77.38
+  Q7-mean + RAW-NN             51.98   58.23   62.01
+  Q7-mean + MLP-NN             75.11   80.75   83.48
+  Q7-mean + FUNNEL-NN          75.52   81.34   82.88
+  Q7-mean + C-MLP              86.14   87.01   87.35
+  Q7-mean + C-MLP-NN           75.78   81.34   84.15
+  Q7-mean + C-FUNNEL-NN        77.94   83.92   85.86
+  Q7-prompt + ZERO-MLP         89.24   88.77   88.95
+  Q7-prompt + ZERO-FUNNEL      84.33   84.13   83.76
+  Q7-prompt + RAW-NN           76.42   84.91   88.90
+  Q7-prompt + MLP-NN           87.21   90.93   92.13
+  Q7-prompt + FUNNEL-NN        86.01   90.35   91.09
+  Q7-prompt + C-MLP            92.71   93.58   93.66
+  Q7-prompt + C-MLP-NN         87.08   91.69   92.61
+  Q7-prompt + C-FUNNEL-NN      86.03   90.27   91.45
+  BGE + ZERO-MLP               83.08   82.72   82.84
+  BGE + ZERO-FUNNEL            82.52   82.15   82.29
+  BGE + RAW-NN                 68.79   79.11   83.31
+  BGE + MLP-NN                 80.39   85.68   87.10
+  BGE + FUNNEL-NN              79.38   85.27   86.47
+  BGE + C-MLP                  87.30   87.68   87.59
+  BGE + C-MLP-NN               80.00   85.71   87.14
+  BGE + C-FUNNEL-NN            79.21   85.10   86.96
+
+--- ZERO-MLP 13-way on all held-out sentences (Lab 15's quantity), k=12 ---
+  Q05-mean     all  67.34% (1293/1920) | events  70.31% | init  55.47%
+  Q05-prompt   all  70.16% (1347/1920) | events  73.57% | init  56.51%
+  Q15-mean     all  77.24% (1483/1920) | events  79.62% | init  67.71%
+  Q15-prompt   all  83.54% (1604/1920) | events  85.74% | init  74.74%
+  Q7-mean      all  75.62% (1452/1920) | events  80.86% | init  54.69%
+  Q7-prompt    all  82.97% (1593/1920) | events  88.02% | init  62.76%
+  BGE          all  83.65% (1606/1920) | events  82.81% | init  86.98%
+
+--- initial-state sentences, 8-way, s=1 draws, k=12 (counts include the 10 draws: ZERO-MLP repeats the same predictions 10 times) ---
+  Q05-mean     ZERO-MLP  60.94% (2340/3840) | C-MLP  62.79% (2411/3840)
+  Q05-prompt   ZERO-MLP  75.78% (2910/3840) | C-MLP  84.56% (3247/3840)
+  Q15-mean     ZERO-MLP  69.79% (2680/3840) | C-MLP  71.22% (2735/3840)
+  Q15-prompt   ZERO-MLP  78.91% (3030/3840) | C-MLP  80.81% (3103/3840)
+  Q7-mean      ZERO-MLP  57.03% (2190/3840) | C-MLP  62.92% (2416/3840)
+  Q7-prompt    ZERO-MLP  66.93% (2570/3840) | C-MLP  71.56% (2748/3840)
+  BGE          ZERO-MLP  94.53% (3630/3840) | C-MLP  98.44% (3780/3840)
+
+--- hard cases on held-out domains, s=1, k=12: % correct [% literal event] (pooled over the 10 draws) ---
+encoder + method                   NEG -> NOOP     OTHER -> NOOP      TEMP
+  Q05-mean + ZERO-MLP              6.8 [ 54.7]      28.1 [ 51.0]      65.6
+  Q05-mean + ZERO-FUNNEL           6.2 [ 53.6]      26.0 [ 54.2]      64.6
+  Q05-mean + RAW-NN                6.5 [ 46.3]      10.5 [ 46.7]      47.1
+  Q05-mean + MLP-NN                2.7 [ 48.8]       8.6 [ 51.7]      57.9
+  Q05-mean + FUNNEL-NN             5.6 [ 48.4]      22.4 [ 44.8]      59.4
+  Q05-mean + C-MLP                 0.9 [ 53.9]      21.2 [ 50.1]      68.0
+  Q05-mean + C-MLP-NN              3.4 [ 49.2]      11.6 [ 49.2]      55.9
+  Q05-mean + C-FUNNEL-NN           6.3 [ 47.9]      22.7 [ 44.5]      60.6
+  Q05-prompt + ZERO-MLP           10.9 [ 31.8]      21.9 [ 49.0]      70.3
+  Q05-prompt + ZERO-FUNNEL        28.1 [ 30.7]      33.3 [ 36.5]      67.7
+  Q05-prompt + RAW-NN              4.5 [ 49.9]       5.6 [ 52.6]      68.9
+  Q05-prompt + MLP-NN              7.6 [ 28.6]      16.9 [ 50.5]      74.4
+  Q05-prompt + FUNNEL-NN          17.8 [ 35.7]      19.4 [ 48.8]      72.5
+  Q05-prompt + C-MLP               9.1 [ 32.9]      12.1 [ 55.6]      80.6
+  Q05-prompt + C-MLP-NN            6.0 [ 34.7]      14.6 [ 55.9]      79.0
+  Q05-prompt + C-FUNNEL-NN        17.5 [ 32.7]      21.8 [ 47.8]      74.0
+  Q15-mean + ZERO-MLP              4.2 [ 58.3]      28.1 [ 44.8]      77.1
+  Q15-mean + ZERO-FUNNEL          14.1 [ 45.3]      35.4 [ 43.8]      77.1
+  Q15-mean + RAW-NN                5.5 [ 49.3]       8.5 [ 50.3]      55.2
+  Q15-mean + MLP-NN                1.0 [ 49.4]      16.8 [ 52.4]      65.7
+  Q15-mean + FUNNEL-NN             5.5 [ 43.2]      24.8 [ 51.1]      66.9
+  Q15-mean + C-MLP                 0.4 [ 52.1]      23.0 [ 52.9]      76.9
+  Q15-mean + C-MLP-NN              2.1 [ 48.3]      15.2 [ 54.1]      64.0
+  Q15-mean + C-FUNNEL-NN           4.7 [ 48.6]      23.2 [ 50.2]      65.7
+  Q15-prompt + ZERO-MLP           10.9 [ 21.4]      12.5 [ 76.0]      85.4
+  Q15-prompt + ZERO-FUNNEL        19.3 [ 21.4]      19.8 [ 61.5]      84.4
+  Q15-prompt + RAW-NN              1.9 [ 42.0]       0.9 [ 70.1]      83.4
+  Q15-prompt + MLP-NN              6.8 [ 23.0]       8.5 [ 70.3]      85.2
+  Q15-prompt + FUNNEL-NN          13.9 [ 27.0]      12.5 [ 71.9]      81.7
+  Q15-prompt + C-MLP               5.9 [ 26.8]       6.7 [ 85.9]      90.2
+  Q15-prompt + C-MLP-NN            3.5 [ 27.1]       7.5 [ 71.9]      86.3
+  Q15-prompt + C-FUNNEL-NN        14.3 [ 28.9]      10.7 [ 73.8]      82.3
+  Q7-mean + ZERO-MLP               3.6 [ 49.5]      21.9 [ 51.0]      63.5
+  Q7-mean + ZERO-FUNNEL            5.7 [ 41.7]      25.0 [ 42.7]      68.2
+  Q7-mean + RAW-NN                 5.0 [ 47.6]       9.4 [ 47.4]      50.6
+  Q7-mean + MLP-NN                 1.7 [ 50.0]      15.8 [ 50.1]      64.3
+  Q7-mean + FUNNEL-NN              1.9 [ 42.7]      20.6 [ 48.5]      64.3
+  Q7-mean + C-MLP                  1.3 [ 58.6]      20.5 [ 61.2]      71.8
+  Q7-mean + C-MLP-NN               2.7 [ 51.8]      16.1 [ 51.8]      64.5
+  Q7-mean + C-FUNNEL-NN            3.7 [ 42.9]      22.8 [ 52.8]      66.9
+  Q7-prompt + ZERO-MLP            10.9 [ 17.7]      10.4 [ 74.0]      92.2
+  Q7-prompt + ZERO-FUNNEL         18.2 [ 30.2]      11.5 [ 78.1]      90.6
+  Q7-prompt + RAW-NN               3.2 [ 40.9]       1.0 [ 72.6]      85.1
+  Q7-prompt + MLP-NN               4.2 [ 22.1]       1.8 [ 80.2]      91.7
+  Q7-prompt + FUNNEL-NN           15.4 [ 29.7]       5.6 [ 80.4]      90.4
+  Q7-prompt + C-MLP                6.7 [ 26.7]       2.5 [ 87.0]      97.8
+  Q7-prompt + C-MLP-NN             3.3 [ 25.1]       2.3 [ 83.0]      91.9
+  Q7-prompt + C-FUNNEL-NN         14.0 [ 33.7]       4.3 [ 82.4]      91.1
+  BGE + ZERO-MLP                   8.3 [ 16.1]      21.9 [ 61.5]      80.7
+  BGE + ZERO-FUNNEL               33.3 [ 15.1]      16.7 [ 71.9]      87.5
+  BGE + RAW-NN                     0.5 [ 50.3]       1.4 [ 64.8]      77.1
+  BGE + MLP-NN                     7.5 [ 16.8]      10.3 [ 68.4]      85.7
+  BGE + FUNNEL-NN                 18.7 [ 23.7]       8.6 [ 66.8]      85.8
+  BGE + C-MLP                      6.2 [ 25.4]       9.9 [ 75.1]      89.1
+  BGE + C-MLP-NN                   5.6 [ 24.3]       8.4 [ 69.5]      85.1
+  BGE + C-FUNNEL-NN               17.6 [ 24.7]       8.3 [ 67.3]      83.9
+
+--- confusion, Q7-prompt + C-MLP, s=1, k=12 (rows = true, columns = predicted) ---
+              IN     OUT   BREAK     FIX    NOOP   recall
+      IN    2578     207      11       3      81    89.5%
+     OUT     174    2577      68      32      29    89.5%
+   BREAK      12      69    2309      10       0    96.2%
+     FIX      32       5       0    2315      48    96.5%
+    NOOP      76      36       2      50    2236    93.2%
+
+--- confusion, Q7-prompt + ZERO-MLP, s=1, k=12 (rows = true, columns = predicted) ---
+              IN     OUT   BREAK     FIX    NOOP   recall
+      IN    2350     139       9       0     382    81.6%
+     OUT     146    2466     164       0     104    85.6%
+   BREAK       9      80    2261       0      50    94.2%
+     FIX      46       0       0    2167     187    90.3%
+    NOOP      52       0       0      27    2321    96.7%
+
+--- Qwen2.5-7B-Instruct, 16 train domains x 2 draws, same queries; correct = right in both orders ---
+  ICL (with the domain's 5 examples): 89.24% (771/864) | order1 92.48% | order2 90.86%
+  ZS0 (no example (Lab 15 prompt)): 67.48% (583/864) | order1 76.74% | order2 76.39%
