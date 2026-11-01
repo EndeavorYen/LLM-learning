@@ -1,0 +1,216 @@
+Lab 15 aggregate | logs: results/recognition_v1/l15_A.log, results/recognition_v1/l15_B.log
+  results/recognition_v1/l15_A.log: models=Q05,Q15,BGE zs=0 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+  results/recognition_v1/l15_B.log: models=Q7 zs=1 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+Accuracy = exact counts pooled over folds x seeds; held-out = domains never used to train that recognizer. NO decision is applied here.
+
+====================================================================================================
+=== data=st: mean CV accuracy (%) on held-out domains, pooled over 4 folds x 3 seeds ===
+--- k=4 training domains | held-out sentences per fold x seed: 160 ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       44.22   52.92   55.94   53.07   52.08
+Q05-prompt     46.56   53.28   58.33   53.70   49.32
+Q15-mean       46.72   57.92   62.45   57.55   55.57
+Q15-prompt     66.56   72.50   73.49   69.48   68.75
+Q7-mean        43.91   60.52   62.76   59.11   60.00
+Q7-prompt      69.22   75.26   75.00   67.55   67.92
+BGE            71.41   72.08   72.86   70.36   62.19
+--- k=8 training domains | held-out sentences per fold x seed: 160 ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       44.22   56.77   64.69   60.10   60.36
+Q05-prompt     51.56   60.42   65.78   62.76   59.27
+Q15-mean       47.34   65.62   73.23   61.56   64.95
+Q15-prompt     69.69   76.56   80.42   76.41   73.12
+Q7-mean        47.81   68.23   71.41   62.40   63.44
+Q7-prompt      70.16   79.95   79.90   76.88   75.62
+BGE            75.47   76.30   80.21   78.59   68.23
+--- k=12 training domains (registered k) | held-out sentences per fold x seed: 160 ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       45.78   59.64   67.34   65.99   59.43
+Q05-prompt     53.44   58.75   70.16   67.34   64.38
+Q15-mean       51.72   69.53   77.24   70.21   69.74
+Q15-prompt     71.72   77.50   83.54   80.21   77.60
+Q7-mean        48.91   70.89   75.62   71.04   71.72
+Q7-prompt      72.03   81.09   82.97   78.59   77.34
+BGE            78.12   79.27   83.65   82.03   68.39
+--- k=12: event sentences (5 classes) ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       50.20   63.35   70.31   71.29   66.28
+Q05-prompt     55.08   64.45   73.57   70.77   70.05
+Q15-mean       53.71   71.61   79.62   74.35   76.82
+Q15-prompt     74.41   82.75   85.74   84.51   83.98
+Q7-mean        54.88   74.87   80.86   77.60   79.36
+Q7-prompt      76.56   86.33   88.02   83.46   86.72
+BGE            75.39   81.51   82.81   81.77   72.40
+--- k=12: init sentences (8 classes) ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       28.12   44.79   55.47   44.79   32.03
+Q05-prompt     46.88   35.94   56.51   53.65   41.67
+Q15-mean       43.75   61.20   67.71   53.65   41.41
+Q15-prompt     60.94   56.51   74.74   63.02   52.08
+Q7-mean        25.00   54.95   54.69   44.79   41.15
+Q7-prompt      53.91   60.16   62.76   59.11   39.84
+BGE            89.06   70.31   86.98   83.07   52.34
+--- best combination at the registered k=12: BGE + MLP = 83.65% (1606/1920) ---
+    event sentences 82.81% (1272/1536) | init sentences 86.98% (334/384)
+    per held-out fold (pooled over seeds): f0=86.25% f1=83.96% f2=76.67% f3=87.71%
+    per seed (pooled over folds): 42=82.66% 1=84.22% 2=84.06%
+    training fit (eval mode): 100.00% (5760/5760)
+--- k-curves of the best 5 combinations at k=12 (%): k=4 / k=8 / k=12 ---
+  BGE + MLP                  72.86   80.21   83.65
+  Q15-prompt + MLP           73.49   80.42   83.54
+  Q7-prompt + MLP            75.00   79.90   82.97
+  BGE + FUNNEL               70.36   78.59   82.03
+  Q7-prompt + LIN            75.26   79.95   81.09
+
+====================================================================================================
+=== data=v5: mean CV accuracy (%) on held-out domains, pooled over 5 folds x 3 seeds ===
+--- k=4 training domains | held-out sentences per fold x seed: 108 ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       20.93   32.53   33.21   31.05   31.17
+Q05-prompt     32.41   38.15   41.42   33.33   30.19
+Q15-mean       27.04   42.96   42.35   38.33   37.84
+Q15-prompt     57.22   59.44   61.11   56.67   54.51
+Q7-mean        22.96   45.86   45.99   43.58   44.26
+Q7-prompt      58.52   65.37   68.33   59.75   58.21
+BGE            58.89   57.28   60.19   49.01   45.06
+--- k=8 training domains | held-out sentences per fold x seed: 108 ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       22.96   39.20   46.48   40.19   40.80
+Q05-prompt     37.41   48.46   53.15   43.58   40.99
+Q15-mean       31.85   51.79   54.75   53.21   52.41
+Q15-prompt     63.89   71.05   70.93   65.43   65.19
+Q7-mean        26.30   57.59   58.52   52.59   54.81
+Q7-prompt      63.33   70.62   74.88   67.41   66.79
+BGE            69.07   69.57   71.17   60.62   50.56
+--- k=16 training domains (registered k) | held-out sentences per fold x seed: 108 ---
+encoder         NEAR     LIN     MLP  FUNNEL    XDOM
+Q05-mean       30.00   54.81   60.68   51.36   48.64
+Q05-prompt     43.15   60.19   65.86   52.41   50.00
+Q15-mean       39.63   65.56   71.91   64.38   62.47
+Q15-prompt     66.85   75.99   77.41   71.48   68.89
+Q7-mean        30.93   67.84   70.74   64.07   69.07
+Q7-prompt      68.52   79.07   78.83   73.15   72.28
+BGE            74.26   75.99   79.07   68.52   53.89
+--- best combination at the registered k=16: Q7-prompt + LIN = 79.07% (1281/1620) | TIED with BGE + MLP ---
+    stage 0 89.17% (321/360) | stage 1 83.33% (150/180) | stage 2 72.50% (261/360) | stage 3 78.61% (283/360) | stage 4 73.89% (266/360)
+    per held-out fold (pooled over seeds): f0=69.44% f1=85.19% f2=81.17% f3=81.48% f4=78.09%
+    per seed (pooled over folds): 42=78.89% 1=79.26% 2=79.07%
+    training fit (eval mode): 99.18% (6427/6480)
+--- k-curves of the best 5 combinations at k=16 (%): k=4 / k=8 / k=16 ---
+  Q7-prompt + LIN            65.37   70.62   79.07
+  BGE + MLP                  60.19   71.17   79.07
+  Q7-prompt + MLP            68.33   74.88   78.83
+  Q15-prompt + MLP           61.11   70.93   77.41
+  Q15-prompt + LIN           59.44   71.05   75.99
+
+====================================================================================================
+=== zero-shot reference (Qwen2.5-7B-Instruct, st, all train-domain sentences, no training; correct = right under both option orders) ===
+  event : 67.77% (347/512) | order1 77.15% (395) | order2 76.76% (393)
+  init  : 16.41% (21/128) | order1 39.84% (51) | order2 26.56% (34)
+  init_level     : 23.44% (30/128) | order1 63 | order2 41
+  init_safeguard : 70.31% (90/128) | order1 103 | order2 106
+  all 13 classes: 57.50% (368/640)
+    event ev:IN        59/112  order1   65 order2   87
+    event ev:OUT       59/112  order1   95 order2   59
+    event ev:BREAK     76/96   order1   76 order2   81
+    event ev:FIX       65/96   order1   67 order2   76
+    event ev:NOOP      88/96   order1   92 order2   90
+    init  L0_ok         2/16   order1    7 order2    2
+    init  L1_ok         2/16   order1    2 order2    9
+    init  L2_ok         1/16   order1    6 order2    1
+    init  L3_ok         6/16   order1    7 order2    9
+    init  L0_broken     1/16   order1    9 order2    1
+    init  L1_broken     4/16   order1    6 order2    6
+    init  L2_broken     1/16   order1    8 order2    1
+    init  L3_broken     4/16   order1    6 order2    5
+
+====================================================================================================
+=== Phase 1b: hard cases on held-out domains (st, k=12, pooled over folds x seeds) ===
+NEG / OTHER: % judged NOOP (correct) [% judged the literally mentioned event]; TEMP: % correct; HEDGE: mean top probability hedged vs matched plain sentences; normal(withhard): held-out normal accuracy of the recognizer trained with hard sentences
+--- train=normal ---
+encoder + recognizer                   NEG             OTHER     TEMP       HEDGE conf
+Q05-mean + NEAR                9.4 [ 31.2]      25.0 [ 31.2]     39.1   0.372 vs 0.569
+Q05-mean + LIN                11.5 [ 54.2]      33.3 [ 34.4]     49.0   0.199 vs 0.305
+Q05-mean + MLP                 6.8 [ 52.1]      25.0 [ 47.9]     56.8   0.657 vs 0.825
+Q05-mean + FUNNEL              6.2 [ 45.8]      22.9 [ 46.9]     58.3   0.707 vs 0.854
+Q05-mean + XDOM               11.5 [ 47.4]      31.2 [ 36.5]     51.6   0.823 vs 0.882
+Q05-prompt + NEAR             17.2 [ 21.9]      37.5 [ 31.2]     56.2   0.317 vs 0.485
+Q05-prompt + LIN              15.1 [ 26.0]      31.2 [ 37.5]     62.5   0.204 vs 0.315
+Q05-prompt + MLP              10.9 [ 27.1]      21.9 [ 49.0]     70.3   0.619 vs 0.825
+Q05-prompt + FUNNEL           25.0 [ 29.7]      33.3 [ 34.4]     62.5   0.761 vs 0.820
+Q05-prompt + XDOM             10.9 [ 36.5]      18.8 [ 45.8]     62.5   0.762 vs 0.830
+Q15-mean + NEAR                3.1 [ 35.9]      28.1 [ 37.5]     43.8   0.399 vs 0.574
+Q15-mean + LIN                 7.8 [ 57.3]      40.6 [ 35.4]     58.3   0.219 vs 0.343
+Q15-mean + MLP                 4.2 [ 55.7]      25.0 [ 43.8]     74.0   0.658 vs 0.834
+Q15-mean + FUNNEL             13.0 [ 39.6]      34.4 [ 38.5]     76.6   0.752 vs 0.848
+Q15-mean + XDOM                6.2 [ 58.3]      21.9 [ 47.9]     67.7   0.822 vs 0.888
+Q15-prompt + NEAR              9.4 [ 17.2]      21.9 [ 59.4]     71.9   0.348 vs 0.550
+Q15-prompt + LIN               9.4 [ 21.9]       9.4 [ 71.9]     78.1   0.286 vs 0.490
+Q15-prompt + MLP               9.4 [ 21.4]      12.5 [ 72.9]     82.3   0.705 vs 0.879
+Q15-prompt + FUNNEL           17.7 [ 19.3]      19.8 [ 60.4]     81.2   0.759 vs 0.872
+Q15-prompt + XDOM             12.0 [ 35.9]      15.6 [ 58.3]     78.6   0.788 vs 0.903
+Q7-mean + NEAR                 3.1 [ 35.9]      34.4 [ 31.2]     40.6   0.396 vs 0.574
+Q7-mean + LIN                  9.4 [ 56.8]      36.5 [ 37.5]     56.2   0.266 vs 0.392
+Q7-mean + MLP                  3.6 [ 47.9]      21.9 [ 47.9]     62.0   0.672 vs 0.848
+Q7-mean + FUNNEL               4.7 [ 39.1]      24.0 [ 40.6]     65.6   0.768 vs 0.882
+Q7-mean + XDOM                14.1 [ 55.2]      26.0 [ 49.0]     68.8   0.843 vs 0.916
+Q7-prompt + NEAR               0.0 [ 12.5]       9.4 [ 65.6]     68.8   0.292 vs 0.567
+Q7-prompt + LIN                6.2 [ 14.1]       6.2 [ 81.2]     89.1   0.220 vs 0.562
+Q7-prompt + MLP                6.2 [ 12.0]      10.4 [ 74.0]     89.6   0.598 vs 0.893
+Q7-prompt + FUNNEL            12.0 [ 26.6]      11.5 [ 78.1]     88.5   0.750 vs 0.883
+Q7-prompt + XDOM              16.7 [ 31.2]       7.3 [ 69.8]     88.0   0.791 vs 0.923
+BGE + NEAR                     4.7 [ 10.9]      18.8 [ 59.4]     70.3   0.290 vs 0.486
+BGE + LIN                     10.9 [ 15.6]      15.6 [ 68.8]     83.9   0.227 vs 0.370
+BGE + MLP                      6.8 [ 15.6]      21.9 [ 61.5]     79.2   0.639 vs 0.876
+BGE + FUNNEL                  29.7 [ 12.5]      16.7 [ 69.8]     84.4   0.769 vs 0.861
+BGE + XDOM                    26.0 [ 23.4]      21.9 [ 59.4]     62.0   0.819 vs 0.883
+--- train=withhard ---
+encoder + recognizer                   NEG             OTHER     TEMP       HEDGE conf  normal acc
+Q05-mean + NEAR               43.8 [ 21.9]      62.5 [ 21.9]     42.2   0.474 vs 0.555       43.6%
+Q05-mean + LIN                51.6 [ 32.8]      59.4 [ 28.1]     57.8   0.300 vs 0.305       55.2%
+Q05-mean + MLP                87.5 [ 10.4]      78.1 [ 18.8]     76.0   0.899 vs 0.815       64.9%
+Q05-mean + FUNNEL             70.8 [ 17.2]      62.5 [ 17.7]     72.9   0.853 vs 0.854       61.1%
+Q05-mean + XDOM               94.3 [  3.1]      81.2 [ 10.4]     66.7   0.961 vs 0.877       52.5%
+Q05-prompt + NEAR             39.1 [ 14.1]      46.9 [ 25.0]     51.6   0.423 vs 0.492       52.7%
+Q05-prompt + LIN              54.7 [ 17.7]      54.2 [ 28.1]     66.7   0.309 vs 0.314       57.8%
+Q05-prompt + MLP              85.9 [  7.8]      75.0 [ 18.8]     65.6   0.876 vs 0.845       65.3%
+Q05-prompt + FUNNEL           85.9 [  6.2]      69.8 [ 11.5]     66.7   0.867 vs 0.816       64.1%
+Q05-prompt + XDOM             91.1 [  1.6]      69.8 [  9.4]     58.3   0.908 vs 0.833       51.2%
+Q15-mean + NEAR               45.3 [ 29.7]      53.1 [ 28.1]     45.3   0.499 vs 0.537       49.2%
+Q15-mean + LIN                55.7 [ 28.6]      70.8 [ 21.9]     68.8   0.336 vs 0.347       65.5%
+Q15-mean + MLP                88.5 [  6.2]      86.5 [ 10.4]     84.4   0.865 vs 0.835       72.3%
+Q15-mean + FUNNEL             74.0 [ 14.1]      74.0 [ 12.5]     80.2   0.827 vs 0.865       68.4%
+Q15-mean + XDOM               99.0 [  0.5]      87.5 [  6.2]     65.6   0.972 vs 0.880       59.5%
+Q15-prompt + NEAR             26.6 [ 17.2]       9.4 [ 68.8]     70.3   0.412 vs 0.555       69.2%
+Q15-prompt + LIN              61.5 [ 13.5]      12.5 [ 62.5]     79.7   0.403 vs 0.477       73.5%
+Q15-prompt + MLP              84.9 [  7.3]      62.5 [ 25.0]     83.3   0.864 vs 0.874       76.9%
+Q15-prompt + FUNNEL           83.3 [  7.3]      38.5 [ 45.8]     84.4   0.882 vs 0.876       74.5%
+Q15-prompt + XDOM             94.8 [  1.0]      74.0 [ 17.7]     75.0   0.938 vs 0.904       67.8%
+Q7-mean + NEAR                43.8 [ 25.0]      53.1 [ 21.9]     48.4   0.560 vs 0.560       44.4%
+Q7-mean + LIN                 61.5 [ 27.6]      66.7 [ 30.2]     71.4   0.405 vs 0.394       68.5%
+Q7-mean + MLP                 90.6 [  7.8]      82.3 [ 17.7]     77.1   0.926 vs 0.840       71.9%
+Q7-mean + FUNNEL              79.2 [ 12.0]      69.8 [ 18.8]     74.0   0.853 vs 0.867       68.2%
+Q7-mean + XDOM               100.0 [  0.0]      80.2 [  7.3]     70.3   0.985 vs 0.916       61.4%
+Q7-prompt + NEAR              26.6 [ 10.9]       9.4 [ 68.8]     70.3   0.390 vs 0.575       70.3%
+Q7-prompt + LIN               82.8 [  6.2]      21.9 [ 65.6]     89.1   0.503 vs 0.548       80.2%
+Q7-prompt + MLP               93.8 [  1.6]      55.2 [ 33.3]     87.5   0.947 vs 0.900       78.2%
+Q7-prompt + FUNNEL            97.4 [  1.6]      36.5 [ 55.2]     81.2   0.908 vs 0.877       74.2%
+Q7-prompt + XDOM             100.0 [  0.0]      69.8 [ 15.6]     80.2   0.971 vs 0.921       70.8%
+BGE + NEAR                    50.0 [  7.8]      25.0 [ 53.1]     82.8   0.392 vs 0.480       77.7%
+BGE + LIN                     79.2 [  5.2]      40.6 [ 46.9]     88.5   0.374 vs 0.363       78.2%
+BGE + MLP                     97.4 [  1.0]      78.1 [ 18.8]     80.2   0.931 vs 0.869       78.9%
+BGE + FUNNEL                  99.5 [  0.0]      74.0 [ 20.8]     74.5   0.946 vs 0.858       76.0%
+BGE + XDOM                    99.5 [  0.0]      87.5 [  7.3]     63.5   0.957 vs 0.884       60.4%
+--- registered best st combination BGE + MLP ---
+    train=normal: NEG 6.77% (13/192) as-surface 30 | OTHER 21.88% (21/96) as-surface 59 | TEMP 79.17% (152/192)
+    train=withhard: NEG 97.40% (187/192) as-surface 2 | OTHER 78.12% (75/96) as-surface 18 | TEMP 80.21% (154/192)
+--- zero-shot on hard cases (Qwen2.5-7B-Instruct; correct under both orders) ---
+  NEG   : 32.81% (21/64) | order1 32 | order2 28
+  OTHER : 9.38% (3/32) | order1 5 | order2 6
+  TEMP  : 75.00% (48/64) | order1 51 | order2 54
+  HEDGE choices order 1: opt1=10 opt2=0 opt3=13 opt4=0 opt5=9  (opt1..5 = IN, OUT, BREAK, FIX, NOOP)
+  HEDGE choices order 2: opt1=12 opt2=0 opt3=14 opt4=0 opt5=6  (opt1..5 = IN, OUT, BREAK, FIX, NOOP)
+
+====================================================================================================
+registered quantity: best st k=12 = 83.65% (1606/1920) [BGE + MLP]
+X^11 = 0.1402  (X = 0.8365)
