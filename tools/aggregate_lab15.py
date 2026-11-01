@@ -21,7 +21,8 @@ import sys
 from collections import defaultdict
 
 PINNED = {"data_sha_st": "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108",
-          "data_sha_v5": "d2a9e877595829b4ff1560be90cd04739acdb11be782b14a067c4b9c4d24f196"}
+          "data_sha_v5": "d2a9e877595829b4ff1560be90cd04739acdb11be782b14a067c4b9c4d24f196",
+          "data_sha_hard": "e145539bc8b37133a226a5d390e6cfebc2492d85e2cc090501d8464fc5afe8aa"}  # Phase 1b
 SEEDS = ("42", "1", "2")
 MODELS = ("Q05", "Q15", "Q7", "BGE")
 ENCODERS = ("Q05-mean", "Q05-prompt", "Q15-mean", "Q15-prompt", "Q7-mean", "Q7-prompt", "BGE")
@@ -48,6 +49,10 @@ configs = []                                  # (path, kv)
 cv = defaultdict(dict)                        # (data, enc, rec, k) -> {(fold, seed): dict}
 stage = defaultdict(dict)                     # (data, enc, rec, k, fold, seed) -> {stage: (c, t)}
 zs, zspart, zscls = {}, {}, {}
+hard = defaultdict(dict)                      # Phase 1b: (enc, rec, train, cat) -> {(fold, seed): (c, t, as_surface)}
+hedge = defaultdict(dict)                     # (enc, rec, train) -> {(fold, seed): (n, conf_hedge, conf_plain, as_s, as_noop)}
+hardnorm = defaultdict(dict)                  # (enc, rec) -> {(fold, seed): (c, t)}
+zshard, zshedge = {}, {}
 folds = {}                                    # (data, fold) -> (heldout, pool)
 model_log = {}                                # model -> path
 warnings = []
@@ -108,6 +113,19 @@ for path in paths:
             put(zspart, kv["kind"], ints(kv, "correct", "total", "order1", "order2"), path, line)
         elif tag == "L15_ZSCLS":
             put(zscls, (kv["kind"], kv["cls"]), ints(kv, "correct", "total", "order1", "order2"), path, line)
+        elif tag == "L15_HARD":
+            put(hard[(kv["enc"], kv["rec"], kv["train"], kv["cat"])], (int(kv["fold"]), kv["seed"]),
+                ints(kv, "correct", "total", "as_surface"), path, line)
+        elif tag == "L15_HEDGE":
+            put(hedge[(kv["enc"], kv["rec"], kv["train"])], (int(kv["fold"]), kv["seed"]),
+                (int(kv["n"]), float(kv["conf_hedge_sum"]), float(kv["conf_plain_sum"]), int(kv["as_surface"]),
+                 int(kv["as_noop"])), path, line)
+        elif tag == "L15_HARDNORM":
+            put(hardnorm[(kv["enc"], kv["rec"])], (int(kv["fold"]), kv["seed"]), ints(kv, "correct", "total"), path, line)
+        elif tag == "L15_ZSHARD":
+            put(zshard, kv["cat"], ints(kv, "correct", "total", "order1", "order2"), path, line)
+        elif tag == "L15_ZSHEDGE":
+            put(zshedge, kv["order"], {k: int(v) for k, v in kv.items() if k.startswith("opt")}, path, line)
     if not tags or tags[-1] != "L15_CONFIG" or tags.count("L15_CONFIG") != 1:
         die(f"{path}: the last L15 line must be its (only) L15_CONFIG line (incomplete or concatenated log?)")
     cfg = configs[-1][1]
@@ -267,6 +285,66 @@ if zs.get("event") and zs.get("init"):
     print(f"  all 13 classes: {pct(c, t)} ({c}/{t})")
 for (kind, cls), (c, t, o1, o2) in zscls.items():
     print(f"    {kind:<6}{cls:<10} {c:>4}/{t:<4} order1 {o1:>4} order2 {o2:>4}")
+
+# ---- Phase 1b: real-language hard cases (st, registered k, held-out domains) ----
+if hard:
+    want_hs = {(f, s) for f in range(DATASETS["st"]["folds"]) for s in SEEDS}
+    for enc in encs:
+        for rec in RECOGNIZERS:
+            for tr in ("normal", "withhard"):
+                for cat in ("NEG", "OTHER", "TEMP"):
+                    if set(hard[(enc, rec, tr, cat)]) != want_hs:
+                        die(f"incomplete L15_HARD cell {(enc, rec, tr, cat)}")
+                if set(hedge[(enc, rec, tr)]) != want_hs:
+                    die(f"incomplete L15_HEDGE cell {(enc, rec, tr)}")
+            if set(hardnorm[(enc, rec)]) != want_hs:
+                die(f"incomplete L15_HARDNORM cell {(enc, rec)}")
+
+    def hsum(enc, rec, tr, cat):
+        v = hard[(enc, rec, tr, cat)].values()
+        return sum(x[0] for x in v), sum(x[1] for x in v), sum(x[2] for x in v)
+
+    print(f"\n{'=' * 100}\n=== Phase 1b: hard cases on held-out domains (st, k={DATASETS['st']['reg_k']}, pooled over folds x "
+          f"seeds) ===")
+    print("NEG / OTHER: % judged NOOP (correct) [% judged the literally mentioned event]; TEMP: % correct; "
+          "HEDGE: mean top probability hedged vs matched plain sentences; normal(withhard): held-out normal accuracy "
+          "of the recognizer trained with hard sentences")
+    for tr in ("normal", "withhard"):
+        print(f"--- train={tr} ---")
+        print(f"{'encoder + recognizer':<24}{'NEG':>18}{'OTHER':>18}{'TEMP':>9}{'HEDGE conf':>17}"
+              + (f"{'normal acc':>12}" if tr == "withhard" else ""))
+        for enc in encs:
+            for rec in RECOGNIZERS:
+                cells = []
+                for cat in ("NEG", "OTHER"):
+                    c, t, a = hsum(enc, rec, tr, cat)
+                    cells.append(f"{100 * c / t:7.1f} [{100 * a / t:5.1f}]")
+                c, t, _a = hsum(enc, rec, tr, "TEMP")
+                cells.append(f"{100 * c / t:7.1f}")
+                hv = hedge[(enc, rec, tr)].values()
+                n = sum(x[0] for x in hv)
+                cells.append(f"{sum(x[1] for x in hv) / n:.3f} vs {sum(x[2] for x in hv) / n:.3f}")
+                line = f"{enc + ' + ' + rec:<24}" + "".join(f"{c_:>18}" if i < 2 else (f"{c_:>9}" if i == 2 else f"{c_:>17}")
+                                                           for i, c_ in enumerate(cells))
+                if tr == "withhard":
+                    v = hardnorm[(enc, rec)].values()
+                    line += f"{100 * sum(x[0] for x in v) / sum(x[1] for x in v):>11.1f}%"
+                print(line)
+    (best, _bc, _bt, _ties) = best_of["st"]
+    print(f"--- registered best st combination {best[0]} + {best[1]} ---")
+    for tr in ("normal", "withhard"):
+        parts = []
+        for cat in ("NEG", "OTHER", "TEMP"):
+            c, t, a = hsum(*best, tr, cat)
+            parts.append(f"{cat} {pct(c, t)} ({c}/{t})" + (f" as-surface {a}" if cat != "TEMP" else ""))
+        print(f"    train={tr}: " + " | ".join(parts))
+if zshard:
+    print("--- zero-shot on hard cases (Qwen2.5-7B-Instruct; correct under both orders) ---")
+    for cat, (c, t, o1, o2) in zshard.items():
+        print(f"  {cat:<6}: {pct(c, t)} ({c}/{t}) | order1 {o1} | order2 {o2}")
+    for o, cnt in zshedge.items():
+        print(f"  HEDGE choices order {o}: " + " ".join(f"{k}={v}" for k, v in sorted(cnt.items()))
+              + "  (opt1..5 = IN, OUT, BREAK, FIX, NOOP)")
 
 (best, bc, bt, ties) = best_of["st"]
 x = bc / bt

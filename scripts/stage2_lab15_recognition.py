@@ -57,6 +57,20 @@
 # Run (Colab, one GPU >= 24 GB for the 7B model):  python stage2_lab15_recognition.py > lab15.log
 #   Optional LAB15_MODELS=Q05,Q15,Q7,BGE (default: all) runs a subset of the encoder models, e.g. to split the run over
 #   two sessions; the aggregator merges the logs and refuses duplicates. The zero-shot runs only when Q7 is loaded.
+# Phase 1b (#25 comment "第一步之一 b", registered 2026-11-01 before this code): real-language hard cases.
+#   benchmarks/state_tracking_v1/hard_cases.json (sha256 pinned), the 16 TRAIN domains only, 12 per domain: NEG (negated
+#   IN/OUT/BREAK/FIX -> NOOP), OTHER (IN/OUT of a different system -> NOOP), TEMP (temporal marker / flashback -> the
+#   event), HEDGE (unconfirmed IN/BREAK -> no label). At the registered k (12) of every st fold, for every encoder /
+#   recognizer / seed:
+#     train=normal    the SAME trained recognizer as the main CV row scores the held-out domains' hard sentences;
+#     train=withhard  a second recognizer is trained on the normal training sentences + the training domains' NEG / OTHER
+#                     / TEMP sentences (with labels; mu stays the mean of the normal training sentences), then scores the
+#                     held-out hard sentences and the held-out normal sentences.
+#   NEG / OTHER: correct = NOOP, as_surface = predicted the literally mentioned event. TEMP: correct = its event.
+#   HEDGE: top softmax probability (cosine scores / 0.1 for NEAR, FUNNEL, XDOM; logits for LIN, MLP) of the hedged
+#     sentence vs the mean top probability of the held-out normal sentences of the same domain and the same event class.
+#   Zero-shot (Q7): the same 5-option event question, both orders; NEG / OTHER correct = option 5 (与系统无关的事).
+#   Machine lines: L15_HARD, L15_HEDGE, L15_HARDNORM, L15_ZSHARD, L15_ZSHEDGE.
 # Copied code is marked "(copied from Lab NN)"; everything else is new for Lab 15.
 # ==============================================================================
 import os, sys, gc, time, math, random, json, hashlib
@@ -108,6 +122,9 @@ CHECK_MIN_COS = 0.99                  # batched vs unbatched pooled feature (bf1
 EXPECTED_ST_SHA256 = "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108"   # #23, commit d20be68
 EXPECTED_TPL_SHA256 = "1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70"  # README of state_tracking_v1
 EXPECTED_V5_SHA256 = "d2a9e877595829b4ff1560be90cd04739acdb11be782b14a067c4b9c4d24f196"   # Lab 12 [review S3]
+EXPECTED_HARD_SHA256 = "e145539bc8b37133a226a5d390e6cfebc2492d85e2cc090501d8464fc5afe8aa"  # Phase 1b, commit 49253ef
+HARD_CATS = ("NEG", "OTHER", "TEMP", "HEDGE")
+CONF_TAU = 0.1                        # Phase 1b: softmax temperature for cosine scores (NEAR / FUNNEL / XDOM)
 
 # (copied from Lab 14) state classes and sentence classes
 CLASSES = ["L0_ok", "L1_ok", "L2_ok", "L3_ok", "L0_broken", "L1_broken", "L2_broken", "L3_broken", "BURST"]
@@ -268,7 +285,7 @@ def load_st():
         f"stories, all of which are in the table | per class: "
         + " ".join(f"{SCLS_NAMES[c]}={cnt[c]}" for c in range(N_SCLS)))
     return dict(name="st", sha=sha, tpl_sha=tpl_sha, texts=texts, cls=cls, dom=dom, doms=train_doms, n_cls=N_SCLS,
-                cls_names=SCLS_NAMES, forbidden=forbidden,
+                cls_names=SCLS_NAMES, forbidden=forbidden, st_dir=st_dir,
                 group=["init" if c < N_INIT else "ev" for c in cls])
 
 
@@ -327,6 +344,35 @@ def load_v5():
         f"{len(texts)} sentences, 27 classes x 20 domains")
     return dict(name="v5", sha=sha, texts=texts, cls=cls, dom=dom, doms=sorted(names), n_cls=27, cls_names=cls_names,
                 stage=stage)
+
+
+def load_hard(st: dict):
+    """Phase 1b: hard_cases.json next to stories.json; train domains only (asserted == st's 16 train domains)."""
+    path, raw, sha = _read_first([os.path.join(st["st_dir"], "hard_cases.json")], "hard_cases.json")
+    assert sha == EXPECTED_HARD_SHA256, f"hard_cases.json is not the registered file: {sha}"
+    h = json.loads(raw.decode("utf-8"))
+    assert h.get("version") == "state_tracking_v1_hard", h.get("version")
+    assert h.get("templates_sha256") == st["tpl_sha"], "hard_cases.json was built from another templates.json"
+    names = [d["name"] for d in h["domains"]]
+    assert sorted(names) == sorted(st["doms"]) and len(set(names)) == len(names), "hard-case domains != st train domains"
+    lab = {e: N_INIT + EVENTS.index(e) for e in EVENTS}
+    texts, cat, surf, ycls, dom = [], [], [], [], []
+    for d in h["domains"]:
+        for it in d["items"]:
+            assert it["category"] in HARD_CATS and it["surface"] in EVENTS[:4], it
+            want = {"NEG": "NOOP", "OTHER": "NOOP", "TEMP": it["surface"], "HEDGE": "UNCERTAIN"}[it["category"]]
+            assert it["label"] == want, it
+            texts.append(it["text"])
+            cat.append(it["category"])
+            surf.append(lab[it["surface"]])
+            ycls.append(-1 if it["label"] == "UNCERTAIN" else lab[it["label"]])
+            dom.append(d["name"])
+    assert len(set(texts)) == len(texts), "DATA ERROR: duplicate hard-case sentence"
+    assert not set(texts) & set(st["texts"]), "DATA ERROR: a hard-case sentence equals a template sentence"
+    cnt = Counter(cat)
+    log(f"[l15] hard: {path} sha256={sha} | {len(texts)} sentences in {len(names)} train domains | "
+        + " ".join(f"{c}={cnt[c]}" for c in HARD_CATS))
+    return dict(name="hard", sha=sha, texts=texts, cat=cat, surface=surf, cls=ycls, dom=dom)
 
 
 def make_folds(doms, n_folds: int, size: int = FOLD_SIZE, seed: int = FOLD_SEED):
@@ -469,7 +515,7 @@ def preflight(models, data: dict, guard: LeakGuard):
         tok = AutoTokenizer.from_pretrained(mid)
         worst = 0
         for pooling in (QWEN_POOLINGS if kind == "qwen" else ("cls",)):
-            for name in DATASETS:
+            for name in DATASETS + (("hard",) if "hard" in data else ()):
                 for s in data[name]["texts"]:
                     t = model_text(pooling, s)
                     guard.check(s, t)
@@ -515,7 +561,7 @@ def run_model(code: str, data: dict, guard: LeakGuard, zs_fn=None):
     for pooling in poolings:
         enc_name = code if kind == "bge" else f"{code}-{pooling}"
         feats[enc_name] = {}
-        for dname in DATASETS:
+        for dname in DATASETS + (("hard",) if "hard" in data else ()):
             t1 = time.time()
             H, n_tok, tids = extract(tok, pool_fn, model, data[dname]["texts"], pooling, guard, f"{enc_name}/{dname}")
             mc, mr, nchk = unbatched_check(tok, pool_fn, model, data[dname]["texts"], pooling, H, n_tok, tids,
@@ -651,6 +697,34 @@ def run_zero_shot(st: dict, choose, guard: LeakGuard):
     return dict(tot=tot, part=part, ev=dict(ev), ini=dict(ini))
 
 
+def run_zero_shot_hard(hard: dict, choose, guard: LeakGuard):
+    """Phase 1b: the 5-option event question on the 192 hard sentences, both orders. NEG / OTHER correct = option 5
+    (与系统无关的事); TEMP correct = its event; HEDGE has no correct option (its choices are counted)."""
+    t0 = time.time()
+    tab = {c: [0, 0, 0, 0] for c in ("NEG", "OTHER", "TEMP")}
+    hedge = {"o1": Counter(), "o2": Counter()}
+    for s, cat, yc, d in zip(hard["texts"], hard["cat"], hard["cls"], hard["dom"]):
+        true_idx = (yc - N_INIT) if yc >= 0 else 0
+        o1, o2, l1, l2 = ask_both_orders(choose, d, s, ZS_EVENT_Q, ZS_EVENT_OPTS, true_idx, guard)
+        if cat == "HEDGE":  # option index chosen in each order (order 2 reversed back to order-1 indices)
+            n = len(ZS_EVENT_OPTS)
+            hedge["o1"][ZS_EVENT_OPTS[LETTERS.index(l1)]] += 1
+            hedge["o2"][ZS_EVENT_OPTS[n - 1 - LETTERS.index(l2)]] += 1
+            continue
+        r = tab[cat]
+        r[0] += int(o1 and o2)
+        r[1] += int(o1)
+        r[2] += int(o2)
+        r[3] += 1
+    log(f"\n=== [2b] zero-shot on the hard cases (Phase 1b; same event question, both orders) | {time.time() - t0:.0f}s ===")
+    for cat, (b, o1, o2, n) in tab.items():
+        log(f"  {cat:<6}: both {b}/{n} | order1 {o1} | order2 {o2}")
+        log(f"L15_ZSHARD cat={cat} correct={b} total={n} order1={o1} order2={o2}")
+    for o in ("o1", "o2"):
+        log(f"  HEDGE choices ({o}): " + " | ".join(f"{opt}={hedge[o][opt]}" for opt in ZS_EVENT_OPTS))
+        log(f"L15_ZSHEDGE order={o[1]} " + " ".join(f"opt{i + 1}={hedge[o][opt]}" for i, opt in enumerate(ZS_EVENT_OPTS)))
+
+
 # ==============================================================================
 # [3] Recognizers
 # ==============================================================================
@@ -735,10 +809,18 @@ def train_loop(model, loss_fn, steps: int, seed: int):
 
 def fit_predict(rec: str, X_tr, y_tr, d_tr, X_te, n_cls: int, seed: int):
     """-> (predictions on X_te, predictions on X_tr (training fit), final training loss or nan)."""
+    score, loss, _is_cos = fit_scorer(rec, X_tr, y_tr, d_tr, n_cls, seed)
+    with torch.no_grad():
+        return score(X_te).argmax(-1), score(X_tr).argmax(-1), loss
+
+
+def fit_scorer(rec: str, X_tr, y_tr, d_tr, n_cls: int, seed: int):
+    """[Phase 1b refactor; identical training and scores to the original fit_predict] -> (score_fn (N, D) -> (N, C)
+    class scores, final training loss or nan, True if the scores are cosines (NEAR / FUNNEL / XDOM))."""
     D = X_tr.shape[1]
     if rec == "NEAR":
         means = class_means(X_tr, y_tr, n_cls)
-        return (X_te @ means.T).argmax(-1), (X_tr @ means.T).argmax(-1), float("nan")
+        return (lambda X: X @ means.T), float("nan"), True
     seed_all(seed)  # before model init
     if rec == "LIN":
         model = nn.Linear(D, n_cls)
@@ -751,8 +833,7 @@ def fit_predict(rec: str, X_tr, y_tr, d_tr, X_te, n_cls: int, seed: int):
     model = model.to(DEVICE).float()
     if rec in ("LIN", "MLP"):
         loss = train_loop(model, lambda m: F.cross_entropy(m(X_tr), y_tr), CE_STEPS, seed)
-        with torch.no_grad():
-            return model(X_te).argmax(-1), model(X_tr).argmax(-1), loss
+        return (lambda X: model(X)), loss, False
     if rec == "FUNNEL":
         loss = train_loop(model, lambda m: funnel_loss(m(X_tr), y_tr, n_cls), FUNNEL_STEPS, seed)
     else:
@@ -764,13 +845,46 @@ def fit_predict(rec: str, X_tr, y_tr, d_tr, X_te, n_cls: int, seed: int):
 
         loss = train_loop(model, _xl, CE_STEPS, seed)
     with torch.no_grad():
-        z_tr, z_te = model(X_tr), model(X_te)
-        anchors = class_means(z_tr, y_tr, n_cls)
-        return (z_te @ anchors.T).argmax(-1), (z_tr @ anchors.T).argmax(-1), loss
+        anchors = class_means(model(X_tr), y_tr, n_cls)
+    return (lambda X: model(X) @ anchors.T), loss, True
 
 
-def cv_dataset(ds: dict, enc: str, H, folds, pools, results: dict):
-    """Every (k, fold, seed, recognizer) of one dataset for one encoder; prints L15_CV (+ L15_STAGE for v5)."""
+@torch.no_grad()
+def top_conf(scores, is_cos: bool):
+    return F.softmax(scores / CONF_TAU if is_cos else scores, dim=-1).max(dim=-1).values
+
+
+@torch.no_grad()
+def eval_hard(tag: str, score, is_cos: bool, Xh, hard, rows, X_te, y_te, te_dom, enc, rec, f, seed):
+    """Phase 1b: NEG / OTHER / TEMP counts and the HEDGE confidence comparison on the held-out hard rows."""
+    sc = score(Xh[rows])
+    pred, conf = sc.argmax(-1).tolist(), top_conf(sc, is_cos).tolist()
+    plain_conf = top_conf(score(X_te), is_cos).tolist()
+    for cat in ("NEG", "OTHER", "TEMP"):
+        idx = [j for j, i in enumerate(rows) if hard["cat"][i] == cat]
+        c = sum(pred[j] == hard["cls"][rows[j]] for j in idx)
+        a = sum(pred[j] == hard["surface"][rows[j]] for j in idx)
+        log(f"L15_HARD data=st enc={enc} rec={rec} train={tag} fold={f} seed={seed} cat={cat} correct={c} "
+            f"total={len(idx)} as_surface={a}")
+    idx = [j for j, i in enumerate(rows) if hard["cat"][i] == "HEDGE"]
+    ch = cp = 0.0
+    as_s = as_noop = 0
+    yl = y_te.tolist()
+    for j in idx:
+        i = rows[j]
+        ref = [plain_conf[r] for r in range(len(yl)) if yl[r] == hard["surface"][i] and te_dom[r] == hard["dom"][i]]
+        assert ref, "no plain reference sentence for a HEDGE item"
+        ch += conf[j]
+        cp += sum(ref) / len(ref)
+        as_s += int(pred[j] == hard["surface"][i])
+        as_noop += int(pred[j] == N_INIT + EVENTS.index("NOOP"))
+    log(f"L15_HEDGE data=st enc={enc} rec={rec} train={tag} fold={f} seed={seed} n={len(idx)} "
+        f"conf_hedge_sum={ch:.4f} conf_plain_sum={cp:.4f} as_surface={as_s} as_noop={as_noop}")
+
+
+def cv_dataset(ds: dict, enc: str, H, folds, pools, results: dict, hard=None, Hh=None):
+    """Every (k, fold, seed, recognizer) of one dataset for one encoder; prints L15_CV (+ L15_STAGE for v5).
+    Phase 1b: for st at the registered k, also the hard-case lines (train=normal / withhard)."""
     name, n_cls = ds["name"], ds["n_cls"]
     Fd = H.to(DEVICE)
     y = torch.tensor(ds["cls"], device=DEVICE)
@@ -788,9 +902,31 @@ def cv_dataset(ds: dict, enc: str, H, folds, pools, results: dict):
             tr_t = torch.tensor(tr, device=DEVICE)
             X_tr, X_te = preprocess(Fd, tr_t, te_t)
             y_tr, y_te, d_tr = y[tr_t], y[te_t], dvec[tr_t]
+            hard_on = hard is not None and name == "st" and k == REG_K["st"]
+            if hard_on:  # Phase 1b: the same mu as preprocess (mean of the normal training rows)
+                mu = Fd[tr_t].mean(dim=0)
+                Xh = F.normalize(Hh.to(DEVICE) - mu, p=2, dim=-1)
+                h_te = [i for i, d in enumerate(hard["dom"]) if d in held]
+                h_tr = [i for i, d in enumerate(hard["dom"]) if d in tr_doms and hard["cls"][i] >= 0]
+                assert h_te and h_tr and not {hard["dom"][i] for i in h_te} & set(tr_doms)
+                te_dom = [ds["dom"][i] for i in te]
+                h_tr_t = torch.tensor(h_tr, device=DEVICE)
+                X_tr_b = torch.cat([X_tr, Xh[h_tr_t]], dim=0)
+                y_tr_b = torch.cat([y_tr, torch.tensor([hard["cls"][i] for i in h_tr], device=DEVICE)])
+                d_tr_b = torch.cat([d_tr, torch.tensor([dom_id[hard["dom"][i]] for i in h_tr], device=DEVICE)])
             for seed in SEEDS:
                 for rec in RECOGNIZERS:
-                    p_te, p_tr, loss = fit_predict(rec, X_tr, y_tr, d_tr, X_te, n_cls, seed)
+                    score, loss, is_cos = fit_scorer(rec, X_tr, y_tr, d_tr, n_cls, seed)
+                    with torch.no_grad():
+                        p_te, p_tr = score(X_te).argmax(-1), score(X_tr).argmax(-1)
+                    if hard_on:
+                        eval_hard("normal", score, is_cos, Xh, hard, h_te, X_te, y_te, te_dom, enc, rec, f, seed)
+                        score_b, _lb, cos_b = fit_scorer(rec, X_tr_b, y_tr_b, d_tr_b, n_cls, seed)
+                        eval_hard("withhard", score_b, cos_b, Xh, hard, h_te, X_te, y_te, te_dom, enc, rec, f, seed)
+                        with torch.no_grad():
+                            cb = int((score_b(X_te).argmax(-1) == y_te).sum())
+                        log(f"L15_HARDNORM data=st enc={enc} rec={rec} fold={f} seed={seed} correct={cb} "
+                            f"total={len(te)}")
                     hit = (p_te == y_te).cpu().tolist()
                     fit_c = int((p_tr == y_tr).sum())
                     c, t = sum(hit), len(hit)
@@ -901,7 +1037,8 @@ def main():
 
     # ---- data ----
     data = {"st": load_st(), "v5": load_v5()}
-    guard = LeakGuard(data["st"]["texts"] + data["v5"]["texts"], data["st"]["forbidden"])
+    data["hard"] = load_hard(data["st"])  # Phase 1b
+    guard = LeakGuard(data["st"]["texts"] + data["v5"]["texts"] + data["hard"]["texts"], data["st"]["forbidden"])
     folds = {}
     for name in DATASETS:
         fo, po = make_folds(data[name]["doms"], N_FOLDS[name])
@@ -922,13 +1059,19 @@ def main():
         zs_fn = None
         if code == ZS_MODEL:
             def zs_fn(tok, model):
-                run_zero_shot(data["st"], make_chooser(tok, model), guard)
+                chooser = make_chooser(tok, model)
+                run_zero_shot(data["st"], chooser, guard)
+                run_zero_shot_hard(data["hard"], chooser, guard)  # Phase 1b
         feats = run_model(code, data, guard, zs_fn)
         zs_done |= zs_fn is not None
         for enc in feats:
             encs_run.append(enc)
             for name in DATASETS:
-                cv_dataset(data[name], enc, feats[enc][name], *folds[name], results)
+                if name == "st":  # Phase 1b: hard cases at the registered k
+                    cv_dataset(data[name], enc, feats[enc][name], *folds[name], results,
+                               hard=data["hard"], Hh=feats[enc]["hard"])
+                else:
+                    cv_dataset(data[name], enc, feats[enc][name], *folds[name], results)
         del feats
         free_gpu()
     assert encs_run == [e for e in ENCODERS if e.split("-")[0] in models], encs_run
@@ -942,6 +1085,7 @@ def main():
         log("\n[l15] zero-shot reference not run in this log (Q7 not in LAB15_MODELS)")
     log(f"\n[l15] total time {time.time() - t_start:.1f}s")
     log(f"L15_CONFIG data_sha_st={data['st']['sha']} data_sha_v5={data['v5']['sha']} templates_sha={data['st']['tpl_sha']} "
+        f"data_sha_hard={data['hard']['sha']} "
         f"env={env_tag} script_sha={script_sha} models={','.join(models)} seeds={','.join(map(str, SEEDS))} "
         f"zs={int(zs_done)}")
 
