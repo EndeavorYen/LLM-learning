@@ -13,7 +13,9 @@
 #   HARD17   normal table + Lab 17 hard sentences (NEG / OTHER / TEMP)
 #   PAIRS    HARD17 + all reading groups
 #   PAIRSCR  PAIRS with confidence regularisation (Utama et al. 2020): bias model = character 1-2 gram logistic
-#            regression on the PAIRS rows (in-sample probabilities); teacher = the PAIRS model of the same eye and seed
+#            regression on the PAIRS rows [amendment, review 1: OUT-OF-FOLD probabilities, cross-fitted by domain,
+#            4 folds x 7 domains; in-sample fits memorise the rows]; teacher = the PAIRS model of the same eye and seed
+#            (PAIRSCR reuses PAIRS's LoRA init and batch order [review 4])
 #            (its FLAT head's probabilities on the training rows, per readout); targets s_j ~ t_j ** (1 - b_gold); used
 #            in the LoRA cross-entropy term (teacher = the C head) and in the final heads (teacher = the same readout).
 # Readout: ZERO x = normalize(f - mu), mu = mean of the 28 domains' normal rows; C x = normalize(f - m_d), m_d = mean of
@@ -60,7 +62,7 @@ EYE_ORDER = ("Q15", "Q3E")
 PROMPT_TMPL = '这句话："{s}"\n用一个词概括这句话描述的事件：'
 Q3E_TASK = "Identify which abstract event or state of the system this sentence describes"
 Q3E_TMPL = "Instruct: " + Q3E_TASK + "\nQuery:{s}"
-SENT_MAXLEN = 128
+SENT_MAXLEN = 160  # [amendment] 128 in Lab 17; the natural-style test sentences reach 132 tokens with the Q3E prompt (no truncation, asserted)
 FEAT_BATCH = 64
 LORA_R, LORA_ALPHA, LORA_DROPOUT = 16, 32, 0.05
 LORA_TARGETS = ("q_proj", "k_proj", "v_proj", "o_proj")
@@ -81,8 +83,8 @@ EXPECTED_PROBE_SHA256 = "3beede5245d048af2a5a6652079a974e19a1305887710eca6c7d1ff
 N_EXTRA = 12
 HARD_CATS = ("NEG", "OTHER", "TEMP", "HEDGE")
 USED_HARD = ("NEG", "OTHER", "TEMP")
-EXPECTED_RTRAIN_SHA256 = None  # set when reading_v1/train_groups.json is accepted
-EXPECTED_RTEST_SHA256 = None   # set when reading_v1/test.json is accepted
+EXPECTED_RTRAIN_SHA256 = "ffede6eca9e2777a213c926c21b9b75981aad4fef50711b391c49d9149efeaf8"  # accepted: validator PASS, blind 416/420, 4 OTHER items clarified and re-checked
+EXPECTED_RTEST_SHA256 = "49616f38581105d0c69c6e9b1509d8d763027fdb3d3b7ec199ea8a07d03c4c4a"   # accepted: validator PASS, blind 1256/1256 (one annotator row-shift re-checked 20/20)
 
 # (copied from Lab 15) classes
 CLASSES = ["L0_ok", "L1_ok", "L2_ok", "L3_ok", "L0_broken", "L1_broken", "L2_broken", "L3_broken", "BURST"]
@@ -679,13 +681,14 @@ class Tally:
 
 
 
-def train_lora(eye, tok, backbone, mods, pool_by_dom, guard, seed, cond, soft=None):
+def train_lora(eye, tok, backbone, mods, pool_by_dom, guard, seed, cond, soft=None, train_set=None):
     """(Lab 17, extended) pool_by_dom: training domain -> list of (sentence, class, training-row index).
     soft: None, or an (N_rows, 13) tensor of confidence-regularised targets (PAIRS+CR): the cross-entropy term then
     uses these soft targets instead of the hard class. Returns the loss trace."""
     if DEVICE == "cuda":
         torch.cuda.reset_peak_memory_stats()
-    tag_seed = int(hashlib.sha256(f"18a-lora|{eye}|{seed}|{cond}".encode()).hexdigest()[:8], 16)
+    # [review 4] PAIRSCR shares PAIRS's LoRA init and batch order, so the only difference is the soft targets
+    tag_seed = int(hashlib.sha256(f"18a-lora|{eye}|{seed}|{cond if cond != 'PAIRSCR' else 'PAIRS'}".encode()).hexdigest()[:8], 16)
     seed_all(tag_seed)
     for m in mods:
         m.reset()
@@ -709,6 +712,7 @@ def train_lora(eye, tok, backbone, mods, pool_by_dom, guard, seed, cond, soft=No
         mt = [model_text(eye, s) for s, _c, _d, _r in batch]
         for (s, _c, _d, _r), t in zip(batch, mt):
             guard.check(s, t)
+            assert train_set is None or s in train_set, "LEAK: a non-training sentence in a LoRA batch"  # [review 7]
         h, _n = pool_last(tok, backbone, mt)
         y = torch.tensor([c for _s, c, _d, _r in batch], device=DEVICE)
         dvec = torch.tensor([d for _s, _c, d, _r in batch], device=DEVICE)
@@ -815,7 +819,7 @@ def load_reading_train(table: dict, forbidden):
     return dict(sha=sha, texts=texts, cls=cls, dom=dom, var=var)
 
 
-def load_reading_test(table: dict, forbidden, other_texts):
+def load_reading_test(table: dict, forbidden, other_texts, other_doms=()):
     path, raw, sha = _read_first(_reading_path("test.json"), "test.json")
     assert EXPECTED_RTEST_SHA256 is not None and sha == EXPECTED_RTEST_SHA256, f"test.json not registered: {sha}"
     p = json.loads(raw.decode("utf-8"))
@@ -823,6 +827,7 @@ def load_reading_test(table: dict, forbidden, other_texts):
     doms = [d["name"] for d in p["domains"]]
     assert len(doms) == N_RTEST and len(set(doms)) == N_RTEST, doms
     assert not any(a in b or b in a for a in doms for b in table["doms"]), "a reading test domain overlaps a train domain"
+    assert not any(a in b or b in a for a in doms for b in other_doms), "a reading test domain overlaps a probe domain"
     sup = {}            # (dom, event index) -> list of support row indices (into texts)
     items = []          # dict(dom, gid, var, text, y)  y = local event index
     texts = []
@@ -858,28 +863,46 @@ def char_ngrams(s):
     return [c for c in s] + [s[i:i + 2] for i in range(len(s) - 1)]
 
 
-def bias_probs(texts, y, seed):
-    """Keyword-only classifier: character 1-2 gram bag (features seen >= 2 times), multinomial logistic regression,
-    full batch AdamW lr 0.05, wd 1e-4, 300 steps; returns in-sample probabilities (N, 13)."""
-    cnt = Counter(g for s in texts for g in set(char_ngrams(s)))
+def bias_fit(texts, y, seed, rows_fit, rows_out):
+    """Keyword-only classifier fitted on rows_fit: character 1-2 gram bag (features seen >= 2 times in rows_fit),
+    multinomial logistic regression, full batch AdamW lr 0.05, wd 1e-4, 300 steps; returns probabilities of rows_out."""
+    cnt = Counter(g for r in rows_fit for g in set(char_ngrams(texts[r])))
     vocab = {g: i for i, g in enumerate(sorted(g for g, c in cnt.items() if c >= 2))}
     X = torch.zeros(len(texts), len(vocab), device=DEVICE)
     for r, s in enumerate(texts):
         for g in char_ngrams(s):
             if g in vocab:
                 X[r, vocab[g]] = 1.0
+    fit_t, out_t = torch.tensor(rows_fit, device=DEVICE), torch.tensor(rows_out, device=DEVICE)
     seed_all(seed)
     lin = nn.Linear(len(vocab), N_SCLS).to(DEVICE)
     opt = torch.optim.AdamW(lin.parameters(), lr=0.05, weight_decay=1e-4)
     for _ in range(300):
         opt.zero_grad()
-        loss = F.cross_entropy(lin(X), y)
+        loss = F.cross_entropy(lin(X[fit_t]), y[fit_t])
         loss.backward()
         opt.step()
     with torch.no_grad():
-        P = F.softmax(lin(X), -1)
+        return F.softmax(lin(X[out_t]), -1), len(vocab)
+
+
+def bias_probs(texts, y, doms, seed):
+    """[amendment, review 1] OUT-OF-FOLD bias probabilities, cross-fitted by domain: the 28 training domains (sorted,
+    shuffled with Random(2026)) in 4 folds of 7; each row is scored by a bias model that never saw its domain. (An
+    in-sample fit memorises the rows: b_gold ~ 1, so every CR target would be ~uniform.)"""
+    names = sorted(set(doms))
+    random.Random(2026).shuffle(names)
+    P = torch.zeros(len(texts), N_SCLS, device=DEVICE)
+    nv = []
+    for k in range(4):
+        held = set(names[k * 7:(k + 1) * 7])
+        out = [r for r, d in enumerate(doms) if d in held]
+        fit = [r for r, d in enumerate(doms) if d not in held]
+        Pk, v = bias_fit(texts, y, seed + k, fit, out)
+        P[torch.tensor(out, device=DEVICE)] = Pk
+        nv.append(v)
     acc = float((P.argmax(-1) == y).float().mean())
-    return P, len(vocab), acc
+    return P, nv, acc
 
 
 def cr_targets(teacher_p, bias_p, y):
@@ -985,6 +1008,11 @@ def evaluate18a(cond, tr, F_tr, rt, F_sup, F_it, probe, Fp, Fi, seed, soft_by_me
                 pq = ev_scores("FLAT", models[m], F.normalize(Fp[q_t] - ctr, dim=-1)).argmax(-1).tolist()
                 for pp, t in zip(pq, yq):
                     ptl[m].add("normal", pp == t)
+                    ptl[m].add(f"normal_{EVENTS[t]}", pp == t)  # [review 5]
+                ir = [i for i, (c, dd) in enumerate(zip(probe["cls"], probe["dom"])) if dd == d and c < N_INIT]
+                pi = init_scores("FLAT", models[m], F.normalize(Fp[torch.tensor(ir, device=DEVICE)] - ctr, dim=-1)).argmax(-1)
+                for pp, t in zip(pi.tolist(), [probe["cls"][i] for i in ir]):
+                    ptl[m].add("init", pp == t)
                 pit = ev_scores("FLAT", models[m], F.normalize(Fi[ii_t] - ctr, dim=-1)).argmax(-1).tolist()
                 ptl[m].score_items(d, dict(zip(ii, pit)))
     return rtl, ptl, teach
@@ -1020,7 +1048,7 @@ def main():
     probe = load_probe(table, hard, st["forbidden"])
     rtrain = load_reading_train(table, st["forbidden"])
     other = table["texts"] + hard["texts"] + rtrain["texts"] + probe["texts"] + [it["text"] for it in probe["items"]]
-    rt = load_reading_test(table, st["forbidden"], other)
+    rt = load_reading_test(table, st["forbidden"], other, probe["doms"])
     assert not set(rtrain["texts"]) & set(hard["texts"]), "DATA ERROR: reading sentence equals a hard sentence"
 
     # training rows per condition: normal table + Lab 17 hard (NEG / OTHER / TEMP) [+ reading groups]
@@ -1039,9 +1067,18 @@ def main():
                       st["forbidden"])
     all_texts = pairs["texts"] + probe["texts"] + probe_items + rt["texts"] + [it["text"] for it in rt["items"]]
     yb = torch.tensor(pairs["cls"], device=DEVICE)
-    PB, nvocab, bacc = bias_probs(pairs["texts"], yb, 2026)
-    log(f"[l18a] bias model (char 1-2 gram logistic regression): vocab {nvocab} | in-sample accuracy {bacc:.4f} | "
-        f"mean gold prob {float(PB.gather(1, yb.unsqueeze(1)).mean()):.4f}")
+    PB, nvocab, bacc = bias_probs(pairs["texts"], yb, pairs["dom"], 2026)
+    bg = PB.gather(1, yb.unsqueeze(1)).squeeze(1)
+    qs = torch.quantile(bg.float().cpu(), torch.tensor([0.1, 0.25, 0.5, 0.75, 0.9]))
+    onehot = F.one_hot(yb, N_SCLS).float()
+    tg = cr_targets(onehot, PB, yb).gather(1, yb.unsqueeze(1)).squeeze(1)
+    frac_sharp = float((tg > 0.5).float().mean())
+    log(f"[l18a] bias model (char 1-2 gram logistic regression, out-of-fold by domain, 4 x 7): vocab {nvocab} | "
+        f"out-of-fold accuracy {bacc:.4f} | b_gold quantiles p10/25/50/75/90 "
+        + "/".join(f"{float(q):.3f}" for q in qs) + f" | CR gold target with a one-hot teacher > 0.5 for {frac_sharp:.3f} of rows")
+    assert 0.2 <= frac_sharp <= 0.95, f"CR targets degenerate (sharp fraction {frac_sharp})"
+    cue_rows = [t for t in pairs["texts"] if any(c in t for c in HYPO_CUES)]
+    log(f"[l18a] training rows containing a hypothetical cue character: {len(cue_rows)} " + " | ".join(cue_rows[:10]))
     for eye in eyes:
         tok = AutoTokenizer.from_pretrained(EYES[eye][0])
         worst = max(len(tok(model_text(eye, s)).input_ids) for s in all_texts)
@@ -1094,7 +1131,7 @@ def main():
                 assert len(pool_by_dom) == 28 and not set(pool_by_dom) & (set(probe["doms"]) | set(rt["doms"]))
                 t1 = time.time()
                 trace = train_lora(eye, tok, backbone, mods, pool_by_dom, guard, seed, cond,
-                                   None if soft is None else soft["C"])
+                                   None if soft is None else soft["C"], set(tr["texts"]))
                 model.eval()
                 F_tr, F_sup, F_it, Fp, Fi = feats(f"{cond}-s{seed}", tr)
                 lora_off(mods)

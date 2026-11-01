@@ -1,0 +1,1692 @@
+[
+ {
+  "n": 1,
+  "label": "OUT",
+  "note": "odd: '医院门口那个站台' not explicitly this stop or another; read as this stop (OUT). Alt NOOP."
+ },
+ {
+  "n": 2,
+  "label": "OUT"
+ },
+ {
+  "n": 3,
+  "label": "FIX"
+ },
+ {
+  "n": 4,
+  "label": "NOOP"
+ },
+ {
+  "n": 5,
+  "label": "NOOP"
+ },
+ {
+  "n": 6,
+  "label": "BREAK"
+ },
+ {
+  "n": 7,
+  "label": "IN"
+ },
+ {
+  "n": 8,
+  "label": "IN"
+ },
+ {
+  "n": 9,
+  "label": "NOOP"
+ },
+ {
+  "n": 10,
+  "label": "NOOP"
+ },
+ {
+  "n": 11,
+  "label": "NOOP"
+ },
+ {
+  "n": 12,
+  "label": "IN"
+ },
+ {
+  "n": 13,
+  "label": "IN"
+ },
+ {
+  "n": 14,
+  "label": "IN"
+ },
+ {
+  "n": 15,
+  "label": "FIX"
+ },
+ {
+  "n": 16,
+  "label": "NOOP"
+ },
+ {
+  "n": 17,
+  "label": "FIX"
+ },
+ {
+  "n": 18,
+  "label": "IN"
+ },
+ {
+  "n": 19,
+  "label": "OUT"
+ },
+ {
+  "n": 20,
+  "label": "FIX"
+ },
+ {
+  "n": 21,
+  "label": "FIX"
+ },
+ {
+  "n": 22,
+  "label": "OUT"
+ },
+ {
+  "n": 23,
+  "label": "FIX"
+ },
+ {
+  "n": 24,
+  "label": "FIX"
+ },
+ {
+  "n": 25,
+  "label": "IN"
+ },
+ {
+  "n": 26,
+  "label": "NOOP"
+ },
+ {
+  "n": 27,
+  "label": "NOOP"
+ },
+ {
+  "n": 28,
+  "label": "IN"
+ },
+ {
+  "n": 29,
+  "label": "IN"
+ },
+ {
+  "n": 30,
+  "label": "NOOP",
+  "note": "odd: protection still not enabled after patch = state unchanged (NOOP), implies it was already off."
+ },
+ {
+  "n": 31,
+  "label": "NOOP"
+ },
+ {
+  "n": 32,
+  "label": "IN"
+ },
+ {
+  "n": 33,
+  "label": "FIX"
+ },
+ {
+  "n": 34,
+  "label": "OUT"
+ },
+ {
+  "n": 35,
+  "label": "NOOP"
+ },
+ {
+  "n": 36,
+  "label": "FIX"
+ },
+ {
+  "n": 37,
+  "label": "NOOP"
+ },
+ {
+  "n": 38,
+  "label": "NOOP"
+ },
+ {
+  "n": 39,
+  "label": "NOOP"
+ },
+ {
+  "n": 40,
+  "label": "NOOP"
+ },
+ {
+  "n": 41,
+  "label": "OUT"
+ },
+ {
+  "n": 42,
+  "label": "NOOP"
+ },
+ {
+  "n": 43,
+  "label": "IN"
+ },
+ {
+  "n": 44,
+  "label": "NOOP"
+ },
+ {
+  "n": 45,
+  "label": "NOOP"
+ },
+ {
+  "n": 46,
+  "label": "NOOP"
+ },
+ {
+  "n": 47,
+  "label": "OUT"
+ },
+ {
+  "n": 48,
+  "label": "OUT"
+ },
+ {
+  "n": 49,
+  "label": "NOOP"
+ },
+ {
+  "n": 50,
+  "label": "NOOP"
+ },
+ {
+  "n": 51,
+  "label": "OUT"
+ },
+ {
+  "n": 52,
+  "label": "NOOP"
+ },
+ {
+  "n": 53,
+  "label": "NOOP"
+ },
+ {
+  "n": 54,
+  "label": "FIX"
+ },
+ {
+  "n": 55,
+  "label": "BREAK"
+ },
+ {
+  "n": 56,
+  "label": "FIX"
+ },
+ {
+  "n": 57,
+  "label": "IN"
+ },
+ {
+  "n": 58,
+  "label": "NOOP"
+ },
+ {
+  "n": 59,
+  "label": "NOOP"
+ },
+ {
+  "n": 60,
+  "label": "NOOP"
+ },
+ {
+  "n": 61,
+  "label": "OUT"
+ },
+ {
+  "n": 62,
+  "label": "BREAK"
+ },
+ {
+  "n": 63,
+  "label": "NOOP"
+ },
+ {
+  "n": 64,
+  "label": "IN"
+ },
+ {
+  "n": 65,
+  "label": "FIX"
+ },
+ {
+  "n": 66,
+  "label": "NOOP"
+ },
+ {
+  "n": 67,
+  "label": "NOOP"
+ },
+ {
+  "n": 68,
+  "label": "FIX"
+ },
+ {
+  "n": 69,
+  "label": "NOOP"
+ },
+ {
+  "n": 70,
+  "label": "FIX"
+ },
+ {
+  "n": 71,
+  "label": "FIX"
+ },
+ {
+  "n": 72,
+  "label": "FIX"
+ },
+ {
+  "n": 73,
+  "label": "NOOP"
+ },
+ {
+  "n": 74,
+  "label": "NOOP"
+ },
+ {
+  "n": 75,
+  "label": "BREAK"
+ },
+ {
+  "n": 76,
+  "label": "FIX",
+  "note": "odd: turning the manager on to stop overloads implies it had been off; FIX."
+ },
+ {
+  "n": 77,
+  "label": "OUT"
+ },
+ {
+  "n": 78,
+  "label": "OUT"
+ },
+ {
+  "n": 79,
+  "label": "NOOP"
+ },
+ {
+  "n": 80,
+  "label": "NOOP"
+ },
+ {
+  "n": 81,
+  "label": "FIX"
+ },
+ {
+  "n": 82,
+  "label": "BREAK"
+ },
+ {
+  "n": 83,
+  "label": "NOOP"
+ },
+ {
+  "n": 84,
+  "label": "IN"
+ },
+ {
+  "n": 85,
+  "label": "NOOP"
+ },
+ {
+  "n": 86,
+  "label": "NOOP"
+ },
+ {
+  "n": 87,
+  "label": "NOOP"
+ },
+ {
+  "n": 88,
+  "label": "FIX"
+ },
+ {
+  "n": 89,
+  "label": "NOOP"
+ },
+ {
+  "n": 90,
+  "label": "OUT"
+ },
+ {
+  "n": 91,
+  "label": "IN"
+ },
+ {
+  "n": 92,
+  "label": "NOOP"
+ },
+ {
+  "n": 93,
+  "label": "NOOP"
+ },
+ {
+  "n": 94,
+  "label": "OUT"
+ },
+ {
+  "n": 95,
+  "label": "NOOP"
+ },
+ {
+  "n": 96,
+  "label": "FIX"
+ },
+ {
+  "n": 97,
+  "label": "BREAK"
+ },
+ {
+  "n": 98,
+  "label": "IN"
+ },
+ {
+  "n": 99,
+  "label": "BREAK"
+ },
+ {
+  "n": 100,
+  "label": "OUT"
+ },
+ {
+  "n": 101,
+  "label": "NOOP"
+ },
+ {
+  "n": 102,
+  "label": "NOOP"
+ },
+ {
+  "n": 103,
+  "label": "NOOP"
+ },
+ {
+  "n": 104,
+  "label": "NOOP"
+ },
+ {
+  "n": 105,
+  "label": "IN"
+ },
+ {
+  "n": 106,
+  "label": "NOOP"
+ },
+ {
+  "n": 107,
+  "label": "NOOP"
+ },
+ {
+  "n": 108,
+  "label": "OUT"
+ },
+ {
+  "n": 109,
+  "label": "FIX"
+ },
+ {
+  "n": 110,
+  "label": "NOOP"
+ },
+ {
+  "n": 111,
+  "label": "FIX"
+ },
+ {
+  "n": 112,
+  "label": "OUT"
+ },
+ {
+  "n": 113,
+  "label": "NOOP"
+ },
+ {
+  "n": 114,
+  "label": "NOOP"
+ },
+ {
+  "n": 115,
+  "label": "FIX"
+ },
+ {
+  "n": 116,
+  "label": "IN"
+ },
+ {
+  "n": 117,
+  "label": "OUT"
+ },
+ {
+  "n": 118,
+  "label": "BREAK"
+ },
+ {
+  "n": 119,
+  "label": "NOOP"
+ },
+ {
+  "n": 120,
+  "label": "NOOP"
+ },
+ {
+  "n": 121,
+  "label": "BREAK"
+ },
+ {
+  "n": 122,
+  "label": "NOOP"
+ },
+ {
+  "n": 123,
+  "label": "OUT"
+ },
+ {
+  "n": 124,
+  "label": "BREAK"
+ },
+ {
+  "n": 125,
+  "label": "NOOP"
+ },
+ {
+  "n": 126,
+  "label": "NOOP"
+ },
+ {
+  "n": 127,
+  "label": "IN"
+ },
+ {
+  "n": 128,
+  "label": "NOOP"
+ },
+ {
+  "n": 129,
+  "label": "FIX"
+ },
+ {
+  "n": 130,
+  "label": "NOOP"
+ },
+ {
+  "n": 131,
+  "label": "BREAK"
+ },
+ {
+  "n": 132,
+  "label": "NOOP"
+ },
+ {
+  "n": 133,
+  "label": "NOOP"
+ },
+ {
+  "n": 134,
+  "label": "FIX"
+ },
+ {
+  "n": 135,
+  "label": "NOOP"
+ },
+ {
+  "n": 136,
+  "label": "NOOP"
+ },
+ {
+  "n": 137,
+  "label": "OUT"
+ },
+ {
+  "n": 138,
+  "label": "NOOP"
+ },
+ {
+  "n": 139,
+  "label": "OUT"
+ },
+ {
+  "n": 140,
+  "label": "BREAK"
+ },
+ {
+  "n": 141,
+  "label": "FIX"
+ },
+ {
+  "n": 142,
+  "label": "NOOP"
+ },
+ {
+  "n": 143,
+  "label": "NOOP"
+ },
+ {
+  "n": 144,
+  "label": "NOOP"
+ },
+ {
+  "n": 145,
+  "label": "NOOP"
+ },
+ {
+  "n": 146,
+  "label": "BREAK"
+ },
+ {
+  "n": 147,
+  "label": "NOOP"
+ },
+ {
+  "n": 148,
+  "label": "OUT"
+ },
+ {
+  "n": 149,
+  "label": "OUT"
+ },
+ {
+  "n": 150,
+  "label": "NOOP"
+ },
+ {
+  "n": 151,
+  "label": "IN"
+ },
+ {
+  "n": 152,
+  "label": "FIX"
+ },
+ {
+  "n": 153,
+  "label": "OUT"
+ },
+ {
+  "n": 154,
+  "label": "FIX"
+ },
+ {
+  "n": 155,
+  "label": "FIX"
+ },
+ {
+  "n": 156,
+  "label": "OUT"
+ },
+ {
+  "n": 157,
+  "label": "NOOP"
+ },
+ {
+  "n": 158,
+  "label": "NOOP"
+ },
+ {
+  "n": 159,
+  "label": "BREAK"
+ },
+ {
+  "n": 160,
+  "label": "IN"
+ },
+ {
+  "n": 161,
+  "label": "NOOP"
+ },
+ {
+  "n": 162,
+  "label": "IN"
+ },
+ {
+  "n": 163,
+  "label": "NOOP"
+ },
+ {
+  "n": 164,
+  "label": "NOOP"
+ },
+ {
+  "n": 165,
+  "label": "OUT"
+ },
+ {
+  "n": 166,
+  "label": "NOOP"
+ },
+ {
+  "n": 167,
+  "label": "UNCLEAR",
+  "note": "BREAK vs NOOP: '罐区北头那只储油罐' may or may not be this tank (no '另一' marker)."
+ },
+ {
+  "n": 168,
+  "label": "IN"
+ },
+ {
+  "n": 169,
+  "label": "NOOP"
+ },
+ {
+  "n": 170,
+  "label": "NOOP"
+ },
+ {
+  "n": 171,
+  "label": "NOOP"
+ },
+ {
+  "n": 172,
+  "label": "NOOP"
+ },
+ {
+  "n": 173,
+  "label": "NOOP"
+ },
+ {
+  "n": 174,
+  "label": "FIX"
+ },
+ {
+  "n": 175,
+  "label": "NOOP"
+ },
+ {
+  "n": 176,
+  "label": "IN"
+ },
+ {
+  "n": 177,
+  "label": "NOOP"
+ },
+ {
+  "n": 178,
+  "label": "NOOP"
+ },
+ {
+  "n": 179,
+  "label": "OUT"
+ },
+ {
+  "n": 180,
+  "label": "BREAK"
+ },
+ {
+  "n": 181,
+  "label": "NOOP"
+ },
+ {
+  "n": 182,
+  "label": "NOOP"
+ },
+ {
+  "n": 183,
+  "label": "BREAK"
+ },
+ {
+  "n": 184,
+  "label": "NOOP"
+ },
+ {
+  "n": 185,
+  "label": "NOOP"
+ },
+ {
+  "n": 186,
+  "label": "NOOP"
+ },
+ {
+  "n": 187,
+  "label": "NOOP"
+ },
+ {
+  "n": 188,
+  "label": "NOOP"
+ },
+ {
+  "n": 189,
+  "label": "NOOP"
+ },
+ {
+  "n": 190,
+  "label": "IN"
+ },
+ {
+  "n": 191,
+  "label": "IN"
+ },
+ {
+  "n": 192,
+  "label": "NOOP"
+ },
+ {
+  "n": 193,
+  "label": "NOOP"
+ },
+ {
+  "n": 194,
+  "label": "NOOP"
+ },
+ {
+  "n": 195,
+  "label": "OUT"
+ },
+ {
+  "n": 196,
+  "label": "NOOP"
+ },
+ {
+  "n": 197,
+  "label": "NOOP"
+ },
+ {
+  "n": 198,
+  "label": "IN"
+ },
+ {
+  "n": 199,
+  "label": "NOOP"
+ },
+ {
+  "n": 200,
+  "label": "NOOP"
+ },
+ {
+  "n": 201,
+  "label": "NOOP"
+ },
+ {
+  "n": 202,
+  "label": "OUT"
+ },
+ {
+  "n": 203,
+  "label": "IN"
+ },
+ {
+  "n": 204,
+  "label": "NOOP"
+ },
+ {
+  "n": 205,
+  "label": "OUT"
+ },
+ {
+  "n": 206,
+  "label": "OUT"
+ },
+ {
+  "n": 207,
+  "label": "NOOP"
+ },
+ {
+  "n": 208,
+  "label": "IN"
+ },
+ {
+  "n": 209,
+  "label": "NOOP"
+ },
+ {
+  "n": 210,
+  "label": "IN"
+ },
+ {
+  "n": 211,
+  "label": "IN"
+ },
+ {
+  "n": 212,
+  "label": "OUT"
+ },
+ {
+  "n": 213,
+  "label": "OUT"
+ },
+ {
+  "n": 214,
+  "label": "BREAK"
+ },
+ {
+  "n": 215,
+  "label": "NOOP"
+ },
+ {
+  "n": 216,
+  "label": "IN"
+ },
+ {
+  "n": 217,
+  "label": "NOOP"
+ },
+ {
+  "n": 218,
+  "label": "IN"
+ },
+ {
+  "n": 219,
+  "label": "OUT"
+ },
+ {
+  "n": 220,
+  "label": "UNCLEAR",
+  "note": "IN vs NOOP: '哥哥的储钱罐' - unclear whether brother's bank is this one (221 suggests brother shakes coins from this one; 187 uses possessive for a different bank)."
+ },
+ {
+  "n": 221,
+  "label": "OUT"
+ },
+ {
+  "n": 222,
+  "label": "NOOP"
+ },
+ {
+  "n": 223,
+  "label": "BREAK"
+ },
+ {
+  "n": 224,
+  "label": "BREAK"
+ },
+ {
+  "n": 225,
+  "label": "BREAK"
+ },
+ {
+  "n": 226,
+  "label": "NOOP"
+ },
+ {
+  "n": 227,
+  "label": "IN"
+ },
+ {
+  "n": 228,
+  "label": "IN"
+ },
+ {
+  "n": 229,
+  "label": "NOOP"
+ },
+ {
+  "n": 230,
+  "label": "FIX"
+ },
+ {
+  "n": 231,
+  "label": "BREAK"
+ },
+ {
+  "n": 232,
+  "label": "NOOP"
+ },
+ {
+  "n": 233,
+  "label": "FIX"
+ },
+ {
+  "n": 234,
+  "label": "NOOP"
+ },
+ {
+  "n": 235,
+  "label": "IN"
+ },
+ {
+  "n": 236,
+  "label": "FIX",
+  "note": "odd: backup switched ON by update -> FIX."
+ },
+ {
+  "n": 237,
+  "label": "NOOP"
+ },
+ {
+  "n": 238,
+  "label": "OUT"
+ },
+ {
+  "n": 239,
+  "label": "FIX"
+ },
+ {
+  "n": 240,
+  "label": "BREAK"
+ },
+ {
+  "n": 241,
+  "label": "UNCLEAR",
+  "note": "BREAK vs NOOP: '小区北区那个充电棚' may or may not be the downstairs shed."
+ },
+ {
+  "n": 242,
+  "label": "IN"
+ },
+ {
+  "n": 243,
+  "label": "NOOP"
+ },
+ {
+  "n": 244,
+  "label": "NOOP"
+ },
+ {
+  "n": 245,
+  "label": "BREAK"
+ },
+ {
+  "n": 246,
+  "label": "OUT"
+ },
+ {
+  "n": 247,
+  "label": "IN"
+ },
+ {
+  "n": 248,
+  "label": "FIX"
+ },
+ {
+  "n": 249,
+  "label": "NOOP"
+ },
+ {
+  "n": 250,
+  "label": "NOOP"
+ },
+ {
+  "n": 251,
+  "label": "IN"
+ },
+ {
+  "n": 252,
+  "label": "NOOP"
+ },
+ {
+  "n": 253,
+  "label": "NOOP"
+ },
+ {
+  "n": 254,
+  "label": "NOOP"
+ },
+ {
+  "n": 255,
+  "label": "IN"
+ },
+ {
+  "n": 256,
+  "label": "NOOP"
+ },
+ {
+  "n": 257,
+  "label": "NOOP"
+ },
+ {
+  "n": 258,
+  "label": "NOOP"
+ },
+ {
+  "n": 259,
+  "label": "NOOP"
+ },
+ {
+  "n": 260,
+  "label": "NOOP"
+ },
+ {
+  "n": 261,
+  "label": "OUT"
+ },
+ {
+  "n": 262,
+  "label": "OUT"
+ },
+ {
+  "n": 263,
+  "label": "FIX"
+ },
+ {
+  "n": 264,
+  "label": "IN"
+ },
+ {
+  "n": 265,
+  "label": "NOOP"
+ },
+ {
+  "n": 266,
+  "label": "NOOP"
+ },
+ {
+  "n": 267,
+  "label": "OUT"
+ },
+ {
+  "n": 268,
+  "label": "NOOP"
+ },
+ {
+  "n": 269,
+  "label": "BREAK"
+ },
+ {
+  "n": 270,
+  "label": "FIX"
+ },
+ {
+  "n": 271,
+  "label": "NOOP"
+ },
+ {
+  "n": 272,
+  "label": "NOOP"
+ },
+ {
+  "n": 273,
+  "label": "NOOP"
+ },
+ {
+  "n": 274,
+  "label": "NOOP"
+ },
+ {
+  "n": 275,
+  "label": "BREAK"
+ },
+ {
+  "n": 276,
+  "label": "BREAK"
+ },
+ {
+  "n": 277,
+  "label": "NOOP"
+ },
+ {
+  "n": 278,
+  "label": "BREAK"
+ },
+ {
+  "n": 279,
+  "label": "NOOP"
+ },
+ {
+  "n": 280,
+  "label": "OUT"
+ },
+ {
+  "n": 281,
+  "label": "BREAK"
+ },
+ {
+  "n": 282,
+  "label": "NOOP"
+ },
+ {
+  "n": 283,
+  "label": "IN"
+ },
+ {
+  "n": 284,
+  "label": "IN"
+ },
+ {
+  "n": 285,
+  "label": "IN"
+ },
+ {
+  "n": 286,
+  "label": "NOOP"
+ },
+ {
+  "n": 287,
+  "label": "NOOP"
+ },
+ {
+  "n": 288,
+  "label": "NOOP"
+ },
+ {
+  "n": 289,
+  "label": "NOOP"
+ },
+ {
+  "n": 290,
+  "label": "UNCLEAR",
+  "note": "IN vs NOOP: '老张的手机' - unclear whether it is this old phone."
+ },
+ {
+  "n": 291,
+  "label": "NOOP"
+ },
+ {
+  "n": 292,
+  "label": "NOOP"
+ },
+ {
+  "n": 293,
+  "label": "NOOP"
+ },
+ {
+  "n": 294,
+  "label": "NOOP"
+ },
+ {
+  "n": 295,
+  "label": "IN"
+ },
+ {
+  "n": 296,
+  "label": "NOOP"
+ },
+ {
+  "n": 297,
+  "label": "NOOP"
+ },
+ {
+  "n": 298,
+  "label": "NOOP"
+ },
+ {
+  "n": 299,
+  "label": "BREAK"
+ },
+ {
+  "n": 300,
+  "label": "OUT"
+ },
+ {
+  "n": 301,
+  "label": "NOOP"
+ },
+ {
+  "n": 302,
+  "label": "NOOP"
+ },
+ {
+  "n": 303,
+  "label": "OUT"
+ },
+ {
+  "n": 304,
+  "label": "OUT"
+ },
+ {
+  "n": 305,
+  "label": "NOOP"
+ },
+ {
+  "n": 306,
+  "label": "NOOP"
+ },
+ {
+  "n": 307,
+  "label": "FIX"
+ },
+ {
+  "n": 308,
+  "label": "IN"
+ },
+ {
+  "n": 309,
+  "label": "NOOP"
+ },
+ {
+  "n": 310,
+  "label": "NOOP"
+ },
+ {
+  "n": 311,
+  "label": "NOOP"
+ },
+ {
+  "n": 312,
+  "label": "OUT"
+ },
+ {
+  "n": 313,
+  "label": "BREAK"
+ },
+ {
+  "n": 314,
+  "label": "IN"
+ },
+ {
+  "n": 315,
+  "label": "IN"
+ },
+ {
+  "n": 316,
+  "label": "OUT"
+ },
+ {
+  "n": 317,
+  "label": "IN"
+ },
+ {
+  "n": 318,
+  "label": "IN"
+ },
+ {
+  "n": 319,
+  "label": "NOOP"
+ },
+ {
+  "n": 320,
+  "label": "BREAK"
+ },
+ {
+  "n": 321,
+  "label": "IN"
+ },
+ {
+  "n": 322,
+  "label": "BREAK"
+ },
+ {
+  "n": 323,
+  "label": "IN"
+ },
+ {
+  "n": 324,
+  "label": "NOOP"
+ },
+ {
+  "n": 325,
+  "label": "OUT"
+ },
+ {
+  "n": 326,
+  "label": "OUT"
+ },
+ {
+  "n": 327,
+  "label": "NOOP"
+ },
+ {
+  "n": 328,
+  "label": "FIX"
+ },
+ {
+  "n": 329,
+  "label": "NOOP"
+ },
+ {
+  "n": 330,
+  "label": "IN"
+ },
+ {
+  "n": 331,
+  "label": "NOOP"
+ },
+ {
+  "n": 332,
+  "label": "NOOP"
+ },
+ {
+  "n": 333,
+  "label": "NOOP"
+ },
+ {
+  "n": 334,
+  "label": "NOOP"
+ },
+ {
+  "n": 335,
+  "label": "FIX"
+ },
+ {
+  "n": 336,
+  "label": "NOOP"
+ },
+ {
+  "n": 337,
+  "label": "FIX"
+ },
+ {
+  "n": 338,
+  "label": "NOOP"
+ },
+ {
+  "n": 339,
+  "label": "NOOP"
+ },
+ {
+  "n": 340,
+  "label": "NOOP"
+ },
+ {
+  "n": 341,
+  "label": "OUT"
+ },
+ {
+  "n": 342,
+  "label": "BREAK"
+ },
+ {
+  "n": 343,
+  "label": "NOOP"
+ },
+ {
+  "n": 344,
+  "label": "IN"
+ },
+ {
+  "n": 345,
+  "label": "IN"
+ },
+ {
+  "n": 346,
+  "label": "IN"
+ },
+ {
+  "n": 347,
+  "label": "OUT"
+ },
+ {
+  "n": 348,
+  "label": "NOOP"
+ },
+ {
+  "n": 349,
+  "label": "IN",
+  "note": "odd: '雪山脚下有座水库' introduces a reservoir without saying it is this one; read as this reservoir (IN). Alt NOOP."
+ },
+ {
+  "n": 350,
+  "label": "NOOP"
+ },
+ {
+  "n": 351,
+  "label": "NOOP"
+ },
+ {
+  "n": 352,
+  "label": "NOOP"
+ },
+ {
+  "n": 353,
+  "label": "FIX"
+ },
+ {
+  "n": 354,
+  "label": "FIX"
+ },
+ {
+  "n": 355,
+  "label": "OUT"
+ },
+ {
+  "n": 356,
+  "label": "NOOP"
+ },
+ {
+  "n": 357,
+  "label": "FIX"
+ },
+ {
+  "n": 358,
+  "label": "NOOP"
+ },
+ {
+  "n": 359,
+  "label": "NOOP"
+ },
+ {
+  "n": 360,
+  "label": "NOOP"
+ },
+ {
+  "n": 361,
+  "label": "NOOP"
+ },
+ {
+  "n": 362,
+  "label": "NOOP"
+ },
+ {
+  "n": 363,
+  "label": "NOOP"
+ },
+ {
+  "n": 364,
+  "label": "OUT"
+ },
+ {
+  "n": 365,
+  "label": "NOOP"
+ },
+ {
+  "n": 366,
+  "label": "IN"
+ },
+ {
+  "n": 367,
+  "label": "NOOP"
+ },
+ {
+  "n": 368,
+  "label": "NOOP"
+ },
+ {
+  "n": 369,
+  "label": "OUT"
+ },
+ {
+  "n": 370,
+  "label": "FIX"
+ },
+ {
+  "n": 371,
+  "label": "NOOP"
+ },
+ {
+  "n": 372,
+  "label": "BREAK"
+ },
+ {
+  "n": 373,
+  "label": "FIX"
+ },
+ {
+  "n": 374,
+  "label": "NOOP"
+ },
+ {
+  "n": 375,
+  "label": "IN"
+ },
+ {
+  "n": 376,
+  "label": "FIX"
+ },
+ {
+  "n": 377,
+  "label": "NOOP"
+ },
+ {
+  "n": 378,
+  "label": "IN"
+ },
+ {
+  "n": 379,
+  "label": "NOOP"
+ },
+ {
+  "n": 380,
+  "label": "NOOP"
+ },
+ {
+  "n": 381,
+  "label": "NOOP"
+ },
+ {
+  "n": 382,
+  "label": "BREAK"
+ },
+ {
+  "n": 383,
+  "label": "NOOP"
+ },
+ {
+  "n": 384,
+  "label": "NOOP"
+ },
+ {
+  "n": 385,
+  "label": "NOOP"
+ },
+ {
+  "n": 386,
+  "label": "OUT"
+ },
+ {
+  "n": 387,
+  "label": "BREAK"
+ },
+ {
+  "n": 388,
+  "label": "NOOP"
+ },
+ {
+  "n": 389,
+  "label": "NOOP"
+ },
+ {
+  "n": 390,
+  "label": "IN"
+ },
+ {
+  "n": 391,
+  "label": "NOOP"
+ },
+ {
+  "n": 392,
+  "label": "NOOP"
+ },
+ {
+  "n": 393,
+  "label": "FIX",
+  "note": "odd: backup ambulance dispatched and referral channel resumes -> FIX."
+ },
+ {
+  "n": 394,
+  "label": "NOOP"
+ },
+ {
+  "n": 395,
+  "label": "OUT"
+ },
+ {
+  "n": 396,
+  "label": "NOOP"
+ },
+ {
+  "n": 397,
+  "label": "NOOP"
+ },
+ {
+  "n": 398,
+  "label": "IN"
+ },
+ {
+  "n": 399,
+  "label": "NOOP"
+ },
+ {
+  "n": 400,
+  "label": "FIX"
+ },
+ {
+  "n": 401,
+  "label": "OUT"
+ },
+ {
+  "n": 402,
+  "label": "FIX"
+ },
+ {
+  "n": 403,
+  "label": "NOOP"
+ },
+ {
+  "n": 404,
+  "label": "NOOP"
+ },
+ {
+  "n": 405,
+  "label": "NOOP"
+ },
+ {
+  "n": 406,
+  "label": "NOOP"
+ },
+ {
+  "n": 407,
+  "label": "NOOP"
+ },
+ {
+  "n": 408,
+  "label": "BREAK"
+ },
+ {
+  "n": 409,
+  "label": "NOOP"
+ },
+ {
+  "n": 410,
+  "label": "NOOP"
+ },
+ {
+  "n": 411,
+  "label": "NOOP"
+ },
+ {
+  "n": 412,
+  "label": "NOOP"
+ },
+ {
+  "n": 413,
+  "label": "NOOP"
+ },
+ {
+  "n": 414,
+  "label": "NOOP"
+ },
+ {
+  "n": 415,
+  "label": "IN"
+ },
+ {
+  "n": 416,
+  "label": "OUT"
+ },
+ {
+  "n": 417,
+  "label": "IN"
+ },
+ {
+  "n": 418,
+  "label": "IN"
+ },
+ {
+  "n": 419,
+  "label": "NOOP"
+ },
+ {
+  "n": 420,
+  "label": "NOOP"
+ }
+]

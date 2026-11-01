@@ -1,0 +1,1572 @@
+[
+ {
+  "n": 1,
+  "label": "IN",
+  "tag": "蒸笼灶/support/IN0"
+ },
+ {
+  "n": 2,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-1/OTHER"
+ },
+ {
+  "n": 3,
+  "label": "IN",
+  "tag": "蒸笼灶/support/IN1"
+ },
+ {
+  "n": 4,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-2/QUESTION"
+ },
+ {
+  "n": 5,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-1/HYPO"
+ },
+ {
+  "n": 6,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-1/FUTURE"
+ },
+ {
+  "n": 7,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-1/INTENT"
+ },
+ {
+  "n": 8,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-2/FUTURE"
+ },
+ {
+  "n": 9,
+  "label": "IN",
+  "tag": "教室伞桶/IN-2/TRANSFER"
+ },
+ {
+  "n": 10,
+  "label": "FIX",
+  "tag": "蒸笼灶/BREAK-3/DIRSWAP"
+ },
+ {
+  "n": 11,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-1/NEG"
+ },
+ {
+  "n": 12,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-2/PRONOUN"
+ },
+ {
+  "n": 13,
+  "label": "IN",
+  "tag": "教室伞桶/IN-1/BASE"
+ },
+ {
+  "n": 14,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-2/OTHER"
+ },
+ {
+  "n": 15,
+  "label": "OUT",
+  "tag": "蒸笼灶/IN-1/DIRSWAP"
+ },
+ {
+  "n": 16,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-1/BASE"
+ },
+ {
+  "n": 17,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-1/NEG"
+ },
+ {
+  "n": 18,
+  "label": "FIX",
+  "tag": "蒸笼灶/support/FIX1"
+ },
+ {
+  "n": 19,
+  "label": "IN",
+  "tag": "蒸笼灶/OUT-3/DIRSWAP"
+ },
+ {
+  "n": 20,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-3/NEG"
+ },
+ {
+  "n": 21,
+  "label": "IN",
+  "tag": "教室伞桶/IN-3/CHATTER"
+ },
+ {
+  "n": 22,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-3/QUESTION"
+ },
+ {
+  "n": 23,
+  "label": "OUT",
+  "tag": "蒸笼灶/IN-2/DIRSWAP"
+ },
+ {
+  "n": 24,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-2/NEG"
+ },
+ {
+  "n": 25,
+  "label": "BREAK",
+  "tag": "教室伞桶/support/BREAK2"
+ },
+ {
+  "n": 26,
+  "label": "NOOP",
+  "tag": "教室伞桶/support/NOOP2"
+ },
+ {
+  "n": 27,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-1/NEG"
+ },
+ {
+  "n": 28,
+  "label": "IN",
+  "tag": "教室伞桶/IN-3/TRANSFER"
+ },
+ {
+  "n": 29,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-1/BASE"
+ },
+ {
+  "n": 30,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-3/OTHER"
+ },
+ {
+  "n": 31,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-1/QUESTION"
+ },
+ {
+  "n": 32,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-1/QUESTION"
+ },
+ {
+  "n": 33,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-2/NEG"
+ },
+ {
+  "n": 34,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-2/PRONOUN"
+ },
+ {
+  "n": 35,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-1/OTHER"
+ },
+ {
+  "n": 36,
+  "label": "NOOP",
+  "tag": "教室伞桶/support/NOOP0"
+ },
+ {
+  "n": 37,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-2/TRANSFER"
+ },
+ {
+  "n": 38,
+  "label": "IN",
+  "tag": "教室伞桶/support/IN2"
+ },
+ {
+  "n": 39,
+  "label": "FIX",
+  "tag": "教室伞桶/BREAK-2/DIRSWAP"
+ },
+ {
+  "n": 40,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-1/POSNEG"
+ },
+ {
+  "n": 41,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-3/BASE"
+ },
+ {
+  "n": 42,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-1/OTHER"
+ },
+ {
+  "n": 43,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-3/INTENT"
+ },
+ {
+  "n": 44,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-3/NEG"
+ },
+ {
+  "n": 45,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-2/OTHER"
+ },
+ {
+  "n": 46,
+  "label": "NOOP",
+  "tag": "蒸笼灶/noop2"
+ },
+ {
+  "n": 47,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-2/FUTURE"
+ },
+ {
+  "n": 48,
+  "label": "BREAK",
+  "tag": "蒸笼灶/FIX-2/DIRSWAP"
+ },
+ {
+  "n": 49,
+  "label": "NOOP",
+  "tag": "蒸笼灶/support/NOOP1"
+ },
+ {
+  "n": 50,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-3/BASE"
+ },
+ {
+  "n": 51,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-1/PRONOUN"
+ },
+ {
+  "n": 52,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-2/OTHER"
+ },
+ {
+  "n": 53,
+  "label": "OUT",
+  "tag": "蒸笼灶/support/OUT2"
+ },
+ {
+  "n": 54,
+  "label": "NOOP",
+  "tag": "蒸笼灶/support/NOOP2"
+ },
+ {
+  "n": 55,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-2/CHATTER"
+ },
+ {
+  "n": 56,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-3/NEG"
+ },
+ {
+  "n": 57,
+  "label": "BREAK",
+  "tag": "教室伞桶/FIX-1/DIRSWAP"
+ },
+ {
+  "n": 58,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-3/OTHER"
+ },
+ {
+  "n": 59,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-1/CHATTER"
+ },
+ {
+  "n": 60,
+  "label": "IN",
+  "tag": "教室伞桶/IN-1/PRONOUN"
+ },
+ {
+  "n": 61,
+  "label": "IN",
+  "tag": "教室伞桶/IN-1/CHATTER"
+ },
+ {
+  "n": 62,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-1/PRONOUN"
+ },
+ {
+  "n": 63,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-2/QUESTION"
+ },
+ {
+  "n": 64,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-1/QUESTION"
+ },
+ {
+  "n": 65,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-2/INTENT"
+ },
+ {
+  "n": 66,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-2/OTHER"
+ },
+ {
+  "n": 67,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-3/POSNEG"
+ },
+ {
+  "n": 68,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-2/POSNEG"
+ },
+ {
+  "n": 69,
+  "label": "BREAK",
+  "tag": "教室伞桶/FIX-3/DIRSWAP"
+ },
+ {
+  "n": 70,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-2/OTHER"
+ },
+ {
+  "n": 71,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-1/POSNEG"
+ },
+ {
+  "n": 72,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-1/CHATTER"
+ },
+ {
+  "n": 73,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-1/INTENT"
+ },
+ {
+  "n": 74,
+  "label": "IN",
+  "tag": "教室伞桶/IN-3/PRONOUN"
+ },
+ {
+  "n": 75,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-1/INTENT"
+ },
+ {
+  "n": 76,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-1/BASE"
+ },
+ {
+  "n": 77,
+  "label": "NOOP",
+  "tag": "教室伞桶/support/NOOP1"
+ },
+ {
+  "n": 78,
+  "label": "IN",
+  "tag": "教室伞桶/IN-2/PRONOUN"
+ },
+ {
+  "n": 79,
+  "label": "FIX",
+  "tag": "教室伞桶/support/FIX1"
+ },
+ {
+  "n": 80,
+  "label": "FIX",
+  "tag": "蒸笼灶/BREAK-2/DIRSWAP"
+ },
+ {
+  "n": 81,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-3/BASE"
+ },
+ {
+  "n": 82,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-1/NEG"
+ },
+ {
+  "n": 83,
+  "label": "IN",
+  "tag": "教室伞桶/OUT-1/DIRSWAP"
+ },
+ {
+  "n": 84,
+  "label": "IN",
+  "tag": "蒸笼灶/OUT-2/DIRSWAP"
+ },
+ {
+  "n": 85,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-1/HYPO"
+ },
+ {
+  "n": 86,
+  "label": "IN",
+  "tag": "蒸笼灶/OUT-1/DIRSWAP"
+ },
+ {
+  "n": 87,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-3/CHATTER"
+ },
+ {
+  "n": 88,
+  "label": "IN",
+  "tag": "教室伞桶/IN-2/CHATTER"
+ },
+ {
+  "n": 89,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-2/FUTURE"
+ },
+ {
+  "n": 90,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-3/QUESTION"
+ },
+ {
+  "n": 91,
+  "label": "OUT",
+  "tag": "教室伞桶/IN-2/DIRSWAP"
+ },
+ {
+  "n": 92,
+  "label": "FIX",
+  "tag": "教室伞桶/support/FIX0"
+ },
+ {
+  "n": 93,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-1/CHATTER"
+ },
+ {
+  "n": 94,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-3/FUTURE"
+ },
+ {
+  "n": 95,
+  "label": "OUT",
+  "tag": "教室伞桶/support/OUT1"
+ },
+ {
+  "n": 96,
+  "label": "IN",
+  "tag": "教室伞桶/IN-1/TRANSFER"
+ },
+ {
+  "n": 97,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-1/TRANSFER"
+ },
+ {
+  "n": 98,
+  "label": "IN",
+  "tag": "蒸笼灶/support/IN2"
+ },
+ {
+  "n": 99,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-3/INTENT"
+ },
+ {
+  "n": 100,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-2/NEG"
+ },
+ {
+  "n": 101,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-2/BASE"
+ },
+ {
+  "n": 102,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-3/BASE"
+ },
+ {
+  "n": 103,
+  "label": "FIX",
+  "tag": "蒸笼灶/support/FIX0"
+ },
+ {
+  "n": 104,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-2/NEG"
+ },
+ {
+  "n": 105,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-1/POSNEG"
+ },
+ {
+  "n": 106,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-3/HYPO"
+ },
+ {
+  "n": 107,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-2/NEG"
+ },
+ {
+  "n": 108,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-1/PRONOUN"
+ },
+ {
+  "n": 109,
+  "label": "NOOP",
+  "tag": "蒸笼灶/support/NOOP0"
+ },
+ {
+  "n": 110,
+  "label": "OUT",
+  "tag": "蒸笼灶/IN-3/DIRSWAP"
+ },
+ {
+  "n": 111,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-3/INTENT"
+ },
+ {
+  "n": 112,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-2/POSNEG"
+ },
+ {
+  "n": 113,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-3/INTENT"
+ },
+ {
+  "n": 114,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-1/OTHER"
+ },
+ {
+  "n": 115,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-2/HYPO"
+ },
+ {
+  "n": 116,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-2/INTENT"
+ },
+ {
+  "n": 117,
+  "label": "NOOP",
+  "tag": "蒸笼灶/noop3"
+ },
+ {
+  "n": 118,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-3/FUTURE"
+ },
+ {
+  "n": 119,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-3/PRONOUN"
+ },
+ {
+  "n": 120,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-2/QUESTION"
+ },
+ {
+  "n": 121,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-1/NEG"
+ },
+ {
+  "n": 122,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-3/NEG"
+ },
+ {
+  "n": 123,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-3/OTHER"
+ },
+ {
+  "n": 124,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-2/INTENT"
+ },
+ {
+  "n": 125,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-3/FUTURE"
+ },
+ {
+  "n": 126,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-3/TRANSFER"
+ },
+ {
+  "n": 127,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-1/QUESTION"
+ },
+ {
+  "n": 128,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-2/FUTURE"
+ },
+ {
+  "n": 129,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-3/QUESTION"
+ },
+ {
+  "n": 130,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-1/BASE"
+ },
+ {
+  "n": 131,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-2/HYPO"
+ },
+ {
+  "n": 132,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-2/INTENT"
+ },
+ {
+  "n": 133,
+  "label": "OUT",
+  "tag": "蒸笼灶/support/OUT0"
+ },
+ {
+  "n": 134,
+  "label": "BREAK",
+  "tag": "教室伞桶/support/BREAK0"
+ },
+ {
+  "n": 135,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-3/CHATTER"
+ },
+ {
+  "n": 136,
+  "label": "IN",
+  "tag": "教室伞桶/IN-3/POSNEG"
+ },
+ {
+  "n": 137,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-2/FUTURE"
+ },
+ {
+  "n": 138,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-2/BASE"
+ },
+ {
+  "n": 139,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-3/QUESTION"
+ },
+ {
+  "n": 140,
+  "label": "NOOP",
+  "tag": "教室伞桶/noop1"
+ },
+ {
+  "n": 141,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-3/NEG"
+ },
+ {
+  "n": 142,
+  "label": "BREAK",
+  "tag": "蒸笼灶/support/BREAK0"
+ },
+ {
+  "n": 143,
+  "label": "NOOP",
+  "tag": "蒸笼灶/noop1"
+ },
+ {
+  "n": 144,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-2/FUTURE"
+ },
+ {
+  "n": 145,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-2/OTHER"
+ },
+ {
+  "n": 146,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-2/OTHER"
+ },
+ {
+  "n": 147,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-3/PRONOUN"
+ },
+ {
+  "n": 148,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-1/CHATTER"
+ },
+ {
+  "n": 149,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-3/PRONOUN"
+ },
+ {
+  "n": 150,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-2/PRONOUN"
+ },
+ {
+  "n": 151,
+  "label": "IN",
+  "tag": "教室伞桶/IN-3/BASE"
+ },
+ {
+  "n": 152,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-2/QUESTION"
+ },
+ {
+  "n": 153,
+  "label": "IN",
+  "tag": "教室伞桶/IN-1/POSNEG"
+ },
+ {
+  "n": 154,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-2/OTHER"
+ },
+ {
+  "n": 155,
+  "label": "OUT",
+  "tag": "教室伞桶/IN-1/DIRSWAP"
+ },
+ {
+  "n": 156,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-1/QUESTION"
+ },
+ {
+  "n": 157,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-3/FUTURE"
+ },
+ {
+  "n": 158,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-1/CHATTER"
+ },
+ {
+  "n": 159,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-3/OTHER"
+ },
+ {
+  "n": 160,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-1/POSNEG"
+ },
+ {
+  "n": 161,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-1/FUTURE"
+ },
+ {
+  "n": 162,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-3/BASE"
+ },
+ {
+  "n": 163,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-1/FUTURE"
+ },
+ {
+  "n": 164,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-2/POSNEG"
+ },
+ {
+  "n": 165,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-2/NEG"
+ },
+ {
+  "n": 166,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-3/CHATTER"
+ },
+ {
+  "n": 167,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-1/FUTURE"
+ },
+ {
+  "n": 168,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-3/OTHER"
+ },
+ {
+  "n": 169,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-2/CHATTER"
+ },
+ {
+  "n": 170,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-2/PRONOUN"
+ },
+ {
+  "n": 171,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-2/FUTURE"
+ },
+ {
+  "n": 172,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-2/INTENT"
+ },
+ {
+  "n": 173,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-2/NEG"
+ },
+ {
+  "n": 174,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-3/PRONOUN"
+ },
+ {
+  "n": 175,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-2/CHATTER"
+ },
+ {
+  "n": 176,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-3/POSNEG"
+ },
+ {
+  "n": 177,
+  "label": "FIX",
+  "tag": "教室伞桶/support/FIX2"
+ },
+ {
+  "n": 178,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-1/OTHER"
+ },
+ {
+  "n": 179,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-2/HYPO"
+ },
+ {
+  "n": 180,
+  "label": "OUT",
+  "tag": "蒸笼灶/support/OUT1"
+ },
+ {
+  "n": 181,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-2/INTENT"
+ },
+ {
+  "n": 182,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-3/OTHER"
+ },
+ {
+  "n": 183,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-2/QUESTION"
+ },
+ {
+  "n": 184,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-1/HYPO"
+ },
+ {
+  "n": 185,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-2/QUESTION"
+ },
+ {
+  "n": 186,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-2/HYPO"
+ },
+ {
+  "n": 187,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-1/FUTURE"
+ },
+ {
+  "n": 188,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-3/POSNEG"
+ },
+ {
+  "n": 189,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-1/INTENT"
+ },
+ {
+  "n": 190,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-1/HYPO"
+ },
+ {
+  "n": 191,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-3/INTENT"
+ },
+ {
+  "n": 192,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-3/QUESTION"
+ },
+ {
+  "n": 193,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-1/TRANSFER"
+ },
+ {
+  "n": 194,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-3/FUTURE"
+ },
+ {
+  "n": 195,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-3/INTENT"
+ },
+ {
+  "n": 196,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-3/QUESTION"
+ },
+ {
+  "n": 197,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-1/PRONOUN"
+ },
+ {
+  "n": 198,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-2/BASE"
+ },
+ {
+  "n": 199,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-2/CHATTER"
+ },
+ {
+  "n": 200,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-1/NEG"
+ },
+ {
+  "n": 201,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-1/CHATTER"
+ },
+ {
+  "n": 202,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-1/HYPO"
+ },
+ {
+  "n": 203,
+  "label": "FIX",
+  "tag": "教室伞桶/BREAK-3/DIRSWAP"
+ },
+ {
+  "n": 204,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-3/HYPO"
+ },
+ {
+  "n": 205,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-1/INTENT"
+ },
+ {
+  "n": 206,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-3/PRONOUN"
+ },
+ {
+  "n": 207,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-2/QUESTION"
+ },
+ {
+  "n": 208,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-3/NEG"
+ },
+ {
+  "n": 209,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-2/TRANSFER"
+ },
+ {
+  "n": 210,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-1/INTENT"
+ },
+ {
+  "n": 211,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-2/PRONOUN"
+ },
+ {
+  "n": 212,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-2/POSNEG"
+ },
+ {
+  "n": 213,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-2/POSNEG"
+ },
+ {
+  "n": 214,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-3/NEG"
+ },
+ {
+  "n": 215,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-1/HYPO"
+ },
+ {
+  "n": 216,
+  "label": "BREAK",
+  "tag": "教室伞桶/FIX-2/DIRSWAP"
+ },
+ {
+  "n": 217,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-3/PRONOUN"
+ },
+ {
+  "n": 218,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-3/HYPO"
+ },
+ {
+  "n": 219,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-2/TRANSFER"
+ },
+ {
+  "n": 220,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-1/FUTURE"
+ },
+ {
+  "n": 221,
+  "label": "IN",
+  "tag": "教室伞桶/IN-2/BASE"
+ },
+ {
+  "n": 222,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-2/BASE"
+ },
+ {
+  "n": 223,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-1/PRONOUN"
+ },
+ {
+  "n": 224,
+  "label": "FIX",
+  "tag": "蒸笼灶/BREAK-1/DIRSWAP"
+ },
+ {
+  "n": 225,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-2/POSNEG"
+ },
+ {
+  "n": 226,
+  "label": "FIX",
+  "tag": "教室伞桶/BREAK-1/DIRSWAP"
+ },
+ {
+  "n": 227,
+  "label": "IN",
+  "tag": "教室伞桶/IN-2/POSNEG"
+ },
+ {
+  "n": 228,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-3/POSNEG"
+ },
+ {
+  "n": 229,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-1/NEG"
+ },
+ {
+  "n": 230,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-3/FUTURE"
+ },
+ {
+  "n": 231,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-3/FUTURE"
+ },
+ {
+  "n": 232,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-1/BASE"
+ },
+ {
+  "n": 233,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-3/POSNEG"
+ },
+ {
+  "n": 234,
+  "label": "BREAK",
+  "tag": "教室伞桶/support/BREAK1"
+ },
+ {
+  "n": 235,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-1/POSNEG"
+ },
+ {
+  "n": 236,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-2/POSNEG"
+ },
+ {
+  "n": 237,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-1/POSNEG"
+ },
+ {
+  "n": 238,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-1/TRANSFER"
+ },
+ {
+  "n": 239,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-3/POSNEG"
+ },
+ {
+  "n": 240,
+  "label": "IN",
+  "tag": "教室伞桶/support/IN1"
+ },
+ {
+  "n": 241,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-3/POSNEG"
+ },
+ {
+  "n": 242,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-3/OTHER"
+ },
+ {
+  "n": 243,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-2/BASE"
+ },
+ {
+  "n": 244,
+  "label": "BREAK",
+  "tag": "蒸笼灶/FIX-3/DIRSWAP"
+ },
+ {
+  "n": 245,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-3/OTHER"
+ },
+ {
+  "n": 246,
+  "label": "IN",
+  "tag": "教室伞桶/OUT-2/DIRSWAP"
+ },
+ {
+  "n": 247,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-2/INTENT"
+ },
+ {
+  "n": 248,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-1/HYPO"
+ },
+ {
+  "n": 249,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-1/INTENT"
+ },
+ {
+  "n": 250,
+  "label": "NOOP",
+  "tag": "蒸笼灶/noop0"
+ },
+ {
+  "n": 251,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-1/HYPO"
+ },
+ {
+  "n": 252,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-1/QUESTION"
+ },
+ {
+  "n": 253,
+  "label": "FIX",
+  "tag": "蒸笼灶/support/FIX2"
+ },
+ {
+  "n": 254,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-2/FUTURE"
+ },
+ {
+  "n": 255,
+  "label": "OUT",
+  "tag": "教室伞桶/IN-3/DIRSWAP"
+ },
+ {
+  "n": 256,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-2/PRONOUN"
+ },
+ {
+  "n": 257,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-1/OTHER"
+ },
+ {
+  "n": 258,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-1/POSNEG"
+ },
+ {
+  "n": 259,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-3/CHATTER"
+ },
+ {
+  "n": 260,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-2/BASE"
+ },
+ {
+  "n": 261,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-1/FUTURE"
+ },
+ {
+  "n": 262,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-3/PRONOUN"
+ },
+ {
+  "n": 263,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-3/TRANSFER"
+ },
+ {
+  "n": 264,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-3/CHATTER"
+ },
+ {
+  "n": 265,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-3/FUTURE"
+ },
+ {
+  "n": 266,
+  "label": "BREAK",
+  "tag": "蒸笼灶/support/BREAK2"
+ },
+ {
+  "n": 267,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-2/HYPO"
+ },
+ {
+  "n": 268,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-1/BASE"
+ },
+ {
+  "n": 269,
+  "label": "NOOP",
+  "tag": "蒸笼灶/FIX-1/NEG"
+ },
+ {
+  "n": 270,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-3/HYPO"
+ },
+ {
+  "n": 271,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-2/INTENT"
+ },
+ {
+  "n": 272,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-3/TRANSFER"
+ },
+ {
+  "n": 273,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-1/PRONOUN"
+ },
+ {
+  "n": 274,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-3/QUESTION"
+ },
+ {
+  "n": 275,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-3/NEG"
+ },
+ {
+  "n": 276,
+  "label": "NOOP",
+  "tag": "教室伞桶/noop0"
+ },
+ {
+  "n": 277,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-3/HYPO"
+ },
+ {
+  "n": 278,
+  "label": "NOOP",
+  "tag": "教室伞桶/noop3"
+ },
+ {
+  "n": 279,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-2/NEG"
+ },
+ {
+  "n": 280,
+  "label": "OUT",
+  "tag": "蒸笼灶/OUT-1/CHATTER"
+ },
+ {
+  "n": 281,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-2/CHATTER"
+ },
+ {
+  "n": 282,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-3/CHATTER"
+ },
+ {
+  "n": 283,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-2/HYPO"
+ },
+ {
+  "n": 284,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-2/HYPO"
+ },
+ {
+  "n": 285,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-3/BASE"
+ },
+ {
+  "n": 286,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-1/INTENT"
+ },
+ {
+  "n": 287,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-1/OTHER"
+ },
+ {
+  "n": 288,
+  "label": "OUT",
+  "tag": "教室伞桶/support/OUT0"
+ },
+ {
+  "n": 289,
+  "label": "BREAK",
+  "tag": "蒸笼灶/FIX-1/DIRSWAP"
+ },
+ {
+  "n": 290,
+  "label": "NOOP",
+  "tag": "教室伞桶/BREAK-3/HYPO"
+ },
+ {
+  "n": 291,
+  "label": "OUT",
+  "tag": "教室伞桶/support/OUT2"
+ },
+ {
+  "n": 292,
+  "label": "IN",
+  "tag": "教室伞桶/support/IN0"
+ },
+ {
+  "n": 293,
+  "label": "NOOP",
+  "tag": "蒸笼灶/IN-3/QUESTION"
+ },
+ {
+  "n": 294,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-1/OTHER"
+ },
+ {
+  "n": 295,
+  "label": "NOOP",
+  "tag": "蒸笼灶/OUT-3/HYPO"
+ },
+ {
+  "n": 296,
+  "label": "BREAK",
+  "tag": "教室伞桶/BREAK-3/CHATTER"
+ },
+ {
+  "n": 297,
+  "label": "FIX",
+  "tag": "蒸笼灶/FIX-2/BASE"
+ },
+ {
+  "n": 298,
+  "label": "IN",
+  "tag": "教室伞桶/OUT-3/DIRSWAP"
+ },
+ {
+  "n": 299,
+  "label": "OUT",
+  "tag": "教室伞桶/OUT-1/BASE"
+ },
+ {
+  "n": 300,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-3/BASE"
+ },
+ {
+  "n": 301,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-1/FUTURE"
+ },
+ {
+  "n": 302,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-2/HYPO"
+ },
+ {
+  "n": 303,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-1/PRONOUN"
+ },
+ {
+  "n": 304,
+  "label": "IN",
+  "tag": "蒸笼灶/IN-2/PRONOUN"
+ },
+ {
+  "n": 305,
+  "label": "NOOP",
+  "tag": "教室伞桶/noop2"
+ },
+ {
+  "n": 306,
+  "label": "NOOP",
+  "tag": "教室伞桶/FIX-3/HYPO"
+ },
+ {
+  "n": 307,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-3/INTENT"
+ },
+ {
+  "n": 308,
+  "label": "BREAK",
+  "tag": "蒸笼灶/support/BREAK1"
+ },
+ {
+  "n": 309,
+  "label": "NOOP",
+  "tag": "教室伞桶/OUT-1/QUESTION"
+ },
+ {
+  "n": 310,
+  "label": "BREAK",
+  "tag": "蒸笼灶/BREAK-2/CHATTER"
+ },
+ {
+  "n": 311,
+  "label": "FIX",
+  "tag": "教室伞桶/FIX-2/CHATTER"
+ },
+ {
+  "n": 312,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-2/QUESTION"
+ },
+ {
+  "n": 313,
+  "label": "NOOP",
+  "tag": "教室伞桶/IN-3/INTENT"
+ },
+ {
+  "n": 314,
+  "label": "NOOP",
+  "tag": "蒸笼灶/BREAK-1/QUESTION"
+ }
+]

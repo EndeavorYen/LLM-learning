@@ -14,7 +14,12 @@ import sys
 from collections import defaultdict
 
 EXPECTED = {"data_sha_probe": "3beede5245d048af2a5a6652079a974e19a1305887710eca6c7d1ffbc83258b8",
-            "data_sha_rtrain": None, "data_sha_rtest": None}   # filled when the reading files are pinned
+            "data_sha_rtrain": "ffede6eca9e2777a213c926c21b9b75981aad4fef50711b391c49d9149efeaf8",
+            "data_sha_rtest": "49616f38581105d0c69c6e9b1509d8d763027fdb3d3b7ec199ea8a07d03c4c4a"}
+REG_DATA = {"data_sha_st": "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108",
+            "data_sha_extra": "f44dc28a2a2df593981c919949b47e13304a814cec4e960123564206190ca7cf",
+            "data_sha_hard": "e145539bc8b37133a226a5d390e6cfebc2492d85e2cc090501d8464fc5afe8aa",
+            "data_sha_hard_extra": "e31ad5839bbc1133c6d3e6e5caec6a5125a4ffd9bcffbf330fb793b58416fc53"}
 EYES = ("Q15", "Q3E")
 CONDS = ("HARD17", "PAIRS", "PAIRSCR")
 VARS = ("BASE", "NEG", "INTENT", "QUESTION", "FUTURE", "POSNEG", "OTHER", "TRANSFER", "DIRSWAP", "PRONOUN", "CHATTER",
@@ -53,7 +58,8 @@ def main(argv):
         for k, v in EXPECTED.items():
             if v is not None and c.get(k) != v:
                 sys.exit(f"{k} {c.get(k)} != registered {v}")
-        bad = "FAKE" in c.get("env", "") or c.get("seeds") != "42,1,2" or c.get("draws") != "10"
+        bad = ("FAKE" in c.get("env", "") or c.get("seeds") != "42,1,2" or c.get("draws") != "10"
+               or c.get("conds") != "HARD17,PAIRS,PAIRSCR" or any(c.get(k) != v for k, v in REG_DATA.items()))
         if bad and not partial:
             sys.exit(f"not a registered run: {c}")
     if not partial:
@@ -105,6 +111,8 @@ def main(argv):
         if v != top:
             continue
         r = res[(e, c, "C")]
+        if "var_HYPO" not in r:
+            sys.exit("var_HYPO missing")
         nrm, hyp = pct(r["normal"]), pct(r.get("var_HYPO"))
         if v >= 80 and nrm >= 95 and hyp >= 70:
             verdict = "讀得廣"
@@ -120,6 +128,15 @@ def main(argv):
         first = first or (e, c)
     if sum(v == top for v, _ in cand) > 1:
         print("  (tie: all tied cells listed)")
+    print("\nSide effects vs HARD17 (same eye, readout C): reading-test normal (base) | Lab 17b template-style normal"
+          " (registered auxiliary side-effect measure); > 1 point drop flagged")
+    for e in EYES:
+        h, hp = res.get((e, "HARD17", "C")), prb.get((e, "HARD17", "C"))
+        for c in ("PAIRS", "PAIRSCR"):
+            r, rp = res.get((e, c, "C")), prb.get((e, c, "C"))
+            if h and r and hp and rp:
+                d1, d2 = pct(r["normal"]) - pct(h["normal"]), pct(rp["normal"]) - pct(hp["normal"])
+                print(f"  {e} {c:8s}: {d1:+.2f} | {d2:+.2f}" + ("  [SIDE EFFECT]" if min(d1, d2) < -1 else ""))
     for e in EYES:
         a, b = res.get((e, "PAIRS", "C")), res.get((e, "PAIRSCR", "C"))
         if a and b:
