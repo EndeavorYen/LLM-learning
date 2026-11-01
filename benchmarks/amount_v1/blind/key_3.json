@@ -1,0 +1,2202 @@
+{
+ "b0550": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "备用变压器间",
+  "gid": "IN3-1"
+ },
+ "b0551": {
+  "event": "IN",
+  "amount": 3,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "蹦床",
+  "gid": "IN3-1"
+ },
+ "b0552": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "BASE",
+  "dom": "便桥",
+  "gid": "OUT2-3"
+ },
+ "b0553": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "粮仓",
+  "gid": "IN2-3"
+ },
+ "b0554": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "露营地",
+  "gid": "IN2-1"
+ },
+ "b0555": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "育苗盘",
+  "gid": "IN2-1"
+ },
+ "b0556": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "蒸笼灶",
+  "gid": "IN3-2"
+ },
+ "b0557": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "壁炉柴架",
+  "gid": "IN3-2"
+ },
+ "b0558": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "淬火吊篮",
+  "gid": "IN3-2"
+ },
+ "b0559": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "淬火吊篮",
+  "gid": "OUT2-1"
+ },
+ "b0560": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "POSNEG",
+  "dom": "皮艇架",
+  "gid": ""
+ },
+ "b0561": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "产蛋箱",
+  "gid": "OUT2-1"
+ },
+ "b0562": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "文物展柜",
+  "gid": "IN3-2"
+ },
+ "b0563": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "露营地",
+  "gid": "OUT2-2"
+ },
+ "b0564": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "试衣挂杆",
+  "gid": "IN2-2"
+ },
+ "b0565": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "秋千架",
+  "gid": "OUT2-2"
+ },
+ "b0566": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "CHATTER",
+  "dom": "教室伞桶",
+  "gid": ""
+ },
+ "b0567": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "液氮罐",
+  "gid": "OUT3-1"
+ },
+ "b0568": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "单车架",
+  "gid": "IN2-1"
+ },
+ "b0569": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "CUE",
+  "dom": "船闸",
+  "gid": ""
+ },
+ "b0570": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "教室伞桶",
+  "gid": "OUT2-1"
+ },
+ "b0571": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "train",
+  "form": "NEG",
+  "dom": "渡轮",
+  "gid": "OUT3-2"
+ },
+ "b0572": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "淬火吊篮",
+  "gid": "OUT2-1"
+ },
+ "b0573": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "PRONOUN",
+  "dom": "蒸笼灶",
+  "gid": ""
+ },
+ "b0574": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "DIRSWAP",
+  "dom": "文物展柜",
+  "gid": ""
+ },
+ "b0575": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "秋千架",
+  "gid": "OUT2-2"
+ },
+ "b0576": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "配送机器人",
+  "gid": "OUT2-1"
+ },
+ "b0577": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "输液架",
+  "gid": "OUT3-2"
+ },
+ "b0578": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "试衣挂杆",
+  "gid": "OUT2-1"
+ },
+ "b0579": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "露营地",
+  "gid": "OUT3-2"
+ },
+ "b0580": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "蒸笼灶",
+  "gid": "IN2-2"
+ },
+ "b0581": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "课后托管班",
+  "gid": "OUT2-4"
+ },
+ "b0582": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "船闸",
+  "gid": "IN3-1"
+ },
+ "b0583": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "NUMFORM",
+  "dom": "图书借阅证",
+  "gid": "IN2-4"
+ },
+ "b0584": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "换电柜",
+  "gid": "OUT2-1"
+ },
+ "b0585": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "寄养猫笼",
+  "gid": "IN2-1"
+ },
+ "b0586": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "换电柜",
+  "gid": "IN2-2"
+ },
+ "b0587": {
+  "event": "IN",
+  "amount": 3,
+  "src": "train",
+  "form": "BASE",
+  "dom": "离心机",
+  "gid": "IN3-3"
+ },
+ "b0588": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "淬火吊篮",
+  "gid": "IN2-2"
+ },
+ "b0589": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "BASE",
+  "dom": "水塔",
+  "gid": "OUT2-3"
+ },
+ "b0590": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "皮艇架",
+  "gid": "IN2-1"
+ },
+ "b0591": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "液氮罐",
+  "gid": "OUT2-1"
+ },
+ "b0592": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "山谷吊篮",
+  "gid": "OUT2-1"
+ },
+ "b0593": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "输液架",
+  "gid": "IN2-1"
+ },
+ "b0594": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "BASE",
+  "dom": "书架",
+  "gid": "OUT2-1"
+ },
+ "b0595": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "换电柜",
+  "gid": "OUT2-2"
+ },
+ "b0596": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "衣帽架",
+  "gid": "IN2-2"
+ },
+ "b0597": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "冷库",
+  "gid": "OUT2-1"
+ },
+ "b0598": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "壁炉柴架",
+  "gid": "OUT3-1"
+ },
+ "b0599": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "皮艇架",
+  "gid": "OUT3-1"
+ },
+ "b0600": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "秋千架",
+  "gid": "IN2-2"
+ },
+ "b0601": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "寄养猫笼",
+  "gid": "OUT3-2"
+ },
+ "b0602": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "试衣挂杆",
+  "gid": "IN3-1"
+ },
+ "b0603": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "衣帽架",
+  "gid": "OUT2-1"
+ },
+ "b0604": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "露营地",
+  "gid": "OUT2-1"
+ },
+ "b0605": {
+  "event": "IN",
+  "amount": 3,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "急诊留观室",
+  "gid": "IN3-4"
+ },
+ "b0606": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "输液架",
+  "gid": "OUT3-1"
+ },
+ "b0607": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "BASE",
+  "dom": "书架",
+  "gid": "IN2-4"
+ },
+ "b0608": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "液氮罐",
+  "gid": "IN3-1"
+ },
+ "b0609": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "皮艇架",
+  "gid": "IN3-2"
+ },
+ "b0610": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "教室伞桶",
+  "gid": "IN3-2"
+ },
+ "b0611": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "船闸",
+  "gid": "OUT2-2"
+ },
+ "b0612": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "液氮罐",
+  "gid": "OUT2-2"
+ },
+ "b0613": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "NUMFORM",
+  "dom": "公交站台",
+  "gid": "IN2-3"
+ },
+ "b0614": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "备用变压器间",
+  "gid": "IN2-2"
+ },
+ "b0615": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "壁炉柴架",
+  "gid": "OUT2-1"
+ },
+ "b0616": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "单车架",
+  "gid": "IN2-2"
+ },
+ "b0617": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "换电柜",
+  "gid": "IN2-1"
+ },
+ "b0618": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "换电柜",
+  "gid": "IN3-2"
+ },
+ "b0619": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "淬火吊篮",
+  "gid": "IN2-2"
+ },
+ "b0620": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "山谷吊篮",
+  "gid": "IN2-1"
+ },
+ "b0621": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "山谷吊篮",
+  "gid": "OUT3-1"
+ },
+ "b0622": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "单车架",
+  "gid": "OUT2-1"
+ },
+ "b0623": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "输液架",
+  "gid": "IN3-2"
+ },
+ "b0624": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "NORMAL",
+  "dom": "船闸",
+  "gid": ""
+ },
+ "b0625": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "壁炉柴架",
+  "gid": "OUT3-1"
+ },
+ "b0626": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "流浪狗收容所",
+  "gid": "OUT3-4"
+ },
+ "b0627": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "PRONOUN",
+  "dom": "单车架",
+  "gid": ""
+ },
+ "b0628": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "打印机纸盒",
+  "gid": "OUT2-2"
+ },
+ "b0629": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "皮艇架",
+  "gid": "IN2-1"
+ },
+ "b0630": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "备用变压器间",
+  "gid": "IN3-2"
+ },
+ "b0631": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "寄养猫笼",
+  "gid": "OUT3-1"
+ },
+ "b0632": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "液氮罐",
+  "gid": "OUT2-1"
+ },
+ "b0633": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "换电柜",
+  "gid": "IN2-2"
+ },
+ "b0634": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "PRONOUN",
+  "dom": "蒸笼灶",
+  "gid": ""
+ },
+ "b0635": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "露营地",
+  "gid": "OUT2-2"
+ },
+ "b0636": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "CHATTER",
+  "dom": "液氮罐",
+  "gid": ""
+ },
+ "b0637": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "山谷吊篮",
+  "gid": "IN3-2"
+ },
+ "b0638": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "PRONOUN",
+  "dom": "淬火吊篮",
+  "gid": ""
+ },
+ "b0639": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "皮艇架",
+  "gid": "IN2-2"
+ },
+ "b0640": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "寄养猫笼",
+  "gid": "IN2-1"
+ },
+ "b0641": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "山谷吊篮",
+  "gid": "OUT3-2"
+ },
+ "b0642": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "打印机纸盒",
+  "gid": "OUT3-1"
+ },
+ "b0643": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "皮艇架",
+  "gid": "OUT3-1"
+ },
+ "b0644": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "配送机器人",
+  "gid": "IN2-2"
+ },
+ "b0645": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "train",
+  "form": "NEG",
+  "dom": "鱼缸",
+  "gid": "OUT3-1"
+ },
+ "b0646": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "教室伞桶",
+  "gid": "OUT3-2"
+ },
+ "b0647": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "寄养猫笼",
+  "gid": "IN2-2"
+ },
+ "b0648": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "蒸笼灶",
+  "gid": "OUT2-1"
+ },
+ "b0649": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "换电柜",
+  "gid": "OUT3-1"
+ },
+ "b0650": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "train",
+  "form": "NEG",
+  "dom": "货车",
+  "gid": "IN2-4"
+ },
+ "b0651": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "换电柜",
+  "gid": "IN2-1"
+ },
+ "b0652": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "备用变压器间",
+  "gid": "OUT2-1"
+ },
+ "b0653": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "PRONOUN",
+  "dom": "皮艇架",
+  "gid": ""
+ },
+ "b0654": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "淬火吊篮",
+  "gid": "OUT3-1"
+ },
+ "b0655": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "备用变压器间",
+  "gid": "OUT3-2"
+ },
+ "b0656": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "配送机器人",
+  "gid": "OUT3-1"
+ },
+ "b0657": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "衣帽架",
+  "gid": "IN3-2"
+ },
+ "b0658": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "液氮罐",
+  "gid": "IN2-2"
+ },
+ "b0659": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "TRANSFER",
+  "dom": "山谷吊篮",
+  "gid": ""
+ },
+ "b0660": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "文物展柜",
+  "gid": "OUT2-1"
+ },
+ "b0661": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "换电柜",
+  "gid": "IN3-1"
+ },
+ "b0662": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "育苗盘",
+  "gid": "IN3-1"
+ },
+ "b0663": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "壁炉柴架",
+  "gid": "OUT2-1"
+ },
+ "b0664": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "NUMFORM",
+  "dom": "离心机",
+  "gid": "IN2-2"
+ },
+ "b0665": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "液氮罐",
+  "gid": "IN3-2"
+ },
+ "b0666": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "壁炉柴架",
+  "gid": "OUT2-2"
+ },
+ "b0667": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "BASE",
+  "dom": "秋千架",
+  "gid": ""
+ },
+ "b0668": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "液氮罐",
+  "gid": "IN2-1"
+ },
+ "b0669": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "壁炉柴架",
+  "gid": "OUT3-2"
+ },
+ "b0670": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "打印机纸盒",
+  "gid": "IN3-2"
+ },
+ "b0671": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "train",
+  "form": "NEG",
+  "dom": "花瓶",
+  "gid": "IN2-3"
+ },
+ "b0672": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "输液架",
+  "gid": "OUT2-1"
+ },
+ "b0673": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "试衣挂杆",
+  "gid": "OUT3-1"
+ },
+ "b0674": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "输液架",
+  "gid": "IN3-1"
+ },
+ "b0675": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "液氮罐",
+  "gid": "IN2-2"
+ },
+ "b0676": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "邮包",
+  "gid": "IN2-4"
+ },
+ "b0677": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "皮艇架",
+  "gid": "OUT2-1"
+ },
+ "b0678": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "教室伞桶",
+  "gid": "OUT3-1"
+ },
+ "b0679": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "壁炉柴架",
+  "gid": "OUT2-2"
+ },
+ "b0680": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "打印机纸盒",
+  "gid": "IN2-2"
+ },
+ "b0681": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "文物展柜",
+  "gid": "OUT3-2"
+ },
+ "b0682": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "试衣挂杆",
+  "gid": "IN3-2"
+ },
+ "b0683": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "文物展柜",
+  "gid": "IN3-2"
+ },
+ "b0684": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "教室伞桶",
+  "gid": "IN3-2"
+ },
+ "b0685": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "NORMAL",
+  "dom": "产蛋箱",
+  "gid": ""
+ },
+ "b0686": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "露营地",
+  "gid": "IN3-2"
+ },
+ "b0687": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "蒸笼灶",
+  "gid": "OUT2-1"
+ },
+ "b0688": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "寄养猫笼",
+  "gid": "OUT2-1"
+ },
+ "b0689": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "育苗盘",
+  "gid": "OUT3-2"
+ },
+ "b0690": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "文物展柜",
+  "gid": "IN3-1"
+ },
+ "b0691": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "文物展柜",
+  "gid": "IN2-2"
+ },
+ "b0692": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "单车架",
+  "gid": "OUT2-2"
+ },
+ "b0693": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "NUMFORM",
+  "dom": "粮仓",
+  "gid": "IN2-2"
+ },
+ "b0694": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "试衣挂杆",
+  "gid": "OUT2-1"
+ },
+ "b0695": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "备用变压器间",
+  "gid": "IN2-1"
+ },
+ "b0696": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "单车架",
+  "gid": "IN3-1"
+ },
+ "b0697": {
+  "event": "IN",
+  "amount": 3,
+  "src": "train",
+  "form": "NUMFORM",
+  "dom": "水库",
+  "gid": "IN3-2"
+ },
+ "b0698": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "秋千架",
+  "gid": "IN2-1"
+ },
+ "b0699": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "山谷吊篮",
+  "gid": "IN2-2"
+ },
+ "b0700": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "教室伞桶",
+  "gid": "OUT3-1"
+ },
+ "b0701": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "试衣挂杆",
+  "gid": "OUT3-2"
+ },
+ "b0702": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "单车架",
+  "gid": "OUT2-1"
+ },
+ "b0703": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "秋千架",
+  "gid": "OUT3-1"
+ },
+ "b0704": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "液氮罐",
+  "gid": "OUT2-1"
+ },
+ "b0705": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "蒸笼灶",
+  "gid": "OUT3-2"
+ },
+ "b0706": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "备用变压器间",
+  "gid": "OUT2-1"
+ },
+ "b0707": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "产蛋箱",
+  "gid": "OUT2-2"
+ },
+ "b0708": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "液氮罐",
+  "gid": "OUT3-2"
+ },
+ "b0709": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "育苗盘",
+  "gid": "OUT2-1"
+ },
+ "b0710": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "教室伞桶",
+  "gid": "OUT2-2"
+ },
+ "b0711": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "文物展柜",
+  "gid": "IN2-1"
+ },
+ "b0712": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "育苗盘",
+  "gid": "IN2-1"
+ },
+ "b0713": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "蒸笼灶",
+  "gid": "OUT3-2"
+ },
+ "b0714": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "船闸",
+  "gid": "OUT3-1"
+ },
+ "b0715": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "单车架",
+  "gid": "OUT2-2"
+ },
+ "b0716": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "DIR",
+  "dom": "打印机纸盒",
+  "gid": ""
+ },
+ "b0717": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "文物展柜",
+  "gid": "IN3-1"
+ },
+ "b0718": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "DIRSWAP",
+  "dom": "文物展柜",
+  "gid": ""
+ },
+ "b0719": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "CHATTER",
+  "dom": "单车架",
+  "gid": ""
+ },
+ "b0720": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "秋千架",
+  "gid": "OUT3-2"
+ },
+ "b0721": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "打印机纸盒",
+  "gid": "OUT2-2"
+ },
+ "b0722": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "备用变压器间",
+  "gid": "IN3-1"
+ },
+ "b0723": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "教室伞桶",
+  "gid": "OUT2-1"
+ },
+ "b0724": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "产蛋箱",
+  "gid": "OUT3-1"
+ },
+ "b0725": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "流浪狗收容所",
+  "gid": "OUT3-3"
+ },
+ "b0726": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "壁炉柴架",
+  "gid": "OUT3-2"
+ },
+ "b0727": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "备用变压器间",
+  "gid": "OUT2-2"
+ },
+ "b0728": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "教室伞桶",
+  "gid": "OUT3-2"
+ },
+ "b0729": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "试衣挂杆",
+  "gid": "OUT3-1"
+ },
+ "b0730": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "产蛋箱",
+  "gid": "IN2-1"
+ },
+ "b0731": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "山谷吊篮",
+  "gid": "OUT2-2"
+ },
+ "b0732": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "液氮罐",
+  "gid": "OUT3-2"
+ },
+ "b0733": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "露营地",
+  "gid": "IN3-1"
+ },
+ "b0734": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "产蛋箱",
+  "gid": "IN3-2"
+ },
+ "b0735": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "train",
+  "form": "NUMFORM",
+  "dom": "杠铃架",
+  "gid": "OUT3-4"
+ },
+ "b0736": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "配送机器人",
+  "gid": "OUT3-1"
+ },
+ "b0737": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "蒸笼灶",
+  "gid": "OUT3-2"
+ },
+ "b0738": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "露营地",
+  "gid": "OUT3-1"
+ },
+ "b0739": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "BASE",
+  "dom": "单车架",
+  "gid": ""
+ },
+ "b0740": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "教室伞桶",
+  "gid": "OUT2-1"
+ },
+ "b0741": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "DIR",
+  "dom": "露营地",
+  "gid": ""
+ },
+ "b0742": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "打印机纸盒",
+  "gid": "IN2-1"
+ },
+ "b0743": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "蒸笼灶",
+  "gid": "OUT3-2"
+ },
+ "b0744": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "淬火吊篮",
+  "gid": "OUT3-1"
+ },
+ "b0745": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "输液架",
+  "gid": "OUT2-2"
+ },
+ "b0746": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "淬火吊篮",
+  "gid": "OUT3-2"
+ },
+ "b0747": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "寄养猫笼",
+  "gid": "OUT3-1"
+ },
+ "b0748": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "文物展柜",
+  "gid": "OUT3-1"
+ },
+ "b0749": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "育苗盘",
+  "gid": "OUT2-1"
+ },
+ "b0750": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "衣帽架",
+  "gid": "IN3-1"
+ },
+ "b0751": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "衣帽架",
+  "gid": "OUT2-2"
+ },
+ "b0752": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "蒸笼灶",
+  "gid": "OUT3-1"
+ },
+ "b0753": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "露营地",
+  "gid": "IN2-1"
+ },
+ "b0754": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "秋千架",
+  "gid": "IN3-1"
+ },
+ "b0755": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "CHATTER",
+  "dom": "单车架",
+  "gid": ""
+ },
+ "b0756": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "壁炉柴架",
+  "gid": "OUT2-2"
+ },
+ "b0757": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "产蛋箱",
+  "gid": "OUT2-1"
+ },
+ "b0758": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "露营地",
+  "gid": "OUT2-2"
+ },
+ "b0759": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "寄养猫笼",
+  "gid": "OUT3-2"
+ },
+ "b0760": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "产蛋箱",
+  "gid": "IN2-2"
+ },
+ "b0761": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "配送机器人",
+  "gid": "OUT2-2"
+ },
+ "b0762": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "秋千架",
+  "gid": "IN2-2"
+ },
+ "b0763": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "衣帽架",
+  "gid": "OUT3-1"
+ },
+ "b0764": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "TRANSFER",
+  "dom": "蒸笼灶",
+  "gid": ""
+ },
+ "b0765": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "蒸笼灶",
+  "gid": "IN3-1"
+ },
+ "b0766": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "BASE",
+  "dom": "输液架",
+  "gid": ""
+ },
+ "b0767": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "BASE",
+  "dom": "育苗盘",
+  "gid": "IN3-1"
+ },
+ "b0768": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "山谷吊篮",
+  "gid": "OUT3-1"
+ },
+ "b0769": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "打印机纸盒",
+  "gid": "OUT2-1"
+ },
+ "b0770": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "图书借阅证",
+  "gid": "OUT2-2"
+ },
+ "b0771": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "育苗盘",
+  "gid": "OUT2-2"
+ },
+ "b0772": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "单车架",
+  "gid": "IN2-2"
+ },
+ "b0773": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "露营地",
+  "gid": "OUT2-1"
+ },
+ "b0774": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "train",
+  "form": "DIRSWAP",
+  "dom": "鱼缸",
+  "gid": "IN3-4"
+ },
+ "b0775": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "文物展柜",
+  "gid": "IN3-2"
+ },
+ "b0776": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "露营地",
+  "gid": "OUT3-2"
+ },
+ "b0777": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "train",
+  "form": "DIRSWAP",
+  "dom": "充电宝",
+  "gid": "IN3-3"
+ },
+ "b0778": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "CHATTER_NUM",
+  "dom": "货车",
+  "gid": "OUT2-2"
+ },
+ "b0779": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "POSNEG",
+  "dom": "输液架",
+  "gid": ""
+ },
+ "b0780": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "皮艇架",
+  "gid": "IN3-2"
+ },
+ "b0781": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "TRANSFER",
+  "dom": "单车架",
+  "gid": ""
+ },
+ "b0782": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "POSNEG",
+  "dom": "单车架",
+  "gid": ""
+ },
+ "b0783": {
+  "event": "IN",
+  "amount": 3,
+  "src": "train",
+  "form": "NUMFORM",
+  "dom": "课后托管班",
+  "gid": "IN3-4"
+ },
+ "b0784": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "船闸",
+  "gid": "OUT2-2"
+ },
+ "b0785": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "山谷吊篮",
+  "gid": "IN3-2"
+ },
+ "b0786": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "壁炉柴架",
+  "gid": "OUT2-1"
+ },
+ "b0787": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "文物展柜",
+  "gid": "OUT2-1"
+ },
+ "b0788": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "PRONOUN",
+  "dom": "液氮罐",
+  "gid": ""
+ },
+ "b0789": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "打印机纸盒",
+  "gid": "OUT3-2"
+ },
+ "b0790": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "输液架",
+  "gid": "OUT2-1"
+ },
+ "b0791": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "备用变压器间",
+  "gid": "IN2-2"
+ },
+ "b0792": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "配送机器人",
+  "gid": "IN2-1"
+ },
+ "b0793": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "船闸",
+  "gid": "IN2-2"
+ },
+ "b0794": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "寄养猫笼",
+  "gid": "IN2-2"
+ },
+ "b0795": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "试衣挂杆",
+  "gid": "IN3-2"
+ },
+ "b0796": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "换电柜",
+  "gid": "IN2-2"
+ },
+ "b0797": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "试衣挂杆",
+  "gid": "IN2-1"
+ },
+ "b0798": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "train",
+  "form": "NEG",
+  "dom": "邮包",
+  "gid": "OUT2-2"
+ },
+ "b0799": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "寄养猫笼",
+  "gid": "IN3-1"
+ },
+ "b0800": {
+  "event": "IN",
+  "amount": 3,
+  "src": "train",
+  "form": "DIRSWAP",
+  "dom": "离心机",
+  "gid": "OUT3-4"
+ },
+ "b0801": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "皮艇架",
+  "gid": "OUT2-1"
+ },
+ "b0802": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "NORMAL",
+  "dom": "产蛋箱",
+  "gid": ""
+ },
+ "b0803": {
+  "event": "IN",
+  "amount": 1,
+  "src": "existing",
+  "form": "POSNEG",
+  "dom": "蒸笼灶",
+  "gid": ""
+ },
+ "b0804": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "船闸",
+  "gid": "OUT2-2"
+ },
+ "b0805": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "教室伞桶",
+  "gid": "IN2-2"
+ },
+ "b0806": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "淬火吊篮",
+  "gid": "IN2-2"
+ },
+ "b0807": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "山谷吊篮",
+  "gid": "OUT2-2"
+ },
+ "b0808": {
+  "event": "OUT",
+  "amount": 1,
+  "src": "existing",
+  "form": "NORMAL",
+  "dom": "衣帽架",
+  "gid": ""
+ },
+ "b0809": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "备用变压器间",
+  "gid": "OUT3-2"
+ },
+ "b0810": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "换电柜",
+  "gid": "OUT2-2"
+ },
+ "b0811": {
+  "event": "IN",
+  "amount": 2,
+  "src": "train",
+  "form": "DIRSWAP",
+  "dom": "电动车充电棚",
+  "gid": "OUT2-4"
+ },
+ "b0812": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "配送机器人",
+  "gid": "OUT2-2"
+ },
+ "b0813": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "train",
+  "form": "BASE",
+  "dom": "电动车充电棚",
+  "gid": "OUT2-1"
+ },
+ "b0814": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "train",
+  "form": "NEG",
+  "dom": "货车",
+  "gid": "IN3-2"
+ },
+ "b0815": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "试衣挂杆",
+  "gid": "IN2-1"
+ },
+ "b0816": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "配送机器人",
+  "gid": "IN3-1"
+ },
+ "b0817": {
+  "event": "IN",
+  "amount": 3,
+  "src": "test",
+  "form": "CHATTER_NUM",
+  "dom": "蒸笼灶",
+  "gid": "IN3-2"
+ },
+ "b0818": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "蒸笼灶",
+  "gid": "OUT2-2"
+ },
+ "b0819": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "NUMFORM",
+  "dom": "秋千架",
+  "gid": "OUT3-1"
+ },
+ "b0820": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "山谷吊篮",
+  "gid": "IN2-2"
+ },
+ "b0821": {
+  "event": "NOOP",
+  "amount": 0,
+  "src": "test",
+  "form": "NEG",
+  "dom": "试衣挂杆",
+  "gid": "OUT2-2"
+ },
+ "b0822": {
+  "event": "IN",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "蒸笼灶",
+  "gid": "IN2-2"
+ },
+ "b0823": {
+  "event": "OUT",
+  "amount": 3,
+  "src": "test",
+  "form": "DIRSWAP",
+  "dom": "打印机纸盒",
+  "gid": "IN3-2"
+ },
+ "b0824": {
+  "event": "OUT",
+  "amount": 2,
+  "src": "test",
+  "form": "BASE",
+  "dom": "山谷吊篮",
+  "gid": "OUT2-1"
+ }
+}
