@@ -11,8 +11,10 @@ import re
 import sys
 from collections import defaultdict
 
-EXPECTED = {"data_sha_story": None, "data_sha_amt_train": None, "data_sha_amt_test": None}
-SYSTEMS = ("ORACLE+EXEC", "EYE+EXEC", "ORACLE+HOP", "EYE+HOP")
+EXPECTED = {"data_sha_story": "5cefc22664f607810c0932700fba739f36f533efea7f70bc612d877c70041a6c",
+            "data_sha_amt_train": "b27131477c6bbb3a0c5b755b6ea72d396492c2fa198d6a6450ab13c07f09b1bb",
+            "data_sha_amt_test": "4bda68a558894e5b9a7cbedb869eee472598a95d873ecf4ee1b1fa0b6ed37a81"}
+SYSTEMS = ("ORACLE+EXEC", "ORACLE-AMT1+EXEC", "EYE+EXEC", "ORACLE+HOP", "EYE+HOP")
 SEEDS = ("42", "1", "2")
 N_STORIES = 22 * 4 * 12 * 3 + 22 * 20
 
@@ -75,6 +77,11 @@ def main(argv):
                 d = per_seed.get((sy, s))
                 if not d or d.get("all", "0/0").split("/")[1] != str(N_STORIES):
                     sys.exit(f"{sy} seed {s}: not {N_STORIES} stories")
+        # [review 7] amount coverage (22 domains x 8 groups x 4 IN / OUT forms per seed) and the oracle check
+        if amt.get("registered", [0, 0])[1] != 22 * 8 * 4 * len(SEEDS):
+            sys.exit(f"amount metric covers {amt.get('registered')} sentences, expected {22 * 8 * 4 * len(SEEDS)}")
+        if res["ORACLE+EXEC"]["all"][0] != res["ORACLE+EXEC"]["all"][1]:
+            sys.exit("ORACLE+EXEC is not 100%: rule or data error")
     else:
         print("!!! PARTIAL: not the registered result\n")
 
@@ -114,6 +121,9 @@ def main(argv):
     e4, h4, o4 = pct(res["EYE+EXEC"].get("ncap4")), pct(res["EYE+HOP"].get("ncap4")), pct(res["ORACLE+HOP"].get("ncap4"))
     hv = "學到了容量" if abs(h4 - e4) <= 3 and o4 >= 95 else "沒學到"
     tag = "  [PARTIAL]" if partial else ""
+    print(f"\nContext [review 3/4]: amount on existing amount-1 sentences {pct(amt.get('k1_existing')):.2f}%, by gold amount "
+          + " ".join(f"{k}={pct(amt.get(k)):.2f}" for k in ("amt1", "amt2", "amt3"))
+          + f"; amount-blind reference (correct events, amounts read as 1) LONG {pct(res['ORACLE-AMT1+EXEC'].get('LONG')):.2f}%")
     print(f"\nREGISTERED: EYE+EXEC LONG {long_:.2f}%, amount {a:.2f}% -> {verdict}{tag}")
     print(f"REGISTERED (learned reasoner, capacity 4): EYE+HOP {h4:.2f} vs EYE+EXEC {e4:.2f}, ORACLE+HOP {o4:.2f} -> {hv}{tag}")
 

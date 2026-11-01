@@ -11,10 +11,13 @@ Rule (capacity cap 2..5, events (type, k)):
   normal  per domain x cap 2..5 x length 1..12: 3 stories; event P(IN .3, OUT .2, BREAK .1, FIX .1, NOOP .3),
           IN / OUT amount P(1 .5, 2 .3, 3 .2); initial level 0..cap, safeguard ok / broken.
   trap    per domain 20 stories, length 8..12, cap 2..5 random, 5 of each (rejection sampling on the rule trace):
-          A1 a multi-unit IN that would overflow while the safeguard is ok (blocked, level = cap), final not BURST;
+          A1 a multi-unit IN that overflows while the level is below capacity and the safeguard is ok (blocked,
+             level = cap), final not BURST;
           A2 final BURST caused by a multi-unit IN that a single unit would not have burst;
-          A3 a multi-unit OUT larger than a non-zero level (-> 0), final not BURST;
+          A3 a multi-unit OUT larger than a level of at least 2 (-> 0), final not BURST;
           A4 BREAK in the first two sentences, BURST caused by a multi-unit IN in the last three sentences.
+          [pre-run amendment, review 1] every trap must also have a different final state when all its IN / OUT
+          amounts are read as 1 (so traps test amount reading).
 --check: rebuild and compare with the file on disk.
 """
 import hashlib
@@ -26,7 +29,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "tools"))
-from make_stories_v1 import load_domains  # noqa: E402
+from make_stories_v1 import SRC, load_domains  # noqa: E402
 
 OUT = ROOT / "benchmarks" / "story_v2" / "stories.json"
 AMOUNT = ROOT / "benchmarks" / "amount_v1" / "test.json"
@@ -41,7 +44,7 @@ def trace(cap, lv, sg, events):
     """events = [(type, k)] -> list of per-step info dicts and the final class name."""
     burst, info = False, []
     for e, k in events:
-        st = dict(lv=lv, sg=sg, e=e, k=k, burst_now=False, blocked=False, over_out=False)
+        st = dict(lv=lv, sg=sg, e=e, k=k, burst_now=False, blocked=False, over_out=False, cap=cap)
         if not burst:
             if e == "IN":
                 if lv + k <= cap:
@@ -52,7 +55,7 @@ def trace(cap, lv, sg, events):
                 else:
                     burst = st["burst_now"] = True
             elif e == "OUT":
-                st["over_out"] = k > lv > 0
+                st["over_out"] = k > lv >= 2
                 lv = max(0, lv - k)
             elif e == "BREAK":
                 sg = "broken"
@@ -110,9 +113,9 @@ def rand_events(rng, n):
 
 def trap_ok(kind, info, final, n):
     if kind == "A1":
-        return final != "BURST" and any(s["blocked"] and s["k"] >= 2 for s in info)
+        return final != "BURST" and any(s["blocked"] and s["k"] >= 2 and s["lv"] < s["cap"] for s in info)
     if kind == "A2":
-        return final == "BURST" and any(s["burst_now"] and s["k"] >= 2 and s["lv"] + 1 <= s.get("cap", 99) for s in info)
+        return final == "BURST" and any(s["burst_now"] and s["k"] >= 2 and s["lv"] + 1 <= s["cap"] for s in info)
     if kind == "A3":
         return final != "BURST" and any(s["over_out"] and s["k"] >= 2 for s in info)
     return (final == "BURST" and any(s["e"] == "BREAK" for s in info[:2])
@@ -150,13 +153,12 @@ def build():
                         evs[rng.choice([0, 1])] = ("BREAK", 0)
                         evs = [x if x[0] != "FIX" else ("NOOP", 0) for x in evs]
                     info, final = trace(cap, lv, sg, evs)
-                    for s in info:
-                        s["cap"] = cap
-                    if trap_ok(kind, info, final, n):
+                    as_one = simulate(cap, lv, sg, [(e, 1 if e in ("IN", "OUT") else 0) for e, _k in evs])
+                    if trap_ok(kind, info, final, n) and as_one != final:
                         break
                 stories.append(make_story(rng, d, kind, cap, lv, sg, evs, f"{d['name']}/{kind}/{k}"))
     meta = dict(version="story_v2", seed=SEED, rule="capacity 2..5, IN/OUT amounts 1..3 (Lab 20)",
-                sources=dict(amount_v1_test=sha(AMOUNT), story_v1_sources="tools/make_stories_v1.SRC"),
+                sources=dict(amount_v1_test=sha(AMOUNT), **{"story_v1_" + k: sha(v) for k, v in SRC.items()}),
                 domains=[dict(name=d["name"], src=d["src"], measure=d["measure"], rules=d["rules"], ok=d["ok"],
                               broken=d["broken"], support=d["support"]) for d in doms])
     return dict(meta, stories=stories)

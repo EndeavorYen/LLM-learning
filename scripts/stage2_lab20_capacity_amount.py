@@ -1030,9 +1030,9 @@ N_AMT = 3
 SEEDS20 = (42, 1, 2)
 AMT_FORMS = ("BASE", "NUMFORM", "DIRSWAP", "NEG", "CHATTER_NUM")
 OPP_IO = {"IN": "OUT", "OUT": "IN"}
-EXPECTED_AMT_TRAIN_SHA256 = None
-EXPECTED_AMT_TEST_SHA256 = None
-EXPECTED_STORY2_SHA256 = None
+EXPECTED_AMT_TRAIN_SHA256 = "b27131477c6bbb3a0c5b755b6ea72d396492c2fa198d6a6450ab13c07f09b1bb"  # accepted: validator PASS, blind sample 120/120
+EXPECTED_AMT_TEST_SHA256 = "4bda68a558894e5b9a7cbedb869eee472598a95d873ecf4ee1b1fa0b6ed37a81"   # accepted: validator PASS, blind 878/880, 2 revised items 2/2
+EXPECTED_STORY2_SHA256 = "5cefc22664f607810c0932700fba739f36f533efea7f70bc612d877c70041a6c"    # accepted: rebuild check, blind 39/40
 
 
 def amt_label(event, k, form):
@@ -1068,7 +1068,8 @@ def simulate(cap, lv, sg, events):
 
 
 def load_amount(name, version, sha_expected, doms_expected, per, forbidden, tag):
-    path, raw, sha = _read_first(_reading_path("amount_v1", name), name)
+    # [review 6] unique upload names on Colab (/content/amount_v1_<name>), then the repo copy
+    path, raw, sha = _read_first(["/content/amount_v1_" + name] + _reading_path("amount_v1", name)[1:], name)
     assert sha_expected is not None and sha == sha_expected, f"{name} not registered: {sha}"
     p = json.loads(raw.decode("utf-8"))
     assert p.get("version") == version
@@ -1275,6 +1276,10 @@ def run_eye(stories, seed):
     for t, c, d, g, a in zip(a_tr["texts"], a_tr["cls"], a_tr["dom"], a_tr["gid"], a_tr["amt"]):
         for k, v in (("texts", t), ("cls", c), ("dom", d), ("kind", "amount"), ("gid", g), ("amt", a)):
             tr[k].append(v)
+    # [review 2] the stories must be built from the registered amount test file
+    assert stories["sources"]["amount_v1_test"] == a_te["sha"], "stories were built from another amount_v1 test file"
+    assert all(x["text"] in set(a_te["texts"]) for s_ in stories["stories"] for x in s_["sentences"]
+               if x["var"].startswith("AMT-")), "a story amount sentence is not in amount_v1 test"
     texts, dom, idx, sup, gold = story_pool(stories, a_te)
     assert not set(texts) & set(tr["texts"]), "LEAK: a story / amount test sentence is a training sentence"
     assert not set(d["name"] for d in stories["domains"]) & set(table["doms"])
@@ -1356,7 +1361,7 @@ def run_eye(stories, seed):
     log(f"L20_AMT seed={seed} " + " ".join(f"{k}={a}/{b}" for k, (a, b) in sorted(ac.items())))
     hop, hop_acc = train_hop(seed)
     log(f"L20_HOP seed={seed} " + " ".join(f"onehot_len1-12_cap{c}={a:.4f}" for c, a in sorted(hop_acc.items())))
-    ex, hp, orc, ohp = StoryTally(), StoryTally(), StoryTally(), StoryTally()
+    ex, hp, orc, ohp, ob1 = StoryTally(), StoryTally(), StoryTally(), StoryTally(), StoryTally()
     dec = defaultdict(lambda: [0, 0])      # (kind group, error type) -> [final right, stories]
     harm = defaultdict(lambda: [0, 0])     # variant -> [stories made wrong when this variant was misread, misreads]
     for s in stories["stories"]:
@@ -1364,6 +1369,8 @@ def run_eye(stories, seed):
         gl = [(x["label"], x["amount"]) for x in s["sentences"]]
         p = [read(x["text"]) for x in s["sentences"]]
         orc.add(s, simulate(cap, lv, sg, gl) == s["final"])
+        # [review 4] amount-blind reference: correct events, every IN / OUT amount read as 1
+        ob1.add(s, simulate(cap, lv, sg, [(e, 1 if k else 0) for e, k in gl]) == s["final"])
         ok = simulate(cap, lv, sg, p) == s["final"]
         ex.add(s, ok)
         n_type = sum(a[0] != b[0] for a, b in zip(gl, p))
@@ -1386,6 +1393,7 @@ def run_eye(stories, seed):
         hp.add(s, STATES[hy] == s["final"])
         ohp.add(s, STATES[gy] == s["final"])
     log(f"L20_RES seed={seed} system=ORACLE+EXEC {orc.line()}")
+    log(f"L20_RES seed={seed} system=ORACLE-AMT1+EXEC {ob1.line()}")
     log(f"L20_RES seed={seed} system=EYE+EXEC {ex.line()}")
     log(f"L20_RES seed={seed} system=ORACLE+HOP {ohp.line()}")
     log(f"L20_RES seed={seed} system=EYE+HOP {hp.line()}")

@@ -1,0 +1,162 @@
+{
+ "s00": {
+  "final": "L1_broken",
+  "story": "育苗盘/A3/1"
+ },
+ "s01": {
+  "final": "L0_broken",
+  "story": "产蛋箱/C5/N6/0"
+ },
+ "s02": {
+  "final": "BURST",
+  "story": "山谷吊篮/A2/0"
+ },
+ "s03": {
+  "final": "BURST",
+  "story": "换电柜/A2/2"
+ },
+ "s04": {
+  "final": "BURST",
+  "story": "教室伞桶/A4/2"
+ },
+ "s05": {
+  "final": "L0_ok",
+  "story": "衣帽架/A1/0"
+ },
+ "s06": {
+  "final": "BURST",
+  "story": "教室伞桶/A2/3"
+ },
+ "s07": {
+  "final": "L2_broken",
+  "story": "试衣挂杆/C3/N2/2"
+ },
+ "s08": {
+  "final": "BURST",
+  "story": "打印机纸盒/A2/1"
+ },
+ "s09": {
+  "final": "L3_ok",
+  "story": "淬火吊篮/A3/1"
+ },
+ "s10": {
+  "final": "L0_ok",
+  "story": "文物展柜/C2/N11/0"
+ },
+ "s11": {
+  "final": "L1_ok",
+  "story": "露营地/A1/1"
+ },
+ "s12": {
+  "final": "BURST",
+  "story": "淬火吊篮/C2/N8/0"
+ },
+ "s13": {
+  "final": "L3_ok",
+  "story": "配送机器人/A3/4"
+ },
+ "s14": {
+  "final": "BURST",
+  "story": "育苗盘/A2/0"
+ },
+ "s15": {
+  "final": "L2_broken",
+  "story": "淬火吊篮/A3/4"
+ },
+ "s16": {
+  "final": "L4_broken",
+  "story": "备用变压器间/C5/N10/0"
+ },
+ "s17": {
+  "final": "L0_broken",
+  "story": "秋千架/A1/1"
+ },
+ "s18": {
+  "final": "L0_broken",
+  "story": "秋千架/A1/0"
+ },
+ "s19": {
+  "final": "BURST",
+  "story": "试衣挂杆/A2/1"
+ },
+ "s20": {
+  "final": "BURST",
+  "story": "产蛋箱/C3/N9/2"
+ },
+ "s21": {
+  "final": "L2_ok",
+  "story": "配送机器人/C4/N3/2"
+ },
+ "s22": {
+  "final": "BURST",
+  "story": "换电柜/A4/0"
+ },
+ "s23": {
+  "final": "L2_ok",
+  "story": "配送机器人/A1/3"
+ },
+ "s24": {
+  "final": "BURST",
+  "story": "露营地/A2/2"
+ },
+ "s25": {
+  "final": "L0_ok",
+  "story": "露营地/C2/N1/2"
+ },
+ "s26": {
+  "final": "L0_broken",
+  "story": "淬火吊篮/C4/N11/0"
+ },
+ "s27": {
+  "final": "L3_ok",
+  "story": "打印机纸盒/C3/N8/2"
+ },
+ "s28": {
+  "final": "BURST",
+  "story": "皮艇架/A4/3"
+ },
+ "s29": {
+  "final": "L1_broken",
+  "story": "蒸笼灶/C5/N3/1"
+ },
+ "s30": {
+  "final": "BURST",
+  "story": "输液架/A4/2"
+ },
+ "s31": {
+  "final": "BURST",
+  "story": "露营地/A4/0"
+ },
+ "s32": {
+  "final": "BURST",
+  "story": "产蛋箱/A4/2"
+ },
+ "s33": {
+  "final": "BURST",
+  "story": "文物展柜/A4/0"
+ },
+ "s34": {
+  "final": "L0_ok",
+  "story": "船闸/A3/1"
+ },
+ "s35": {
+  "final": "L2_ok",
+  "story": "单车架/A3/0"
+ },
+ "s36": {
+  "final": "L0_broken",
+  "story": "壁炉柴架/A3/2"
+ },
+ "s37": {
+  "final": "L1_ok",
+  "story": "试衣挂杆/A1/1"
+ },
+ "s38": {
+  "final": "L2_ok",
+  "story": "育苗盘/A1/1"
+ },
+ "s39": {
+  "final": "BURST",
+  "story": "教室伞桶/C4/N6/1"
+ }
+}

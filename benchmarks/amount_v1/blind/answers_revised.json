@@ -1,0 +1,7 @@
+{
+  "r1": {"event": "IN", "amount": 2},
+  "r2": {"event": "IN", "amount": 2},
+  "_notes": {
+    "r1": "Two people (两个人) sat on the swing frame; read them as the units entering with measure 个. Unsure because 个 could be meant to count something other than riders, and '十分钟' is a time number that does not count."
+  }
+}
