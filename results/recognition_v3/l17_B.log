@@ -1,0 +1,1043 @@
+[l17] device=cuda | seeds=(42, 1, 2) | python 3.13.16 | torch 2.11.0+cu130 | transformers 5.21.0
+[l17] st: /content/stories.json sha256=ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108 | templates.json sha256=1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70 | 16 train domains (templates.json == stories' train split; 8 test domains NOT used) | 640 sentences (40 per domain); 640 of them occur in the 4896 train / val_seen stories, all of which are in the table | per class: L0_ok=16 L1_ok=16 L2_ok=16 L3_ok=16 L0_broken=16 L1_broken=16 L2_broken=16 L3_broken=16 ev:IN=112 ev:OUT=112 ev:BREAK=96 ev:FIX=96 ev:NOOP=96
+[l17] extra: /content/extra_domains.json sha256=f44dc28a2a2df593981c919949b47e13304a814cec4e960123564206190ca7cf | 12 new train domains | 480 sentences
+[l17] hard: /content/hard_cases.json sha256=e145539bc8b37133a226a5d390e6cfebc2492d85e2cc090501d8464fc5afe8aa | 192 sentences in 16 train domains | NEG=64 OTHER=32 TEMP=64 HEDGE=32
+[l17] hard extra: /content/hard_cases_extra.json sha256=e31ad5839bbc1133c6d3e6e5caec6a5125a4ffd9bcffbf330fb793b58416fc53 | 144 sentences in 12 extra domains
+L17_FOLD fold=0 heldout=杠铃架,急诊留观室,冷库,停车场,蹦床,公交站台,电动车充电棚 pool=手推车,储钱罐,书架,便桥,货车,图书借阅证,邮包,花瓶,流浪狗收容所,渡轮,手机存储,水塔,离心机,水库,粮仓,晾衣绳,鱼缸,过山车排队区,课后托管班,油罐,充电宝
+L17_FOLD fold=1 heldout=花瓶,邮包,充电宝,晾衣绳,便桥,手推车,书架 pool=鱼缸,储钱罐,流浪狗收容所,货车,杠铃架,水库,水塔,图书借阅证,过山车排队区,急诊留观室,电动车充电棚,手机存储,蹦床,粮仓,课后托管班,渡轮,油罐,停车场,公交站台,离心机,冷库
+L17_FOLD fold=2 heldout=课后托管班,水库,油罐,水塔,渡轮,货车,离心机 pool=便桥,花瓶,电动车充电棚,图书借阅证,粮仓,冷库,流浪狗收容所,杠铃架,邮包,手推车,充电宝,储钱罐,过山车排队区,手机存储,停车场,急诊留观室,蹦床,鱼缸,书架,公交站台,晾衣绳
+L17_FOLD fold=3 heldout=图书借阅证,鱼缸,粮仓,过山车排队区,流浪狗收容所,手机存储,储钱罐 pool=花瓶,充电宝,油罐,书架,停车场,便桥,电动车充电棚,杠铃架,水塔,手推车,急诊留观室,晾衣绳,水库,课后托管班,蹦床,公交站台,渡轮,货车,冷库,邮包,离心机
+/usr/local/lib/python3.13/dist-packages/huggingface_hub/utils/_auth.py:138: UserWarning: 
+Error while fetching `HF_TOKEN` secret value from your vault: 'Requesting secret HF_TOKEN timed out. Secrets can only be fetched when running from the Colab UI.'.
+  warnings.warn(f"\nError while fetching `HF_TOKEN` secret value from your vault: '{str(e)}'.")
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+WARNING:huggingface_hub.utils._http:Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+config.json:   0%|          | 0.00/727 [00:00<?, ?B/s]
+tokenizer_config.json:   0%|          | 0.00/9.71k [00:00<?, ?B/s]
+vocab.json:   0%|          | 0.00/2.78M [00:00<?, ?B/s]
+merges.txt:   0%|          | 0.00/1.67M [00:00<?, ?B/s]
+tokenizer.json: reconstructing file:   0%|          |  0.00B / 11.4MB           
+tokenizer.json: downloading bytes:           |  0.00B            
+[l17] preflight Q3E: longest model text 54 tokens
+model.safetensors: reconstructing file:   0%|          |  0.00B / 1.19GB        
+model.safetensors: downloading bytes:           |  0.00B            
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]
+[l17] Q3E: Qwen/Qwen3-Embedding-0.6B loaded in 11.0s | hidden 1024 | layers 28 | LoRA modules 112 | revision ? | pooled token ids [151643] (eos 151645, pad 151643)
+L17_FEAT eye=Q3E tag=frozen n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=0.999742 fp=-0x1.8343ea6508000p+16
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=42 correct=1612 total=1890 c_old=1145 t_old=1350 c_new=467 t_new=540 conf=309,92,0,9,10,44,347,0,0,29,0,42,308,0,0,7,18,0,316,9,9,0,0,9,332
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=42 correct=510 total=560 c_old=360 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=42 cat=NEG correct=80 total=280 c_old=60 t_old=200 c_new=20 t_new=80 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=42 cat=OTHER correct=10 total=140 c_old=0 t_old=100 c_new=10 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=42 cat=TEMP correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=260
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=42 correct=1615 total=1890 c_old=1152 t_old=1350 c_new=463 t_new=540 conf=314,70,5,5,26,73,327,1,6,13,0,22,316,12,0,7,4,0,330,9,11,0,0,11,328
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=42 correct=480 total=560 c_old=335 t_old=400 c_new=145 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=42 cat=NEG correct=50 total=280 c_old=38 t_old=200 c_new=12 t_new=80 as_surface=79
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=42 cat=OTHER correct=10 total=140 c_old=0 t_old=100 c_new=10 t_new=40 as_surface=123
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=42 cat=TEMP correct=247 total=280 c_old=184 t_old=200 c_new=63 t_new=80 as_surface=247
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=42 correct=1560 total=1890 c_old=1076 t_old=1350 c_new=484 t_new=540 conf=298,103,0,9,10,56,345,0,0,19,0,49,291,0,10,33,16,7,285,9,0,0,0,9,341
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=42 correct=490 total=560 c_old=330 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=42 cat=NEG correct=70 total=280 c_old=50 t_old=200 c_new=20 t_new=80 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=42 cat=OTHER correct=10 total=140 c_old=0 t_old=100 c_new=10 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=42 cat=TEMP correct=240 total=280 c_old=180 t_old=200 c_new=60 t_new=80 as_surface=240
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=42 correct=1589 total=1890 c_old=1132 t_old=1350 c_new=457 t_new=540 conf=322,65,1,12,20,81,310,7,1,21,0,23,320,7,0,19,4,6,312,9,11,0,0,14,325
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=42 correct=478 total=560 c_old=333 t_old=400 c_new=145 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=42 cat=NEG correct=36 total=280 c_old=27 t_old=200 c_new=9 t_new=80 as_surface=99
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=42 cat=OTHER correct=20 total=140 c_old=10 t_old=100 c_new=10 t_new=40 as_surface=114
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=42 cat=TEMP correct=245 total=280 c_old=182 t_old=200 c_new=63 t_new=80 as_surface=245
+/usr/local/lib/python3.13/dist-packages/torch/autograd/graph.py:869: UserWarning: Memory Efficient attention defaults to a non-deterministic algorithm. To explicitly enable determinism call torch.use_deterministic_algorithms(True, warn_only=False). (Triggered internally at /pytorch/aten/src/ATen/native/transformers/cuda/attention_backward.cu:900.)
+  return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+L17_FEAT eye=Q3E tag=lora-f0-s42-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.918816c140000p+15
+L17_LORA eye=Q3E fold=0 seed=42 hard=0 loss=1:9.0976,50:2.7051,100:2.1159,150:2.1558,maxmem_GiB:11.1 sec=107.6
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=42 correct=1797 total=1890 c_old=1275 t_old=1350 c_new=522 t_new=540 conf=371,31,0,9,9,35,385,0,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=42 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=42 cat=NEG correct=60 total=280 c_old=50 t_old=200 c_new=10 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=42 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=42 correct=1796 total=1890 c_old=1274 t_old=1350 c_new=522 t_new=540 conf=370,32,0,9,9,35,385,0,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=42 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=42 cat=NEG correct=53 total=280 c_old=43 t_old=200 c_new=10 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=42 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=42 correct=1780 total=1890 c_old=1258 t_old=1350 c_new=522 t_new=540 conf=371,31,0,9,9,44,376,0,0,0,0,8,342,0,0,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=42 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=42 cat=NEG correct=70 total=280 c_old=60 t_old=200 c_new=10 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=42 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=42 correct=1795 total=1890 c_old=1271 t_old=1350 c_new=524 t_new=540 conf=370,34,0,7,9,36,384,0,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=42 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=42 cat=NEG correct=59 total=280 c_old=49 t_old=200 c_new=10 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=42 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=42 correct=1551 total=1890 c_old=1075 t_old=1350 c_new=476 t_new=540 conf=277,93,0,9,41,27,373,0,0,20,0,25,260,0,65,7,25,0,309,9,9,0,0,9,332
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=42 correct=480 total=560 c_old=340 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=42 cat=OTHER correct=90 total=140 c_old=60 t_old=100 c_new=30 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=42 cat=TEMP correct=250 total=280 c_old=180 t_old=200 c_new=70 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=42 correct=1558 total=1890 c_old=1106 t_old=1350 c_new=452 t_new=540 conf=302,62,4,3,49,68,315,0,7,30,0,21,294,11,24,8,10,0,323,9,14,0,0,12,324
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=42 correct=466 total=560 c_old=323 t_old=400 c_new=143 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=42 cat=NEG correct=277 total=280 c_old=200 t_old=200 c_new=77 t_new=80 as_surface=2
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=42 cat=OTHER correct=82 total=140 c_old=52 t_old=100 c_new=30 t_new=40 as_surface=58
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=42 cat=TEMP correct=245 total=280 c_old=181 t_old=200 c_new=64 t_new=80 as_surface=245
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=42 correct=1479 total=1890 c_old=976 t_old=1350 c_new=503 t_new=540 conf=284,95,0,0,41,36,358,8,0,18,0,25,231,0,94,33,34,0,274,9,9,0,0,9,332
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=42 correct=480 total=560 c_old=320 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=42 cat=NEG correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=42 cat=OTHER correct=90 total=140 c_old=60 t_old=100 c_new=30 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=42 cat=TEMP correct=240 total=280 c_old=160 t_old=200 c_new=80 t_new=80 as_surface=240
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=42 correct=1531 total=1890 c_old=1070 t_old=1350 c_new=461 t_new=540 conf=319,60,3,5,33,80,303,8,1,28,0,21,297,4,28,35,5,5,298,7,23,0,0,13,314
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=42 correct=473 total=560 c_old=326 t_old=400 c_new=147 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=42 cat=NEG correct=269 total=280 c_old=199 t_old=200 c_new=70 t_new=80 as_surface=8
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=42 cat=OTHER correct=87 total=140 c_old=57 t_old=100 c_new=30 t_new=40 as_surface=53
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=42 cat=TEMP correct=239 total=280 c_old=174 t_old=200 c_new=65 t_new=80 as_surface=239
+L17_FEAT eye=Q3E tag=lora-f0-s42-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.1f23106590000p+16
+L17_LORA eye=Q3E fold=0 seed=42 hard=1 loss=1:8.2196,50:2.7995,100:2.1213,150:2.3510,maxmem_GiB:12.4 sec=112.8
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=42 correct=1751 total=1890 c_old=1220 t_old=1350 c_new=531 t_new=540 conf=369,33,0,9,9,35,385,0,0,0,0,8,333,9,0,0,0,0,350,0,10,0,9,17,314
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=42 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=42 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=42 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=42 correct=1760 total=1890 c_old=1229 t_old=1350 c_new=531 t_new=540 conf=373,29,0,9,9,34,386,0,0,0,0,8,333,9,0,0,1,0,349,0,5,0,9,17,319
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=42 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=42 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=42 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=42 correct=1761 total=1890 c_old=1230 t_old=1350 c_new=531 t_new=540 conf=369,33,0,9,9,35,385,0,0,0,0,8,333,9,0,0,0,0,350,0,0,0,9,17,324
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=42 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=42 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=42 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=42 correct=1760 total=1890 c_old=1229 t_old=1350 c_new=531 t_new=540 conf=372,30,0,9,9,34,386,0,0,0,0,8,333,9,0,1,1,1,347,0,2,0,9,17,322
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=42 correct=549 total=560 c_old=399 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=42 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=42 cat=TEMP correct=279 total=280 c_old=200 t_old=200 c_new=79 t_new=80 as_surface=279
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=1 correct=1631 total=1890 c_old=1159 t_old=1350 c_new=472 t_new=540 conf=314,88,0,8,10,45,359,0,0,16,0,40,310,0,0,6,19,0,316,9,8,0,0,10,332
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=1 correct=500 total=560 c_old=350 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=1 cat=NEG correct=80 total=280 c_old=60 t_old=200 c_new=20 t_new=80 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=1 cat=OTHER correct=10 total=140 c_old=0 t_old=100 c_new=10 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=1 cat=TEMP correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=260
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=1 correct=1623 total=1890 c_old=1159 t_old=1350 c_new=464 t_new=540 conf=303,70,8,12,27,64,339,1,4,12,0,18,320,12,0,6,1,0,335,8,12,0,0,12,326
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=1 correct=490 total=560 c_old=338 t_old=400 c_new=152 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=1 cat=NEG correct=52 total=280 c_old=41 t_old=200 c_new=11 t_new=80 as_surface=74
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=1 cat=OTHER correct=11 total=140 c_old=1 t_old=100 c_new=10 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=1 cat=TEMP correct=248 total=280 c_old=184 t_old=200 c_new=64 t_new=80 as_surface=248
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=1 correct=1604 total=1890 c_old=1108 t_old=1350 c_new=496 t_new=540 conf=311,91,0,8,10,45,366,0,0,9,0,49,294,0,7,39,9,0,293,9,0,0,0,10,340
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=1 correct=490 total=560 c_old=330 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=1 cat=NEG correct=60 total=280 c_old=40 t_old=200 c_new=20 t_new=80 as_surface=80
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=1 cat=OTHER correct=10 total=140 c_old=0 t_old=100 c_new=10 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=1 cat=TEMP correct=240 total=280 c_old=180 t_old=200 c_new=60 t_new=80 as_surface=240
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=1 correct=1592 total=1890 c_old=1140 t_old=1350 c_new=452 t_new=540 conf=307,70,3,12,28,76,312,6,4,22,0,17,326,7,0,8,0,14,320,8,10,0,0,13,327
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=1 correct=493 total=560 c_old=341 t_old=400 c_new=152 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=1 cat=NEG correct=33 total=280 c_old=23 t_old=200 c_new=10 t_new=80 as_surface=96
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=1 cat=OTHER correct=22 total=140 c_old=11 t_old=100 c_new=11 t_new=40 as_surface=109
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=1 cat=TEMP correct=246 total=280 c_old=182 t_old=200 c_new=64 t_new=80 as_surface=246
+L17_FEAT eye=Q3E tag=lora-f0-s1-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.3859e5ffc0000p+15
+L17_LORA eye=Q3E fold=0 seed=1 hard=0 loss=1:9.4682,50:2.2148,100:2.3737,150:2.1824,maxmem_GiB:12.4 sec=109.1
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=1 correct=1797 total=1890 c_old=1265 t_old=1350 c_new=532 t_new=540 conf=388,15,0,8,9,44,376,0,0,0,0,0,342,8,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=1 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=1 cat=NEG correct=60 total=280 c_old=50 t_old=200 c_new=10 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=1 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=1 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=1 correct=1797 total=1890 c_old=1265 t_old=1350 c_new=532 t_new=540 conf=383,20,0,8,9,39,381,0,0,0,0,0,342,8,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=1 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=1 cat=NEG correct=62 total=280 c_old=51 t_old=200 c_new=11 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=1 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=1 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=1 correct=1797 total=1890 c_old=1265 t_old=1350 c_new=532 t_new=540 conf=388,15,0,8,9,44,376,0,0,0,0,0,342,8,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=1 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=1 cat=NEG correct=60 total=280 c_old=40 t_old=200 c_new=20 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=1 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=1 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=1 correct=1794 total=1890 c_old=1262 t_old=1350 c_new=532 t_new=540 conf=381,22,0,8,9,40,380,0,0,0,0,0,342,8,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=1 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=1 cat=NEG correct=73 total=280 c_old=52 t_old=200 c_new=21 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=1 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=1 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=1 correct=1552 total=1890 c_old=1063 t_old=1350 c_new=489 t_new=540 conf=275,90,0,8,47,33,369,0,0,18,0,17,269,0,64,6,28,0,307,9,8,0,0,10,332
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=1 correct=480 total=560 c_old=330 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=1 cat=OTHER correct=90 total=140 c_old=60 t_old=100 c_new=30 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=1 cat=TEMP correct=260 total=280 c_old=180 t_old=200 c_new=80 t_new=80 as_surface=260
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=1 correct=1542 total=1890 c_old=1100 t_old=1350 c_new=442 t_new=540 conf=277,66,6,5,66,57,317,1,9,36,0,21,293,9,27,6,4,0,331,9,14,0,0,12,324
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=1 correct=472 total=560 c_old=316 t_old=400 c_new=156 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=1 cat=NEG correct=276 total=280 c_old=200 t_old=200 c_new=76 t_new=80 as_surface=1
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=1 cat=OTHER correct=87 total=140 c_old=58 t_old=100 c_new=29 t_new=40 as_surface=52
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=1 cat=TEMP correct=242 total=280 c_old=180 t_old=200 c_new=62 t_new=80 as_surface=242
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=1 correct=1513 total=1890 c_old=1008 t_old=1350 c_new=505 t_new=540 conf=290,83,0,0,47,33,370,0,0,17,0,25,248,0,77,33,28,0,273,16,8,0,0,10,332
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=1 correct=490 total=560 c_old=330 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=1 cat=NEG correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=1 cat=OTHER correct=90 total=140 c_old=60 t_old=100 c_new=30 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=1 cat=TEMP correct=230 total=280 c_old=150 t_old=200 c_new=80 t_new=80 as_surface=230
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=1 correct=1513 total=1890 c_old=1062 t_old=1350 c_new=451 t_new=540 conf=285,74,3,5,53,63,311,9,1,36,0,22,293,2,33,23,7,6,305,9,17,0,0,14,319
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=1 correct=490 total=560 c_old=335 t_old=400 c_new=155 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=1 cat=NEG correct=275 total=280 c_old=200 t_old=200 c_new=75 t_new=80 as_surface=3
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=1 cat=OTHER correct=91 total=140 c_old=62 t_old=100 c_new=29 t_new=40 as_surface=48
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=1 cat=TEMP correct=239 total=280 c_old=178 t_old=200 c_new=61 t_new=80 as_surface=239
+L17_FEAT eye=Q3E tag=lora-f0-s1-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.db2ed48dd0000p+15
+L17_LORA eye=Q3E fold=0 seed=1 hard=1 loss=1:8.5108,50:2.4762,100:2.6197,150:2.5551,maxmem_GiB:12.4 sec=114.9
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=1 correct=1815 total=1890 c_old=1301 t_old=1350 c_new=514 t_new=540 conf=378,25,0,8,9,27,393,0,0,0,0,0,350,0,0,0,0,0,350,0,6,0,0,0,344
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=1 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=1 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=1 correct=1809 total=1890 c_old=1295 t_old=1350 c_new=514 t_new=540 conf=377,26,0,8,9,31,389,0,0,0,0,0,350,0,0,0,0,0,350,0,6,0,0,1,343
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=1 correct=547 total=560 c_old=400 t_old=400 c_new=147 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=1 cat=TEMP correct=268 total=280 c_old=200 t_old=200 c_new=68 t_new=80 as_surface=268
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=1 correct=1815 total=1890 c_old=1301 t_old=1350 c_new=514 t_new=540 conf=378,25,0,8,9,27,393,0,0,0,0,0,350,0,0,0,0,0,350,0,6,0,0,0,344
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=1 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=1 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=1 correct=1803 total=1890 c_old=1289 t_old=1350 c_new=514 t_new=540 conf=375,28,0,8,9,35,385,0,0,0,0,0,350,0,0,0,0,0,350,0,6,0,0,1,343
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=1 correct=550 total=560 c_old=400 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=1 cat=TEMP correct=266 total=280 c_old=200 t_old=200 c_new=66 t_new=80 as_surface=266
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=2 correct=1622 total=1890 c_old=1149 t_old=1350 c_new=473 t_new=540 conf=309,96,0,9,6,43,360,0,0,17,0,43,307,0,0,9,18,0,314,9,9,0,0,9,332
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=2 correct=490 total=560 c_old=340 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=2 cat=NEG correct=80 total=280 c_old=60 t_old=200 c_new=20 t_new=80 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=2 cat=OTHER correct=10 total=140 c_old=0 t_old=100 c_new=10 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=0 seed=2 cat=TEMP correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=260
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=2 correct=1629 total=1890 c_old=1157 t_old=1350 c_new=472 t_new=540 conf=319,74,3,7,17,66,341,1,5,7,0,21,316,13,0,13,3,0,325,9,12,0,0,10,328
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=2 correct=494 total=560 c_old=341 t_old=400 c_new=153 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=2 cat=NEG correct=36 total=280 c_old=32 t_old=200 c_new=4 t_new=80 as_surface=94
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=2 cat=OTHER correct=9 total=140 c_old=5 t_old=100 c_new=4 t_new=40 as_surface=123
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=0 seed=2 cat=TEMP correct=251 total=280 c_old=185 t_old=200 c_new=66 t_new=80 as_surface=251
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=2 correct=1565 total=1890 c_old=1074 t_old=1350 c_new=491 t_new=540 conf=302,103,0,9,6,53,351,0,0,16,0,52,288,0,10,34,16,8,283,9,0,0,0,9,341
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=2 correct=500 total=560 c_old=340 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=2 cat=NEG correct=60 total=280 c_old=40 t_old=200 c_new=20 t_new=80 as_surface=100
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=2 cat=OTHER correct=10 total=140 c_old=0 t_old=100 c_new=10 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=0 seed=2 cat=TEMP correct=240 total=280 c_old=180 t_old=200 c_new=60 t_new=80 as_surface=240
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=2 correct=1591 total=1890 c_old=1121 t_old=1350 c_new=470 t_new=540 conf=318,81,0,5,16,73,323,6,1,17,2,20,315,12,1,22,4,6,309,9,15,0,0,9,326
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=2 correct=493 total=560 c_old=340 t_old=400 c_new=153 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=2 cat=NEG correct=30 total=280 c_old=25 t_old=200 c_new=5 t_new=80 as_surface=110
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=2 cat=OTHER correct=19 total=140 c_old=11 t_old=100 c_new=8 t_new=40 as_surface=112
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=0 seed=2 cat=TEMP correct=250 total=280 c_old=185 t_old=200 c_new=65 t_new=80 as_surface=250
+L17_FEAT eye=Q3E tag=lora-f0-s2-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.2fb4e499b0000p+16
+L17_LORA eye=Q3E fold=0 seed=2 hard=0 loss=1:8.0611,50:2.5150,100:2.1548,150:2.1271,maxmem_GiB:12.4 sec=109.2
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=2 correct=1800 total=1890 c_old=1269 t_old=1350 c_new=531 t_new=540 conf=373,28,0,9,10,27,386,0,0,7,0,0,350,0,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=2 correct=540 total=560 c_old=390 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=2 cat=NEG correct=50 total=280 c_old=50 t_old=200 c_new=0 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=0 seed=2 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=2 correct=1799 total=1890 c_old=1268 t_old=1350 c_new=531 t_new=540 conf=373,28,0,9,10,28,386,0,0,6,0,0,350,0,0,0,0,0,341,9,0,0,0,1,349
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=2 correct=539 total=560 c_old=389 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=2 cat=NEG correct=48 total=280 c_old=48 t_old=200 c_new=0 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=0 seed=2 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=2 correct=1800 total=1890 c_old=1269 t_old=1350 c_new=531 t_new=540 conf=373,28,0,9,10,27,386,0,0,7,0,0,350,0,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=2 correct=530 total=560 c_old=380 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=2 cat=NEG correct=50 total=280 c_old=50 t_old=200 c_new=0 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=0 seed=2 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=2 correct=1799 total=1890 c_old=1269 t_old=1350 c_new=530 t_new=540 conf=372,29,0,9,10,28,386,0,0,6,0,0,350,0,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=2 correct=531 total=560 c_old=381 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=2 cat=NEG correct=50 total=280 c_old=50 t_old=200 c_new=0 t_new=80 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=114
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=0 seed=2 cat=TEMP correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=280
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=2 correct=1540 total=1890 c_old=1058 t_old=1350 c_new=482 t_new=540 conf=268,105,0,9,38,23,380,0,0,17,0,33,254,0,63,9,26,0,306,9,9,0,0,9,332
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=2 correct=460 total=560 c_old=310 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=2 cat=OTHER correct=100 total=140 c_old=70 t_old=100 c_new=30 t_new=40 as_surface=40
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=0 seed=2 cat=TEMP correct=260 total=280 c_old=180 t_old=200 c_new=80 t_new=80 as_surface=260
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=2 correct=1573 total=1890 c_old=1118 t_old=1350 c_new=455 t_new=540 conf=306,66,4,5,39,55,331,0,5,29,0,23,285,9,33,12,5,0,324,9,14,0,1,8,327
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=2 correct=472 total=560 c_old=323 t_old=400 c_new=149 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=2 cat=NEG correct=273 total=280 c_old=200 t_old=200 c_new=73 t_new=80 as_surface=1
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=2 cat=OTHER correct=80 total=140 c_old=54 t_old=100 c_new=26 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=0 seed=2 cat=TEMP correct=249 total=280 c_old=184 t_old=200 c_new=65 t_new=80 as_surface=249
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=2 correct=1494 total=1890 c_old=996 t_old=1350 c_new=498 t_new=540 conf=297,85,0,0,38,33,353,7,0,27,0,26,239,0,85,32,36,0,273,9,9,0,0,9,332
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=2 correct=490 total=560 c_old=330 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=2 cat=NEG correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=2 cat=OTHER correct=90 total=140 c_old=60 t_old=100 c_new=30 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=0 seed=2 cat=TEMP correct=240 total=280 c_old=160 t_old=200 c_new=80 t_new=80 as_surface=240
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=2 correct=1532 total=1890 c_old=1062 t_old=1350 c_new=470 t_new=540 conf=313,76,0,3,28,67,321,7,1,24,2,22,281,1,44,37,6,4,296,7,18,0,0,11,321
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=2 correct=487 total=560 c_old=332 t_old=400 c_new=155 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=2 cat=NEG correct=269 total=280 c_old=200 t_old=200 c_new=69 t_new=80 as_surface=3
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=2 cat=OTHER correct=89 total=140 c_old=60 t_old=100 c_new=29 t_new=40 as_surface=51
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=0 seed=2 cat=TEMP correct=243 total=280 c_old=176 t_old=200 c_new=67 t_new=80 as_surface=243
+L17_FEAT eye=Q3E tag=lora-f0-s2-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.31f2943900000p+13
+L17_LORA eye=Q3E fold=0 seed=2 hard=1 loss=1:8.1647,50:2.4763,100:2.3680,150:2.2445,maxmem_GiB:12.4 sec=114.2
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=2 correct=1744 total=1890 c_old=1219 t_old=1350 c_new=525 t_new=540 conf=352,49,0,9,10,34,376,0,0,10,0,0,341,9,0,0,0,0,341,9,7,0,9,0,334
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=2 correct=540 total=560 c_old=400 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=2 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=0 seed=2 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=2 correct=1747 total=1890 c_old=1222 t_old=1350 c_new=525 t_new=540 conf=352,49,0,9,10,31,379,0,0,10,0,0,341,9,0,0,0,0,341,9,7,0,9,0,334
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=2 correct=540 total=560 c_old=400 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=2 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=0 seed=2 cat=TEMP correct=276 total=280 c_old=200 t_old=200 c_new=76 t_new=80 as_surface=276
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=2 correct=1744 total=1890 c_old=1219 t_old=1350 c_new=525 t_new=540 conf=352,49,0,9,10,34,376,0,0,10,0,0,341,9,0,0,0,0,341,9,7,0,9,0,334
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=2 correct=540 total=560 c_old=400 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=2 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=0 seed=2 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=2 correct=1745 total=1890 c_old=1220 t_old=1350 c_new=525 t_new=540 conf=350,51,0,9,10,31,379,0,0,10,0,0,341,9,0,0,0,0,341,9,7,0,9,0,334
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=2 correct=542 total=560 c_old=400 t_old=400 c_new=142 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=2 cat=OTHER correct=130 total=140 c_old=90 t_old=100 c_new=40 t_new=40 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=0 seed=2 cat=TEMP correct=274 total=280 c_old=200 t_old=200 c_new=74 t_new=80 as_surface=274
+[l17] Q3E: fold 0 done (781s)
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=42 correct=1550 total=1890 c_old=423 t_old=540 c_new=1127 t_new=1350 conf=307,16,0,25,72,118,252,16,0,34,0,0,350,0,0,8,0,7,318,17,27,0,0,0,323
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=42 correct=460 total=560 c_old=130 t_old=160 c_new=330 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=42 cat=NEG correct=70 total=280 c_old=10 t_old=80 c_new=60 t_new=200 as_surface=80
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=42 cat=OTHER correct=50 total=140 c_old=10 t_old=40 c_new=40 t_new=100 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=42 cat=TEMP correct=250 total=280 c_old=60 t_old=80 c_new=190 t_new=200 as_surface=250
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=42 correct=1648 total=1890 c_old=461 t_old=540 c_new=1187 t_new=1350 conf=285,79,0,8,48,38,366,5,0,11,0,0,350,0,0,4,0,9,336,1,23,10,6,0,311
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=42 correct=451 total=560 c_old=138 t_old=160 c_new=313 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=42 cat=NEG correct=27 total=280 c_old=15 t_old=80 c_new=12 t_new=200 as_surface=114
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=42 cat=OTHER correct=23 total=140 c_old=2 t_old=40 c_new=21 t_new=100 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=42 cat=TEMP correct=258 total=280 c_old=77 t_old=80 c_new=181 t_new=200 as_surface=258
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=42 correct=1543 total=1890 c_old=428 t_old=540 c_new=1115 t_new=1350 conf=288,36,0,17,79,110,266,0,0,44,0,0,341,0,9,0,0,0,325,25,27,0,0,0,323
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=42 correct=420 total=560 c_old=130 t_old=160 c_new=290 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=42 cat=NEG correct=50 total=280 c_old=10 t_old=80 c_new=40 t_new=200 as_surface=90
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=42 cat=OTHER correct=50 total=140 c_old=0 t_old=40 c_new=50 t_new=100 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=42 cat=TEMP correct=230 total=280 c_old=60 t_old=80 c_new=170 t_new=200 as_surface=230
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=42 correct=1634 total=1890 c_old=440 t_old=540 c_new=1194 t_new=1350 conf=283,80,0,8,49,63,346,0,0,11,0,0,350,0,0,1,0,6,341,2,21,7,8,0,314
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=42 correct=458 total=560 c_old=135 t_old=160 c_new=323 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=42 cat=NEG correct=19 total=280 c_old=17 t_old=80 c_new=2 t_new=200 as_surface=104
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=42 cat=OTHER correct=25 total=140 c_old=0 t_old=40 c_new=25 t_new=100 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=42 cat=TEMP correct=256 total=280 c_old=73 t_old=80 c_new=183 t_new=200 as_surface=256
+L17_FEAT eye=Q3E tag=lora-f1-s42-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.492d685f20000p+16
+L17_LORA eye=Q3E fold=1 seed=42 hard=0 loss=1:8.2539,50:2.3337,100:2.0936,150:2.3674,maxmem_GiB:12.4 sec=109.6
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=42 correct=1789 total=1890 c_old=521 t_old=540 c_new=1268 t_new=1350 conf=411,0,0,9,0,72,348,0,0,0,0,0,350,0,0,10,0,0,340,0,10,0,0,0,340
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=80 c_new=0 t_new=200 as_surface=80
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=42 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=42 correct=1791 total=1890 c_old=521 t_old=540 c_new=1270 t_new=1350 conf=411,0,0,9,0,71,349,0,0,0,0,0,350,0,0,9,0,0,341,0,10,0,0,0,340
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=80 c_new=0 t_new=200 as_surface=73
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=42 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=42 correct=1789 total=1890 c_old=521 t_old=540 c_new=1268 t_new=1350 conf=411,0,0,9,0,72,348,0,0,0,0,0,350,0,0,10,0,0,340,0,10,0,0,0,340
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=80 c_new=0 t_new=200 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=42 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=42 correct=1791 total=1890 c_old=521 t_old=540 c_new=1270 t_new=1350 conf=411,0,0,9,0,70,350,0,0,0,0,0,350,0,0,10,0,0,340,0,10,0,0,0,340
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=80 c_new=0 t_new=200 as_surface=61
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=42 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=42 correct=1516 total=1890 c_old=412 t_old=540 c_new=1104 t_new=1350 conf=288,34,0,17,81,76,254,8,0,82,0,0,325,0,25,26,0,0,316,8,17,0,0,0,333
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=42 correct=470 total=560 c_old=130 t_old=160 c_new=340 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=42 cat=NEG correct=270 total=280 c_old=70 t_old=80 c_new=200 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=42 cat=OTHER correct=110 total=140 c_old=30 t_old=40 c_new=80 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=42 cat=TEMP correct=250 total=280 c_old=70 t_old=80 c_new=180 t_new=200 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=42 correct=1595 total=1890 c_old=427 t_old=540 c_new=1168 t_new=1350 conf=263,67,0,9,81,30,323,2,1,64,0,0,343,0,7,1,0,5,343,1,15,9,3,0,323
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=42 correct=455 total=560 c_old=137 t_old=160 c_new=318 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=42 cat=NEG correct=256 total=280 c_old=79 t_old=80 c_new=177 t_new=200 as_surface=12
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=42 cat=OTHER correct=103 total=140 c_old=29 t_old=40 c_new=74 t_new=100 as_surface=21
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=42 cat=TEMP correct=256 total=280 c_old=76 t_old=80 c_new=180 t_new=200 as_surface=256
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=42 correct=1482 total=1890 c_old=395 t_old=540 c_new=1087 t_new=1350 conf=279,36,0,17,88,121,236,0,0,63,0,0,325,0,25,17,0,0,309,24,17,0,0,0,333
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=42 correct=420 total=560 c_old=120 t_old=160 c_new=300 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=42 cat=NEG correct=250 total=280 c_old=70 t_old=80 c_new=180 t_new=200 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=42 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=42 cat=TEMP correct=260 total=280 c_old=80 t_old=80 c_new=180 t_new=200 as_surface=260
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=42 correct=1575 total=1890 c_old=417 t_old=540 c_new=1158 t_new=1350 conf=274,73,0,7,66,57,306,0,0,57,0,0,342,0,8,5,0,8,337,0,19,7,8,0,316
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=42 correct=458 total=560 c_old=137 t_old=160 c_new=321 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=42 cat=NEG correct=241 total=280 c_old=78 t_old=80 c_new=163 t_new=200 as_surface=17
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=42 cat=OTHER correct=108 total=140 c_old=29 t_old=40 c_new=79 t_new=100 as_surface=18
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=42 cat=TEMP correct=264 total=280 c_old=74 t_old=80 c_new=190 t_new=200 as_surface=264
+L17_FEAT eye=Q3E tag=lora-f1-s42-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.43a16f4c00000p+15
+L17_LORA eye=Q3E fold=1 seed=42 hard=1 loss=1:9.9280,50:2.9168,100:2.3207,150:2.1815,maxmem_GiB:12.4 sec=112.8
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=42 correct=1769 total=1890 c_old=531 t_old=540 c_new=1238 t_new=1350 conf=394,0,0,9,17,78,332,0,0,10,0,0,350,0,0,0,0,0,343,7,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=42 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=42 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=42 correct=1775 total=1890 c_old=533 t_old=540 c_new=1242 t_new=1350 conf=395,0,0,7,18,78,337,0,0,5,0,0,350,0,0,0,0,0,343,7,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=42 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=42 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=42 correct=1764 total=1890 c_old=540 t_old=540 c_new=1224 t_new=1350 conf=396,0,0,0,24,78,332,0,0,10,0,0,350,0,0,0,0,0,336,14,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=42 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=42 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=42 correct=1773 total=1890 c_old=539 t_old=540 c_new=1234 t_new=1350 conf=397,0,0,1,22,78,335,0,0,7,0,0,350,0,0,0,0,0,341,9,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=42 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=42 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=42 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=42 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=1 correct=1540 total=1890 c_old=409 t_old=540 c_new=1131 t_new=1350 conf=297,25,0,27,71,122,245,17,0,36,0,0,350,0,0,18,0,8,324,0,26,0,0,0,324
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=1 correct=460 total=560 c_old=120 t_old=160 c_new=340 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=1 cat=NEG correct=80 total=280 c_old=10 t_old=80 c_new=70 t_new=200 as_surface=80
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=1 cat=OTHER correct=60 total=140 c_old=10 t_old=40 c_new=50 t_new=100 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=1 cat=TEMP correct=230 total=280 c_old=60 t_old=80 c_new=170 t_new=200 as_surface=230
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=1 correct=1643 total=1890 c_old=463 t_old=540 c_new=1180 t_new=1350 conf=289,79,0,4,48,49,352,6,0,13,0,1,349,0,0,1,0,7,342,0,22,13,4,0,311
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=1 correct=449 total=560 c_old=139 t_old=160 c_new=310 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=1 cat=NEG correct=31 total=280 c_old=14 t_old=80 c_new=17 t_new=200 as_surface=109
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=1 cat=OTHER correct=24 total=140 c_old=1 t_old=40 c_new=23 t_new=100 as_surface=62
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=1 cat=TEMP correct=261 total=280 c_old=77 t_old=80 c_new=184 t_new=200 as_surface=261
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=1 correct=1539 total=1890 c_old=425 t_old=540 c_new=1114 t_new=1350 conf=286,35,0,19,80,113,264,0,0,43,0,0,340,0,10,0,0,0,325,25,26,0,0,0,324
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=1 correct=440 total=560 c_old=140 t_old=160 c_new=300 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=1 cat=NEG correct=40 total=280 c_old=10 t_old=80 c_new=30 t_new=200 as_surface=110
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=1 cat=OTHER correct=40 total=140 c_old=0 t_old=40 c_new=40 t_new=100 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=1 cat=TEMP correct=250 total=280 c_old=70 t_old=80 c_new=180 t_new=200 as_surface=250
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=1 correct=1625 total=1890 c_old=440 t_old=540 c_new=1185 t_new=1350 conf=290,69,0,7,54,72,337,1,0,10,0,1,349,0,0,0,0,10,340,0,23,10,5,3,309
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=1 correct=461 total=560 c_old=135 t_old=160 c_new=326 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=1 cat=NEG correct=18 total=280 c_old=15 t_old=80 c_new=3 t_new=200 as_surface=112
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=1 cat=OTHER correct=24 total=140 c_old=0 t_old=40 c_new=24 t_new=100 as_surface=68
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=1 cat=TEMP correct=258 total=280 c_old=76 t_old=80 c_new=182 t_new=200 as_surface=258
+L17_FEAT eye=Q3E tag=lora-f1-s1-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.39efe7f320000p+15
+L17_LORA eye=Q3E fold=1 seed=1 hard=0 loss=1:8.2576,50:2.4766,100:2.1430,150:2.2198,maxmem_GiB:12.4 sec=109.6
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=1 correct=1809 total=1890 c_old=521 t_old=540 c_new=1288 t_new=1350 conf=410,0,0,10,0,62,358,0,0,0,0,0,350,0,0,0,0,0,350,0,9,0,0,0,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=1 cat=NEG correct=20 total=280 c_old=0 t_old=80 c_new=20 t_new=200 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=1 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=1 correct=1806 total=1890 c_old=521 t_old=540 c_new=1285 t_new=1350 conf=405,5,0,10,0,60,360,0,0,0,0,0,350,0,0,0,0,0,350,0,9,0,0,0,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=1 cat=NEG correct=20 total=280 c_old=0 t_old=80 c_new=20 t_new=200 as_surface=64
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=1 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=1 correct=1809 total=1890 c_old=521 t_old=540 c_new=1288 t_new=1350 conf=410,0,0,10,0,62,358,0,0,0,0,0,350,0,0,0,0,0,350,0,9,0,0,0,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=1 cat=NEG correct=20 total=280 c_old=0 t_old=80 c_new=20 t_new=200 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=1 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=1 correct=1805 total=1890 c_old=521 t_old=540 c_new=1284 t_new=1350 conf=404,6,0,10,0,60,360,0,0,0,0,0,350,0,0,0,0,0,350,0,9,0,0,0,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=1 cat=NEG correct=20 total=280 c_old=0 t_old=80 c_new=20 t_new=200 as_surface=58
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=1 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=1 correct=1495 total=1890 c_old=409 t_old=540 c_new=1086 t_new=1350 conf=279,35,0,19,87,88,245,10,0,77,0,0,332,0,18,27,0,0,306,17,17,0,0,0,333
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=1 correct=480 total=560 c_old=130 t_old=160 c_new=350 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=1 cat=NEG correct=270 total=280 c_old=70 t_old=80 c_new=200 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=1 cat=OTHER correct=110 total=140 c_old=30 t_old=40 c_new=80 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=1 cat=TEMP correct=250 total=280 c_old=70 t_old=80 c_new=180 t_new=200 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=1 correct=1569 total=1890 c_old=426 t_old=540 c_new=1143 t_new=1350 conf=263,63,0,5,89,31,297,5,0,87,0,0,343,0,7,1,0,7,342,0,13,10,2,1,324
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=1 correct=445 total=560 c_old=139 t_old=160 c_new=306 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=1 cat=NEG correct=250 total=280 c_old=76 t_old=80 c_new=174 t_new=200 as_surface=13
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=1 cat=OTHER correct=106 total=140 c_old=30 t_old=40 c_new=76 t_new=100 as_surface=17
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=1 cat=TEMP correct=250 total=280 c_old=75 t_old=80 c_new=175 t_new=200 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=1 correct=1496 total=1890 c_old=408 t_old=540 c_new=1088 t_new=1350 conf=278,34,0,19,89,119,230,0,0,71,0,0,322,0,28,17,0,0,325,8,9,0,0,0,341
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=1 correct=430 total=560 c_old=130 t_old=160 c_new=300 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=1 cat=NEG correct=250 total=280 c_old=70 t_old=80 c_new=180 t_new=200 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=1 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=1 cat=TEMP correct=260 total=280 c_old=80 t_old=80 c_new=180 t_new=200 as_surface=260
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=1 correct=1566 total=1890 c_old=425 t_old=540 c_new=1141 t_new=1350 conf=273,58,0,7,82,55,301,0,0,64,0,0,342,0,8,2,0,11,337,0,17,12,7,1,313
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=1 correct=461 total=560 c_old=135 t_old=160 c_new=326 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=1 cat=NEG correct=245 total=280 c_old=76 t_old=80 c_new=169 t_new=200 as_surface=15
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=1 cat=OTHER correct=112 total=140 c_old=30 t_old=40 c_new=82 t_new=100 as_surface=16
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=1 cat=TEMP correct=260 total=280 c_old=74 t_old=80 c_new=186 t_new=200 as_surface=260
+L17_FEAT eye=Q3E tag=lora-f1-s1-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.4808bd4b00000p+13
+L17_LORA eye=Q3E fold=1 seed=1 hard=1 loss=1:8.5071,50:2.7142,100:2.3928,150:2.4162,maxmem_GiB:12.4 sec=114.0
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=1 correct=1748 total=1890 c_old=522 t_old=540 c_new=1226 t_new=1350 conf=393,0,0,10,17,35,331,0,0,54,0,0,350,0,0,0,0,0,341,9,0,9,0,8,333
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=1 cat=NEG correct=260 total=280 c_old=70 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=1 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=1 correct=1756 total=1890 c_old=530 t_old=540 c_new=1226 t_new=1350 conf=387,6,0,10,17,35,331,0,0,54,0,0,350,0,0,0,0,0,341,9,0,3,0,0,347
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=1 cat=NEG correct=260 total=280 c_old=70 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=1 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=1 correct=1756 total=1890 c_old=530 t_old=540 c_new=1226 t_new=1350 conf=393,0,0,10,17,35,331,0,0,54,0,0,350,0,0,0,0,0,341,9,0,9,0,0,341
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=1 cat=NEG correct=260 total=280 c_old=70 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=1 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=1 correct=1750 total=1890 c_old=530 t_old=540 c_new=1220 t_new=1350 conf=387,6,0,10,17,35,331,0,0,54,0,0,350,0,0,0,0,0,341,9,0,9,0,0,341
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=1 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=1 cat=NEG correct=260 total=280 c_old=70 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=1 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=1 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=2 correct=1562 total=1890 c_old=437 t_old=540 c_new=1125 t_new=1350 conf=307,19,0,16,78,122,246,18,0,34,0,0,350,0,0,15,0,9,319,7,10,0,0,0,340
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=2 correct=460 total=560 c_old=130 t_old=160 c_new=330 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=2 cat=NEG correct=60 total=280 c_old=10 t_old=80 c_new=50 t_new=200 as_surface=90
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=2 cat=OTHER correct=50 total=140 c_old=0 t_old=40 c_new=50 t_new=100 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=1 seed=2 cat=TEMP correct=230 total=280 c_old=60 t_old=80 c_new=170 t_new=200 as_surface=230
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=2 correct=1662 total=1890 c_old=455 t_old=540 c_new=1207 t_new=1350 conf=288,84,0,5,43,24,383,5,0,8,0,0,350,0,0,4,0,11,335,0,23,17,3,1,306
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=2 correct=450 total=560 c_old=135 t_old=160 c_new=315 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=2 cat=NEG correct=21 total=280 c_old=11 t_old=80 c_new=10 t_new=200 as_surface=125
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=2 cat=OTHER correct=21 total=140 c_old=0 t_old=40 c_new=21 t_new=100 as_surface=69
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=1 seed=2 cat=TEMP correct=257 total=280 c_old=73 t_old=80 c_new=184 t_new=200 as_surface=257
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=2 correct=1544 total=1890 c_old=428 t_old=540 c_new=1116 t_new=1350 conf=289,36,0,16,79,110,266,0,0,44,0,0,340,0,10,0,0,0,326,24,27,0,0,0,323
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=2 correct=430 total=560 c_old=140 t_old=160 c_new=290 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=2 cat=NEG correct=50 total=280 c_old=10 t_old=80 c_new=40 t_new=200 as_surface=90
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=2 cat=OTHER correct=50 total=140 c_old=0 t_old=40 c_new=50 t_new=100 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=1 seed=2 cat=TEMP correct=240 total=280 c_old=70 t_old=80 c_new=170 t_new=200 as_surface=240
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=2 correct=1635 total=1890 c_old=436 t_old=540 c_new=1199 t_new=1350 conf=283,88,0,5,44,59,353,1,0,7,0,0,350,0,0,0,0,7,343,0,27,10,5,2,306
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=2 correct=449 total=560 c_old=130 t_old=160 c_new=319 t_new=400
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=2 cat=NEG correct=15 total=280 c_old=15 t_old=80 c_new=0 t_new=200 as_surface=117
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=2 cat=OTHER correct=26 total=140 c_old=0 t_old=40 c_new=26 t_new=100 as_surface=65
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=1 seed=2 cat=TEMP correct=255 total=280 c_old=71 t_old=80 c_new=184 t_new=200 as_surface=255
+L17_FEAT eye=Q3E tag=lora-f1-s2-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.a5729a2260000p+15
+L17_LORA eye=Q3E fold=1 seed=2 hard=0 loss=1:8.5645,50:2.6364,100:2.3530,150:2.1689,maxmem_GiB:12.4 sec=109.8
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=2 correct=1781 total=1890 c_old=523 t_old=540 c_new=1258 t_new=1350 conf=387,10,0,7,16,68,352,0,0,0,0,0,350,0,0,8,0,0,342,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=2 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=80 c_new=0 t_new=200 as_surface=70
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=2 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=1 seed=2 cat=TEMP correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=2 correct=1790 total=1890 c_old=523 t_old=540 c_new=1267 t_new=1350 conf=388,10,0,7,15,60,360,0,0,0,0,0,350,0,0,8,0,0,342,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=2 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=80 c_new=0 t_new=200 as_surface=78
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=2 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=1 seed=2 cat=TEMP correct=271 total=280 c_old=80 t_old=80 c_new=191 t_new=200 as_surface=271
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=2 correct=1771 total=1890 c_old=523 t_old=540 c_new=1248 t_new=1350 conf=387,10,0,7,16,78,342,0,0,0,0,0,350,0,0,8,0,0,342,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=2 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=2 cat=NEG correct=10 total=280 c_old=0 t_old=80 c_new=10 t_new=200 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=2 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=1 seed=2 cat=TEMP correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=2 correct=1784 total=1890 c_old=523 t_old=540 c_new=1261 t_new=1350 conf=388,10,0,7,15,66,354,0,0,0,0,0,350,0,0,8,0,0,342,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=2 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=80 c_new=0 t_new=200 as_surface=58
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=2 cat=OTHER correct=10 total=140 c_old=0 t_old=40 c_new=10 t_new=100 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=1 seed=2 cat=TEMP correct=271 total=280 c_old=80 t_old=80 c_new=191 t_new=200 as_surface=271
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=2 correct=1534 total=1890 c_old=416 t_old=540 c_new=1118 t_new=1350 conf=292,38,0,16,74,87,256,9,0,68,0,0,340,0,10,27,0,0,316,7,20,0,0,0,330
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=2 correct=460 total=560 c_old=120 t_old=160 c_new=340 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=2 cat=NEG correct=270 total=280 c_old=70 t_old=80 c_new=200 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=2 cat=OTHER correct=110 total=140 c_old=30 t_old=40 c_new=80 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=1 seed=2 cat=TEMP correct=250 total=280 c_old=70 t_old=80 c_new=180 t_new=200 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=2 correct=1594 total=1890 c_old=431 t_old=540 c_new=1163 t_new=1350 conf=262,77,0,6,75,20,323,3,1,73,0,0,347,0,3,2,0,6,342,0,15,12,3,0,320
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=2 correct=450 total=560 c_old=136 t_old=160 c_new=314 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=2 cat=NEG correct=259 total=280 c_old=76 t_old=80 c_new=183 t_new=200 as_surface=7
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=2 cat=OTHER correct=105 total=140 c_old=28 t_old=40 c_new=77 t_new=100 as_surface=19
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=1 seed=2 cat=TEMP correct=259 total=280 c_old=77 t_old=80 c_new=182 t_new=200 as_surface=259
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=2 correct=1469 total=1890 c_old=379 t_old=540 c_new=1090 t_new=1350 conf=283,37,0,16,84,128,222,0,0,70,0,0,323,0,27,17,0,9,311,13,20,0,0,0,330
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=2 correct=430 total=560 c_old=130 t_old=160 c_new=300 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=2 cat=NEG correct=250 total=280 c_old=70 t_old=80 c_new=180 t_new=200 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=2 cat=OTHER correct=120 total=140 c_old=30 t_old=40 c_new=90 t_new=100 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=1 seed=2 cat=TEMP correct=260 total=280 c_old=80 t_old=80 c_new=180 t_new=200 as_surface=260
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=2 correct=1592 total=1890 c_old=427 t_old=540 c_new=1165 t_new=1350 conf=267,78,0,4,71,51,317,0,0,52,0,0,347,0,3,0,0,7,343,0,17,10,4,1,318
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=2 correct=453 total=560 c_old=134 t_old=160 c_new=319 t_new=400
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=2 cat=NEG correct=244 total=280 c_old=75 t_old=80 c_new=169 t_new=200 as_surface=11
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=2 cat=OTHER correct=107 total=140 c_old=30 t_old=40 c_new=77 t_new=100 as_surface=21
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=1 seed=2 cat=TEMP correct=262 total=280 c_old=71 t_old=80 c_new=191 t_new=200 as_surface=262
+L17_FEAT eye=Q3E tag=lora-f1-s2-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.510b5c0540000p+14
+L17_LORA eye=Q3E fold=1 seed=2 hard=1 loss=1:8.1997,50:2.8610,100:2.3782,150:2.3428,maxmem_GiB:12.4 sec=114.2
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=2 correct=1779 total=1890 c_old=540 t_old=540 c_new=1239 t_new=1350 conf=403,0,0,0,17,50,333,0,0,37,0,0,350,0,0,0,0,0,343,7,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=2 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=2 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=2 cat=OTHER correct=130 total=140 c_old=30 t_old=40 c_new=100 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=1 seed=2 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=2 correct=1791 total=1890 c_old=540 t_old=540 c_new=1251 t_new=1350 conf=403,0,0,0,17,47,345,0,0,28,0,0,350,0,0,0,0,0,343,7,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=2 correct=560 total=560 c_old=160 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=2 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=2 cat=OTHER correct=125 total=140 c_old=30 t_old=40 c_new=95 t_new=100 as_surface=15
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=1 seed=2 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=2 correct=1779 total=1890 c_old=540 t_old=540 c_new=1239 t_new=1350 conf=403,0,0,0,17,50,333,0,0,37,0,0,350,0,0,0,0,0,343,7,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=2 correct=550 total=560 c_old=150 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=2 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=2 cat=OTHER correct=130 total=140 c_old=30 t_old=40 c_new=100 t_new=100 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=1 seed=2 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=2 correct=1789 total=1890 c_old=538 t_old=540 c_new=1251 t_new=1350 conf=401,2,0,0,17,46,345,0,0,29,0,0,350,0,0,0,0,0,343,7,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=2 correct=558 total=560 c_old=158 t_old=160 c_new=400 t_new=400
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=2 cat=NEG correct=270 total=280 c_old=80 t_old=80 c_new=190 t_new=200 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=2 cat=OTHER correct=124 total=140 c_old=30 t_old=40 c_new=94 t_new=100 as_surface=16
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=1 seed=2 cat=TEMP correct=280 total=280 c_old=80 t_old=80 c_new=200 t_new=200 as_surface=280
+[l17] Q3E: fold 1 done (1548s)
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=42 correct=1665 total=1890 c_old=909 t_old=1080 c_new=756 t_new=810 conf=285,63,24,32,16,44,339,18,19,0,0,0,350,0,0,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=42 correct=530 total=560 c_old=300 t_old=320 c_new=230 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=42 cat=NEG correct=10 total=280 c_old=0 t_old=160 c_new=10 t_new=120 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=42 cat=OTHER correct=20 total=140 c_old=20 t_old=80 c_new=0 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=42 cat=TEMP correct=230 total=280 c_old=120 t_old=160 c_new=110 t_new=120 as_surface=230
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=42 correct=1716 total=1890 c_old=971 t_old=1080 c_new=745 t_new=810 conf=337,72,1,10,0,48,348,21,0,3,0,1,348,0,1,0,2,1,347,0,14,0,0,0,336
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=42 correct=512 total=560 c_old=280 t_old=320 c_new=232 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=42 cat=NEG correct=21 total=280 c_old=9 t_old=160 c_new=12 t_new=120 as_surface=67
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=42 cat=OTHER correct=18 total=140 c_old=18 t_old=80 c_new=0 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=42 cat=TEMP correct=249 total=280 c_old=134 t_old=160 c_new=115 t_new=120 as_surface=249
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=42 correct=1636 total=1890 c_old=908 t_old=1080 c_new=728 t_new=810 conf=274,95,10,25,16,53,340,18,0,9,0,0,350,0,0,0,0,9,341,0,10,0,0,9,331
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=42 correct=510 total=560 c_old=270 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=42 cat=NEG correct=10 total=280 c_old=0 t_old=160 c_new=10 t_new=120 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=42 cat=OTHER correct=20 total=140 c_old=20 t_old=80 c_new=0 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=42 cat=TEMP correct=210 total=280 c_old=100 t_old=160 c_new=110 t_new=120 as_surface=210
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=42 correct=1682 total=1890 c_old=947 t_old=1080 c_new=735 t_new=810 conf=328,81,1,10,0,61,340,17,2,0,0,11,337,2,0,1,0,4,344,1,17,0,0,0,333
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=42 correct=514 total=560 c_old=279 t_old=320 c_new=235 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=42 cat=NEG correct=12 total=280 c_old=1 t_old=160 c_new=11 t_new=120 as_surface=68
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=42 cat=OTHER correct=15 total=140 c_old=14 t_old=80 c_new=1 t_new=60 as_surface=72
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=42 cat=TEMP correct=243 total=280 c_old=134 t_old=160 c_new=109 t_new=120 as_surface=243
+L17_FEAT eye=Q3E tag=lora-f2-s42-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.da7f650480000p+16
+L17_LORA eye=Q3E fold=2 seed=42 hard=0 loss=1:9.0514,50:2.3638,100:2.2476,150:2.1848,maxmem_GiB:12.4 sec=109.4
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=42 correct=1778 total=1890 c_old=996 t_old=1080 c_new=782 t_new=810 conf=393,27,0,0,0,51,361,8,0,0,0,0,333,9,8,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=42 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=40
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=42 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=140
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=42 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=42 correct=1780 total=1890 c_old=998 t_old=1080 c_new=782 t_new=810 conf=390,30,0,0,0,49,363,8,0,0,0,0,336,6,8,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=42 correct=555 total=560 c_old=315 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=50
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=42 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=136
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=42 cat=TEMP correct=268 total=280 c_old=150 t_old=160 c_new=118 t_new=120 as_surface=268
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=42 correct=1778 total=1890 c_old=996 t_old=1080 c_new=782 t_new=810 conf=393,27,0,0,0,51,361,8,0,0,0,0,333,9,8,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=42 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=40
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=42 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=140
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=42 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=42 correct=1779 total=1890 c_old=997 t_old=1080 c_new=782 t_new=810 conf=389,31,0,0,0,49,363,8,0,0,0,0,336,6,8,0,0,0,350,0,0,0,0,9,341
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=42 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=42 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=47
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=42 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=135
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=42 cat=TEMP correct=268 total=280 c_old=150 t_old=160 c_new=118 t_new=120 as_surface=268
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=42 correct=1614 total=1890 c_old=874 t_old=1080 c_new=740 t_new=810 conf=243,51,24,52,50,36,321,27,19,17,0,0,350,0,0,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=42 correct=500 total=560 c_old=280 t_old=320 c_new=220 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=42 cat=NEG correct=220 total=280 c_old=130 t_old=160 c_new=90 t_new=120 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=42 cat=OTHER correct=80 total=140 c_old=40 t_old=80 c_new=40 t_new=60 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=42 cat=TEMP correct=240 total=280 c_old=130 t_old=160 c_new=110 t_new=120 as_surface=240
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=42 correct=1692 total=1890 c_old=958 t_old=1080 c_new=734 t_new=810 conf=328,56,1,8,27,48,338,23,1,10,0,1,347,0,2,0,2,1,347,0,18,0,0,0,332
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=42 correct=510 total=560 c_old=282 t_old=320 c_new=228 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=42 cat=NEG correct=250 total=280 c_old=143 t_old=160 c_new=107 t_new=120 as_surface=7
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=42 cat=OTHER correct=91 total=140 c_old=59 t_old=80 c_new=32 t_new=60 as_surface=19
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=42 cat=TEMP correct=259 total=280 c_old=140 t_old=160 c_new=119 t_new=120 as_surface=259
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=42 correct=1566 total=1890 c_old=863 t_old=1080 c_new=703 t_new=810 conf=260,51,25,41,43,27,289,46,9,49,0,0,350,0,0,0,0,9,341,0,0,0,0,24,326
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=42 correct=500 total=560 c_old=270 t_old=320 c_new=230 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=42 cat=NEG correct=220 total=280 c_old=130 t_old=160 c_new=90 t_new=120 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=42 cat=OTHER correct=80 total=140 c_old=40 t_old=80 c_new=40 t_new=60 as_surface=30
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=42 cat=TEMP correct=230 total=280 c_old=130 t_old=160 c_new=100 t_new=120 as_surface=230
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=42 correct=1618 total=1890 c_old=902 t_old=1080 c_new=716 t_new=810 conf=317,66,1,9,27,59,315,27,0,19,0,4,328,4,14,1,0,6,336,7,27,0,0,1,322
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=42 correct=515 total=560 c_old=281 t_old=320 c_new=234 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=42 cat=NEG correct=250 total=280 c_old=147 t_old=160 c_new=103 t_new=120 as_surface=12
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=42 cat=OTHER correct=85 total=140 c_old=58 t_old=80 c_new=27 t_new=60 as_surface=26
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=42 cat=TEMP correct=247 total=280 c_old=131 t_old=160 c_new=116 t_new=120 as_surface=247
+L17_FEAT eye=Q3E tag=lora-f2-s42-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.07d411b3c0000p+15
+L17_LORA eye=Q3E fold=2 seed=42 hard=1 loss=1:8.2836,50:2.5414,100:2.3636,150:2.3916,maxmem_GiB:12.4 sec=111.2
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=42 correct=1798 total=1890 c_old=1006 t_old=1080 c_new=792 t_new=810 conf=394,26,0,0,0,50,362,8,0,0,0,0,342,0,8,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=42 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=42 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=42 cat=OTHER correct=140 total=140 c_old=80 t_old=80 c_new=60 t_new=60 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=42 cat=TEMP correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=42 correct=1799 total=1890 c_old=1007 t_old=1080 c_new=792 t_new=810 conf=394,26,0,0,0,48,364,8,0,0,0,0,342,0,8,0,0,0,350,0,1,0,0,0,349
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=42 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=42 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=42 cat=OTHER correct=140 total=140 c_old=80 t_old=80 c_new=60 t_new=60 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=42 cat=TEMP correct=276 total=280 c_old=158 t_old=160 c_new=118 t_new=120 as_surface=276
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=42 correct=1798 total=1890 c_old=1006 t_old=1080 c_new=792 t_new=810 conf=394,26,0,0,0,50,362,8,0,0,0,0,342,0,8,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=42 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=42 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=42 cat=OTHER correct=140 total=140 c_old=80 t_old=80 c_new=60 t_new=60 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=42 cat=TEMP correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=280
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=42 correct=1802 total=1890 c_old=1010 t_old=1080 c_new=792 t_new=810 conf=394,26,0,0,0,47,366,7,0,0,0,0,342,0,8,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=42 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=42 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=42 cat=OTHER correct=139 total=140 c_old=79 t_old=80 c_new=60 t_new=60 as_surface=1
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=42 cat=TEMP correct=276 total=280 c_old=158 t_old=160 c_new=118 t_new=120 as_surface=276
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=1 correct=1672 total=1890 c_old=910 t_old=1080 c_new=762 t_new=810 conf=288,58,34,24,16,42,342,18,18,0,0,0,350,0,0,0,0,0,350,0,0,0,0,8,342
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=1 correct=530 total=560 c_old=300 t_old=320 c_new=230 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=1 cat=NEG correct=10 total=280 c_old=0 t_old=160 c_new=10 t_new=120 as_surface=40
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=1 cat=OTHER correct=20 total=140 c_old=20 t_old=80 c_new=0 t_new=60 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=1 cat=TEMP correct=220 total=280 c_old=120 t_old=160 c_new=100 t_new=120 as_surface=220
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=1 correct=1716 total=1890 c_old=969 t_old=1080 c_new=747 t_new=810 conf=346,62,4,7,1,59,331,27,1,2,0,0,350,0,0,0,1,1,348,0,9,0,0,0,341
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=1 correct=513 total=560 c_old=281 t_old=320 c_new=232 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=1 cat=NEG correct=19 total=280 c_old=7 t_old=160 c_new=12 t_new=120 as_surface=62
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=1 cat=OTHER correct=19 total=140 c_old=19 t_old=80 c_new=0 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=1 cat=TEMP correct=247 total=280 c_old=134 t_old=160 c_new=113 t_new=120 as_surface=247
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=1 correct=1634 total=1890 c_old=900 t_old=1080 c_new=734 t_new=810 conf=283,86,9,26,16,59,325,26,0,10,0,0,350,0,0,0,0,7,343,0,9,0,0,8,333
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=1 correct=500 total=560 c_old=280 t_old=320 c_new=220 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=1 cat=NEG correct=10 total=280 c_old=0 t_old=160 c_new=10 t_new=120 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=1 cat=OTHER correct=20 total=140 c_old=20 t_old=80 c_new=0 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=1 cat=TEMP correct=220 total=280 c_old=110 t_old=160 c_new=110 t_new=120 as_surface=220
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=1 correct=1683 total=1890 c_old=942 t_old=1080 c_new=741 t_new=810 conf=333,75,2,10,0,70,327,19,4,0,0,7,339,4,0,0,0,5,345,0,11,0,0,0,339
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=1 correct=506 total=560 c_old=274 t_old=320 c_new=232 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=1 cat=NEG correct=9 total=280 c_old=0 t_old=160 c_new=9 t_new=120 as_surface=68
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=1 cat=OTHER correct=14 total=140 c_old=12 t_old=80 c_new=2 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=1 cat=TEMP correct=238 total=280 c_old=131 t_old=160 c_new=107 t_new=120 as_surface=238
+L17_FEAT eye=Q3E tag=lora-f2-s1-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.cab110c3a0000p+15
+L17_LORA eye=Q3E fold=2 seed=1 hard=0 loss=1:8.4354,50:2.5220,100:2.2428,150:2.1768,maxmem_GiB:12.4 sec=109.8
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=1 correct=1791 total=1890 c_old=996 t_old=1080 c_new=795 t_new=810 conf=396,24,0,0,0,66,345,9,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=1 cat=NEG correct=10 total=280 c_old=10 t_old=160 c_new=0 t_new=120 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=1 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=130
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=1 cat=TEMP correct=250 total=280 c_old=140 t_old=160 c_new=110 t_new=120 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=1 correct=1798 total=1890 c_old=1002 t_old=1080 c_new=796 t_new=810 conf=397,23,0,0,0,60,351,9,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=1 cat=NEG correct=10 total=280 c_old=10 t_old=160 c_new=0 t_new=120 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=1 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=132
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=1 cat=TEMP correct=250 total=280 c_old=140 t_old=160 c_new=110 t_new=120 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=1 correct=1806 total=1890 c_old=1004 t_old=1080 c_new=802 t_new=810 conf=403,17,0,0,0,58,353,9,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=1 cat=NEG correct=10 total=280 c_old=10 t_old=160 c_new=0 t_new=120 as_surface=20
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=1 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=130
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=1 cat=TEMP correct=250 total=280 c_old=140 t_old=160 c_new=110 t_new=120 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=1 correct=1801 total=1890 c_old=1005 t_old=1080 c_new=796 t_new=810 conf=397,23,0,0,0,57,354,9,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=1 cat=NEG correct=6 total=280 c_old=6 t_old=160 c_new=0 t_new=120 as_surface=24
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=1 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=131
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=1 cat=TEMP correct=250 total=280 c_old=140 t_old=160 c_new=110 t_new=120 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=1 correct=1616 total=1890 c_old=863 t_old=1080 c_new=753 t_new=810 conf=252,40,25,59,44,41,314,28,18,19,0,0,350,0,0,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=1 correct=500 total=560 c_old=290 t_old=320 c_new=210 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=1 cat=NEG correct=220 total=280 c_old=130 t_old=160 c_new=90 t_new=120 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=1 cat=OTHER correct=80 total=140 c_old=40 t_old=80 c_new=40 t_new=60 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=1 cat=TEMP correct=240 total=280 c_old=130 t_old=160 c_new=110 t_new=120 as_surface=240
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=1 correct=1687 total=1890 c_old=950 t_old=1080 c_new=737 t_new=810 conf=330,47,2,7,34,53,325,31,2,9,0,0,350,0,0,0,1,1,348,0,16,0,0,0,334
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=1 correct=508 total=560 c_old=281 t_old=320 c_new=227 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=1 cat=NEG correct=241 total=280 c_old=139 t_old=160 c_new=102 t_new=120 as_surface=11
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=1 cat=OTHER correct=89 total=140 c_old=57 t_old=80 c_new=32 t_new=60 as_surface=21
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=1 cat=TEMP correct=259 total=280 c_old=140 t_old=160 c_new=119 t_new=120 as_surface=259
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=1 correct=1545 total=1890 c_old=855 t_old=1080 c_new=690 t_new=810 conf=246,43,25,53,53,34,281,45,9,51,0,0,350,0,0,0,0,7,343,0,0,0,0,25,325
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=1 correct=500 total=560 c_old=280 t_old=320 c_new=220 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=1 cat=NEG correct=220 total=280 c_old=130 t_old=160 c_new=90 t_new=120 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=1 cat=OTHER correct=80 total=140 c_old=40 t_old=80 c_new=40 t_new=60 as_surface=30
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=1 cat=TEMP correct=230 total=280 c_old=130 t_old=160 c_new=100 t_new=120 as_surface=230
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=1 correct=1618 total=1890 c_old=904 t_old=1080 c_new=714 t_new=810 conf=316,65,2,10,27,72,297,30,1,20,0,3,335,4,8,0,0,3,344,3,24,0,0,0,326
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=1 correct=508 total=560 c_old=278 t_old=320 c_new=230 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=1 cat=NEG correct=247 total=280 c_old=144 t_old=160 c_new=103 t_new=120 as_surface=15
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=1 cat=OTHER correct=79 total=140 c_old=50 t_old=80 c_new=29 t_new=60 as_surface=28
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=1 cat=TEMP correct=246 total=280 c_old=133 t_old=160 c_new=113 t_new=120 as_surface=246
+L17_FEAT eye=Q3E tag=lora-f2-s1-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.25772beb70000p+16
+L17_LORA eye=Q3E fold=2 seed=1 hard=1 loss=1:9.0557,50:2.5796,100:2.4041,150:2.2921,maxmem_GiB:12.4 sec=111.1
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=1 correct=1797 total=1890 c_old=1003 t_old=1080 c_new=794 t_new=810 conf=404,9,7,0,0,34,368,18,0,0,0,0,342,8,0,0,0,0,350,0,0,0,0,17,333
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=1 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=1 cat=OTHER correct=120 total=140 c_old=60 t_old=80 c_new=60 t_new=60 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=1 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=1 correct=1803 total=1890 c_old=1003 t_old=1080 c_new=800 t_new=810 conf=403,10,7,0,0,33,375,12,0,0,0,0,342,8,0,0,0,0,350,0,0,0,0,17,333
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=1 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=1 cat=OTHER correct=120 total=140 c_old=60 t_old=80 c_new=60 t_new=60 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=1 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=1 correct=1806 total=1890 c_old=1003 t_old=1080 c_new=803 t_new=810 conf=404,9,7,0,0,34,377,9,0,0,0,0,342,8,0,0,0,0,350,0,0,0,0,17,333
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=1 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=1 cat=OTHER correct=120 total=140 c_old=60 t_old=80 c_new=60 t_new=60 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=1 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=1 correct=1807 total=1890 c_old=1004 t_old=1080 c_new=803 t_new=810 conf=399,14,7,0,0,27,384,9,0,0,2,0,342,6,0,0,0,1,349,0,0,0,1,16,333
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=1 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=1 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=1 cat=OTHER correct=120 total=140 c_old=60 t_old=80 c_new=60 t_new=60 as_surface=10
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=1 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=2 correct=1688 total=1890 c_old=931 t_old=1080 c_new=757 t_new=810 conf=303,40,35,24,18,42,341,19,18,0,0,0,350,0,0,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=2 correct=530 total=560 c_old=300 t_old=320 c_new=230 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=2 cat=NEG correct=10 total=280 c_old=0 t_old=160 c_new=10 t_new=120 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=2 cat=OTHER correct=20 total=140 c_old=20 t_old=80 c_new=0 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=2 seed=2 cat=TEMP correct=220 total=280 c_old=120 t_old=160 c_new=100 t_new=120 as_surface=220
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=2 correct=1719 total=1890 c_old=976 t_old=1080 c_new=743 t_new=810 conf=349,59,7,5,0,56,337,21,4,2,0,0,350,0,0,0,0,1,347,2,13,0,0,1,336
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=2 correct=507 total=560 c_old=273 t_old=320 c_new=234 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=2 cat=NEG correct=18 total=280 c_old=7 t_old=160 c_new=11 t_new=120 as_surface=64
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=2 cat=OTHER correct=22 total=140 c_old=20 t_old=80 c_new=2 t_new=60 as_surface=68
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=2 seed=2 cat=TEMP correct=252 total=280 c_old=136 t_old=160 c_new=116 t_new=120 as_surface=252
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=2 correct=1646 total=1890 c_old=915 t_old=1080 c_new=731 t_new=810 conf=294,75,9,24,18,59,324,37,0,0,0,0,350,0,0,0,0,6,344,0,10,0,0,6,334
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=2 correct=490 total=560 c_old=270 t_old=320 c_new=220 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=2 cat=NEG correct=10 total=280 c_old=0 t_old=160 c_new=10 t_new=120 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=2 cat=OTHER correct=20 total=140 c_old=20 t_old=80 c_new=0 t_new=60 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=2 seed=2 cat=TEMP correct=220 total=280 c_old=110 t_old=160 c_new=110 t_new=120 as_surface=220
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=2 correct=1678 total=1890 c_old=947 t_old=1080 c_new=731 t_new=810 conf=337,72,1,10,0,71,324,19,4,2,0,9,340,1,0,0,0,5,344,1,16,1,0,0,333
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=2 correct=503 total=560 c_old=270 t_old=320 c_new=233 t_new=240
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=2 cat=NEG correct=10 total=280 c_old=1 t_old=160 c_new=9 t_new=120 as_surface=77
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=2 cat=OTHER correct=20 total=140 c_old=17 t_old=80 c_new=3 t_new=60 as_surface=66
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=2 seed=2 cat=TEMP correct=242 total=280 c_old=135 t_old=160 c_new=107 t_new=120 as_surface=242
+L17_FEAT eye=Q3E tag=lora-f2-s2-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.1e7bf88160000p+15
+L17_LORA eye=Q3E fold=2 seed=2 hard=0 loss=1:8.7688,50:2.6215,100:2.1532,150:2.1798,maxmem_GiB:12.4 sec=109.5
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=2 correct=1798 total=1890 c_old=1006 t_old=1080 c_new=792 t_new=810 conf=394,26,0,0,0,50,360,10,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=2 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=130
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=2 seed=2 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=2 correct=1796 total=1890 c_old=1004 t_old=1080 c_new=792 t_new=810 conf=392,28,0,0,0,50,360,10,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=2 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=130
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=2 seed=2 cat=TEMP correct=268 total=280 c_old=150 t_old=160 c_new=118 t_new=120 as_surface=268
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=2 correct=1798 total=1890 c_old=1006 t_old=1080 c_new=792 t_new=810 conf=394,26,0,0,0,50,360,10,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=2 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=130
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=2 seed=2 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=2 correct=1800 total=1890 c_old=1008 t_old=1080 c_new=792 t_new=810 conf=392,28,0,0,0,50,364,6,0,0,0,0,350,0,0,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=160 c_new=0 t_new=120 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=2 cat=OTHER correct=0 total=140 c_old=0 t_old=80 c_new=0 t_new=60 as_surface=130
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=2 seed=2 cat=TEMP correct=268 total=280 c_old=150 t_old=160 c_new=118 t_new=120 as_surface=268
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=2 correct=1614 total=1890 c_old=875 t_old=1080 c_new=739 t_new=810 conf=241,52,25,61,41,44,323,27,18,8,0,0,350,0,0,0,0,0,350,0,0,0,0,0,350
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=2 correct=520 total=560 c_old=300 t_old=320 c_new=220 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=2 cat=NEG correct=220 total=280 c_old=130 t_old=160 c_new=90 t_new=120 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=2 cat=OTHER correct=70 total=140 c_old=40 t_old=80 c_new=30 t_new=60 as_surface=20
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=2 seed=2 cat=TEMP correct=240 total=280 c_old=130 t_old=160 c_new=110 t_new=120 as_surface=240
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=2 correct=1684 total=1890 c_old=957 t_old=1080 c_new=727 t_new=810 conf=330,55,4,4,27,56,324,24,2,14,0,1,349,0,0,0,2,2,346,0,15,0,0,0,335
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=2 correct=505 total=560 c_old=278 t_old=320 c_new=227 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=2 cat=NEG correct=241 total=280 c_old=140 t_old=160 c_new=101 t_new=120 as_surface=9
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=2 cat=OTHER correct=87 total=140 c_old=62 t_old=80 c_new=25 t_new=60 as_surface=23
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=2 seed=2 cat=TEMP correct=261 total=280 c_old=144 t_old=160 c_new=117 t_new=120 as_surface=261
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=2 correct=1572 total=1890 c_old=890 t_old=1080 c_new=682 t_new=810 conf=263,59,27,33,38,35,287,45,8,45,0,0,350,0,0,0,0,6,344,0,0,0,0,22,328
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=2 correct=470 total=560 c_old=260 t_old=320 c_new=210 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=2 cat=NEG correct=220 total=280 c_old=130 t_old=160 c_new=90 t_new=120 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=2 cat=OTHER correct=80 total=140 c_old=40 t_old=80 c_new=40 t_new=60 as_surface=30
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=2 seed=2 cat=TEMP correct=230 total=280 c_old=130 t_old=160 c_new=100 t_new=120 as_surface=230
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=2 correct=1619 total=1890 c_old=913 t_old=1080 c_new=706 t_new=810 conf=314,65,1,11,29,64,305,25,2,24,0,6,336,1,7,0,0,6,337,7,22,1,0,0,327
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=2 correct=505 total=560 c_old=272 t_old=320 c_new=233 t_new=240
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=2 cat=NEG correct=250 total=280 c_old=146 t_old=160 c_new=104 t_new=120 as_surface=13
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=2 cat=OTHER correct=87 total=140 c_old=61 t_old=80 c_new=26 t_new=60 as_surface=24
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=2 seed=2 cat=TEMP correct=247 total=280 c_old=133 t_old=160 c_new=114 t_new=120 as_surface=247
+L17_FEAT eye=Q3E tag=lora-f2-s2-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.5033d35080000p+14
+L17_LORA eye=Q3E fold=2 seed=2 hard=1 loss=1:8.9411,50:2.9006,100:2.2093,150:2.3067,maxmem_GiB:12.4 sec=110.7
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=2 correct=1797 total=1890 c_old=996 t_old=1080 c_new=801 t_new=810 conf=403,17,0,0,0,40,360,10,0,10,0,0,340,0,10,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=2 cat=NEG correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=2 cat=OTHER correct=140 total=140 c_old=80 t_old=80 c_new=60 t_new=60 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=2 seed=2 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=2 correct=1802 total=1890 c_old=1001 t_old=1080 c_new=801 t_new=810 conf=403,17,0,0,0,41,365,5,0,9,0,0,340,0,10,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=2 cat=NEG correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=2 cat=OTHER correct=140 total=140 c_old=80 t_old=80 c_new=60 t_new=60 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=2 seed=2 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=2 correct=1797 total=1890 c_old=996 t_old=1080 c_new=801 t_new=810 conf=403,17,0,0,0,50,360,10,0,0,0,0,340,0,10,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=2 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=2 cat=OTHER correct=140 total=140 c_old=80 t_old=80 c_new=60 t_new=60 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=2 seed=2 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=2 correct=1805 total=1890 c_old=1005 t_old=1080 c_new=800 t_new=810 conf=403,17,0,0,0,48,368,0,0,4,0,0,340,0,10,0,0,0,350,0,0,0,0,6,344
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=2 correct=560 total=560 c_old=320 t_old=320 c_new=240 t_new=240
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=2 cat=NEG correct=280 total=280 c_old=160 t_old=160 c_new=120 t_new=120 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=2 cat=OTHER correct=140 total=140 c_old=80 t_old=80 c_new=60 t_new=60 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=2 seed=2 cat=TEMP correct=270 total=280 c_old=150 t_old=160 c_new=120 t_new=120 as_surface=270
+[l17] Q3E: fold 2 done (2307s)
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=42 correct=1440 total=1890 c_old=1019 t_old=1350 c_new=421 t_new=540 conf=172,146,0,17,85,43,359,0,0,18,0,0,342,0,8,14,0,0,269,67,8,26,10,8,298
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=42 correct=450 total=560 c_old=300 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=42 cat=NEG correct=80 total=280 c_old=70 t_old=200 c_new=10 t_new=80 as_surface=30
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=42 cat=OTHER correct=0 total=140 c_old=0 t_old=100 c_new=0 t_new=40 as_surface=100
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=42 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=42 correct=1568 total=1890 c_old=1126 t_old=1350 c_new=442 t_new=540 conf=307,60,3,2,48,95,294,5,0,26,0,0,342,8,0,22,0,0,317,11,11,23,0,8,308
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=42 correct=444 total=560 c_old=294 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=42 cat=NEG correct=46 total=280 c_old=32 t_old=200 c_new=14 t_new=80 as_surface=55
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=42 cat=OTHER correct=21 total=140 c_old=21 t_old=100 c_new=0 t_new=40 as_surface=99
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=42 cat=TEMP correct=233 total=280 c_old=165 t_old=200 c_new=68 t_new=80 as_surface=233
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=42 correct=1470 total=1890 c_old=1038 t_old=1350 c_new=432 t_new=540 conf=235,133,0,0,52,50,352,0,0,18,0,10,324,0,16,32,0,8,268,42,8,26,18,7,291
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=42 correct=400 total=560 c_old=250 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=42 cat=NEG correct=70 total=280 c_old=60 t_old=200 c_new=10 t_new=80 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=90
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=42 cat=TEMP correct=200 total=280 c_old=130 t_old=200 c_new=70 t_new=80 as_surface=200
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=42 correct=1558 total=1890 c_old=1110 t_old=1350 c_new=448 t_new=540 conf=305,57,4,1,53,102,291,5,0,22,0,1,343,6,0,25,0,0,314,11,12,24,1,8,305
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=42 correct=446 total=560 c_old=294 t_old=400 c_new=152 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=42 cat=NEG correct=29 total=280 c_old=17 t_old=200 c_new=12 t_new=80 as_surface=117
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=42 cat=OTHER correct=22 total=140 c_old=22 t_old=100 c_new=0 t_new=40 as_surface=94
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=42 cat=TEMP correct=231 total=280 c_old=162 t_old=200 c_new=69 t_new=80 as_surface=231
+L17_FEAT eye=Q3E tag=lora-f3-s42-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.07b3058140000p+16
+L17_LORA eye=Q3E fold=3 seed=42 hard=0 loss=1:8.5103,50:2.3237,100:2.2690,150:2.3714,maxmem_GiB:12.4 sec=112.0
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=42 correct=1693 total=1890 c_old=1187 t_old=1350 c_new=506 t_new=540 conf=338,58,0,0,24,17,393,0,0,10,0,0,333,0,17,22,0,0,304,24,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=42 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=42 cat=NEG correct=60 total=280 c_old=50 t_old=200 c_new=10 t_new=80 as_surface=40
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=42 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=42 correct=1728 total=1890 c_old=1220 t_old=1350 c_new=508 t_new=540 conf=352,50,0,0,18,17,393,0,0,10,0,0,339,0,11,10,0,0,319,21,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=42 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=42 cat=NEG correct=60 total=280 c_old=50 t_old=200 c_new=10 t_new=80 as_surface=36
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=42 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=42 correct=1701 total=1890 c_old=1195 t_old=1350 c_new=506 t_new=540 conf=346,50,0,0,24,17,393,0,0,10,0,0,333,0,17,22,0,0,304,24,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=42 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=42 cat=NEG correct=80 total=280 c_old=70 t_old=200 c_new=10 t_new=80 as_surface=40
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=42 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=42 correct=1716 total=1890 c_old=1210 t_old=1350 c_new=506 t_new=540 conf=347,51,0,0,22,17,393,0,0,10,0,0,336,0,14,13,0,0,315,22,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=42 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=42 cat=NEG correct=71 total=280 c_old=59 t_old=200 c_new=12 t_new=80 as_surface=39
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=42 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=42 cat=TEMP correct=270 total=280 c_old=200 t_old=200 c_new=70 t_new=80 as_surface=270
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=42 correct=1376 total=1890 c_old=957 t_old=1350 c_new=419 t_new=540 conf=154,134,0,17,115,36,357,0,0,27,0,0,307,0,43,14,0,0,267,69,0,34,10,15,291
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=42 correct=430 total=560 c_old=290 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=42 cat=NEG correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=42 cat=OTHER correct=50 total=140 c_old=40 t_old=100 c_new=10 t_new=40 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=42 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=42 correct=1492 total=1890 c_old=1077 t_old=1350 c_new=415 t_new=540 conf=266,55,3,1,95,87,286,6,0,41,0,0,340,5,5,18,0,0,319,13,36,20,4,9,281
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=42 correct=427 total=560 c_old=286 t_old=400 c_new=141 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=42 cat=NEG correct=263 total=280 c_old=190 t_old=200 c_new=73 t_new=80 as_surface=6
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=42 cat=OTHER correct=74 total=140 c_old=55 t_old=100 c_new=19 t_new=40 as_surface=56
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=42 cat=TEMP correct=225 total=280 c_old=162 t_old=200 c_new=63 t_new=80 as_surface=225
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=42 correct=1366 total=1890 c_old=981 t_old=1350 c_new=385 t_new=540 conf=198,126,0,0,96,69,316,8,0,27,0,0,300,0,50,40,0,0,267,43,15,25,18,7,285
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=42 correct=390 total=560 c_old=240 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=42 cat=OTHER correct=70 total=140 c_old=50 t_old=100 c_new=20 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=42 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=42 correct=1448 total=1890 c_old=1038 t_old=1350 c_new=410 t_new=540 conf=254,55,4,1,106,101,277,9,0,33,0,0,329,3,18,22,0,0,309,19,36,19,3,13,279
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=42 correct=441 total=560 c_old=293 t_old=400 c_new=148 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=42 cat=NEG correct=266 total=280 c_old=192 t_old=200 c_new=74 t_new=80 as_surface=4
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=42 cat=OTHER correct=71 total=140 c_old=61 t_old=100 c_new=10 t_new=40 as_surface=52
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=42 cat=TEMP correct=231 total=280 c_old=165 t_old=200 c_new=66 t_new=80 as_surface=231
+L17_FEAT eye=Q3E tag=lora-f3-s42-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.902b5532c0000p+14
+L17_LORA eye=Q3E fold=3 seed=42 hard=1 loss=1:7.6684,50:2.6663,100:2.4434,150:2.2776,maxmem_GiB:12.4 sec=113.2
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=42 correct=1696 total=1890 c_old=1197 t_old=1350 c_new=499 t_new=540 conf=381,31,0,0,8,41,369,0,0,10,0,0,326,0,24,30,0,0,295,25,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=42 correct=530 total=560 c_old=370 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=42 cat=OTHER correct=70 total=140 c_old=60 t_old=100 c_new=10 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=42 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=42 correct=1704 total=1890 c_old=1206 t_old=1350 c_new=498 t_new=540 conf=379,30,0,0,11,41,368,1,0,10,0,0,334,0,16,28,0,0,298,24,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=42 correct=531 total=560 c_old=371 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=42 cat=OTHER correct=70 total=140 c_old=60 t_old=100 c_new=10 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=42 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=42 correct=1688 total=1890 c_old=1189 t_old=1350 c_new=499 t_new=540 conf=381,31,0,0,8,41,369,0,0,10,0,0,326,0,24,30,0,0,287,33,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=42 correct=530 total=560 c_old=370 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=42 cat=OTHER correct=70 total=140 c_old=60 t_old=100 c_new=10 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=42 cat=TEMP correct=240 total=280 c_old=180 t_old=200 c_new=60 t_new=80 as_surface=240
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=42 correct=1684 total=1890 c_old=1186 t_old=1350 c_new=498 t_new=540 conf=367,30,0,0,23,40,369,0,0,11,0,0,331,0,19,28,0,0,292,30,0,17,0,8,325
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=42 correct=534 total=560 c_old=374 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=42 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=42 cat=OTHER correct=70 total=140 c_old=60 t_old=100 c_new=10 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=42 cat=TEMP correct=249 total=280 c_old=189 t_old=200 c_new=60 t_new=80 as_surface=249
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=1 correct=1423 total=1890 c_old=1001 t_old=1350 c_new=422 t_new=540 conf=162,176,0,8,74,45,357,0,0,18,0,0,341,0,9,27,0,0,263,60,5,27,9,9,300
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=1 correct=470 total=560 c_old=320 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=1 cat=NEG correct=60 total=280 c_old=50 t_old=200 c_new=10 t_new=80 as_surface=30
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=1 cat=OTHER correct=0 total=140 c_old=0 t_old=100 c_new=0 t_new=40 as_surface=100
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=1 cat=TEMP correct=220 total=280 c_old=150 t_old=200 c_new=70 t_new=80 as_surface=220
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=1 correct=1571 total=1890 c_old=1126 t_old=1350 c_new=445 t_new=540 conf=300,68,0,4,48,85,310,2,1,22,0,1,343,6,0,29,0,0,311,10,7,28,0,8,307
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=1 correct=452 total=560 c_old=300 t_old=400 c_new=152 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=1 cat=NEG correct=38 total=280 c_old=27 t_old=200 c_new=11 t_new=80 as_surface=56
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=1 cat=OTHER correct=14 total=140 c_old=14 t_old=100 c_new=0 t_new=40 as_surface=108
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=1 cat=TEMP correct=235 total=280 c_old=166 t_old=200 c_new=69 t_new=80 as_surface=235
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=1 correct=1457 total=1890 c_old=1014 t_old=1350 c_new=443 t_new=540 conf=225,148,0,0,47,57,345,0,0,18,0,7,325,0,18,35,0,0,272,43,5,27,18,10,290
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=1 correct=410 total=560 c_old=260 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=1 cat=NEG correct=50 total=280 c_old=40 t_old=200 c_new=10 t_new=80 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=1 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=90
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=1 cat=TEMP correct=220 total=280 c_old=150 t_old=200 c_new=70 t_new=80 as_surface=220
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=1 correct=1559 total=1890 c_old=1112 t_old=1350 c_new=447 t_new=540 conf=305,68,0,0,47,97,298,3,0,22,0,5,342,3,0,30,0,0,309,11,9,28,1,7,305
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=1 correct=451 total=560 c_old=300 t_old=400 c_new=151 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=1 cat=NEG correct=18 total=280 c_old=10 t_old=200 c_new=8 t_new=80 as_surface=126
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=1 cat=OTHER correct=18 total=140 c_old=18 t_old=100 c_new=0 t_new=40 as_surface=99
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=1 cat=TEMP correct=231 total=280 c_old=161 t_old=200 c_new=70 t_new=80 as_surface=231
+L17_FEAT eye=Q3E tag=lora-f3-s1-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.14b29e87c0000p+14
+L17_LORA eye=Q3E fold=3 seed=1 hard=0 loss=1:8.4619,50:2.4726,100:2.1305,150:2.4470,maxmem_GiB:12.4 sec=111.0
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=1 correct=1696 total=1890 c_old=1206 t_old=1350 c_new=490 t_new=540 conf=328,76,0,0,16,21,399,0,0,0,0,9,341,0,0,9,0,0,323,18,8,28,0,9,305
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=1 correct=550 total=560 c_old=390 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=1 cat=NEG correct=40 total=280 c_old=40 t_old=200 c_new=0 t_new=80 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=1 cat=OTHER correct=20 total=140 c_old=20 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=1 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=1 correct=1696 total=1890 c_old=1202 t_old=1350 c_new=494 t_new=540 conf=328,76,0,0,16,21,399,0,0,0,0,9,341,0,0,9,0,0,323,18,8,28,0,9,305
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=1 correct=546 total=560 c_old=386 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=1 cat=NEG correct=34 total=280 c_old=34 t_old=200 c_new=0 t_new=80 as_surface=33
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=1 cat=OTHER correct=20 total=140 c_old=20 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=1 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=1 correct=1691 total=1890 c_old=1201 t_old=1350 c_new=490 t_new=540 conf=323,76,0,0,21,21,399,0,0,0,0,9,341,0,0,9,0,0,323,18,8,28,0,9,305
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=1 correct=550 total=560 c_old=390 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=1 cat=NEG correct=40 total=280 c_old=40 t_old=200 c_new=0 t_new=80 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=1 cat=OTHER correct=20 total=140 c_old=20 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=1 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=1 correct=1693 total=1890 c_old=1199 t_old=1350 c_new=494 t_new=540 conf=325,76,0,0,19,21,399,0,0,0,0,9,341,0,0,9,0,0,323,18,8,27,1,9,305
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=1 correct=547 total=560 c_old=387 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=1 cat=NEG correct=35 total=280 c_old=34 t_old=200 c_new=1 t_new=80 as_surface=33
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=1 cat=OTHER correct=20 total=140 c_old=20 t_old=100 c_new=0 t_new=40 as_surface=110
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=1 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=1 correct=1394 total=1890 c_old=957 t_old=1350 c_new=437 t_new=540 conf=162,133,0,17,108,35,359,0,0,26,0,0,308,0,42,18,0,0,279,53,0,36,9,19,286
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=1 correct=410 total=560 c_old=270 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=1 cat=NEG correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=1 cat=OTHER correct=60 total=140 c_old=50 t_old=100 c_new=10 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=1 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=1 correct=1508 total=1890 c_old=1082 t_old=1350 c_new=426 t_new=540 conf=265,68,1,2,84,74,308,4,1,33,0,0,342,3,5,22,0,0,316,12,31,32,3,7,277
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=1 correct=443 total=560 c_old=300 t_old=400 c_new=143 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=1 cat=NEG correct=266 total=280 c_old=190 t_old=200 c_new=76 t_new=80 as_surface=1
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=1 cat=OTHER correct=69 total=140 c_old=47 t_old=100 c_new=22 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=1 cat=TEMP correct=228 total=280 c_old=165 t_old=200 c_new=63 t_new=80 as_surface=228
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=1 correct=1377 total=1890 c_old=970 t_old=1350 c_new=407 t_new=540 conf=198,122,0,0,100,60,328,7,0,25,0,0,308,0,42,43,0,0,262,45,14,18,27,10,281
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=1 correct=400 total=560 c_old=250 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=1 cat=OTHER correct=70 total=140 c_old=50 t_old=100 c_new=20 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=1 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=1 correct=1464 total=1890 c_old=1039 t_old=1350 c_new=425 t_new=540 conf=270,69,0,3,78,96,284,7,0,33,0,0,327,1,22,29,0,0,305,16,31,29,1,11,278
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=1 correct=447 total=560 c_old=300 t_old=400 c_new=147 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=1 cat=NEG correct=271 total=280 c_old=193 t_old=200 c_new=78 t_new=80 as_surface=1
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=1 cat=OTHER correct=60 total=140 c_old=46 t_old=100 c_new=14 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=1 cat=TEMP correct=237 total=280 c_old=169 t_old=200 c_new=68 t_new=80 as_surface=237
+L17_FEAT eye=Q3E tag=lora-f3-s1-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.ee8b6892c0000p+15
+L17_LORA eye=Q3E fold=3 seed=1 hard=1 loss=1:9.4787,50:2.3416,100:2.2154,150:2.3872,maxmem_GiB:12.4 sec=112.0
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=1 correct=1622 total=1890 c_old=1126 t_old=1350 c_new=496 t_new=540 conf=324,62,0,0,34,9,402,0,0,9,0,10,331,0,9,53,0,0,279,18,18,28,0,18,286
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=1 correct=550 total=560 c_old=390 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=1 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=1 correct=1648 total=1890 c_old=1156 t_old=1350 c_new=492 t_new=540 conf=325,62,0,0,33,15,400,0,0,5,0,8,333,0,9,35,0,0,297,18,11,28,0,18,293
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=1 correct=556 total=560 c_old=396 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=1 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=1 correct=1616 total=1890 c_old=1120 t_old=1350 c_new=496 t_new=540 conf=324,62,0,0,34,15,396,0,0,9,0,10,331,0,9,53,0,0,279,18,18,28,0,18,286
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=1 correct=550 total=560 c_old=390 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=1 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=1 correct=1635 total=1890 c_old=1143 t_old=1350 c_new=492 t_new=540 conf=325,62,0,0,33,19,392,0,0,9,0,9,332,0,9,37,0,0,295,18,10,31,0,18,291
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=1 correct=551 total=560 c_old=391 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=1 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=1 cat=OTHER correct=110 total=140 c_old=80 t_old=100 c_new=30 t_new=40 as_surface=30
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=1 cat=TEMP correct=252 total=280 c_old=190 t_old=200 c_new=62 t_new=80 as_surface=252
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=2 correct=1422 total=1890 c_old=999 t_old=1350 c_new=423 t_new=540 conf=163,173,0,7,77,44,360,0,0,16,0,9,332,0,9,23,0,0,266,61,7,26,8,8,301
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=2 correct=430 total=560 c_old=290 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=2 cat=NEG correct=50 total=280 c_old=40 t_old=200 c_new=10 t_new=80 as_surface=60
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=2 cat=OTHER correct=0 total=140 c_old=0 t_old=100 c_new=0 t_new=40 as_surface=100
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=ZERO fold=3 seed=2 cat=TEMP correct=230 total=280 c_old=160 t_old=200 c_new=70 t_new=80 as_surface=230
+L17_EV eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=2 correct=1546 total=1890 c_old=1118 t_old=1350 c_new=428 t_new=540 conf=280,63,8,2,67,100,294,3,2,21,0,0,344,6,0,20,0,0,321,9,9,25,1,8,307
+L17_INIT eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=2 correct=438 total=560 c_old=292 t_old=400 c_new=146 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=2 cat=NEG correct=32 total=280 c_old=22 t_old=200 c_new=10 t_new=80 as_surface=56
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=2 cat=OTHER correct=21 total=140 c_old=20 t_old=100 c_new=1 t_new=40 as_surface=100
+L17_HARD eye=Q3E lora=0 hard=0 head=FLAT method=C fold=3 seed=2 cat=TEMP correct=236 total=280 c_old=168 t_old=200 c_new=68 t_new=80 as_surface=236
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=2 correct=1465 total=1890 c_old=1034 t_old=1350 c_new=431 t_new=540 conf=232,129,0,0,59,61,343,0,0,16,0,10,322,0,18,33,0,0,275,42,7,26,16,8,293
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=2 correct=420 total=560 c_old=270 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=2 cat=NEG correct=50 total=280 c_old=40 t_old=200 c_new=10 t_new=80 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=90
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=ZERO fold=3 seed=2 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=2 correct=1527 total=1890 c_old=1103 t_old=1350 c_new=424 t_new=540 conf=276,72,6,4,62,106,291,2,1,20,0,4,339,7,0,25,0,0,315,10,11,25,3,5,306
+L17_INIT eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=2 correct=441 total=560 c_old=290 t_old=400 c_new=151 t_new=160
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=2 cat=NEG correct=31 total=280 c_old=20 t_old=200 c_new=11 t_new=80 as_surface=115
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=2 cat=OTHER correct=20 total=140 c_old=20 t_old=100 c_new=0 t_new=40 as_surface=92
+L17_HARD eye=Q3E lora=0 hard=0 head=FACT method=C fold=3 seed=2 cat=TEMP correct=233 total=280 c_old=164 t_old=200 c_new=69 t_new=80 as_surface=233
+L17_FEAT eye=Q3E tag=lora-f3-s2-h0 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=0x1.4b9643a280000p+16
+L17_LORA eye=Q3E fold=3 seed=2 hard=0 loss=1:8.6522,50:2.6142,100:2.2169,150:2.1586,maxmem_GiB:12.4 sec=111.3
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=2 correct=1753 total=1890 c_old=1230 t_old=1350 c_new=523 t_new=540 conf=368,34,0,0,18,18,402,0,0,0,0,8,342,0,0,16,0,0,325,9,0,26,0,8,316
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=2 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=200 c_new=0 t_new=80 as_surface=80
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=ZERO fold=3 seed=2 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=2 correct=1759 total=1890 c_old=1237 t_old=1350 c_new=522 t_new=540 conf=374,27,0,0,19,21,399,0,0,0,0,5,345,0,0,16,0,0,325,9,0,26,0,8,316
+L17_INIT eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=2 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=2 cat=NEG correct=3 total=280 c_old=3 t_old=200 c_new=0 t_new=80 as_surface=71
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FLAT method=C fold=3 seed=2 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=2 correct=1752 total=1890 c_old=1229 t_old=1350 c_new=523 t_new=540 conf=384,18,0,0,18,26,394,0,0,0,0,8,342,0,0,25,0,0,316,9,0,26,0,8,316
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=2 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=2 cat=NEG correct=0 total=280 c_old=0 t_old=200 c_new=0 t_new=80 as_surface=90
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=ZERO fold=3 seed=2 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=2 correct=1757 total=1890 c_old=1235 t_old=1350 c_new=522 t_new=540 conf=378,22,0,0,20,27,393,0,0,0,0,4,346,0,0,17,0,0,324,9,0,26,0,8,316
+L17_INIT eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=2 correct=560 total=560 c_old=400 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=2 cat=NEG correct=3 total=280 c_old=3 t_old=200 c_new=0 t_new=80 as_surface=85
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=2 cat=OTHER correct=10 total=140 c_old=10 t_old=100 c_new=0 t_new=40 as_surface=120
+L17_HARD eye=Q3E lora=1 hard=0 head=FACT method=C fold=3 seed=2 cat=TEMP correct=250 total=280 c_old=190 t_old=200 c_new=60 t_new=80 as_surface=250
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=2 correct=1382 total=1890 c_old=953 t_old=1350 c_new=429 t_new=540 conf=144,129,0,15,132,36,348,0,0,36,0,0,310,0,40,16,0,0,282,52,0,36,8,8,298
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=2 correct=400 total=560 c_old=260 t_old=400 c_new=140 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=2 cat=NEG correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=10
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=2 cat=OTHER correct=50 total=140 c_old=40 t_old=100 c_new=10 t_new=40 as_surface=70
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=ZERO fold=3 seed=2 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=2 correct=1479 total=1890 c_old=1075 t_old=1350 c_new=404 t_new=540 conf=245,60,6,4,105,89,290,7,2,32,0,0,339,4,7,15,0,0,319,16,27,25,5,7,286
+L17_INIT eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=2 correct=434 total=560 c_old=291 t_old=400 c_new=143 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=2 cat=NEG correct=257 total=280 c_old=190 t_old=200 c_new=67 t_new=80 as_surface=5
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=2 cat=OTHER correct=71 total=140 c_old=53 t_old=100 c_new=18 t_new=40 as_surface=58
+L17_HARD eye=Q3E lora=0 hard=1 head=FLAT method=C fold=3 seed=2 cat=TEMP correct=231 total=280 c_old=165 t_old=200 c_new=66 t_new=80 as_surface=231
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=2 correct=1404 total=1890 c_old=1001 t_old=1350 c_new=403 t_new=540 conf=214,120,0,0,86,53,331,10,0,26,0,0,310,0,40,41,0,0,266,43,16,17,26,8,283
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=2 correct=390 total=560 c_old=240 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=2 cat=OTHER correct=70 total=140 c_old=50 t_old=100 c_new=20 t_new=40 as_surface=50
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=ZERO fold=3 seed=2 cat=TEMP correct=210 total=280 c_old=140 t_old=200 c_new=70 t_new=80 as_surface=210
+L17_EV eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=2 correct=1451 total=1890 c_old=1043 t_old=1350 c_new=408 t_new=540 conf=246,73,3,2,96,106,278,6,0,30,0,0,331,3,16,20,0,0,311,19,25,26,4,10,285
+L17_INIT eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=2 correct=445 total=560 c_old=295 t_old=400 c_new=150 t_new=160
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=2 cat=NEG correct=257 total=280 c_old=190 t_old=200 c_new=67 t_new=80 as_surface=5
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=2 cat=OTHER correct=73 total=140 c_old=61 t_old=100 c_new=12 t_new=40 as_surface=52
+L17_HARD eye=Q3E lora=0 hard=1 head=FACT method=C fold=3 seed=2 cat=TEMP correct=237 total=280 c_old=169 t_old=200 c_new=68 t_new=80 as_surface=237
+L17_FEAT eye=Q3E tag=lora-f3-s2-h1 n=1120 n_hard=336 dim=1024 max_tokens=54 check_min_cos=1.000000 fp=-0x1.fee8cd8400000p+13
+L17_LORA eye=Q3E fold=3 seed=2 hard=1 loss=1:8.0960,50:2.4412,100:2.3774,150:2.3435,maxmem_GiB:12.4 sec=112.7
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=2 correct=1699 total=1890 c_old=1186 t_old=1350 c_new=513 t_new=540 conf=374,36,0,0,10,25,395,0,0,0,0,0,341,0,9,25,0,0,291,34,8,28,0,16,298
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=2 correct=550 total=560 c_old=390 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=2 cat=OTHER correct=70 total=140 c_old=60 t_old=100 c_new=10 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=ZERO fold=3 seed=2 cat=TEMP correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=260
+L17_EV eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=2 correct=1716 total=1890 c_old=1205 t_old=1350 c_new=511 t_new=540 conf=368,42,0,0,10,26,393,0,0,1,0,0,341,0,9,9,0,0,316,25,8,28,0,16,298
+L17_INIT eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=2 correct=556 total=560 c_old=396 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=2 cat=OTHER correct=71 total=140 c_old=61 t_old=100 c_new=10 t_new=40 as_surface=59
+L17_HARD eye=Q3E lora=1 hard=1 head=FLAT method=C fold=3 seed=2 cat=TEMP correct=266 total=280 c_old=196 t_old=200 c_new=70 t_new=80 as_surface=266
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=2 correct=1691 total=1890 c_old=1178 t_old=1350 c_new=513 t_new=540 conf=366,44,0,0,10,25,395,0,0,0,0,0,341,0,9,25,0,0,291,34,8,28,0,16,298
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=2 correct=550 total=560 c_old=390 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=2 cat=OTHER correct=70 total=140 c_old=60 t_old=100 c_new=10 t_new=40 as_surface=60
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=ZERO fold=3 seed=2 cat=TEMP correct=260 total=280 c_old=190 t_old=200 c_new=70 t_new=80 as_surface=260
+L17_EV eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=2 correct=1710 total=1890 c_old=1199 t_old=1350 c_new=511 t_new=540 conf=360,44,0,0,16,25,394,0,0,1,0,0,341,0,9,9,0,0,314,27,8,28,0,13,301
+L17_INIT eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=2 correct=554 total=560 c_old=394 t_old=400 c_new=160 t_new=160
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=2 cat=NEG correct=280 total=280 c_old=200 t_old=200 c_new=80 t_new=80 as_surface=0
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=2 cat=OTHER correct=71 total=140 c_old=61 t_old=100 c_new=10 t_new=40 as_surface=59
+L17_HARD eye=Q3E lora=1 hard=1 head=FACT method=C fold=3 seed=2 cat=TEMP correct=265 total=280 c_old=195 t_old=200 c_new=70 t_new=80 as_surface=265
+[l17] Q3E: fold 3 done (3076s)
+[l17] leak guard: 382000 inputs checked; none contains a test-domain string
+[l17] total time 3092.6s
+L17_CONFIG data_sha_st=ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108 templates_sha=1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70 data_sha_extra=f44dc28a2a2df593981c919949b47e13304a814cec4e960123564206190ca7cf data_sha_hard=e145539bc8b37133a226a5d390e6cfebc2492d85e2cc090501d8464fc5afe8aa data_sha_hard_extra=e31ad5839bbc1133c6d3e6e5caec6a5125a4ffd9bcffbf330fb793b58416fc53 env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4 script_sha=unavailable eyes=Q3E seeds=42,1,2 draws=10

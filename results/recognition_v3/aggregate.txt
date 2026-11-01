@@ -1,0 +1,137 @@
+Lab 17 aggregate | logs: results/recognition_v3/l17_A.log, results/recognition_v3/l17_B.log, results/recognition_v3/l17_C.log
+  results/recognition_v3/l17_A.log: eyes=Q15 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+  results/recognition_v3/l17_B.log: eyes=Q3E script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+  results/recognition_v3/l17_C.log: eyes=Q7 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+Accuracy pooled over 4 folds x 3 seeds x 10 draws. OLD = held-out registered domains (primary). NO decision.
+
+=== event sentences, 5-way: OLD domains (NEW domains) per cell; ZERO = no example, C = one example per type ===
+eye   LoRA hard  head              ZERO                 C
+Q15      0    0  FLAT    86.67 (89.63)    88.80 (92.00)
+Q15      0    0  FACT    87.57 (90.08)    88.63 (92.24)
+Q15      0    1  FLAT    81.90 (89.06)    86.07 (89.18)
+Q15      0    1  FACT    81.12 (89.10)    85.39 (89.61)
+Q15      1    0  FLAT    94.57 (95.65)    94.81 (95.74)
+Q15      1    0  FACT    94.37 (95.75)    94.63 (95.86)
+Q15      1    1  FLAT    91.37 (94.19)    92.08 (94.25)
+Q15      1    1  FACT    91.64 (94.20)    92.19 (94.19)
+Q3E      0    0  FLAT    80.95 (85.76)    85.90 (87.69)
+Q3E      0    0  FACT    79.85 (85.55)    83.87 (87.27)
+Q3E      0    1  FLAT    76.48 (85.10)    82.62 (85.04)
+Q3E      0    1  FACT    75.02 (82.73)    79.49 (84.62)
+Q3E      1    0  FLAT    92.55 (95.55)    92.86 (95.69)
+Q3E      1    0  FACT    92.50 (95.51)    92.75 (95.61)
+Q3E      1    1  FLAT    91.41 (94.32)    92.03 (94.48)
+Q3E      1    1  FACT    91.45 (94.27)    91.76 (94.35)
+Q7       0    0  FLAT    91.28 (89.55)    92.48 (91.73)
+Q7       0    0  FACT    89.87 (89.08)    91.10 (92.14)
+Q7       0    1  FLAT    84.23 (87.29)    88.23 (88.96)
+Q7       0    1  FACT    83.22 (86.73)    87.04 (89.65)
+
+=== REGISTERED quantities ===
+  Q15 main cell (LoRA + FACT + hard, C): OLD events 92.19% (11948/12960) | NEG->NOOP OLD 96.20% (1847/1920) | events with hard off 94.63% (drop +2.44) | frozen same cell 85.39% (LoRA gain = main minus frozen, same cell: +6.80)
+  Q3E main cell (LoRA + FACT + hard, C): OLD events 91.76% (11892/12960) | NEG->NOOP OLD 99.48% (1910/1920) | events with hard off 92.75% (drop +1.00) | frozen same cell 79.49% (LoRA gain = main minus frozen, same cell: +12.27)
+  best eye: Q15 = 92.19% | >= 95%: False | negation gate (NEG >= 90 and drop <= 1): False | 93-95%: False | LoRA gain >= 2 points: True
+
+=== main effects on OLD events, method C (mean of the other factors' cells; points) ===
+  Q15: LoRA +6.20 | FACT vs FLAT -0.23 | hard on -2.79
+  Q3E: LoRA +9.38 | FACT vs FLAT -1.38 | hard on -2.37
+
+=== IN<->OUT confusions (OLD+NEW queries), method C ===
+  Q15 LoRA=0 hard=0 FLAT: IN->OUT 700 OUT->IN 496 of 2230 errors
+  Q15 LoRA=0 hard=0 FACT: IN->OUT 752 OUT->IN 528 of 2227 errors
+  Q15 LoRA=0 hard=1 FLAT: IN->OUT 642 OUT->IN 423 of 2857 errors
+  Q15 LoRA=0 hard=1 FACT: IN->OUT 691 OUT->IN 521 of 2903 errors
+  Q15 LoRA=1 hard=0 FLAT: IN->OUT 318 OUT->IN 289 of 1086 errors
+  Q15 LoRA=1 hard=0 FACT: IN->OUT 314 OUT->IN 308 of 1098 errors
+  Q15 LoRA=1 hard=1 FLAT: IN->OUT 278 OUT->IN 337 of 1586 errors
+  Q15 LoRA=1 hard=1 FACT: IN->OUT 269 OUT->IN 337 of 1577 errors
+  Q3E LoRA=0 hard=0 FLAT: IN->OUT 840 OUT->IN 757 of 3024 errors
+  Q3E LoRA=0 hard=0 FACT: IN->OUT 878 OUT->IN 931 of 3327 errors
+  Q3E LoRA=0 hard=1 FLAT: IN->OUT 742 OUT->IN 668 of 3707 errors
+  Q3E LoRA=0 hard=1 FACT: IN->OUT 812 OUT->IN 871 of 4153 errors
+  Q3E LoRA=1 hard=0 FLAT: IN->OUT 329 OUT->IN 511 of 1344 errors
+  Q3E LoRA=1 hard=0 FACT: IN->OUT 332 OUT->IN 521 of 1366 errors
+  Q3E LoRA=1 hard=1 FLAT: IN->OUT 297 OUT->IN 460 of 1570 errors
+  Q3E LoRA=1 hard=1 FACT: IN->OUT 310 OUT->IN 465 of 1617 errors
+  Q7 LoRA=0 hard=0 FLAT: IN->OUT 448 OUT->IN 474 of 1779 errors
+  Q7 LoRA=0 hard=0 FACT: IN->OUT 485 OUT->IN 533 of 1918 errors
+  Q7 LoRA=0 hard=1 FLAT: IN->OUT 477 OUT->IN 350 of 2598 errors
+  Q7 LoRA=0 hard=1 FACT: IN->OUT 469 OUT->IN 428 of 2685 errors
+
+=== hard sentences on held-out OLD domains: NEG->NOOP / OTHER->NOOP / TEMP correct [% literal event] ===
+  Q15 LoRA=0 hard=0 FLAT ZERO NEG  11.46 (new   4.86) [ 32.4] | OTHER   9.38 (new   8.33) [ 67.3] | TEMP  86.98 (new  93.06) [ 89.6]
+  Q15 LoRA=0 hard=0 FLAT C    NEG   7.03 (new   1.74) [ 39.0] | OTHER   6.67 (new   9.58) [ 78.8] | TEMP  93.80 (new  92.08) [ 93.1]
+  Q15 LoRA=0 hard=0 FACT ZERO NEG  10.94 (new   4.17) [ 32.1] | OTHER   9.38 (new   8.33) [ 71.4] | TEMP  86.46 (new  90.28) [ 88.1]
+  Q15 LoRA=0 hard=0 FACT C    NEG   6.82 (new   0.97) [ 38.3] | OTHER   7.92 (new   9.03) [ 78.0] | TEMP  92.55 (new  91.25) [ 92.0]
+  Q15 LoRA=0 hard=1 FLAT ZERO NEG  91.15 (new  93.75) [  2.7] | OTHER  62.50 (new  54.17) [ 30.4] | TEMP  85.94 (new  88.19) [ 86.9]
+  Q15 LoRA=0 hard=1 FLAT C    NEG  92.71 (new  91.32) [  3.5] | OTHER  52.81 (new  60.56) [ 37.9] | TEMP  93.65 (new  89.44) [ 91.8]
+  Q15 LoRA=0 hard=1 FACT ZERO NEG  91.15 (new  97.22) [  0.9] | OTHER  62.50 (new  65.28) [ 30.4] | TEMP  82.81 (new  86.11) [ 84.2]
+  Q15 LoRA=0 hard=1 FACT C    NEG  92.60 (new  91.18) [  2.7] | OTHER  55.00 (new  63.89) [ 34.8] | TEMP  91.20 (new  88.47) [ 90.0]
+  Q15 LoRA=1 hard=0 FLAT ZERO NEG   6.77 (new   3.47) [ 11.0] | OTHER   5.21 (new   2.78) [ 92.9] | TEMP  97.40 (new  97.22) [ 97.3]
+  Q15 LoRA=1 hard=0 FLAT C    NEG   5.62 (new   3.33) [ 11.1] | OTHER   4.17 (new   2.78) [ 93.3] | TEMP  97.40 (new  97.22) [ 97.3]
+  Q15 LoRA=1 hard=0 FACT ZERO NEG   8.85 (new   3.47) [ 10.7] | OTHER   5.21 (new   2.78) [ 92.9] | TEMP  96.88 (new  97.22) [ 97.0]
+  Q15 LoRA=1 hard=0 FACT C    NEG   6.61 (new   2.99) [ 10.9] | OTHER   4.69 (new   2.78) [ 93.2] | TEMP  97.29 (new  97.15) [ 97.2]
+  Q15 LoRA=1 hard=1 FLAT ZERO NEG  95.83 (new  99.31) [  0.0] | OTHER  85.42 (new  81.94) [ 14.3] | TEMP  96.35 (new  94.44) [ 95.5]
+  Q15 LoRA=1 hard=1 FLAT C    NEG  95.83 (new  99.10) [  0.0] | OTHER  83.96 (new  82.22) [ 15.0] | TEMP  97.71 (new  95.21) [ 96.6]
+  Q15 LoRA=1 hard=1 FACT ZERO NEG  95.83 (new  99.31) [  0.0] | OTHER  84.38 (new  81.94) [ 14.9] | TEMP  96.35 (new  95.14) [ 95.8]
+  Q15 LoRA=1 hard=1 FACT C    NEG  96.20 (new  99.17) [  0.0] | OTHER  85.00 (new  82.78) [ 14.2] | TEMP  97.40 (new  95.21) [ 96.5]
+  Q3E LoRA=0 hard=0 FLAT ZERO NEG  19.27 (new  20.83) [ 19.6] | OTHER   8.33 (new  23.61) [ 59.5] | TEMP  81.25 (new  87.50) [ 83.9]
+  Q3E LoRA=0 hard=0 FLAT C    NEG  13.28 (new   9.44) [ 28.4] | OTHER  12.60 (new  12.78) [ 64.4] | TEMP  87.66 (new  89.65) [ 88.5]
+  Q3E LoRA=0 hard=0 FACT ZERO NEG  15.62 (new  15.97) [ 26.8] | OTHER   9.38 (new  23.61) [ 61.9] | TEMP  77.08 (new  86.11) [ 81.0]
+  Q3E LoRA=0 hard=0 FACT C    NEG   8.91 (new   6.18) [ 36.0] | OTHER  14.06 (new  15.28) [ 61.4] | TEMP  86.25 (new  88.33) [ 87.1]
+  Q3E LoRA=0 hard=1 FLAT ZERO NEG  92.19 (new  91.67) [  1.8] | OTHER  55.21 (new  65.28) [ 24.4] | TEMP  81.25 (new  90.97) [ 85.4]
+  Q3E LoRA=0 hard=1 FLAT C    NEG  94.95 (new  89.31) [  2.2] | OTHER  60.83 (new  63.89) [ 27.6] | TEMP  87.97 (new  88.54) [ 88.2]
+  Q3E LoRA=0 hard=1 FACT ZERO NEG  93.75 (new  87.50) [  1.8] | OTHER  56.25 (new  75.00) [ 23.2] | TEMP  79.17 (new  89.58) [ 83.6]
+  Q3E LoRA=0 hard=1 FACT C    NEG  95.83 (new  86.39) [  3.2] | OTHER  63.02 (new  61.67) [ 26.7] | TEMP  85.78 (new  90.62) [ 87.9]
+  Q3E LoRA=1 hard=0 FLAT ZERO NEG  13.02 (new   3.47) [ 15.2] | OTHER   7.29 (new   4.17) [ 86.3] | TEMP  96.88 (new  95.14) [ 96.1]
+  Q3E LoRA=1 hard=0 FLAT C    NEG  12.45 (new   3.54) [ 15.3] | OTHER   7.29 (new   4.17) [ 86.2] | TEMP  96.88 (new  94.93) [ 96.0]
+  Q3E LoRA=1 hard=0 FACT ZERO NEG  14.06 (new   4.86) [ 14.6] | OTHER   7.29 (new   4.17) [ 86.3] | TEMP  96.88 (new  95.14) [ 96.1]
+  Q3E LoRA=1 hard=0 FACT C    NEG  13.18 (new   4.44) [ 14.7] | OTHER   7.29 (new   4.17) [ 86.3] | TEMP  96.88 (new  94.93) [ 96.0]
+  Q3E LoRA=1 hard=1 FLAT ZERO NEG  98.96 (new  97.92) [  0.0] | OTHER  80.21 (new  86.11) [ 14.3] | TEMP  97.40 (new  95.14) [ 96.4]
+  Q3E LoRA=1 hard=1 FLAT C    NEG  98.96 (new  97.92) [  0.0] | OTHER  80.31 (new  85.42) [ 14.5] | TEMP  97.60 (new  95.28) [ 96.6]
+  Q3E LoRA=1 hard=1 FACT ZERO NEG  99.48 (new  97.92) [  0.0] | OTHER  80.21 (new  86.11) [ 14.3] | TEMP  96.88 (new  95.14) [ 96.1]
+  Q3E LoRA=1 hard=1 FACT C    NEG  99.48 (new  97.92) [  0.0] | OTHER  80.21 (new  85.28) [ 14.6] | TEMP  97.50 (new  95.07) [ 96.5]
+  Q7 LoRA=0 hard=0 FLAT ZERO NEG   9.90 (new   1.39) [ 30.1] | OTHER   0.00 (new   8.33) [ 82.7] | TEMP  96.35 (new  89.58) [ 93.5]
+  Q7 LoRA=0 hard=0 FLAT C    NEG   7.71 (new   1.11) [ 36.0] | OTHER   1.04 (new   6.81) [ 85.4] | TEMP  98.49 (new  91.53) [ 95.5]
+  Q7 LoRA=0 hard=0 FACT ZERO NEG   5.73 (new   0.00) [ 35.7] | OTHER   0.00 (new   8.33) [ 76.2] | TEMP  90.10 (new  85.42) [ 88.1]
+  Q7 LoRA=0 hard=0 FACT C    NEG   3.49 (new   0.00) [ 37.9] | OTHER   3.33 (new   7.64) [ 79.8] | TEMP  95.78 (new  89.38) [ 93.0]
+  Q7 LoRA=0 hard=1 FLAT ZERO NEG  95.83 (new 100.00) [  0.0] | OTHER  59.38 (new  58.33) [ 33.9] | TEMP  85.94 (new  91.67) [ 88.4]
+  Q7 LoRA=0 hard=1 FLAT C    NEG  97.86 (new  95.62) [  1.1] | OTHER  56.46 (new  56.11) [ 36.4] | TEMP  94.79 (new  91.88) [ 93.5]
+  Q7 LoRA=0 hard=1 FACT ZERO NEG  96.88 (new  96.53) [  0.9] | OTHER  69.79 (new  54.17) [ 29.2] | TEMP  83.33 (new  88.89) [ 85.7]
+  Q7 LoRA=0 hard=1 FACT C    NEG  97.92 (new  93.96) [  1.5] | OTHER  61.04 (new  55.83) [ 33.8] | TEMP  92.34 (new  89.17) [ 91.0]
+
+=== initial-state sentences, 8-way, OLD domains ===
+  Q15 LoRA=0 hard=0 FLAT ZERO  71.35 (new  86.11) | C  79.48 (new  86.49)
+  Q15 LoRA=0 hard=0 FACT ZERO  75.52 (new  87.50) | C  81.12 (new  88.65)
+  Q15 LoRA=0 hard=1 FLAT ZERO  72.40 (new  82.99) | C  78.31 (new  85.10)
+  Q15 LoRA=0 hard=1 FACT ZERO  74.74 (new  86.81) | C  80.39 (new  87.81)
+  Q15 LoRA=1 hard=0 FLAT ZERO  98.70 (new  98.96) | C  98.59 (new  98.96)
+  Q15 LoRA=1 hard=0 FACT ZERO  98.70 (new  98.96) | C  98.59 (new  98.96)
+  Q15 LoRA=1 hard=1 FLAT ZERO  94.79 (new 100.00) | C  95.13 (new 100.00)
+  Q15 LoRA=1 hard=1 FACT ZERO  94.79 (new 100.00) | C  95.29 (new 100.00)
+  Q3E LoRA=0 hard=0 FLAT ZERO  84.38 (new  89.58) | C  81.93 (new  87.99)
+  Q3E LoRA=0 hard=0 FACT ZERO  78.39 (new  86.46) | C  81.28 (new  89.31)
+  Q3E LoRA=0 hard=1 FLAT ZERO  79.43 (new  88.19) | C  80.52 (new  86.63)
+  Q3E LoRA=0 hard=1 FACT ZERO  75.52 (new  86.46) | C  81.20 (new  89.06)
+  Q3E LoRA=1 hard=0 FLAT ZERO  99.48 (new  98.96) | C  99.22 (new  98.96)
+  Q3E LoRA=1 hard=0 FACT ZERO  99.22 (new  98.96) | C  99.17 (new  98.96)
+  Q3E LoRA=1 hard=1 FLAT ZERO  98.70 (new  98.61) | C  99.04 (new  98.51)
+  Q3E LoRA=1 hard=1 FACT ZERO  98.44 (new  98.61) | C  98.85 (new  98.68)
+  Q7 LoRA=0 hard=0 FLAT ZERO  70.57 (new  84.38) | C  74.14 (new  83.78)
+  Q7 LoRA=0 hard=0 FACT ZERO  71.61 (new  85.07) | C  74.27 (new  84.03)
+  Q7 LoRA=0 hard=1 FLAT ZERO  72.40 (new  84.38) | C  73.67 (new  84.10)
+  Q7 LoRA=0 hard=1 FACT ZERO  73.18 (new  84.72) | C  74.14 (new  84.31)
+
+=== LoRA loss traces (step:loss), first fold/seed per eye ===
+  Q15 hard=0: 1:7.6254,50:2.3568,100:2.3678,150:2.3205,maxmem_GiB:14.5 (113.6 s)
+  Q15 hard=1: 1:7.8670,50:3.0290,100:2.4812,150:2.4637,maxmem_GiB:16.2 (119.1 s)
+  Q3E hard=0: 1:9.0976,50:2.7051,100:2.1159,150:2.1558,maxmem_GiB:11.1 (107.6 s)
+  Q3E hard=1: 1:8.2196,50:2.7995,100:2.1213,150:2.3510,maxmem_GiB:12.4 (112.8 s)
+
+=== confusion of the best main cell, method C (rows = true) ===
+              IN     OUT   BREAK     FIX    NOOP
+      IN    4438     269       0      34     299
+     OUT     337    4547      19      25     112
+   BREAK       0      53    4080       0      67
+     FIX      31       0       0    4058     111
+    NOOP      90      69       0      61    3980
