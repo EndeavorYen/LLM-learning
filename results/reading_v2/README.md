@@ -35,7 +35,7 @@ Best cell (new sealed test v2, readout C): **Q15, system-aware prompt on, noise 
    - On the Lab 18a test, Q15 goes from 58% to **75%** group all-correct, against 56% in Lab 18a.
 2. **Noise practice adds nothing measurable.** CHATTER stays at 88–95% with or without it. The invariance loss neither
    helps nor hurts much (normal −0.6).
-3. **The untaught hypothetical still generalises** (95–99% in every cell).
+3. **The untaught hypothetical still generalises** (94–99% in every cell).
 4. **Lab 17b probe, re-tested**: Q15 A1B0 reaches DIR + REAL pairs 97.3%, DIR 97.1% (direction swaps were the weak
    spot in 17b), and CUE 95.1% vs normal 96.5%.
 5. **What still breaks whole groups** (best cell): CHATTER (89.8%), DIRSWAP (90.9%), PRONOUN (95.4%) and POSNEG
