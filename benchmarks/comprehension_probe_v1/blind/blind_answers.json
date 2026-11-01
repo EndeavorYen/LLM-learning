@@ -1,0 +1,1259 @@
+[
+ {
+  "n": 1,
+  "label": "NOOP"
+ },
+ {
+  "n": 2,
+  "label": "IN"
+ },
+ {
+  "n": 3,
+  "label": "NOOP"
+ },
+ {
+  "n": 4,
+  "label": "FIX"
+ },
+ {
+  "n": 5,
+  "label": "NOOP"
+ },
+ {
+  "n": 6,
+  "label": "IN"
+ },
+ {
+  "n": 7,
+  "label": "NOOP"
+ },
+ {
+  "n": 8,
+  "label": "IN"
+ },
+ {
+  "n": 9,
+  "label": "OUT"
+ },
+ {
+  "n": 10,
+  "label": "FIX",
+  "note": "odd: only implies a fix if the locker was unusable before; '收拾妥当' reads as readiness restored"
+ },
+ {
+  "n": 11,
+  "label": "NOOP"
+ },
+ {
+  "n": 12,
+  "label": "BREAK"
+ },
+ {
+  "n": 13,
+  "label": "FIX"
+ },
+ {
+  "n": 14,
+  "label": "BREAK"
+ },
+ {
+  "n": 15,
+  "label": "FIX"
+ },
+ {
+  "n": 16,
+  "label": "NOOP"
+ },
+ {
+  "n": 17,
+  "label": "BREAK"
+ },
+ {
+  "n": 18,
+  "label": "NOOP"
+ },
+ {
+  "n": 19,
+  "label": "NOOP"
+ },
+ {
+  "n": 20,
+  "label": "IN"
+ },
+ {
+  "n": 21,
+  "label": "BREAK"
+ },
+ {
+  "n": 22,
+  "label": "OUT"
+ },
+ {
+  "n": 23,
+  "label": "NOOP"
+ },
+ {
+  "n": 24,
+  "label": "IN"
+ },
+ {
+  "n": 25,
+  "label": "OUT"
+ },
+ {
+  "n": 26,
+  "label": "FIX"
+ },
+ {
+  "n": 27,
+  "label": "OUT"
+ },
+ {
+  "n": 28,
+  "label": "NOOP"
+ },
+ {
+  "n": 29,
+  "label": "OUT"
+ },
+ {
+  "n": 30,
+  "label": "NOOP"
+ },
+ {
+  "n": 31,
+  "label": "BREAK"
+ },
+ {
+  "n": 32,
+  "label": "FIX"
+ },
+ {
+  "n": 33,
+  "label": "FIX"
+ },
+ {
+  "n": 34,
+  "label": "NOOP"
+ },
+ {
+  "n": 35,
+  "label": "NOOP"
+ },
+ {
+  "n": 36,
+  "label": "BREAK"
+ },
+ {
+  "n": 37,
+  "label": "BREAK"
+ },
+ {
+  "n": 38,
+  "label": "NOOP"
+ },
+ {
+  "n": 39,
+  "label": "OUT"
+ },
+ {
+  "n": 40,
+  "label": "OUT"
+ },
+ {
+  "n": 41,
+  "label": "FIX"
+ },
+ {
+  "n": 42,
+  "label": "IN"
+ },
+ {
+  "n": 43,
+  "label": "IN"
+ },
+ {
+  "n": 44,
+  "label": "IN"
+ },
+ {
+  "n": 45,
+  "label": "NOOP"
+ },
+ {
+  "n": 46,
+  "label": "NOOP"
+ },
+ {
+  "n": 47,
+  "label": "IN"
+ },
+ {
+  "n": 48,
+  "label": "IN"
+ },
+ {
+  "n": 49,
+  "label": "IN"
+ },
+ {
+  "n": 50,
+  "label": "FIX"
+ },
+ {
+  "n": 51,
+  "label": "OUT"
+ },
+ {
+  "n": 52,
+  "label": "NOOP"
+ },
+ {
+  "n": 53,
+  "label": "IN"
+ },
+ {
+  "n": 54,
+  "label": "FIX"
+ },
+ {
+  "n": 55,
+  "label": "IN"
+ },
+ {
+  "n": 56,
+  "label": "NOOP"
+ },
+ {
+  "n": 57,
+  "label": "NOOP"
+ },
+ {
+  "n": 58,
+  "label": "IN"
+ },
+ {
+  "n": 59,
+  "label": "BREAK"
+ },
+ {
+  "n": 60,
+  "label": "NOOP"
+ },
+ {
+  "n": 61,
+  "label": "FIX"
+ },
+ {
+  "n": 62,
+  "label": "IN"
+ },
+ {
+  "n": 63,
+  "label": "NOOP"
+ },
+ {
+  "n": 64,
+  "label": "IN"
+ },
+ {
+  "n": 65,
+  "label": "OUT"
+ },
+ {
+  "n": 66,
+  "label": "NOOP"
+ },
+ {
+  "n": 67,
+  "label": "IN"
+ },
+ {
+  "n": 68,
+  "label": "IN"
+ },
+ {
+  "n": 69,
+  "label": "OUT"
+ },
+ {
+  "n": 70,
+  "label": "IN"
+ },
+ {
+  "n": 71,
+  "label": "OUT"
+ },
+ {
+  "n": 72,
+  "label": "BREAK"
+ },
+ {
+  "n": 73,
+  "label": "NOOP"
+ },
+ {
+  "n": 74,
+  "label": "FIX"
+ },
+ {
+  "n": 75,
+  "label": "OUT"
+ },
+ {
+  "n": 76,
+  "label": "NOOP"
+ },
+ {
+  "n": 77,
+  "label": "NOOP"
+ },
+ {
+  "n": 78,
+  "label": "IN"
+ },
+ {
+  "n": 79,
+  "label": "FIX"
+ },
+ {
+  "n": 80,
+  "label": "NOOP"
+ },
+ {
+  "n": 81,
+  "label": "NOOP"
+ },
+ {
+  "n": 82,
+  "label": "IN"
+ },
+ {
+  "n": 83,
+  "label": "OUT"
+ },
+ {
+  "n": 84,
+  "label": "FIX",
+  "note": "odd: washing/re-preparing pots only counts as FIX if they were unusable before; otherwise NOOP"
+ },
+ {
+  "n": 85,
+  "label": "NOOP"
+ },
+ {
+  "n": 86,
+  "label": "NOOP"
+ },
+ {
+  "n": 87,
+  "label": "BREAK"
+ },
+ {
+  "n": 88,
+  "label": "NOOP"
+ },
+ {
+  "n": 89,
+  "label": "NOOP"
+ },
+ {
+  "n": 90,
+  "label": "BREAK"
+ },
+ {
+  "n": 91,
+  "label": "BREAK"
+ },
+ {
+  "n": 92,
+  "label": "FIX"
+ },
+ {
+  "n": 93,
+  "label": "IN"
+ },
+ {
+  "n": 94,
+  "label": "OUT"
+ },
+ {
+  "n": 95,
+  "label": "NOOP"
+ },
+ {
+  "n": 96,
+  "label": "NOOP"
+ },
+ {
+  "n": 97,
+  "label": "BREAK"
+ },
+ {
+  "n": 98,
+  "label": "IN"
+ },
+ {
+  "n": 99,
+  "label": "IN"
+ },
+ {
+  "n": 100,
+  "label": "UNCLEAR",
+  "note": "UNCLEAR: NOOP (net: broke then reconnected, end state same as before) vs FIX (end state working)"
+ },
+ {
+  "n": 101,
+  "label": "FIX"
+ },
+ {
+  "n": 102,
+  "label": "IN"
+ },
+ {
+  "n": 103,
+  "label": "OUT"
+ },
+ {
+  "n": 104,
+  "label": "OUT"
+ },
+ {
+  "n": 105,
+  "label": "FIX"
+ },
+ {
+  "n": 106,
+  "label": "BREAK"
+ },
+ {
+  "n": 107,
+  "label": "OUT"
+ },
+ {
+  "n": 108,
+  "label": "FIX"
+ },
+ {
+  "n": 109,
+  "label": "OUT"
+ },
+ {
+  "n": 110,
+  "label": "OUT"
+ },
+ {
+  "n": 111,
+  "label": "FIX"
+ },
+ {
+  "n": 112,
+  "label": "IN"
+ },
+ {
+  "n": 113,
+  "label": "NOOP"
+ },
+ {
+  "n": 114,
+  "label": "IN"
+ },
+ {
+  "n": 115,
+  "label": "NOOP"
+ },
+ {
+  "n": 116,
+  "label": "IN"
+ },
+ {
+  "n": 117,
+  "label": "IN"
+ },
+ {
+  "n": 118,
+  "label": "NOOP"
+ },
+ {
+  "n": 119,
+  "label": "FIX"
+ },
+ {
+  "n": 120,
+  "label": "FIX"
+ },
+ {
+  "n": 121,
+  "label": "NOOP"
+ },
+ {
+  "n": 122,
+  "label": "OUT"
+ },
+ {
+  "n": 123,
+  "label": "OUT"
+ },
+ {
+  "n": 124,
+  "label": "FIX"
+ },
+ {
+  "n": 125,
+  "label": "NOOP"
+ },
+ {
+  "n": 126,
+  "label": "NOOP"
+ },
+ {
+  "n": 127,
+  "label": "IN"
+ },
+ {
+  "n": 128,
+  "label": "OUT"
+ },
+ {
+  "n": 129,
+  "label": "BREAK"
+ },
+ {
+  "n": 130,
+  "label": "OUT"
+ },
+ {
+  "n": 131,
+  "label": "IN"
+ },
+ {
+  "n": 132,
+  "label": "OUT"
+ },
+ {
+  "n": 133,
+  "label": "BREAK"
+ },
+ {
+  "n": 134,
+  "label": "BREAK"
+ },
+ {
+  "n": 135,
+  "label": "BREAK"
+ },
+ {
+  "n": 136,
+  "label": "NOOP"
+ },
+ {
+  "n": 137,
+  "label": "OUT"
+ },
+ {
+  "n": 138,
+  "label": "IN"
+ },
+ {
+  "n": 139,
+  "label": "BREAK"
+ },
+ {
+  "n": 140,
+  "label": "OUT"
+ },
+ {
+  "n": 141,
+  "label": "BREAK"
+ },
+ {
+  "n": 142,
+  "label": "NOOP"
+ },
+ {
+  "n": 143,
+  "label": "OUT"
+ },
+ {
+  "n": 144,
+  "label": "BREAK"
+ },
+ {
+  "n": 145,
+  "label": "IN"
+ },
+ {
+  "n": 146,
+  "label": "NOOP"
+ },
+ {
+  "n": 147,
+  "label": "UNCLEAR",
+  "note": "UNCLEAR: NOOP (net: reconnected then broke again) vs BREAK (end state broken)"
+ },
+ {
+  "n": 148,
+  "label": "NOOP"
+ },
+ {
+  "n": 149,
+  "label": "FIX"
+ },
+ {
+  "n": 150,
+  "label": "FIX"
+ },
+ {
+  "n": 151,
+  "label": "NOOP"
+ },
+ {
+  "n": 152,
+  "label": "UNCLEAR",
+  "note": "UNCLEAR: NOOP (net: jammed then recovered) vs FIX (end state working)"
+ },
+ {
+  "n": 153,
+  "label": "IN"
+ },
+ {
+  "n": 154,
+  "label": "NOOP"
+ },
+ {
+  "n": 155,
+  "label": "OUT"
+ },
+ {
+  "n": 156,
+  "label": "NOOP"
+ },
+ {
+  "n": 157,
+  "label": "BREAK"
+ },
+ {
+  "n": 158,
+  "label": "IN"
+ },
+ {
+  "n": 159,
+  "label": "FIX"
+ },
+ {
+  "n": 160,
+  "label": "IN"
+ },
+ {
+  "n": 161,
+  "label": "BREAK"
+ },
+ {
+  "n": 162,
+  "label": "IN"
+ },
+ {
+  "n": 163,
+  "label": "BREAK"
+ },
+ {
+  "n": 164,
+  "label": "BREAK"
+ },
+ {
+  "n": 165,
+  "label": "NOOP"
+ },
+ {
+  "n": 166,
+  "label": "NOOP"
+ },
+ {
+  "n": 167,
+  "label": "BREAK"
+ },
+ {
+  "n": 168,
+  "label": "IN"
+ },
+ {
+  "n": 169,
+  "label": "NOOP"
+ },
+ {
+  "n": 170,
+  "label": "BREAK"
+ },
+ {
+  "n": 171,
+  "label": "FIX"
+ },
+ {
+  "n": 172,
+  "label": "NOOP"
+ },
+ {
+  "n": 173,
+  "label": "NOOP"
+ },
+ {
+  "n": 174,
+  "label": "IN"
+ },
+ {
+  "n": 175,
+  "label": "NOOP"
+ },
+ {
+  "n": 176,
+  "label": "IN"
+ },
+ {
+  "n": 177,
+  "label": "FIX"
+ },
+ {
+  "n": 178,
+  "label": "OUT"
+ },
+ {
+  "n": 179,
+  "label": "BREAK"
+ },
+ {
+  "n": 180,
+  "label": "NOOP"
+ },
+ {
+  "n": 181,
+  "label": "NOOP"
+ },
+ {
+  "n": 182,
+  "label": "BREAK"
+ },
+ {
+  "n": 183,
+  "label": "BREAK"
+ },
+ {
+  "n": 184,
+  "label": "NOOP"
+ },
+ {
+  "n": 185,
+  "label": "OUT"
+ },
+ {
+  "n": 186,
+  "label": "NOOP"
+ },
+ {
+  "n": 187,
+  "label": "NOOP"
+ },
+ {
+  "n": 188,
+  "label": "NOOP"
+ },
+ {
+  "n": 189,
+  "label": "BREAK"
+ },
+ {
+  "n": 190,
+  "label": "NOOP"
+ },
+ {
+  "n": 191,
+  "label": "NOOP"
+ },
+ {
+  "n": 192,
+  "label": "NOOP"
+ },
+ {
+  "n": 193,
+  "label": "OUT"
+ },
+ {
+  "n": 194,
+  "label": "BREAK"
+ },
+ {
+  "n": 195,
+  "label": "NOOP"
+ },
+ {
+  "n": 196,
+  "label": "FIX"
+ },
+ {
+  "n": 197,
+  "label": "UNCLEAR",
+  "note": "UNCLEAR: IN vs NOOP; '换进' can mean a swap (one egg in, one out, net 0) or simply moved in"
+ },
+ {
+  "n": 198,
+  "label": "IN"
+ },
+ {
+  "n": 199,
+  "label": "BREAK"
+ },
+ {
+  "n": 200,
+  "label": "FIX",
+  "note": "odd: fetching a new batch of pots is FIX only if the old ones were broken; otherwise NOOP"
+ },
+ {
+  "n": 201,
+  "label": "BREAK"
+ },
+ {
+  "n": 202,
+  "label": "FIX"
+ },
+ {
+  "n": 203,
+  "label": "OUT"
+ },
+ {
+  "n": 204,
+  "label": "NOOP"
+ },
+ {
+  "n": 205,
+  "label": "NOOP"
+ },
+ {
+  "n": 206,
+  "label": "NOOP"
+ },
+ {
+  "n": 207,
+  "label": "FIX"
+ },
+ {
+  "n": 208,
+  "label": "NOOP"
+ },
+ {
+  "n": 209,
+  "label": "NOOP"
+ },
+ {
+  "n": 210,
+  "label": "FIX"
+ },
+ {
+  "n": 211,
+  "label": "BREAK"
+ },
+ {
+  "n": 212,
+  "label": "OUT"
+ },
+ {
+  "n": 213,
+  "label": "IN"
+ },
+ {
+  "n": 214,
+  "label": "NOOP"
+ },
+ {
+  "n": 215,
+  "label": "FIX"
+ },
+ {
+  "n": 216,
+  "label": "OUT"
+ },
+ {
+  "n": 217,
+  "label": "NOOP"
+ },
+ {
+  "n": 218,
+  "label": "FIX"
+ },
+ {
+  "n": 219,
+  "label": "IN"
+ },
+ {
+  "n": 220,
+  "label": "OUT"
+ },
+ {
+  "n": 221,
+  "label": "NOOP"
+ },
+ {
+  "n": 222,
+  "label": "UNCLEAR",
+  "note": "UNCLEAR: OUT vs NOOP; '换进' can mean a swap (net 0) or simply moved out"
+ },
+ {
+  "n": 223,
+  "label": "OUT"
+ },
+ {
+  "n": 224,
+  "label": "NOOP"
+ },
+ {
+  "n": 225,
+  "label": "BREAK"
+ },
+ {
+  "n": 226,
+  "label": "FIX"
+ },
+ {
+  "n": 227,
+  "label": "OUT"
+ },
+ {
+  "n": 228,
+  "label": "BREAK"
+ },
+ {
+  "n": 229,
+  "label": "BREAK"
+ },
+ {
+  "n": 230,
+  "label": "BREAK"
+ },
+ {
+  "n": 231,
+  "label": "NOOP"
+ },
+ {
+  "n": 232,
+  "label": "OUT"
+ },
+ {
+  "n": 233,
+  "label": "BREAK"
+ },
+ {
+  "n": 234,
+  "label": "IN"
+ },
+ {
+  "n": 235,
+  "label": "IN"
+ },
+ {
+  "n": 236,
+  "label": "IN"
+ },
+ {
+  "n": 237,
+  "label": "NOOP"
+ },
+ {
+  "n": 238,
+  "label": "IN"
+ },
+ {
+  "n": 239,
+  "label": "BREAK"
+ },
+ {
+  "n": 240,
+  "label": "BREAK"
+ },
+ {
+  "n": 241,
+  "label": "OUT"
+ },
+ {
+  "n": 242,
+  "label": "OUT"
+ },
+ {
+  "n": 243,
+  "label": "BREAK"
+ },
+ {
+  "n": 244,
+  "label": "BREAK"
+ },
+ {
+  "n": 245,
+  "label": "NOOP"
+ },
+ {
+  "n": 246,
+  "label": "NOOP"
+ },
+ {
+  "n": 247,
+  "label": "OUT"
+ },
+ {
+  "n": 248,
+  "label": "OUT"
+ },
+ {
+  "n": 249,
+  "label": "OUT"
+ },
+ {
+  "n": 250,
+  "label": "NOOP"
+ },
+ {
+  "n": 251,
+  "label": "NOOP"
+ },
+ {
+  "n": 252,
+  "label": "FIX"
+ },
+ {
+  "n": 253,
+  "label": "FIX"
+ },
+ {
+  "n": 254,
+  "label": "IN"
+ },
+ {
+  "n": 255,
+  "label": "OUT"
+ },
+ {
+  "n": 256,
+  "label": "NOOP"
+ },
+ {
+  "n": 257,
+  "label": "NOOP"
+ },
+ {
+  "n": 258,
+  "label": "BREAK"
+ },
+ {
+  "n": 259,
+  "label": "BREAK"
+ },
+ {
+  "n": 260,
+  "label": "NOOP"
+ },
+ {
+  "n": 261,
+  "label": "FIX"
+ },
+ {
+  "n": 262,
+  "label": "UNCLEAR",
+  "note": "UNCLEAR: NOOP (net: worked then jammed, prior state presumably jammed) vs BREAK (end state broken)"
+ },
+ {
+  "n": 263,
+  "label": "NOOP"
+ },
+ {
+  "n": 264,
+  "label": "NOOP"
+ },
+ {
+  "n": 265,
+  "label": "OUT"
+ },
+ {
+  "n": 266,
+  "label": "IN"
+ },
+ {
+  "n": 267,
+  "label": "OUT"
+ },
+ {
+  "n": 268,
+  "label": "IN"
+ },
+ {
+  "n": 269,
+  "label": "IN"
+ },
+ {
+  "n": 270,
+  "label": "OUT"
+ },
+ {
+  "n": 271,
+  "label": "IN"
+ },
+ {
+  "n": 272,
+  "label": "NOOP"
+ },
+ {
+  "n": 273,
+  "label": "NOOP"
+ },
+ {
+  "n": 274,
+  "label": "IN"
+ },
+ {
+  "n": 275,
+  "label": "NOOP"
+ },
+ {
+  "n": 276,
+  "label": "BREAK"
+ },
+ {
+  "n": 277,
+  "label": "BREAK"
+ },
+ {
+  "n": 278,
+  "label": "IN"
+ },
+ {
+  "n": 279,
+  "label": "NOOP"
+ },
+ {
+  "n": 280,
+  "label": "NOOP"
+ },
+ {
+  "n": 281,
+  "label": "OUT"
+ },
+ {
+  "n": 282,
+  "label": "OUT"
+ },
+ {
+  "n": 283,
+  "label": "IN"
+ },
+ {
+  "n": 284,
+  "label": "NOOP"
+ },
+ {
+  "n": 285,
+  "label": "OUT"
+ },
+ {
+  "n": 286,
+  "label": "NOOP"
+ },
+ {
+  "n": 287,
+  "label": "IN"
+ },
+ {
+  "n": 288,
+  "label": "OUT"
+ },
+ {
+  "n": 289,
+  "label": "BREAK"
+ },
+ {
+  "n": 290,
+  "label": "IN"
+ },
+ {
+  "n": 291,
+  "label": "FIX"
+ },
+ {
+  "n": 292,
+  "label": "NOOP"
+ },
+ {
+  "n": 293,
+  "label": "FIX"
+ },
+ {
+  "n": 294,
+  "label": "NOOP"
+ },
+ {
+  "n": 295,
+  "label": "NOOP"
+ },
+ {
+  "n": 296,
+  "label": "FIX"
+ },
+ {
+  "n": 297,
+  "label": "FIX"
+ },
+ {
+  "n": 298,
+  "label": "FIX"
+ },
+ {
+  "n": 299,
+  "label": "IN"
+ },
+ {
+  "n": 300,
+  "label": "FIX"
+ },
+ {
+  "n": 301,
+  "label": "NOOP"
+ },
+ {
+  "n": 302,
+  "label": "NOOP"
+ },
+ {
+  "n": 303,
+  "label": "NOOP"
+ },
+ {
+  "n": 304,
+  "label": "BREAK"
+ },
+ {
+  "n": 305,
+  "label": "FIX"
+ },
+ {
+  "n": 306,
+  "label": "IN"
+ },
+ {
+  "n": 307,
+  "label": "OUT"
+ },
+ {
+  "n": 308,
+  "label": "OUT"
+ },
+ {
+  "n": 309,
+  "label": "FIX"
+ },
+ {
+  "n": 310,
+  "label": "NOOP"
+ },
+ {
+  "n": 311,
+  "label": "BREAK"
+ },
+ {
+  "n": 312,
+  "label": "BREAK"
+ }
+]

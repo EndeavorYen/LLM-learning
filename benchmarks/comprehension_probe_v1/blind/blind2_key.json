@@ -1,0 +1,182 @@
+[
+ {
+  "n": 1,
+  "label": "IN",
+  "tag": "CUE/CUE-2",
+  "changed": false
+ },
+ {
+  "n": 2,
+  "label": "IN",
+  "tag": "DIR/DIR-1a",
+  "changed": false
+ },
+ {
+  "n": 3,
+  "label": "BREAK",
+  "tag": "CUE/CUE-5",
+  "changed": false
+ },
+ {
+  "n": 4,
+  "label": "IN",
+  "tag": "STR/STR-2",
+  "changed": true
+ },
+ {
+  "n": 5,
+  "label": "NOOP",
+  "tag": "MENTION/MEN-1b",
+  "changed": false
+ },
+ {
+  "n": 6,
+  "label": "BREAK",
+  "tag": "STR/STR-6",
+  "changed": false
+ },
+ {
+  "n": 7,
+  "label": "BREAK",
+  "tag": "DIR/DIR-4b",
+  "changed": true
+ },
+ {
+  "n": 8,
+  "label": "NOOP",
+  "tag": "MENTION/MEN-1b",
+  "changed": false
+ },
+ {
+  "n": 9,
+  "label": "IN",
+  "tag": "STR/STR-1",
+  "changed": false
+ },
+ {
+  "n": 10,
+  "label": "OUT",
+  "tag": "CUE/CUE-4",
+  "changed": false
+ },
+ {
+  "n": 11,
+  "label": "BREAK",
+  "tag": "MENTION/MEN-1a",
+  "changed": false
+ },
+ {
+  "n": 12,
+  "label": "IN",
+  "tag": "CUE/CUE-2",
+  "changed": false
+ },
+ {
+  "n": 13,
+  "label": "NOOP",
+  "tag": "SYS/SYS-1b",
+  "changed": false
+ },
+ {
+  "n": 14,
+  "label": "OUT",
+  "tag": "STR/STR-4",
+  "changed": false
+ },
+ {
+  "n": 15,
+  "label": "NOOP",
+  "tag": "STR/STR-7",
+  "changed": false
+ },
+ {
+  "n": 16,
+  "label": "FIX",
+  "tag": "DIR/DIR-4a",
+  "changed": true
+ },
+ {
+  "n": 17,
+  "label": "NOOP",
+  "tag": "MENTION/MEN-2b",
+  "changed": false
+ },
+ {
+  "n": 18,
+  "label": "NOOP",
+  "tag": "STR/STR-7",
+  "changed": false
+ },
+ {
+  "n": 19,
+  "label": "OUT",
+  "tag": "STR/STR-4",
+  "changed": true
+ },
+ {
+  "n": 20,
+  "label": "FIX",
+  "tag": "CUE/CUE-7",
+  "changed": true
+ },
+ {
+  "n": 21,
+  "label": "NOOP",
+  "tag": "STR/STR-8",
+  "changed": false
+ },
+ {
+  "n": 22,
+  "label": "BREAK",
+  "tag": "DIR/DIR-3a",
+  "changed": true
+ },
+ {
+  "n": 23,
+  "label": "FIX",
+  "tag": "DIR/DIR-4a",
+  "changed": true
+ },
+ {
+  "n": 24,
+  "label": "NOOP",
+  "tag": "MENTION/MEN-2b",
+  "changed": false
+ },
+ {
+  "n": 25,
+  "label": "IN",
+  "tag": "STR/STR-2",
+  "changed": false
+ },
+ {
+  "n": 26,
+  "label": "BREAK",
+  "tag": "DIR/DIR-4b",
+  "changed": true
+ },
+ {
+  "n": 27,
+  "label": "OUT",
+  "tag": "DIR/DIR-2a",
+  "changed": false
+ },
+ {
+  "n": 28,
+  "label": "NOOP",
+  "tag": "SYS/SYS-2b",
+  "changed": false
+ },
+ {
+  "n": 29,
+  "label": "FIX",
+  "tag": "DIR/DIR-3b",
+  "changed": true
+ },
+ {
+  "n": 30,
+  "label": "FIX",
+  "tag": "CUE/CUE-7",
+  "changed": false
+ }
+]
