@@ -1,0 +1,30 @@
+Final-state accuracy (EYE systems summed over 3 seeds)
+system | SHORT 1-4 | MID 5-7 | LONG 8-12 | traps (LONG) | T1 | T2 | T3 | T4 | all
+ORACLE+EXEC     | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00 | 100.00
+EYE+EXEC        |  93.41 |  86.31 |  84.42 |  86.21 |  76.36 |  91.82 |  82.42 |  94.24 |  87.65
+EYE+HOP         |  92.88 |  86.06 |  83.91 |  86.82 |  76.36 |  92.42 |  83.03 |  95.45 |  87.35
+7B-DIRECT       |   9.89 |   9.85 |   9.18 |  11.82 |   3.64 |  18.18 |   8.18 |  17.27 |   9.90
+QWEN3-8B-THINK  |    nan |    nan |  20.45 |  23.41 |   8.18 |  46.36 |  31.82 |   7.27 |  22.42
+
+by length (normal + trap stories of that length):
+ORACLE+EXEC     1:100.0 2:100.0 3:100.0 4:100.0 5:100.0 6:100.0 7:100.0 8:100.0 9:100.0 10:100.0 11:100.0 12:100.0   (normal only)
+EYE+EXEC        1: 97.3 2: 93.5 3: 92.7 4: 90.2 5: 88.0 6: 87.1 7: 83.8 8: 84.2 9: 86.1 10: 85.2 11: 82.4 12: 84.2   (normal only)
+EYE+HOP         1: 97.0 2: 92.7 3: 92.6 4: 89.2 5: 87.4 6: 87.1 7: 83.6 8: 84.2 9: 86.5 10: 83.0 11: 82.1 12: 83.6   (normal only)
+7B-DIRECT       1: 11.4 2: 10.0 3:  9.5 4:  8.6 5: 12.3 6:  5.9 7: 11.4 8: 13.2 9:  9.1 10:  8.6 11:  8.2 12:  6.8   (normal only)
+
+Eye sentence accuracy on the story pool (3 seeds): BASE=95.5 CHATTER=91.3 CUE=93.9 DIR=98.6 DIRSWAP=92.2 FUTURE=95.6 HYPO=97.5 INTENT=100.0 MENTION=97.2 NEG=99.3 NOOPSENT=93.8 NORMAL=96.7 OTHER=94.4 POSNEG=93.6 PRONOUN=96.0 QUESTION=100.0 REAL-actual=97.2 REAL-hypothetical=94.4 REAL-intended=100.0 REAL-negated=100.0 STR=86.8 SYS=94.4 TRANSFER=93.8 all=95.7
+Misread sentences that made the story wrong, by variant (wrong stories / misreads): DIRSWAP=238/434 POSNEG=223/383 CHATTER=204/377 PRONOUN=134/242 STR=73/212 BASE=106/199 NORMAL=82/186 CUE=63/169 TRANSFER=91/161 OTHER=67/146 FUTURE=62/140 SYS=33/84 HYPO=33/63 NOOPSENT=23/56 MENTION=10/38 REAL-hypothetical=5/34 NEG=8/22 DIR=8/16 REAL-actual=4/11
+Stories with exactly ONE misread, made wrong by it (wrong / stories): POSNEG=144/268 DIRSWAP=126/256 CHATTER=106/218 PRONOUN=99/173 STR=49/153 NORMAL=52/140 CUE=48/131 BASE=59/124 FUTURE=36/99 TRANSFER=52/99 OTHER=27/88 SYS=20/61 NOOPSENT=14/40 HYPO=17/39 MENTION=6/31 REAL-hypothetical=5/23 DIR=8/14 NEG=2/13 REAL-actual=2/6
+normal: misread sentences per story -> final right / stories: 0:5908/5908 1:907/1632 2:131/325 3:14/43 4:1/12 | stories with >= 1 misread still right: 52.3%
+trap: misread sentences per story -> final right / stories: 0:897/897 1:197/344 2:38/68 3:6/10 4:0/1 | stories with >= 1 misread still right: 57.0%
+7B-DIRECT sec = 1369
+QWEN3-8B-THINK closed = 171 (25.9% of 660)
+QWEN3-8B-THINK gen_tokens = 1263074
+QWEN3-8B-THINK no_answer = 490 (74.2% of 660)
+QWEN3-8B-THINK sec = 15097
+
+Same stories as the thinking model:
+  normal LONG (220): EYE+EXEC 85.61 | QWEN3-8B-THINK 20.45 | 7B-DIRECT 10.45
+  traps (440): EYE+EXEC 86.21 | QWEN3-8B-THINK 23.41 | 7B-DIRECT 11.82
+
+REGISTERED: EYE+EXEC LONG 84.42% (same-story: eye 85.61 vs think 20.45) -> 部分可用

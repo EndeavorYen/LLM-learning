@@ -1,0 +1,344 @@
+[l19] job=think seed=0 device=cuda | torch 2.11.0+cu130 | transformers 5.21.0
+[l19] stories: /content/story_v1_stories.json sha256=69c5866bf9e4f4715bde1dfff4c9660d7fbc409d0498d73f7258cc0ab9650be6 | 3080 stories in 22 domains | T1=110 T2=110 T3=110 T4=110 normal=2640
+[l19] st: /content/stories.json sha256=ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f11e3108 | templates.json sha256=1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70 | 16 train domains (templates.json == stories' train split; 8 test domains NOT used) | 640 sentences (40 per domain); 640 of them occur in the 4896 train / val_seen stories, all of which are in the table | per class: L0_ok=16 L1_ok=16 L2_ok=16 L3_ok=16 L0_broken=16 L1_broken=16 L2_broken=16 L3_broken=16 ev:IN=112 ev:OUT=112 ev:BREAK=96 ev:FIX=96 ev:NOOP=96
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 5 files:   0%|          | 0/5 [00:00<?, ?it/s]Fetching 5 files:  20%|██        | 1/5 [00:40<02:40, 40.15s/it]Fetching 5 files:  40%|████      | 2/5 [00:46<01:01, 20.46s/it]Fetching 5 files: 100%|██████████| 5/5 [00:46<00:00,  9.37s/it]
+Loading weights:   0%|          | 0/399 [00:00<?, ?it/s]Loading weights:   0%|          | 1/399 [00:00<03:59,  1.66it/s]Loading weights:   4%|▍         | 16/399 [00:00<00:13, 28.73it/s]Loading weights:   7%|▋         | 28/399 [00:00<00:08, 45.24it/s]Loading weights:  11%|█         | 42/399 [00:00<00:05, 64.73it/s]Loading weights:  14%|█▍        | 56/399 [00:01<00:04, 80.53it/s]Loading weights:  18%|█▊        | 70/399 [00:01<00:03, 84.73it/s]Loading weights:  21%|██        | 83/399 [00:01<00:03, 90.00it/s]Loading weights:  24%|██▎       | 94/399 [00:01<00:03, 94.55it/s]Loading weights:  27%|██▋       | 108/399 [00:01<00:02, 106.05it/s]Loading weights:  30%|███       | 120/399 [00:01<00:02, 107.84it/s]Loading weights:  33%|███▎      | 132/399 [00:01<00:02, 108.89it/s]Loading weights:  36%|███▌      | 144/399 [00:01<00:02, 111.37it/s]Loading weights:  39%|███▉      | 156/399 [00:01<00:02, 106.40it/s]Loading weights:  43%|████▎     | 170/399 [00:02<00:02, 108.38it/s]Loading weights:  46%|████▌     | 182/399 [00:02<00:02, 104.16it/s]Loading weights:  49%|████▉     | 196/399 [00:02<00:01, 113.49it/s]Loading weights:  52%|█████▏    | 208/399 [00:02<00:01, 110.62it/s]Loading weights:  56%|█████▌    | 224/399 [00:02<00:01, 116.09it/s]Loading weights:  59%|█████▉    | 236/399 [00:02<00:01, 103.57it/s]Loading weights:  63%|██████▎   | 251/399 [00:02<00:01, 115.06it/s]Loading weights:  66%|██████▌   | 263/399 [00:02<00:01, 113.87it/s]Loading weights:  69%|██████▉   | 275/399 [00:03<00:01, 113.13it/s]Loading weights:  72%|███████▏  | 287/399 [00:03<00:00, 113.71it/s]Loading weights:  75%|███████▌  | 300/399 [00:03<00:00, 103.36it/s]Loading weights:  79%|███████▊  | 314/399 [00:03<00:00, 105.92it/s]Loading weights:  82%|████████▏ | 326/399 [00:03<00:00, 109.44it/s]Loading weights:  85%|████████▍ | 339/399 [00:03<00:00, 114.77it/s]Loading weights:  88%|████████▊ | 351/399 [00:03<00:00, 113.77it/s]Loading weights:  91%|█████████ | 364/399 [00:03<00:00, 115.73it/s]Loading weights:  94%|█████████▍| 376/399 [00:03<00:00, 116.42it/s]Loading weights:  97%|█████████▋| 389/399 [00:04<00:00, 112.40it/s]Loading weights: 100%|██████████| 399/399 [00:04<00:00, 96.23it/s] 
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T2/2 ok=1 answered=1 closed=1 gen_tokens=1553
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T3/1 ok=1 answered=1 closed=1 gen_tokens=1686
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+[l19] think 8/330 (176s)
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T1/3 ok=0 answered=1 closed=1 gen_tokens=2025
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T2/0 ok=1 answered=1 closed=1 gen_tokens=1104
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T2/2 ok=1 answered=1 closed=1 gen_tokens=1389
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T2/4 ok=1 answered=1 closed=1 gen_tokens=1381
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T2/0 ok=1 answered=1 closed=1 gen_tokens=1334
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T2/2 ok=1 answered=1 closed=1 gen_tokens=1075
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T2/4 ok=1 answered=1 closed=1 gen_tokens=1594
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T2/0 ok=1 answered=1 closed=1 gen_tokens=897
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T3/1 ok=1 answered=1 closed=1 gen_tokens=1760
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T3/3 ok=1 answered=1 closed=1 gen_tokens=1830
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T2/2 ok=1 answered=1 closed=1 gen_tokens=1230
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T2/4 ok=1 answered=1 closed=1 gen_tokens=1712
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T3/1 ok=1 answered=1 closed=1 gen_tokens=2002
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T3/3 ok=1 answered=1 closed=1 gen_tokens=1389
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T2/0 ok=1 answered=1 closed=1 gen_tokens=1537
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T2/4 ok=0 answered=0 closed=1 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T3/1 ok=1 answered=1 closed=1 gen_tokens=1042
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T1/1 ok=1 answered=1 closed=1 gen_tokens=1808
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T3/1 ok=0 answered=1 closed=1 gen_tokens=1769
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T4/0 ok=0 answered=1 closed=1 gen_tokens=1972
+[l19] think 88/330 (1923s)
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T2/4 ok=1 answered=1 closed=1 gen_tokens=1271
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T1/3 ok=0 answered=1 closed=1 gen_tokens=1444
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T4/2 ok=1 answered=1 closed=1 gen_tokens=2030
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T1/3 ok=0 answered=1 closed=1 gen_tokens=1917
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T2/0 ok=1 answered=1 closed=1 gen_tokens=1320
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T2/2 ok=1 answered=1 closed=1 gen_tokens=1525
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T2/4 ok=1 answered=1 closed=1 gen_tokens=1403
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T3/1 ok=1 answered=1 closed=1 gen_tokens=729
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T3/3 ok=1 answered=1 closed=1 gen_tokens=1439
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T4/0 ok=1 answered=1 closed=1 gen_tokens=1831
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T2/0 ok=1 answered=1 closed=1 gen_tokens=1074
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T3/1 ok=0 answered=1 closed=1 gen_tokens=983
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T3/3 ok=1 answered=1 closed=1 gen_tokens=936
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T2/2 ok=1 answered=1 closed=1 gen_tokens=1326
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T2/4 ok=1 answered=1 closed=1 gen_tokens=1266
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T3/1 ok=1 answered=1 closed=1 gen_tokens=1850
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T3/3 ok=1 answered=1 closed=1 gen_tokens=1249
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T4/2 ok=1 answered=1 closed=1 gen_tokens=1980
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T1/1 ok=1 answered=1 closed=1 gen_tokens=1505
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T2/0 ok=1 answered=1 closed=1 gen_tokens=1895
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T3/1 ok=0 answered=1 closed=1 gen_tokens=1678
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T4/2 ok=1 answered=1 closed=1 gen_tokens=1849
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T1/3 ok=1 answered=1 closed=1 gen_tokens=1361
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T2/4 ok=1 answered=1 closed=1 gen_tokens=1344
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T3/1 ok=0 answered=1 closed=1 gen_tokens=1569
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T3/3 ok=0 answered=1 closed=1 gen_tokens=1369
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T2/0 ok=1 answered=1 closed=1 gen_tokens=1761
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T2/2 ok=1 answered=1 closed=1 gen_tokens=1224
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+[l19] think 168/330 (3678s)
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T2/0 ok=1 answered=1 closed=1 gen_tokens=2019
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T2/2 ok=0 answered=1 closed=1 gen_tokens=1357
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T2/4 ok=1 answered=1 closed=1 gen_tokens=1324
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T3/1 ok=1 answered=1 closed=1 gen_tokens=1620
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T4/0 ok=1 answered=1 closed=1 gen_tokens=1739
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T2/0 ok=1 answered=1 closed=1 gen_tokens=1304
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T1/1 ok=1 answered=1 closed=1 gen_tokens=2005
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T2/0 ok=1 answered=1 closed=1 gen_tokens=1626
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T2/2 ok=1 answered=1 closed=1 gen_tokens=1968
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T3/3 ok=1 answered=1 closed=1 gen_tokens=935
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T2/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T1/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T1/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T2/0 ok=1 answered=1 closed=1 gen_tokens=1392
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T2/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T2/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T3/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T3/3 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T4/0 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T4/2 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/T4/4 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=寄养猫笼/N12/1 ok=0 answered=1 closed=1 gen_tokens=1861
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=试衣挂杆/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/N10/1 ok=1 answered=1 closed=1 gen_tokens=1680
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/N11/1 ok=1 answered=1 closed=1 gen_tokens=791
+L19_STORY seed=0 system=QWEN3-8B-THINK id=配送机器人/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/N8/1 ok=0 answered=1 closed=1 gen_tokens=1403
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/N9/1 ok=1 answered=1 closed=1 gen_tokens=1804
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=备用变压器间/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=秋千架/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/N9/1 ok=1 answered=1 closed=1 gen_tokens=1032
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+[l19] think 248/330 (5428s)
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/N11/1 ok=1 answered=1 closed=1 gen_tokens=1169
+L19_STORY seed=0 system=QWEN3-8B-THINK id=单车架/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/N10/1 ok=1 answered=1 closed=1 gen_tokens=1276
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=液氮罐/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/N10/1 ok=1 answered=1 closed=1 gen_tokens=1050
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/N11/1 ok=1 answered=1 closed=1 gen_tokens=1228
+L19_STORY seed=0 system=QWEN3-8B-THINK id=换电柜/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/N8/1 ok=1 answered=1 closed=1 gen_tokens=1297
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=皮艇架/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/N10/1 ok=1 answered=1 closed=1 gen_tokens=1967
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=输液架/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=文物展柜/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/N9/1 ok=1 answered=1 closed=1 gen_tokens=1861
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=淬火吊篮/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=蒸笼灶/N12/1 ok=1 answered=1 closed=1 gen_tokens=1172
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=教室伞桶/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/N10/1 ok=1 answered=1 closed=1 gen_tokens=1645
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=山谷吊篮/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/N8/1 ok=1 answered=1 closed=1 gen_tokens=1638
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/N10/1 ok=1 answered=1 closed=1 gen_tokens=1995
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=壁炉柴架/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=船闸/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/N8/1 ok=1 answered=1 closed=1 gen_tokens=1602
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/N9/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/N10/1 ok=1 answered=1 closed=1 gen_tokens=1303
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=露营地/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/N9/1 ok=1 answered=1 closed=1 gen_tokens=1906
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=打印机纸盒/N12/1 ok=1 answered=1 closed=1 gen_tokens=1753
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/N9/1 ok=1 answered=1 closed=1 gen_tokens=1740
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=衣帽架/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/N9/1 ok=1 answered=1 closed=1 gen_tokens=1772
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=产蛋箱/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/N8/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/N9/1 ok=0 answered=1 closed=1 gen_tokens=1908
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/N10/1 ok=0 answered=0 closed=0 gen_tokens=2048
+[l19] think 328/330 (7175s)
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/N11/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_STORY seed=0 system=QWEN3-8B-THINK id=育苗盘/N12/1 ok=0 answered=0 closed=0 gen_tokens=2048
+L19_RES seed=0 system=QWEN3-8B-THINK part=1/2 LONG=21/110 LONG_trap=50/220 T1=4/44 T2=28/66 T3=13/44 T4=5/66 all=71/330 len10=19/62 len11=9/63 len12=9/68 len8=16/71 len9=18/66 nlen10=7/22 nlen11=3/22 nlen12=2/22 nlen8=3/22 nlen9=6/22 normal=21/110 no_answer=246 closed=85 gen_tokens=631167 sec=7348
+[l19] total time 7405.1s
+L19_CONFIG job=think seed=0 part=1/2 data_sha_story=69c5866bf9e4f4715bde1dfff4c9660d7fbc409d0498d73f7258cc0ab9650be6 env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_A100-SXM4-40GB script_sha=8c6d91695b01ecd239702c1b50d66e31e473beb1b6a924f450962a2367fadc52 think_max_new=2048 think_batch=8
