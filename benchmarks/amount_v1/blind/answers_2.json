@@ -1,0 +1,1112 @@
+{
+ "b0275": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0276": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0277": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0278": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0279": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0280": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0281": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0282": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0283": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0284": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0285": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0286": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0287": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0288": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0289": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0290": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0291": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0292": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0293": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0294": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0295": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0296": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0297": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0298": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0299": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0300": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0301": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0302": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0303": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0304": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0305": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0306": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0307": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0308": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0309": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0310": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0311": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0312": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0313": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0314": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0315": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0316": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0317": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0318": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0319": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0320": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0321": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0322": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0323": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0324": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0325": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0326": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0327": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0328": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0329": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0330": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0331": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0332": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0333": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0334": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0335": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0336": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0337": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0338": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0339": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0340": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0341": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0342": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0343": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0344": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0345": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0346": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0347": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0348": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0349": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0350": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0351": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0352": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0353": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0354": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0355": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0356": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0357": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0358": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0359": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0360": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0361": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0362": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0363": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0364": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0365": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0366": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0367": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0368": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0369": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0370": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0371": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0372": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0373": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0374": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0375": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0376": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0377": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0378": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0379": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0380": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0381": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0382": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0383": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0384": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0385": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0386": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0387": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0388": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0389": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0390": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0391": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0392": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0393": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0394": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0395": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0396": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0397": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0398": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0399": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0400": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0401": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0402": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0403": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0404": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0405": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0406": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0407": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0408": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0409": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0410": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0411": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0412": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0413": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0414": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0415": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0416": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0417": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0418": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0419": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0420": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0421": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0422": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0423": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0424": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0425": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0426": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0427": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0428": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0429": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0430": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0431": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0432": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0433": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0434": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0435": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0436": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0437": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0438": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0439": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0440": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0441": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0442": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0443": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0444": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0445": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0446": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0447": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0448": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0449": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0450": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0451": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0452": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0453": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0454": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0455": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0456": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0457": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0458": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0459": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0460": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0461": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0462": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0463": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0464": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0465": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0466": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0467": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0468": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0469": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0470": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0471": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0472": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0473": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0474": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0475": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0476": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0477": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0478": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0479": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0480": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0481": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0482": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0483": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0484": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0485": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0486": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0487": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0488": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0489": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0490": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0491": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0492": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0493": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0494": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0495": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0496": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0497": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0498": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0499": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0500": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0501": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0502": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0503": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0504": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0505": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0506": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0507": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0508": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0509": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0510": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0511": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0512": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0513": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0514": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0515": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0516": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0517": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0518": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0519": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0520": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0521": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0522": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0523": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0524": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0525": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0526": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0527": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0528": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0529": {
+  "event": "IN",
+  "amount": 3
+ },
+ "b0530": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0531": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0532": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0533": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0534": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0535": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0536": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0537": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0538": {
+  "event": "OUT",
+  "amount": 1
+ },
+ "b0539": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0540": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0541": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0542": {
+  "event": "IN",
+  "amount": 2
+ },
+ "b0543": {
+  "event": "OUT",
+  "amount": 2
+ },
+ "b0544": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0545": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0546": {
+  "event": "IN",
+  "amount": 1
+ },
+ "b0547": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "b0548": {
+  "event": "NOOP",
+  "amount": 0
+ },
+ "b0549": {
+  "event": "OUT",
+  "amount": 3
+ },
+ "_notes": {
+  "b0324": "Event is inside a story; treated as IN 3, but could be NOOP if fiction counts as not actual.",
+  "b0443": "Gave the three big fish away; removal from tank implied rather than stated.",
+  "b0468": "Says only 纸盒; assumed to be the printer paper tray.",
+  "b0469": "Count of nutrient-solution bags not stated; assumed 1.",
+  "b0491": "Number of umbrellas not stated; assumed 1.",
+  "b0493": "Notice says the transformers will be moved in tonight; read as a plan (NOOP). Could be IN 2 if read as done.",
+  "b0540": "Library card as system; returning two books treated as OUT 2 from the card's borrowed set.",
+  "b0514": "Log taken from a different 柴架 and placed on 壁炉柴架; IN 1 for this system."
+ }
+}
