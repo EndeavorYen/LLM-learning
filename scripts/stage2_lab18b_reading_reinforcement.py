@@ -1044,6 +1044,14 @@ def main():
     if any(e not in EYES for e in eyes) or len(set(eyes)) != len(eyes):
         raise ValueError(f"LAB18B_EYES={eyes_env!r}; allowed {list(EYES)}")
     eyes = [e for e in EYE_ORDER if e in eyes]
+    # [execution amendment] LAB18B_SEEDS runs a subset of the registered seeds (split over several Colab VMs after
+    # the first attempt lost both VMs mid-run); the aggregator sums the per-log seed=all tallies and checks that the
+    # logs of each eye cover the registered seeds exactly once. Every per-seed computation is unchanged.
+    seeds_env = os.environ.get("LAB18B_SEEDS", "").strip()
+    run_seeds = tuple(int(x) for x in seeds_env.split(",") if x.strip()) if seeds_env else SEEDS
+    if not set(run_seeds) <= set(SEEDS) or len(set(run_seeds)) != len(run_seeds):
+        raise ValueError(f"LAB18B_SEEDS={seeds_env!r}; allowed a subset of {SEEDS}")
+    run_seeds = tuple(s for s in SEEDS if s in run_seeds)
 
     st = load_st()
     extra = load_extra(st)
@@ -1136,7 +1144,7 @@ def main():
             return H.to(DEVICE)
 
         tallies = {(c, m): (ReadTally(t2), ReadTally(t1), Tally(probe)) for c in CELLS for m in METHODS}
-        for seed in SEEDS:
+        for seed in run_seeds:
             for cell in CELLS:
                 a_on, b_on = cell
                 SYS_ON = bool(a_on)
@@ -1188,7 +1196,7 @@ def main():
     log(f"L18B_CONFIG data_sha_st={st['sha']} templates_sha={st['tpl_sha']} data_sha_extra={extra['sha']} "
         f"data_sha_hard={hard['sha']} data_sha_hard_extra={hard['sha_extra']} data_sha_probe={probe['sha']} "
         f"data_sha_rtrain={r1['sha']} data_sha_rtrain2={r2['sha']} data_sha_rtest={t1['sha']} data_sha_rtest2={t2['sha']} "
-        f"env={env_tag} script_sha={script_sha} eyes={','.join(eyes)} seeds={','.join(map(str, SEEDS))} "
+        f"env={env_tag} script_sha={script_sha} eyes={','.join(eyes)} seeds={','.join(map(str, run_seeds))} "
         f"draws={N_DRAWS} cells={','.join(f'A{a}B{b}' for a, b in CELLS)}")
 
 

@@ -45,20 +45,35 @@ def main(argv):
             if line.startswith("L18B_RES "):
                 d = kv(line)
                 key = (d["test"], d["eye"], d["cell"], d["method"], d["seed"])
-                assert key not in res, f"duplicate {key}"
-                res[key] = {k: tuple(map(int, v.split("/"))) for k, v in d.items() if "/" in v}
+                new = {k: tuple(map(int, v.split("/"))) for k, v in d.items() if "/" in v}
+                if key in res:  # seed=all of logs that ran different seed subsets: sum the tallies
+                    assert d["seed"] == "all", f"duplicate per-seed line {key}"
+                    old = res[key]
+                    new = {k: (old.get(k, (0, 0))[0] + new.get(k, (0, 0))[0], old.get(k, (0, 0))[1] + new.get(k, (0, 0))[1])
+                           for k in set(old) | set(new)}
+                res[key] = new
             elif line.startswith("L18B_PROBE "):
                 d = kv(line)
-                prb[(d["eye"], d["cell"], d["method"], d["seed"])] = {k: tuple(map(int, v.split("/"))) for k, v in d.items() if "/" in v}
+                key = (d["eye"], d["cell"], d["method"], d["seed"])
+                new = {k: tuple(map(int, v.split("/"))) for k, v in d.items() if "/" in v}
+                if key in prb:
+                    assert d["seed"] == "all", f"duplicate per-seed probe line {key}"
+                    old = prb[key]
+                    new = {k: (old.get(k, (0, 0))[0] + new.get(k, (0, 0))[0], old.get(k, (0, 0))[1] + new.get(k, (0, 0))[1])
+                           for k in set(old) | set(new)}
+                prb[key] = new
             elif line.startswith("L18B_ITEM "):
                 d = kv(line)
-                items[(d["eye"], d["cell"], d["method"])][d["item"]] = (d["y"], list(map(int, d["preds"].split(","))))
+                k3, pr = (d["eye"], d["cell"], d["method"]), list(map(int, d["preds"].split(",")))
+                if d["item"] in items[k3]:
+                    pr = [a + b for a, b in zip(items[k3][d["item"]][1], pr)]
+                items[k3][d["item"]] = (d["y"], pr)
             elif line.startswith("L18B_CONFIG "):
                 configs.append(kv(line))
     if len(configs) != len(files) and not partial:
         sys.exit("every log needs exactly one L18B_CONFIG line (use --partial to look anyway)")
     for c in configs:
-        bad = ("FAKE" in c.get("env", "") or c.get("seeds") != ",".join(SEEDS) or c.get("draws") != "10"
+        bad = ("FAKE" in c.get("env", "") or not set(c.get("seeds", "").split(",")) <= set(SEEDS) or c.get("draws") != "10"
                or c.get("cells") != ",".join(CELLS))
         bad = bad or any(v is not None and c.get(k) != v for k, v in REG.items())
         if bad and not partial:
@@ -68,8 +83,10 @@ def main(argv):
             sys.exit("v2 data shas not pinned in this aggregator")
         if len({c.get("script_sha") for c in configs}) != 1:
             sys.exit("logs come from different script versions")
-        if sorted(e for c in configs for e in c.get("eyes", "").split(",")) != sorted(EYES):
-            sys.exit("eyes across logs != Q15, Q3E once each")
+        for e in EYES:  # the logs of each eye must cover the registered seeds exactly once
+            got = sorted(s for c in configs if e in c.get("eyes", "").split(",") for s in c.get("seeds", "").split(","))
+            if got != sorted(SEEDS):
+                sys.exit(f"eye {e}: seeds across logs {got} != {sorted(SEEDS)} exactly once")
         miss = [(t, e, c, m, "all") for t in ("v2", "v1") for e in EYES for c in CELLS for m in ("ZERO", "C")
                 if (t, e, c, m, "all") not in res]
         miss += [("v2", e, c, "C", sd) for e in EYES for c in CELLS for sd in SEEDS if ("v2", e, c, "C", sd) not in res]
