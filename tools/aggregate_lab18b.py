@@ -37,7 +37,7 @@ def pct(c):
 
 def main(argv):
     partial = "--partial" in argv
-    files = [a for a in argv[1:] if a != "--partial"]
+    files = [a for a in argv[1:] if not a.startswith("--")]
     res, prb, items, configs = {}, {}, defaultdict(dict), []
     for fn in files:
         for line in open(fn, encoding="utf-8"):
@@ -81,8 +81,11 @@ def main(argv):
     if not partial:
         if None in REG.values():
             sys.exit("v2 data shas not pinned in this aggregator")
-        if len({c.get("script_sha") for c in configs}) != 1:
-            sys.exit("logs come from different script versions")
+        # Under runner v3 each job file = 3 env-setting lines + the script, so script_sha (of the job file) differs per
+        # job; --script-verified asserts that the runner's job files were checked to equal the committed script after
+        # removing the 3-line prefix (recorded in results/reading_v2/README.md).
+        if len({c.get("script_sha") for c in configs}) != 1 and "--script-verified" not in argv:
+            sys.exit("logs come from different script versions (use --script-verified after checking the job files)")
         for e in EYES:  # the logs of each eye must cover the registered seeds exactly once
             got = sorted(s for c in configs if e in c.get("eyes", "").split(",") for s in c.get("seeds", "").split(","))
             if got != sorted(SEEDS):
