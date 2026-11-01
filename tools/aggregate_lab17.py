@@ -118,8 +118,11 @@ for e in eyes:
                                     or int(d["c_old"]) + int(d["c_new"]) != int(d["correct"]):
                                 die(f"L17_{nm} {k}: totals")
                         for cat in CATS:
-                            if k + (cat,) not in HD or int(HD[k + (cat,)]["total"]) != EXP_HARD[cat]:
-                                die(f"L17_HARD {k} {cat}: missing or total")
+                            hd_ = HD.get(k + (cat,))
+                            if hd_ is None or int(hd_["total"]) != EXP_HARD[cat] \
+                                    or int(hd_["t_old"]) + int(hd_["t_new"]) != int(hd_["total"]) \
+                                    or int(hd_["c_old"]) + int(hd_["c_new"]) != int(hd_["correct"]):
+                                die(f"L17_HARD {k} {cat}: missing or totals")
         if EYES[e] and lo == "1":
             for f in FOLDS:
                 for s in SEEDS:
@@ -187,12 +190,12 @@ for e in eyes:
     fr, _x, _y = acc((e, "0", "1", "FACT", "C"))
     print(f"  {e} main cell (LoRA + FACT + hard, C): OLD events {a:.2f}% ({c}/{t}) | NEG->NOOP OLD {neg:.2f}% "
           f"({nc}/{nt}) | events with hard off {a0:.2f}% (drop {a0 - a:+.2f}) | frozen same cell {fr:.2f}% "
-          f"(LoRA gain {a - fr:+.2f})")
+          f"(LoRA gain = main minus frozen, same cell: {a - fr:+.2f})")
     if best is None or a > best[0]:
         best = (a, e, neg, a0 - a, a - fr)
 if best:
     a, e, neg, drop, gain = best
-    print(f"  best eye: {e} = {a:.2f}% | >= 95%: {a >= 95} | negation gate (NEG >= 90 and drop <= 1): "
+    print(f"  best eye{' (PARTIAL)' if missing else ''}: {e} = {a:.2f}% | >= 95%: {a >= 95} | negation gate (NEG >= 90 and drop <= 1): "
           f"{neg >= 90 and drop <= 1} | 93-95%: {93 <= a < 95} | LoRA gain >= 2 points: {gain >= 2}")
 
 print("\n=== main effects on OLD events, method C (mean of the other factors' cells; points) ===")
@@ -222,7 +225,8 @@ for e in eyes:
                 for cat in CATS:
                     a, _c, _t = acc((e, lo, h, hk, m), tab=HD, cat=cat)
                     sc, st = pool(HD, (e, lo, h, hk, m), ("as_surface", "total"), cat)
-                    parts.append(f"{cat} {a:6.2f} [{pct(sc, st):5.1f}]")
+                    an, _c2, _t2 = acc((e, lo, h, hk, m), "new", tab=HD, cat=cat)
+                    parts.append(f"{cat} {a:6.2f} (new {an:6.2f}) [{pct(sc, st):5.1f}]")
                 print(f"  {e} LoRA={lo} hard={h} {hk:<4} {m:<4} " + " | ".join(parts))
 
 print("\n=== initial-state sentences, 8-way, OLD domains ===")
@@ -230,7 +234,8 @@ for e in eyes:
     for lo, h in cells(e):
         for hk in HEADS:
             print(f"  {e} LoRA={lo} hard={h} {hk:<4} " + " | ".join(
-                f"{m} {acc((e, lo, h, hk, m), tab=INI)[0]:6.2f}" for m in METHODS))
+                f"{m} {acc((e, lo, h, hk, m), tab=INI)[0]:6.2f} (new {acc((e, lo, h, hk, m), 'new', tab=INI)[0]:6.2f})"
+                for m in METHODS))
 
 if LORA:
     print("\n=== LoRA loss traces (step:loss), first fold/seed per eye ===")

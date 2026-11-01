@@ -500,7 +500,7 @@ def pool_last(tok, backbone, mtexts):
     enc = tok(mtexts, return_tensors="pt", padding=True, truncation=True, max_length=SENT_MAXLEN).to(DEVICE)
     m = enc.attention_mask
     n = _right_padded(m)
-    h = backbone(input_ids=enc.input_ids, attention_mask=m).last_hidden_state
+    h = backbone(input_ids=enc.input_ids, attention_mask=m, use_cache=False).last_hidden_state
     rows = torch.arange(h.shape[0], device=h.device)
     return h[rows, n - 1].float(), n
 
@@ -632,6 +632,8 @@ def train_lora(eye, tok, backbone, mods, pool_by_dom, guard, seed, fold, hard_on
         opt.step()
         if step in (1, 50, 100, LORA_STEPS):
             trace.append(f"{step}:{float(loss.item()):.4f}")
+    if DEVICE == "cuda":
+        trace.append(f"maxmem_GiB:{torch.cuda.max_memory_allocated() / 2 ** 30:.1f}")
     for m in mods:
         m.drop_on = False
     return trace
@@ -832,13 +834,20 @@ def main():
         model = (AutoModelForCausalLM if kind == "causal" else AutoModel).from_pretrained(
             mid, dtype=torch.bfloat16, device_map=DEVICE)
         model.eval()
+        model.requires_grad_(False)  # [review D1] HF loads weights with requires_grad=True
         backbone = backbone_of(eye, model)
         hid = model.config.hidden_size
         assert hid == dim, (eye, hid)
         mods = inject_lora(backbone) if tunable else []
-        for p in model.parameters():
-            assert not p.requires_grad or tunable
-        log(f"[l17] {eye}: {mid} loaded in {time.time() - t0:.1f}s | hidden {hid} | LoRA modules {len(mods)}")
+        n_layers = getattr(model.config, "num_hidden_layers", None)
+        if tunable and "FAKE" not in getattr(transformers, "__version__", ""):  # [review D1] all q/k/v/o wrapped
+            assert len(mods) == len(LORA_TARGETS) * n_layers, (len(mods), n_layers)
+        lora_ids = {id(m.A) for m in mods} | {id(m.B) for m in mods}
+        assert all(id(p) in lora_ids for p in model.parameters() if p.requires_grad)
+        last_ids = {tok(model_text(eye, s)).input_ids[-1] for s in table["texts"][:5]}
+        log(f"[l17] {eye}: {mid} loaded in {time.time() - t0:.1f}s | hidden {hid} | layers {n_layers} | LoRA modules "
+            f"{len(mods)} | revision {getattr(model.config, '_commit_hash', '?')} | pooled token ids {sorted(last_ids)} "
+            f"(eos {getattr(tok, 'eos_token_id', None)}, pad {getattr(tok, 'pad_token_id', None)})")
 
         def feats(tag, check):
             H, mx, mc = extract17(tok, backbone, table["texts"], eye, guard, f"{eye}/{tag}/st", check)
