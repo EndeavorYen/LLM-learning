@@ -1,0 +1,506 @@
+{
+ "1": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "图书借阅证",
+  "sentence": "管理员误操作，把借阅限额系统关闭了。"
+ },
+ "2": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "渡轮",
+  "sentence": "超载报警器经过维修，重新投入使用。"
+ },
+ "3": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "离心机",
+  "sentence": "有人嫌麻烦，把平衡保护锁强行关掉了。"
+ },
+ "4": {
+  "letter": "D",
+  "cls": "L3_ok",
+  "domain": "图书借阅证",
+  "sentence": "这张证上目前借着三本书，额度已经用完，借阅限额系统运行正常。"
+ },
+ "5": {
+  "letter": "C",
+  "cls": "L2_ok",
+  "domain": "杠铃架",
+  "sentence": "此刻挂片杆上挂着两片杠铃片，保险销牢牢插在杆口。"
+ },
+ "6": {
+  "letter": "H",
+  "cls": "L3_broken",
+  "domain": "课后托管班",
+  "sentence": "班里现在托管着三名孩子，名额已满，签到系统出了故障，处于瘫痪状态。"
+ },
+ "7": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "晾衣绳",
+  "sentence": "爷爷把折叠晾衣架修好了。"
+ },
+ "8": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "储钱罐",
+  "sentence": "文具店老板帮忙修复了投币口挡片。"
+ },
+ "9": {
+  "letter": "H",
+  "cls": "L3_broken",
+  "domain": "花瓶",
+  "sentence": "眼下瓶里插着三枝花，已经插满，瓶口限位圈已经松脱了。"
+ },
+ "10": {
+  "letter": "H",
+  "cls": "L3_broken",
+  "domain": "邮包",
+  "sentence": "眼下邮包里装着三捆信，已经塞满，加固缝线已经绽开了。"
+ },
+ "11": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "邮包",
+  "sentence": "窗口的同事递来一捆加急信，邮递员收进了邮包。"
+ },
+ "12": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "课后托管班",
+  "sentence": "一位妈妈给孩子办好手续，班里新收了一名学生。"
+ },
+ "13": {
+  "letter": "H",
+  "cls": "L3_broken",
+  "domain": "渡轮",
+  "sentence": "眼下甲板上停着三辆车，车位已经停满，超载报警器的线路烧坏了，不会响了。"
+ },
+ "14": {
+  "letter": "A",
+  "cls": "L0_ok",
+  "domain": "离心机",
+  "sentence": "此刻转子里插着零管样品，孔位全空，平衡保护锁工作正常。"
+ },
+ "15": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "图书借阅证",
+  "sentence": "图书馆门口贴出了读书节的海报。"
+ },
+ "16": {
+  "letter": "B",
+  "cls": "L1_ok",
+  "domain": "课后托管班",
+  "sentence": "班里现在托管着一名孩子，签到系统运行正常。"
+ },
+ "17": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "杠铃架",
+  "sentence": "小伙子做完硬拉，把一片铁片放回架上。"
+ },
+ "18": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "杠铃架",
+  "sentence": "有人搬器材时撞弯了保险销，它再也插不进杆口。"
+ },
+ "19": {
+  "letter": "A",
+  "cls": "L0_ok",
+  "domain": "晾衣绳",
+  "sentence": "现在绳上晾着的衣服数为零，什么也没挂，折叠晾衣架完好能用。"
+ },
+ "20": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "课后托管班",
+  "sentence": "托管班送走了一名要出国读书的孩子。"
+ },
+ "21": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "晾衣绳",
+  "sentence": "院墙上的麻雀叽叽喳喳叫个不停。"
+ },
+ "22": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "蹦床",
+  "sentence": "入口计数闸的感应器被口香糖糊住，失灵了。"
+ },
+ "23": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "离心机",
+  "sentence": "技术员更换配件后，平衡保护锁恢复正常。"
+ },
+ "24": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "渡轮",
+  "sentence": "渡轮靠岸后，又上来一辆小汽车。"
+ },
+ "25": {
+  "letter": "A",
+  "cls": "L0_ok",
+  "domain": "杠铃架",
+  "sentence": "此刻挂片杆上挂着零片杠铃片，光秃秃的，保险销牢牢插在杆口。"
+ },
+ "26": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "手推车",
+  "sentence": "检修之后，防翻支架恢复了正常。"
+ },
+ "27": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "书架",
+  "sentence": "社区图书角的志愿者从书架上领走了一箱书。"
+ },
+ "28": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "储钱罐",
+  "sentence": "爸爸掏出口袋里的一枚硬币，丢进了储钱罐。"
+ },
+ "29": {
+  "letter": "G",
+  "cls": "L2_broken",
+  "domain": "邮包",
+  "sentence": "眼下邮包里装着两捆信，加固缝线已经绽开了。"
+ },
+ "30": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "蹦床",
+  "sentence": "又有一位小朋友排到号，跳上了蹦床。"
+ },
+ "31": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "书架",
+  "sentence": "限重蜂鸣器被修复，报警功能一切正常。"
+ },
+ "32": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "蹦床",
+  "sentence": "家长们坐在长椅上聊天喝茶。"
+ },
+ "33": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "花瓶",
+  "sentence": "瓶口限位圈的卡扣断了，圈子歪到了一边。"
+ },
+ "34": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "手推车",
+  "sentence": "防翻支架的焊点开裂，再也撑不住车身。"
+ },
+ "35": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "杠铃架",
+  "sentence": "管理员给挂片杆装上了一根新的保险销。"
+ },
+ "36": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "杠铃架",
+  "sentence": "窗外的天色渐渐暗了下来。"
+ },
+ "37": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "手推车",
+  "sentence": "帮工把车斗里的一袋土倒在了果树根下。"
+ },
+ "38": {
+  "letter": "A",
+  "cls": "L0_ok",
+  "domain": "手推车",
+  "sentence": "车斗里眼下装着零袋土，空荡荡的，防翻支架稳稳地撑在车底。"
+ },
+ "39": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "邮包",
+  "sentence": "邮包被铁门勾了一下，加固缝线绷断了。"
+ },
+ "40": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "书架",
+  "sentence": "限重蜂鸣器的电池耗尽，彻底哑了。"
+ },
+ "41": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "花瓶",
+  "sentence": "爸爸给花瓶换上了新的瓶口限位圈。"
+ },
+ "42": {
+  "letter": "G",
+  "cls": "L2_broken",
+  "domain": "蹦床",
+  "sentence": "眼下蹦床上有两位小朋友在跳，入口计数闸出了故障，拦不住人了。"
+ },
+ "43": {
+  "letter": "A",
+  "cls": "L0_ok",
+  "domain": "渡轮",
+  "sentence": "眼下甲板上停着零辆车，空荡荡的，超载报警器运转正常。"
+ },
+ "44": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "储钱罐",
+  "sentence": "猫咪趴在储钱罐旁边睡着了。"
+ },
+ "45": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "图书借阅证",
+  "sentence": "图书馆请来工程师，让借阅限额系统重新运转起来。"
+ },
+ "46": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "渡轮",
+  "sentence": "海水渗进了超载报警器的电路板，报警器彻底哑了。"
+ },
+ "47": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "手推车",
+  "sentence": "工人扛来一袋泥土，放进了车斗。"
+ },
+ "48": {
+  "letter": "A",
+  "cls": "L0_ok",
+  "domain": "储钱罐",
+  "sentence": "眼下罐里装着零枚硬币，是空的，投币口挡片灵活好用。"
+ },
+ "49": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "离心机",
+  "sentence": "导师在办公室里接了个电话。"
+ },
+ "50": {
+  "letter": "D",
+  "cls": "L3_ok",
+  "domain": "书架",
+  "sentence": "眼下书架上放着三箱书，已经放满，限重蜂鸣器工作正常。"
+ },
+ "51": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "课后托管班",
+  "sentence": "老师在黑板上画了一棵圣诞树。"
+ },
+ "52": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "离心机",
+  "sentence": "护士送来一管血清，技术员把它装进了转子。"
+ },
+ "53": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "课后托管班",
+  "sentence": "签到系统的服务费到期，系统被停用了。"
+ },
+ "54": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "书架",
+  "sentence": "邻居搬家前送来一箱小说，爸爸把它放上了书架。"
+ },
+ "55": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "图书借阅证",
+  "sentence": "到期前，持证人去前台归还了一本历史书。"
+ },
+ "56": {
+  "letter": "B",
+  "cls": "L1_ok",
+  "domain": "晾衣绳",
+  "sentence": "现在绳上挂着一件衣服，折叠晾衣架完好能用。"
+ },
+ "57": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "邮包",
+  "sentence": "邮递员在街道办门口从包里卸下一捆信。"
+ },
+ "58": {
+  "letter": "B",
+  "cls": "L1_ok",
+  "domain": "书架",
+  "sentence": "眼下书架上放着一箱书，限重蜂鸣器工作正常。"
+ },
+ "59": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "邮包",
+  "sentence": "后勤师傅给邮包重新走了一遍加固缝线。"
+ },
+ "60": {
+  "letter": "E",
+  "cls": "L0_broken",
+  "domain": "储钱罐",
+  "sentence": "眼下罐里装着零枚硬币，是空的，投币口挡片已经卡坏了。"
+ },
+ "61": {
+  "letter": "C",
+  "cls": "L2_ok",
+  "domain": "图书借阅证",
+  "sentence": "这张证上目前借着两本书，借阅限额系统运行正常。"
+ },
+ "62": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "晾衣绳",
+  "sentence": "爸爸急着出门，从绳上扯下一件外套就穿上了。"
+ },
+ "63": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "离心机",
+  "sentence": "技术员从转子里取走一管细胞，放进了冰箱。"
+ },
+ "64": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "花瓶",
+  "sentence": "女儿从院子里剪来一枝月季，插进了花瓶。"
+ },
+ "65": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "渡轮",
+  "sentence": "几只海鸥绕着渡轮的桅杆盘旋。"
+ },
+ "66": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "晾衣绳",
+  "sentence": "奶奶把洗好的一件衬衫挂上了晾衣绳。"
+ },
+ "67": {
+  "letter": "G",
+  "cls": "L2_broken",
+  "domain": "花瓶",
+  "sentence": "眼下瓶里插着两枝花，瓶口限位圈已经松脱了。"
+ },
+ "68": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "邮包",
+  "sentence": "邮局门口的梧桐树落了几片叶子。"
+ },
+ "69": {
+  "letter": "F",
+  "cls": "L1_broken",
+  "domain": "手推车",
+  "sentence": "车斗里眼下装着一袋土，防翻支架已经断裂松垮。"
+ },
+ "70": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "储钱罐",
+  "sentence": "小狗把投币口挡片啃坏了。"
+ },
+ "71": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "课后托管班",
+  "sentence": "签到系统完成检修，名额核对又能用了。"
+ },
+ "72": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "渡轮",
+  "sentence": "渡轮靠岸，一辆小轿车从甲板上开了下去。"
+ },
+ "73": {
+  "letter": "C",
+  "cls": "L2_ok",
+  "domain": "蹦床",
+  "sentence": "眼下蹦床上有两位小朋友在跳，入口计数闸运转正常。"
+ },
+ "74": {
+  "letter": "D",
+  "cls": "FIX",
+  "domain": "蹦床",
+  "sentence": "游乐场换上了新的入口计数闸。"
+ },
+ "75": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "书架",
+  "sentence": "爸爸给书架旁的绿萝浇了水。"
+ },
+ "76": {
+  "letter": "C",
+  "cls": "BREAK",
+  "domain": "晾衣绳",
+  "sentence": "家里的狗把折叠晾衣架咬坏了。"
+ },
+ "77": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "杠铃架",
+  "sentence": "一个练弓步的姑娘顺手取走了架上的一片杠铃片。"
+ },
+ "78": {
+  "letter": "A",
+  "cls": "IN",
+  "domain": "图书借阅证",
+  "sentence": "馆员把一本刚上架的科普书登记到了这张证上。"
+ },
+ "79": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "储钱罐",
+  "sentence": "妹妹把储钱罐倒过来摇了摇，抖出了一枚硬币。"
+ },
+ "80": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "花瓶",
+  "sentence": "女儿给花瓶画了一幅素描。"
+ },
+ "81": {
+  "letter": "E",
+  "cls": "NOOP",
+  "domain": "手推车",
+  "sentence": "园丁停下来擦了擦额头上的汗。"
+ },
+ "82": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "花瓶",
+  "sentence": "小猫叼走了瓶里的一枝狗尾巴草。"
+ },
+ "83": {
+  "letter": "B",
+  "cls": "OUT",
+  "domain": "蹦床",
+  "sentence": "教练把一位哭鼻子的小男孩从蹦床上抱了下来。"
+ },
+ "84": {
+  "letter": "B",
+  "cls": "L1_ok",
+  "domain": "离心机",
+  "sentence": "此刻转子里插着一管样品，平衡保护锁工作正常。"
+ }
+}
