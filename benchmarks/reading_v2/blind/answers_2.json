@@ -1,0 +1,1263 @@
+[
+ {
+  "n": 1,
+  "label": "OUT"
+ },
+ {
+  "n": 2,
+  "label": "NOOP"
+ },
+ {
+  "n": 3,
+  "label": "BREAK"
+ },
+ {
+  "n": 4,
+  "label": "IN"
+ },
+ {
+  "n": 5,
+  "label": "NOOP"
+ },
+ {
+  "n": 6,
+  "label": "NOOP"
+ },
+ {
+  "n": 7,
+  "label": "FIX"
+ },
+ {
+  "n": 8,
+  "label": "OUT"
+ },
+ {
+  "n": 9,
+  "label": "BREAK"
+ },
+ {
+  "n": 10,
+  "label": "NOOP"
+ },
+ {
+  "n": 11,
+  "label": "NOOP"
+ },
+ {
+  "n": 12,
+  "label": "BREAK"
+ },
+ {
+  "n": 13,
+  "label": "OUT"
+ },
+ {
+  "n": 14,
+  "label": "NOOP"
+ },
+ {
+  "n": 15,
+  "label": "BREAK"
+ },
+ {
+  "n": 16,
+  "label": "FIX"
+ },
+ {
+  "n": 17,
+  "label": "NOOP"
+ },
+ {
+  "n": 18,
+  "label": "NOOP"
+ },
+ {
+  "n": 19,
+  "label": "BREAK",
+  "note": "barrier stuck in raised position = cannot block, treated as BREAK"
+ },
+ {
+  "n": 20,
+  "label": "NOOP"
+ },
+ {
+  "n": 21,
+  "label": "NOOP"
+ },
+ {
+  "n": 22,
+  "label": "NOOP"
+ },
+ {
+  "n": 23,
+  "label": "FIX"
+ },
+ {
+  "n": 24,
+  "label": "NOOP"
+ },
+ {
+  "n": 25,
+  "label": "FIX"
+ },
+ {
+  "n": 26,
+  "label": "NOOP"
+ },
+ {
+  "n": 27,
+  "label": "NOOP"
+ },
+ {
+  "n": 28,
+  "label": "NOOP"
+ },
+ {
+  "n": 29,
+  "label": "NOOP"
+ },
+ {
+  "n": 30,
+  "label": "NOOP"
+ },
+ {
+  "n": 31,
+  "label": "NOOP"
+ },
+ {
+  "n": 32,
+  "label": "NOOP"
+ },
+ {
+  "n": 33,
+  "label": "OUT"
+ },
+ {
+  "n": 34,
+  "label": "NOOP"
+ },
+ {
+  "n": 35,
+  "label": "OUT"
+ },
+ {
+  "n": 36,
+  "label": "NOOP"
+ },
+ {
+  "n": 37,
+  "label": "NOOP"
+ },
+ {
+  "n": 38,
+  "label": "BREAK"
+ },
+ {
+  "n": 39,
+  "label": "NOOP"
+ },
+ {
+  "n": 40,
+  "label": "NOOP"
+ },
+ {
+  "n": 41,
+  "label": "IN"
+ },
+ {
+  "n": 42,
+  "label": "NOOP"
+ },
+ {
+  "n": 43,
+  "label": "OUT"
+ },
+ {
+  "n": 44,
+  "label": "NOOP"
+ },
+ {
+  "n": 45,
+  "label": "OUT"
+ },
+ {
+  "n": 46,
+  "label": "IN"
+ },
+ {
+  "n": 47,
+  "label": "OUT"
+ },
+ {
+  "n": 48,
+  "label": "OUT",
+  "note": "handed parcel to another robot; leaves this one"
+ },
+ {
+  "n": 49,
+  "label": "OUT"
+ },
+ {
+  "n": 50,
+  "label": "NOOP"
+ },
+ {
+  "n": 51,
+  "label": "NOOP"
+ },
+ {
+  "n": 52,
+  "label": "NOOP"
+ },
+ {
+  "n": 53,
+  "label": "BREAK"
+ },
+ {
+  "n": 54,
+  "label": "BREAK"
+ },
+ {
+  "n": 55,
+  "label": "NOOP"
+ },
+ {
+  "n": 56,
+  "label": "OUT"
+ },
+ {
+  "n": 57,
+  "label": "BREAK"
+ },
+ {
+  "n": 58,
+  "label": "FIX"
+ },
+ {
+  "n": 59,
+  "label": "OUT"
+ },
+ {
+  "n": 60,
+  "label": "NOOP"
+ },
+ {
+  "n": 61,
+  "label": "NOOP"
+ },
+ {
+  "n": 62,
+  "label": "OUT"
+ },
+ {
+  "n": 63,
+  "label": "NOOP"
+ },
+ {
+  "n": 64,
+  "label": "NOOP"
+ },
+ {
+  "n": 65,
+  "label": "NOOP"
+ },
+ {
+  "n": 66,
+  "label": "NOOP"
+ },
+ {
+  "n": 67,
+  "label": "NOOP"
+ },
+ {
+  "n": 68,
+  "label": "NOOP"
+ },
+ {
+  "n": 69,
+  "label": "BREAK"
+ },
+ {
+  "n": 70,
+  "label": "BREAK"
+ },
+ {
+  "n": 71,
+  "label": "BREAK"
+ },
+ {
+  "n": 72,
+  "label": "IN"
+ },
+ {
+  "n": 73,
+  "label": "NOOP"
+ },
+ {
+  "n": 74,
+  "label": "BREAK"
+ },
+ {
+  "n": 75,
+  "label": "NOOP"
+ },
+ {
+  "n": 76,
+  "label": "BREAK"
+ },
+ {
+  "n": 77,
+  "label": "NOOP"
+ },
+ {
+  "n": 78,
+  "label": "IN"
+ },
+ {
+  "n": 79,
+  "label": "IN"
+ },
+ {
+  "n": 80,
+  "label": "FIX"
+ },
+ {
+  "n": 81,
+  "label": "NOOP"
+ },
+ {
+  "n": 82,
+  "label": "NOOP"
+ },
+ {
+  "n": 83,
+  "label": "NOOP"
+ },
+ {
+  "n": 84,
+  "label": "IN"
+ },
+ {
+  "n": 85,
+  "label": "NOOP"
+ },
+ {
+  "n": 86,
+  "label": "BREAK"
+ },
+ {
+  "n": 87,
+  "label": "FIX"
+ },
+ {
+  "n": 88,
+  "label": "IN"
+ },
+ {
+  "n": 89,
+  "label": "NOOP"
+ },
+ {
+  "n": 90,
+  "label": "NOOP"
+ },
+ {
+  "n": 91,
+  "label": "FIX"
+ },
+ {
+  "n": 92,
+  "label": "NOOP"
+ },
+ {
+  "n": 93,
+  "label": "BREAK"
+ },
+ {
+  "n": 94,
+  "label": "NOOP"
+ },
+ {
+  "n": 95,
+  "label": "NOOP"
+ },
+ {
+  "n": 96,
+  "label": "NOOP"
+ },
+ {
+  "n": 97,
+  "label": "NOOP"
+ },
+ {
+  "n": 98,
+  "label": "BREAK"
+ },
+ {
+  "n": 99,
+  "label": "NOOP"
+ },
+ {
+  "n": 100,
+  "label": "NOOP"
+ },
+ {
+  "n": 101,
+  "label": "OUT"
+ },
+ {
+  "n": 102,
+  "label": "FIX"
+ },
+ {
+  "n": 103,
+  "label": "NOOP"
+ },
+ {
+  "n": 104,
+  "label": "BREAK"
+ },
+ {
+  "n": 105,
+  "label": "BREAK"
+ },
+ {
+  "n": 106,
+  "label": "OUT"
+ },
+ {
+  "n": 107,
+  "label": "IN"
+ },
+ {
+  "n": 108,
+  "label": "NOOP"
+ },
+ {
+  "n": 109,
+  "label": "NOOP"
+ },
+ {
+  "n": 110,
+  "label": "NOOP"
+ },
+ {
+  "n": 111,
+  "label": "NOOP"
+ },
+ {
+  "n": 112,
+  "label": "IN",
+  "note": "document envelope (文件袋) put into empty slot; counted as one item"
+ },
+ {
+  "n": 113,
+  "label": "IN"
+ },
+ {
+  "n": 114,
+  "label": "NOOP"
+ },
+ {
+  "n": 115,
+  "label": "NOOP"
+ },
+ {
+  "n": 116,
+  "label": "NOOP"
+ },
+ {
+  "n": 117,
+  "label": "FIX"
+ },
+ {
+  "n": 118,
+  "label": "NOOP"
+ },
+ {
+  "n": 119,
+  "label": "NOOP"
+ },
+ {
+  "n": 120,
+  "label": "FIX"
+ },
+ {
+  "n": 121,
+  "label": "BREAK"
+ },
+ {
+  "n": 122,
+  "label": "OUT"
+ },
+ {
+  "n": 123,
+  "label": "OUT"
+ },
+ {
+  "n": 124,
+  "label": "NOOP"
+ },
+ {
+  "n": 125,
+  "label": "IN"
+ },
+ {
+  "n": 126,
+  "label": "IN"
+ },
+ {
+  "n": 127,
+  "label": "NOOP"
+ },
+ {
+  "n": 128,
+  "label": "IN"
+ },
+ {
+  "n": 129,
+  "label": "NOOP"
+ },
+ {
+  "n": 130,
+  "label": "BREAK"
+ },
+ {
+  "n": 131,
+  "label": "NOOP"
+ },
+ {
+  "n": 132,
+  "label": "NOOP"
+ },
+ {
+  "n": 133,
+  "label": "IN"
+ },
+ {
+  "n": 134,
+  "label": "OUT"
+ },
+ {
+  "n": 135,
+  "label": "NOOP"
+ },
+ {
+  "n": 136,
+  "label": "NOOP"
+ },
+ {
+  "n": 137,
+  "label": "NOOP"
+ },
+ {
+  "n": 138,
+  "label": "NOOP"
+ },
+ {
+  "n": 139,
+  "label": "NOOP"
+ },
+ {
+  "n": 140,
+  "label": "OUT"
+ },
+ {
+  "n": 141,
+  "label": "NOOP"
+ },
+ {
+  "n": 142,
+  "label": "NOOP"
+ },
+ {
+  "n": 143,
+  "label": "FIX"
+ },
+ {
+  "n": 144,
+  "label": "IN"
+ },
+ {
+  "n": 145,
+  "label": "FIX"
+ },
+ {
+  "n": 146,
+  "label": "NOOP"
+ },
+ {
+  "n": 147,
+  "label": "BREAK"
+ },
+ {
+  "n": 148,
+  "label": "NOOP"
+ },
+ {
+  "n": 149,
+  "label": "NOOP"
+ },
+ {
+  "n": 150,
+  "label": "IN"
+ },
+ {
+  "n": 151,
+  "label": "NOOP"
+ },
+ {
+  "n": 152,
+  "label": "NOOP"
+ },
+ {
+  "n": 153,
+  "label": "IN"
+ },
+ {
+  "n": 154,
+  "label": "FIX"
+ },
+ {
+  "n": 155,
+  "label": "FIX"
+ },
+ {
+  "n": 156,
+  "label": "NOOP"
+ },
+ {
+  "n": 157,
+  "label": "IN"
+ },
+ {
+  "n": 158,
+  "label": "IN"
+ },
+ {
+  "n": 159,
+  "label": "NOOP"
+ },
+ {
+  "n": 160,
+  "label": "FIX"
+ },
+ {
+  "n": 161,
+  "label": "OUT"
+ },
+ {
+  "n": 162,
+  "label": "NOOP"
+ },
+ {
+  "n": 163,
+  "label": "OUT"
+ },
+ {
+  "n": 164,
+  "label": "NOOP"
+ },
+ {
+  "n": 165,
+  "label": "NOOP"
+ },
+ {
+  "n": 166,
+  "label": "NOOP"
+ },
+ {
+  "n": 167,
+  "label": "OUT"
+ },
+ {
+  "n": 168,
+  "label": "NOOP"
+ },
+ {
+  "n": 169,
+  "label": "NOOP"
+ },
+ {
+  "n": 170,
+  "label": "NOOP"
+ },
+ {
+  "n": 171,
+  "label": "NOOP"
+ },
+ {
+  "n": 172,
+  "label": "IN"
+ },
+ {
+  "n": 173,
+  "label": "BREAK"
+ },
+ {
+  "n": 174,
+  "label": "OUT"
+ },
+ {
+  "n": 175,
+  "label": "NOOP"
+ },
+ {
+  "n": 176,
+  "label": "NOOP"
+ },
+ {
+  "n": 177,
+  "label": "NOOP"
+ },
+ {
+  "n": 178,
+  "label": "IN"
+ },
+ {
+  "n": 179,
+  "label": "NOOP"
+ },
+ {
+  "n": 180,
+  "label": "IN"
+ },
+ {
+  "n": 181,
+  "label": "IN"
+ },
+ {
+  "n": 182,
+  "label": "OUT"
+ },
+ {
+  "n": 183,
+  "label": "FIX"
+ },
+ {
+  "n": 184,
+  "label": "NOOP"
+ },
+ {
+  "n": 185,
+  "label": "OUT"
+ },
+ {
+  "n": 186,
+  "label": "FIX"
+ },
+ {
+  "n": 187,
+  "label": "BREAK"
+ },
+ {
+  "n": 188,
+  "label": "NOOP"
+ },
+ {
+  "n": 189,
+  "label": "IN"
+ },
+ {
+  "n": 190,
+  "label": "NOOP"
+ },
+ {
+  "n": 191,
+  "label": "NOOP"
+ },
+ {
+  "n": 192,
+  "label": "BREAK"
+ },
+ {
+  "n": 193,
+  "label": "BREAK"
+ },
+ {
+  "n": 194,
+  "label": "NOOP"
+ },
+ {
+  "n": 195,
+  "label": "NOOP"
+ },
+ {
+  "n": 196,
+  "label": "BREAK"
+ },
+ {
+  "n": 197,
+  "label": "OUT"
+ },
+ {
+  "n": 198,
+  "label": "IN"
+ },
+ {
+  "n": 199,
+  "label": "OUT"
+ },
+ {
+  "n": 200,
+  "label": "FIX"
+ },
+ {
+  "n": 201,
+  "label": "NOOP"
+ },
+ {
+  "n": 202,
+  "label": "NOOP"
+ },
+ {
+  "n": 203,
+  "label": "BREAK"
+ },
+ {
+  "n": 204,
+  "label": "NOOP"
+ },
+ {
+  "n": 205,
+  "label": "NOOP"
+ },
+ {
+  "n": 206,
+  "label": "NOOP"
+ },
+ {
+  "n": 207,
+  "label": "NOOP"
+ },
+ {
+  "n": 208,
+  "label": "NOOP"
+ },
+ {
+  "n": 209,
+  "label": "NOOP"
+ },
+ {
+  "n": 210,
+  "label": "FIX"
+ },
+ {
+  "n": 211,
+  "label": "OUT"
+ },
+ {
+  "n": 212,
+  "label": "OUT"
+ },
+ {
+  "n": 213,
+  "label": "NOOP"
+ },
+ {
+  "n": 214,
+  "label": "NOOP"
+ },
+ {
+  "n": 215,
+  "label": "NOOP"
+ },
+ {
+  "n": 216,
+  "label": "BREAK"
+ },
+ {
+  "n": 217,
+  "label": "NOOP"
+ },
+ {
+  "n": 218,
+  "label": "NOOP"
+ },
+ {
+  "n": 219,
+  "label": "FIX"
+ },
+ {
+  "n": 220,
+  "label": "IN"
+ },
+ {
+  "n": 221,
+  "label": "OUT"
+ },
+ {
+  "n": 222,
+  "label": "BREAK"
+ },
+ {
+  "n": 223,
+  "label": "IN"
+ },
+ {
+  "n": 224,
+  "label": "FIX"
+ },
+ {
+  "n": 225,
+  "label": "NOOP"
+ },
+ {
+  "n": 226,
+  "label": "NOOP"
+ },
+ {
+  "n": 227,
+  "label": "NOOP"
+ },
+ {
+  "n": 228,
+  "label": "FIX"
+ },
+ {
+  "n": 229,
+  "label": "OUT"
+ },
+ {
+  "n": 230,
+  "label": "NOOP"
+ },
+ {
+  "n": 231,
+  "label": "NOOP"
+ },
+ {
+  "n": 232,
+  "label": "NOOP"
+ },
+ {
+  "n": 233,
+  "label": "IN",
+  "note": "recipient (not sender) placing own parcel in; still IN"
+ },
+ {
+  "n": 234,
+  "label": "NOOP"
+ },
+ {
+  "n": 235,
+  "label": "NOOP"
+ },
+ {
+  "n": 236,
+  "label": "OUT"
+ },
+ {
+  "n": 237,
+  "label": "NOOP"
+ },
+ {
+  "n": 238,
+  "label": "NOOP"
+ },
+ {
+  "n": 239,
+  "label": "IN"
+ },
+ {
+  "n": 240,
+  "label": "FIX"
+ },
+ {
+  "n": 241,
+  "label": "NOOP"
+ },
+ {
+  "n": 242,
+  "label": "NOOP"
+ },
+ {
+  "n": 243,
+  "label": "NOOP"
+ },
+ {
+  "n": 244,
+  "label": "OUT"
+ },
+ {
+  "n": 245,
+  "label": "NOOP"
+ },
+ {
+  "n": 246,
+  "label": "FIX"
+ },
+ {
+  "n": 247,
+  "label": "FIX"
+ },
+ {
+  "n": 248,
+  "label": "FIX"
+ },
+ {
+  "n": 249,
+  "label": "OUT"
+ },
+ {
+  "n": 250,
+  "label": "NOOP"
+ },
+ {
+  "n": 251,
+  "label": "IN"
+ },
+ {
+  "n": 252,
+  "label": "NOOP"
+ },
+ {
+  "n": 253,
+  "label": "NOOP"
+ },
+ {
+  "n": 254,
+  "label": "NOOP"
+ },
+ {
+  "n": 255,
+  "label": "NOOP"
+ },
+ {
+  "n": 256,
+  "label": "IN"
+ },
+ {
+  "n": 257,
+  "label": "FIX"
+ },
+ {
+  "n": 258,
+  "label": "OUT"
+ },
+ {
+  "n": 259,
+  "label": "IN"
+ },
+ {
+  "n": 260,
+  "label": "NOOP"
+ },
+ {
+  "n": 261,
+  "label": "NOOP"
+ },
+ {
+  "n": 262,
+  "label": "NOOP"
+ },
+ {
+  "n": 263,
+  "label": "FIX"
+ },
+ {
+  "n": 264,
+  "label": "IN"
+ },
+ {
+  "n": 265,
+  "label": "OUT"
+ },
+ {
+  "n": 266,
+  "label": "BREAK"
+ },
+ {
+  "n": 267,
+  "label": "IN"
+ },
+ {
+  "n": 268,
+  "label": "BREAK"
+ },
+ {
+  "n": 269,
+  "label": "IN"
+ },
+ {
+  "n": 270,
+  "label": "IN"
+ },
+ {
+  "n": 271,
+  "label": "OUT"
+ },
+ {
+  "n": 272,
+  "label": "NOOP"
+ },
+ {
+  "n": 273,
+  "label": "NOOP"
+ },
+ {
+  "n": 274,
+  "label": "FIX"
+ },
+ {
+  "n": 275,
+  "label": "IN"
+ },
+ {
+  "n": 276,
+  "label": "IN"
+ },
+ {
+  "n": 277,
+  "label": "FIX"
+ },
+ {
+  "n": 278,
+  "label": "NOOP"
+ },
+ {
+  "n": 279,
+  "label": "OUT"
+ },
+ {
+  "n": 280,
+  "label": "FIX"
+ },
+ {
+  "n": 281,
+  "label": "BREAK",
+  "note": "sensor stuck/frozen, treated as BREAK"
+ },
+ {
+  "n": 282,
+  "label": "NOOP"
+ },
+ {
+  "n": 283,
+  "label": "NOOP"
+ },
+ {
+  "n": 284,
+  "label": "NOOP"
+ },
+ {
+  "n": 285,
+  "label": "NOOP"
+ },
+ {
+  "n": 286,
+  "label": "NOOP"
+ },
+ {
+  "n": 287,
+  "label": "OUT"
+ },
+ {
+  "n": 288,
+  "label": "BREAK"
+ },
+ {
+  "n": 289,
+  "label": "FIX"
+ },
+ {
+  "n": 290,
+  "label": "NOOP"
+ },
+ {
+  "n": 291,
+  "label": "FIX"
+ },
+ {
+  "n": 292,
+  "label": "NOOP"
+ },
+ {
+  "n": 293,
+  "label": "FIX"
+ },
+ {
+  "n": 294,
+  "label": "NOOP"
+ },
+ {
+  "n": 295,
+  "label": "NOOP"
+ },
+ {
+  "n": 296,
+  "label": "NOOP"
+ },
+ {
+  "n": 297,
+  "label": "NOOP"
+ },
+ {
+  "n": 298,
+  "label": "NOOP"
+ },
+ {
+  "n": 299,
+  "label": "NOOP"
+ },
+ {
+  "n": 300,
+  "label": "NOOP"
+ },
+ {
+  "n": 301,
+  "label": "FIX"
+ },
+ {
+  "n": 302,
+  "label": "OUT"
+ },
+ {
+  "n": 303,
+  "label": "NOOP"
+ },
+ {
+  "n": 304,
+  "label": "NOOP"
+ },
+ {
+  "n": 305,
+  "label": "BREAK"
+ },
+ {
+  "n": 306,
+  "label": "NOOP"
+ },
+ {
+  "n": 307,
+  "label": "NOOP"
+ },
+ {
+  "n": 308,
+  "label": "BREAK"
+ },
+ {
+  "n": 309,
+  "label": "IN"
+ },
+ {
+  "n": 310,
+  "label": "IN"
+ },
+ {
+  "n": 311,
+  "label": "NOOP"
+ },
+ {
+  "n": 312,
+  "label": "OUT"
+ },
+ {
+  "n": 313,
+  "label": "OUT"
+ },
+ {
+  "n": 314,
+  "label": "IN"
+ }
+]

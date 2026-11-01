@@ -18,7 +18,7 @@ REG = {"data_sha_st": "ed6d16bd3e625198bba74d28e7b20f6bdba9c399a3eb94b9a0d1f113f
        "data_sha_probe": "3beede5245d048af2a5a6652079a974e19a1305887710eca6c7d1ffbc83258b8",
        "data_sha_rtrain": "ffede6eca9e2777a213c926c21b9b75981aad4fef50711b391c49d9149efeaf8",
        "data_sha_rtest": "49616f38581105d0c69c6e9b1509d8d763027fdb3d3b7ec199ea8a07d03c4c4a",
-       "data_sha_rtrain2": None, "data_sha_rtest2": None}   # v2 shas filled when pinned
+       "data_sha_rtrain2": "1d7f1c6fac0b39b7bae6ad7c81472986f97853c9dd33120441a5cd022b92942a", "data_sha_rtest2": "904a97b811942ef95efede95d367603364e3542a2ff2f6ac6737f4e3121f2de2"}
 EYES = ("Q15", "Q3E")
 CELLS = ("A0B0", "A0B1", "A1B0", "A1B1")
 SEEDS = ("42", "1", "2", "3", "4")

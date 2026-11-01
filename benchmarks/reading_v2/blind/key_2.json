@@ -1,0 +1,1572 @@
+[
+ {
+  "n": 1,
+  "label": "OUT",
+  "tag": "配送机器人/support/OUT2"
+ },
+ {
+  "n": 2,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-1/INTENT"
+ },
+ {
+  "n": 3,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-2/POSNEG"
+ },
+ {
+  "n": 4,
+  "label": "IN",
+  "tag": "备用变压器间/IN-1/BASE"
+ },
+ {
+  "n": 5,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-2/HYPO"
+ },
+ {
+  "n": 6,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-2/HYPO"
+ },
+ {
+  "n": 7,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-1/PRONOUN"
+ },
+ {
+  "n": 8,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-2/CHATTER"
+ },
+ {
+  "n": 9,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-2/PRONOUN"
+ },
+ {
+  "n": 10,
+  "label": "NOOP",
+  "tag": "备用变压器间/noop0"
+ },
+ {
+  "n": 11,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-3/HYPO"
+ },
+ {
+  "n": 12,
+  "label": "BREAK",
+  "tag": "配送机器人/support/BREAK0"
+ },
+ {
+  "n": 13,
+  "label": "OUT",
+  "tag": "备用变压器间/IN-2/DIRSWAP"
+ },
+ {
+  "n": 14,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-3/OTHER"
+ },
+ {
+  "n": 15,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-2/CHATTER"
+ },
+ {
+  "n": 16,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-1/PRONOUN"
+ },
+ {
+  "n": 17,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-3/QUESTION"
+ },
+ {
+  "n": 18,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-2/OTHER"
+ },
+ {
+  "n": 19,
+  "label": "BREAK",
+  "tag": "备用变压器间/support/BREAK2"
+ },
+ {
+  "n": 20,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-2/QUESTION"
+ },
+ {
+  "n": 21,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-3/OTHER"
+ },
+ {
+  "n": 22,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-1/NEG"
+ },
+ {
+  "n": 23,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-3/POSNEG"
+ },
+ {
+  "n": 24,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-1/INTENT"
+ },
+ {
+  "n": 25,
+  "label": "FIX",
+  "tag": "备用变压器间/BREAK-3/DIRSWAP"
+ },
+ {
+  "n": 26,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-2/NEG"
+ },
+ {
+  "n": 27,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-3/OTHER"
+ },
+ {
+  "n": 28,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-1/HYPO"
+ },
+ {
+  "n": 29,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-3/NEG"
+ },
+ {
+  "n": 30,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-2/HYPO"
+ },
+ {
+  "n": 31,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-1/HYPO"
+ },
+ {
+  "n": 32,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-3/INTENT"
+ },
+ {
+  "n": 33,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-3/CHATTER"
+ },
+ {
+  "n": 34,
+  "label": "NOOP",
+  "tag": "备用变压器间/support/NOOP1"
+ },
+ {
+  "n": 35,
+  "label": "OUT",
+  "tag": "备用变压器间/IN-3/DIRSWAP"
+ },
+ {
+  "n": 36,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-3/NEG"
+ },
+ {
+  "n": 37,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-1/QUESTION"
+ },
+ {
+  "n": 38,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-1/CHATTER"
+ },
+ {
+  "n": 39,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-2/FUTURE"
+ },
+ {
+  "n": 40,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-1/NEG"
+ },
+ {
+  "n": 41,
+  "label": "IN",
+  "tag": "备用变压器间/IN-1/CHATTER"
+ },
+ {
+  "n": 42,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-2/INTENT"
+ },
+ {
+  "n": 43,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-3/PRONOUN"
+ },
+ {
+  "n": 44,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-2/HYPO"
+ },
+ {
+  "n": 45,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-1/POSNEG"
+ },
+ {
+  "n": 46,
+  "label": "IN",
+  "tag": "配送机器人/IN-2/PRONOUN"
+ },
+ {
+  "n": 47,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-1/BASE"
+ },
+ {
+  "n": 48,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-3/TRANSFER"
+ },
+ {
+  "n": 49,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-2/CHATTER"
+ },
+ {
+  "n": 50,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-1/OTHER"
+ },
+ {
+  "n": 51,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-2/NEG"
+ },
+ {
+  "n": 52,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-1/OTHER"
+ },
+ {
+  "n": 53,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-2/BASE"
+ },
+ {
+  "n": 54,
+  "label": "BREAK",
+  "tag": "配送机器人/FIX-1/DIRSWAP"
+ },
+ {
+  "n": 55,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-2/QUESTION"
+ },
+ {
+  "n": 56,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-3/POSNEG"
+ },
+ {
+  "n": 57,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-1/PRONOUN"
+ },
+ {
+  "n": 58,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-1/CHATTER"
+ },
+ {
+  "n": 59,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-2/PRONOUN"
+ },
+ {
+  "n": 60,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-1/INTENT"
+ },
+ {
+  "n": 61,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-1/QUESTION"
+ },
+ {
+  "n": 62,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-3/BASE"
+ },
+ {
+  "n": 63,
+  "label": "NOOP",
+  "tag": "配送机器人/support/NOOP1"
+ },
+ {
+  "n": 64,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-2/INTENT"
+ },
+ {
+  "n": 65,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-3/FUTURE"
+ },
+ {
+  "n": 66,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-1/NEG"
+ },
+ {
+  "n": 67,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-2/NEG"
+ },
+ {
+  "n": 68,
+  "label": "NOOP",
+  "tag": "备用变压器间/noop3"
+ },
+ {
+  "n": 69,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-1/PRONOUN"
+ },
+ {
+  "n": 70,
+  "label": "BREAK",
+  "tag": "备用变压器间/support/BREAK0"
+ },
+ {
+  "n": 71,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-3/PRONOUN"
+ },
+ {
+  "n": 72,
+  "label": "IN",
+  "tag": "备用变压器间/OUT-1/DIRSWAP"
+ },
+ {
+  "n": 73,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-2/HYPO"
+ },
+ {
+  "n": 74,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-3/BASE"
+ },
+ {
+  "n": 75,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-3/FUTURE"
+ },
+ {
+  "n": 76,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-3/CHATTER"
+ },
+ {
+  "n": 77,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-3/FUTURE"
+ },
+ {
+  "n": 78,
+  "label": "IN",
+  "tag": "备用变压器间/IN-2/CHATTER"
+ },
+ {
+  "n": 79,
+  "label": "IN",
+  "tag": "配送机器人/support/IN0"
+ },
+ {
+  "n": 80,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-1/BASE"
+ },
+ {
+  "n": 81,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-2/QUESTION"
+ },
+ {
+  "n": 82,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-1/QUESTION"
+ },
+ {
+  "n": 83,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-2/QUESTION"
+ },
+ {
+  "n": 84,
+  "label": "IN",
+  "tag": "配送机器人/IN-3/POSNEG"
+ },
+ {
+  "n": 85,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-3/NEG"
+ },
+ {
+  "n": 86,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-3/CHATTER"
+ },
+ {
+  "n": 87,
+  "label": "FIX",
+  "tag": "备用变压器间/support/FIX0"
+ },
+ {
+  "n": 88,
+  "label": "IN",
+  "tag": "备用变压器间/IN-3/PRONOUN"
+ },
+ {
+  "n": 89,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-3/QUESTION"
+ },
+ {
+  "n": 90,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-3/FUTURE"
+ },
+ {
+  "n": 91,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-2/POSNEG"
+ },
+ {
+  "n": 92,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-3/OTHER"
+ },
+ {
+  "n": 93,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-1/BASE"
+ },
+ {
+  "n": 94,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-1/FUTURE"
+ },
+ {
+  "n": 95,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-3/HYPO"
+ },
+ {
+  "n": 96,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-3/OTHER"
+ },
+ {
+  "n": 97,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-2/HYPO"
+ },
+ {
+  "n": 98,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-3/POSNEG"
+ },
+ {
+  "n": 99,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-3/QUESTION"
+ },
+ {
+  "n": 100,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-2/NEG"
+ },
+ {
+  "n": 101,
+  "label": "OUT",
+  "tag": "备用变压器间/support/OUT0"
+ },
+ {
+  "n": 102,
+  "label": "FIX",
+  "tag": "配送机器人/support/FIX1"
+ },
+ {
+  "n": 103,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-2/FUTURE"
+ },
+ {
+  "n": 104,
+  "label": "BREAK",
+  "tag": "备用变压器间/FIX-1/DIRSWAP"
+ },
+ {
+  "n": 105,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-3/BASE"
+ },
+ {
+  "n": 106,
+  "label": "OUT",
+  "tag": "配送机器人/IN-3/DIRSWAP"
+ },
+ {
+  "n": 107,
+  "label": "IN",
+  "tag": "配送机器人/IN-3/BASE"
+ },
+ {
+  "n": 108,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-3/HYPO"
+ },
+ {
+  "n": 109,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-1/INTENT"
+ },
+ {
+  "n": 110,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-1/FUTURE"
+ },
+ {
+  "n": 111,
+  "label": "NOOP",
+  "tag": "备用变压器间/noop2"
+ },
+ {
+  "n": 112,
+  "label": "IN",
+  "tag": "配送机器人/support/IN1"
+ },
+ {
+  "n": 113,
+  "label": "IN",
+  "tag": "备用变压器间/support/IN0"
+ },
+ {
+  "n": 114,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-1/HYPO"
+ },
+ {
+  "n": 115,
+  "label": "NOOP",
+  "tag": "配送机器人/noop3"
+ },
+ {
+  "n": 116,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-1/INTENT"
+ },
+ {
+  "n": 117,
+  "label": "FIX",
+  "tag": "配送机器人/BREAK-1/DIRSWAP"
+ },
+ {
+  "n": 118,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-1/INTENT"
+ },
+ {
+  "n": 119,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-3/INTENT"
+ },
+ {
+  "n": 120,
+  "label": "FIX",
+  "tag": "配送机器人/BREAK-3/DIRSWAP"
+ },
+ {
+  "n": 121,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-1/POSNEG"
+ },
+ {
+  "n": 122,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-3/PRONOUN"
+ },
+ {
+  "n": 123,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-1/PRONOUN"
+ },
+ {
+  "n": 124,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-3/INTENT"
+ },
+ {
+  "n": 125,
+  "label": "IN",
+  "tag": "备用变压器间/IN-1/TRANSFER"
+ },
+ {
+  "n": 126,
+  "label": "IN",
+  "tag": "配送机器人/IN-3/TRANSFER"
+ },
+ {
+  "n": 127,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-2/QUESTION"
+ },
+ {
+  "n": 128,
+  "label": "IN",
+  "tag": "配送机器人/OUT-2/DIRSWAP"
+ },
+ {
+  "n": 129,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-3/QUESTION"
+ },
+ {
+  "n": 130,
+  "label": "BREAK",
+  "tag": "配送机器人/FIX-2/DIRSWAP"
+ },
+ {
+  "n": 131,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-2/OTHER"
+ },
+ {
+  "n": 132,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-3/NEG"
+ },
+ {
+  "n": 133,
+  "label": "IN",
+  "tag": "配送机器人/OUT-3/DIRSWAP"
+ },
+ {
+  "n": 134,
+  "label": "OUT",
+  "tag": "配送机器人/IN-2/DIRSWAP"
+ },
+ {
+  "n": 135,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-2/FUTURE"
+ },
+ {
+  "n": 136,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-1/NEG"
+ },
+ {
+  "n": 137,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-3/INTENT"
+ },
+ {
+  "n": 138,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-2/QUESTION"
+ },
+ {
+  "n": 139,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-2/FUTURE"
+ },
+ {
+  "n": 140,
+  "label": "OUT",
+  "tag": "配送机器人/support/OUT0"
+ },
+ {
+  "n": 141,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-1/QUESTION"
+ },
+ {
+  "n": 142,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-1/FUTURE"
+ },
+ {
+  "n": 143,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-2/CHATTER"
+ },
+ {
+  "n": 144,
+  "label": "IN",
+  "tag": "备用变压器间/support/IN1"
+ },
+ {
+  "n": 145,
+  "label": "FIX",
+  "tag": "备用变压器间/BREAK-1/DIRSWAP"
+ },
+ {
+  "n": 146,
+  "label": "NOOP",
+  "tag": "配送机器人/noop2"
+ },
+ {
+  "n": 147,
+  "label": "BREAK",
+  "tag": "配送机器人/FIX-3/DIRSWAP"
+ },
+ {
+  "n": 148,
+  "label": "NOOP",
+  "tag": "备用变压器间/support/NOOP2"
+ },
+ {
+  "n": 149,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-1/NEG"
+ },
+ {
+  "n": 150,
+  "label": "IN",
+  "tag": "备用变压器间/IN-2/BASE"
+ },
+ {
+  "n": 151,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-1/NEG"
+ },
+ {
+  "n": 152,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-3/INTENT"
+ },
+ {
+  "n": 153,
+  "label": "IN",
+  "tag": "配送机器人/IN-2/CHATTER"
+ },
+ {
+  "n": 154,
+  "label": "FIX",
+  "tag": "备用变压器间/support/FIX1"
+ },
+ {
+  "n": 155,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-3/PRONOUN"
+ },
+ {
+  "n": 156,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-2/NEG"
+ },
+ {
+  "n": 157,
+  "label": "IN",
+  "tag": "配送机器人/IN-1/CHATTER"
+ },
+ {
+  "n": 158,
+  "label": "IN",
+  "tag": "备用变压器间/IN-2/PRONOUN"
+ },
+ {
+  "n": 159,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-1/OTHER"
+ },
+ {
+  "n": 160,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-1/POSNEG"
+ },
+ {
+  "n": 161,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-2/TRANSFER"
+ },
+ {
+  "n": 162,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-1/FUTURE"
+ },
+ {
+  "n": 163,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-1/POSNEG"
+ },
+ {
+  "n": 164,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-3/HYPO"
+ },
+ {
+  "n": 165,
+  "label": "NOOP",
+  "tag": "配送机器人/support/NOOP2"
+ },
+ {
+  "n": 166,
+  "label": "NOOP",
+  "tag": "配送机器人/noop1"
+ },
+ {
+  "n": 167,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-1/BASE"
+ },
+ {
+  "n": 168,
+  "label": "NOOP",
+  "tag": "配送机器人/support/NOOP0"
+ },
+ {
+  "n": 169,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-2/FUTURE"
+ },
+ {
+  "n": 170,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-3/FUTURE"
+ },
+ {
+  "n": 171,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-1/FUTURE"
+ },
+ {
+  "n": 172,
+  "label": "IN",
+  "tag": "配送机器人/IN-1/PRONOUN"
+ },
+ {
+  "n": 173,
+  "label": "BREAK",
+  "tag": "备用变压器间/FIX-2/DIRSWAP"
+ },
+ {
+  "n": 174,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-1/TRANSFER"
+ },
+ {
+  "n": 175,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-3/NEG"
+ },
+ {
+  "n": 176,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-3/QUESTION"
+ },
+ {
+  "n": 177,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-1/OTHER"
+ },
+ {
+  "n": 178,
+  "label": "IN",
+  "tag": "备用变压器间/OUT-3/DIRSWAP"
+ },
+ {
+  "n": 179,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-2/INTENT"
+ },
+ {
+  "n": 180,
+  "label": "IN",
+  "tag": "配送机器人/IN-3/CHATTER"
+ },
+ {
+  "n": 181,
+  "label": "IN",
+  "tag": "备用变压器间/IN-3/POSNEG"
+ },
+ {
+  "n": 182,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-3/BASE"
+ },
+ {
+  "n": 183,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-2/BASE"
+ },
+ {
+  "n": 184,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-1/QUESTION"
+ },
+ {
+  "n": 185,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-1/CHATTER"
+ },
+ {
+  "n": 186,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-3/BASE"
+ },
+ {
+  "n": 187,
+  "label": "BREAK",
+  "tag": "备用变压器间/FIX-3/DIRSWAP"
+ },
+ {
+  "n": 188,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-1/QUESTION"
+ },
+ {
+  "n": 189,
+  "label": "IN",
+  "tag": "配送机器人/IN-2/BASE"
+ },
+ {
+  "n": 190,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-3/FUTURE"
+ },
+ {
+  "n": 191,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-3/INTENT"
+ },
+ {
+  "n": 192,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-1/POSNEG"
+ },
+ {
+  "n": 193,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-1/BASE"
+ },
+ {
+  "n": 194,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-2/FUTURE"
+ },
+ {
+  "n": 195,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-1/FUTURE"
+ },
+ {
+  "n": 196,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-1/CHATTER"
+ },
+ {
+  "n": 197,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-1/CHATTER"
+ },
+ {
+  "n": 198,
+  "label": "IN",
+  "tag": "备用变压器间/IN-3/BASE"
+ },
+ {
+  "n": 199,
+  "label": "OUT",
+  "tag": "备用变压器间/support/OUT1"
+ },
+ {
+  "n": 200,
+  "label": "FIX",
+  "tag": "配送机器人/BREAK-2/DIRSWAP"
+ },
+ {
+  "n": 201,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-3/HYPO"
+ },
+ {
+  "n": 202,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-2/INTENT"
+ },
+ {
+  "n": 203,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-3/POSNEG"
+ },
+ {
+  "n": 204,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-3/FUTURE"
+ },
+ {
+  "n": 205,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-1/HYPO"
+ },
+ {
+  "n": 206,
+  "label": "NOOP",
+  "tag": "备用变压器间/noop1"
+ },
+ {
+  "n": 207,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-1/HYPO"
+ },
+ {
+  "n": 208,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-2/INTENT"
+ },
+ {
+  "n": 209,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-1/OTHER"
+ },
+ {
+  "n": 210,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-1/BASE"
+ },
+ {
+  "n": 211,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-2/BASE"
+ },
+ {
+  "n": 212,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-1/TRANSFER"
+ },
+ {
+  "n": 213,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-2/HYPO"
+ },
+ {
+  "n": 214,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-2/OTHER"
+ },
+ {
+  "n": 215,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-3/FUTURE"
+ },
+ {
+  "n": 216,
+  "label": "BREAK",
+  "tag": "配送机器人/support/BREAK1"
+ },
+ {
+  "n": 217,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-2/INTENT"
+ },
+ {
+  "n": 218,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-1/HYPO"
+ },
+ {
+  "n": 219,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-2/CHATTER"
+ },
+ {
+  "n": 220,
+  "label": "IN",
+  "tag": "备用变压器间/IN-3/TRANSFER"
+ },
+ {
+  "n": 221,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-2/TRANSFER"
+ },
+ {
+  "n": 222,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-2/CHATTER"
+ },
+ {
+  "n": 223,
+  "label": "IN",
+  "tag": "配送机器人/IN-1/BASE"
+ },
+ {
+  "n": 224,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-1/CHATTER"
+ },
+ {
+  "n": 225,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-2/OTHER"
+ },
+ {
+  "n": 226,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-3/QUESTION"
+ },
+ {
+  "n": 227,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-3/HYPO"
+ },
+ {
+  "n": 228,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-2/PRONOUN"
+ },
+ {
+  "n": 229,
+  "label": "OUT",
+  "tag": "配送机器人/IN-1/DIRSWAP"
+ },
+ {
+  "n": 230,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-2/FUTURE"
+ },
+ {
+  "n": 231,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-2/OTHER"
+ },
+ {
+  "n": 232,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-1/OTHER"
+ },
+ {
+  "n": 233,
+  "label": "IN",
+  "tag": "配送机器人/OUT-1/DIRSWAP"
+ },
+ {
+  "n": 234,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-3/QUESTION"
+ },
+ {
+  "n": 235,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-1/QUESTION"
+ },
+ {
+  "n": 236,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-3/POSNEG"
+ },
+ {
+  "n": 237,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-3/QUESTION"
+ },
+ {
+  "n": 238,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-3/NEG"
+ },
+ {
+  "n": 239,
+  "label": "IN",
+  "tag": "配送机器人/IN-2/POSNEG"
+ },
+ {
+  "n": 240,
+  "label": "FIX",
+  "tag": "备用变压器间/support/FIX2"
+ },
+ {
+  "n": 241,
+  "label": "NOOP",
+  "tag": "备用变压器间/support/NOOP0"
+ },
+ {
+  "n": 242,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-3/OTHER"
+ },
+ {
+  "n": 243,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-2/OTHER"
+ },
+ {
+  "n": 244,
+  "label": "OUT",
+  "tag": "配送机器人/support/OUT1"
+ },
+ {
+  "n": 245,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-1/INTENT"
+ },
+ {
+  "n": 246,
+  "label": "FIX",
+  "tag": "配送机器人/support/FIX0"
+ },
+ {
+  "n": 247,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-1/POSNEG"
+ },
+ {
+  "n": 248,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-2/PRONOUN"
+ },
+ {
+  "n": 249,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-1/PRONOUN"
+ },
+ {
+  "n": 250,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-1/FUTURE"
+ },
+ {
+  "n": 251,
+  "label": "IN",
+  "tag": "配送机器人/IN-1/TRANSFER"
+ },
+ {
+  "n": 252,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-2/OTHER"
+ },
+ {
+  "n": 253,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-1/HYPO"
+ },
+ {
+  "n": 254,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-2/NEG"
+ },
+ {
+  "n": 255,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-1/OTHER"
+ },
+ {
+  "n": 256,
+  "label": "IN",
+  "tag": "备用变压器间/IN-2/POSNEG"
+ },
+ {
+  "n": 257,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-3/CHATTER"
+ },
+ {
+  "n": 258,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-2/POSNEG"
+ },
+ {
+  "n": 259,
+  "label": "IN",
+  "tag": "备用变压器间/IN-1/POSNEG"
+ },
+ {
+  "n": 260,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-3/NEG"
+ },
+ {
+  "n": 261,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-1/FUTURE"
+ },
+ {
+  "n": 262,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-3/OTHER"
+ },
+ {
+  "n": 263,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-3/BASE"
+ },
+ {
+  "n": 264,
+  "label": "IN",
+  "tag": "备用变压器间/support/IN2"
+ },
+ {
+  "n": 265,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-2/POSNEG"
+ },
+ {
+  "n": 266,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-3/PRONOUN"
+ },
+ {
+  "n": 267,
+  "label": "IN",
+  "tag": "配送机器人/IN-1/POSNEG"
+ },
+ {
+  "n": 268,
+  "label": "BREAK",
+  "tag": "备用变压器间/support/BREAK1"
+ },
+ {
+  "n": 269,
+  "label": "IN",
+  "tag": "备用变压器间/OUT-2/DIRSWAP"
+ },
+ {
+  "n": 270,
+  "label": "IN",
+  "tag": "配送机器人/IN-2/TRANSFER"
+ },
+ {
+  "n": 271,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-3/TRANSFER"
+ },
+ {
+  "n": 272,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-2/HYPO"
+ },
+ {
+  "n": 273,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-3/HYPO"
+ },
+ {
+  "n": 274,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-3/CHATTER"
+ },
+ {
+  "n": 275,
+  "label": "IN",
+  "tag": "备用变压器间/IN-3/CHATTER"
+ },
+ {
+  "n": 276,
+  "label": "IN",
+  "tag": "备用变压器间/IN-2/TRANSFER"
+ },
+ {
+  "n": 277,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-2/BASE"
+ },
+ {
+  "n": 278,
+  "label": "NOOP",
+  "tag": "备用变压器间/IN-1/INTENT"
+ },
+ {
+  "n": 279,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-2/BASE"
+ },
+ {
+  "n": 280,
+  "label": "FIX",
+  "tag": "备用变压器间/BREAK-2/DIRSWAP"
+ },
+ {
+  "n": 281,
+  "label": "BREAK",
+  "tag": "配送机器人/support/BREAK2"
+ },
+ {
+  "n": 282,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-2/INTENT"
+ },
+ {
+  "n": 283,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-3/HYPO"
+ },
+ {
+  "n": 284,
+  "label": "NOOP",
+  "tag": "备用变压器间/OUT-2/QUESTION"
+ },
+ {
+  "n": 285,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-1/QUESTION"
+ },
+ {
+  "n": 286,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-2/QUESTION"
+ },
+ {
+  "n": 287,
+  "label": "OUT",
+  "tag": "备用变压器间/support/OUT2"
+ },
+ {
+  "n": 288,
+  "label": "BREAK",
+  "tag": "配送机器人/BREAK-2/PRONOUN"
+ },
+ {
+  "n": 289,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-3/PRONOUN"
+ },
+ {
+  "n": 290,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-3/NEG"
+ },
+ {
+  "n": 291,
+  "label": "FIX",
+  "tag": "配送机器人/FIX-2/POSNEG"
+ },
+ {
+  "n": 292,
+  "label": "NOOP",
+  "tag": "配送机器人/OUT-2/OTHER"
+ },
+ {
+  "n": 293,
+  "label": "FIX",
+  "tag": "配送机器人/support/FIX2"
+ },
+ {
+  "n": 294,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-1/OTHER"
+ },
+ {
+  "n": 295,
+  "label": "NOOP",
+  "tag": "配送机器人/BREAK-3/INTENT"
+ },
+ {
+  "n": 296,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-1/HYPO"
+ },
+ {
+  "n": 297,
+  "label": "NOOP",
+  "tag": "配送机器人/FIX-2/NEG"
+ },
+ {
+  "n": 298,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-2/NEG"
+ },
+ {
+  "n": 299,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-3/OTHER"
+ },
+ {
+  "n": 300,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-2/FUTURE"
+ },
+ {
+  "n": 301,
+  "label": "FIX",
+  "tag": "备用变压器间/FIX-3/POSNEG"
+ },
+ {
+  "n": 302,
+  "label": "OUT",
+  "tag": "配送机器人/OUT-3/CHATTER"
+ },
+ {
+  "n": 303,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-2/INTENT"
+ },
+ {
+  "n": 304,
+  "label": "NOOP",
+  "tag": "备用变压器间/FIX-3/INTENT"
+ },
+ {
+  "n": 305,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-2/POSNEG"
+ },
+ {
+  "n": 306,
+  "label": "NOOP",
+  "tag": "备用变压器间/BREAK-1/NEG"
+ },
+ {
+  "n": 307,
+  "label": "NOOP",
+  "tag": "配送机器人/noop0"
+ },
+ {
+  "n": 308,
+  "label": "BREAK",
+  "tag": "备用变压器间/BREAK-2/BASE"
+ },
+ {
+  "n": 309,
+  "label": "IN",
+  "tag": "备用变压器间/IN-1/PRONOUN"
+ },
+ {
+  "n": 310,
+  "label": "IN",
+  "tag": "配送机器人/support/IN2"
+ },
+ {
+  "n": 311,
+  "label": "NOOP",
+  "tag": "配送机器人/IN-1/NEG"
+ },
+ {
+  "n": 312,
+  "label": "OUT",
+  "tag": "备用变压器间/OUT-2/PRONOUN"
+ },
+ {
+  "n": 313,
+  "label": "OUT",
+  "tag": "备用变压器间/IN-1/DIRSWAP"
+ },
+ {
+  "n": 314,
+  "label": "IN",
+  "tag": "配送机器人/IN-3/PRONOUN"
+ }
+]

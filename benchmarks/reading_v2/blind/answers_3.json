@@ -1,0 +1,1263 @@
+[
+ {
+  "n": 1,
+  "label": "NOOP"
+ },
+ {
+  "n": 2,
+  "label": "BREAK"
+ },
+ {
+  "n": 3,
+  "label": "NOOP"
+ },
+ {
+  "n": 4,
+  "label": "NOOP"
+ },
+ {
+  "n": 5,
+  "label": "IN"
+ },
+ {
+  "n": 6,
+  "label": "FIX",
+  "note": "odd: new gate installed with no prior break stated; FIX"
+ },
+ {
+  "n": 7,
+  "label": "NOOP"
+ },
+ {
+  "n": 8,
+  "label": "BREAK"
+ },
+ {
+  "n": 9,
+  "label": "IN"
+ },
+ {
+  "n": 10,
+  "label": "OUT"
+ },
+ {
+  "n": 11,
+  "label": "NOOP"
+ },
+ {
+  "n": 12,
+  "label": "IN"
+ },
+ {
+  "n": 13,
+  "label": "NOOP"
+ },
+ {
+  "n": 14,
+  "label": "NOOP"
+ },
+ {
+  "n": 15,
+  "label": "NOOP"
+ },
+ {
+  "n": 16,
+  "label": "BREAK"
+ },
+ {
+  "n": 17,
+  "label": "NOOP"
+ },
+ {
+  "n": 18,
+  "label": "IN"
+ },
+ {
+  "n": 19,
+  "label": "BREAK"
+ },
+ {
+  "n": 20,
+  "label": "NOOP"
+ },
+ {
+  "n": 21,
+  "label": "BREAK",
+  "note": "odd: reports the gate is broken (state report) rather than describing the breaking; BREAK"
+ },
+ {
+  "n": 22,
+  "label": "NOOP"
+ },
+ {
+  "n": 23,
+  "label": "IN"
+ },
+ {
+  "n": 24,
+  "label": "IN"
+ },
+ {
+  "n": 25,
+  "label": "NOOP"
+ },
+ {
+  "n": 26,
+  "label": "NOOP"
+ },
+ {
+  "n": 27,
+  "label": "IN"
+ },
+ {
+  "n": 28,
+  "label": "NOOP"
+ },
+ {
+  "n": 29,
+  "label": "IN"
+ },
+ {
+  "n": 30,
+  "label": "OUT"
+ },
+ {
+  "n": 31,
+  "label": "NOOP"
+ },
+ {
+  "n": 32,
+  "label": "IN"
+ },
+ {
+  "n": 33,
+  "label": "OUT"
+ },
+ {
+  "n": 34,
+  "label": "NOOP"
+ },
+ {
+  "n": 35,
+  "label": "NOOP"
+ },
+ {
+  "n": 36,
+  "label": "NOOP"
+ },
+ {
+  "n": 37,
+  "label": "NOOP"
+ },
+ {
+  "n": 38,
+  "label": "NOOP"
+ },
+ {
+  "n": 39,
+  "label": "FIX"
+ },
+ {
+  "n": 40,
+  "label": "NOOP"
+ },
+ {
+  "n": 41,
+  "label": "NOOP"
+ },
+ {
+  "n": 42,
+  "label": "BREAK"
+ },
+ {
+  "n": 43,
+  "label": "OUT"
+ },
+ {
+  "n": 44,
+  "label": "BREAK"
+ },
+ {
+  "n": 45,
+  "label": "NOOP"
+ },
+ {
+  "n": 46,
+  "label": "NOOP"
+ },
+ {
+  "n": 47,
+  "label": "NOOP"
+ },
+ {
+  "n": 48,
+  "label": "NOOP"
+ },
+ {
+  "n": 49,
+  "label": "FIX"
+ },
+ {
+  "n": 50,
+  "label": "OUT"
+ },
+ {
+  "n": 51,
+  "label": "BREAK"
+ },
+ {
+  "n": 52,
+  "label": "NOOP"
+ },
+ {
+  "n": 53,
+  "label": "IN"
+ },
+ {
+  "n": 54,
+  "label": "IN"
+ },
+ {
+  "n": 55,
+  "label": "OUT"
+ },
+ {
+  "n": 56,
+  "label": "NOOP"
+ },
+ {
+  "n": 57,
+  "label": "FIX"
+ },
+ {
+  "n": 58,
+  "label": "OUT"
+ },
+ {
+  "n": 59,
+  "label": "NOOP"
+ },
+ {
+  "n": 60,
+  "label": "NOOP"
+ },
+ {
+  "n": 61,
+  "label": "OUT"
+ },
+ {
+  "n": 62,
+  "label": "IN"
+ },
+ {
+  "n": 63,
+  "label": "NOOP"
+ },
+ {
+  "n": 64,
+  "label": "IN"
+ },
+ {
+  "n": 65,
+  "label": "NOOP"
+ },
+ {
+  "n": 66,
+  "label": "OUT"
+ },
+ {
+  "n": 67,
+  "label": "OUT"
+ },
+ {
+  "n": 68,
+  "label": "NOOP"
+ },
+ {
+  "n": 69,
+  "label": "NOOP"
+ },
+ {
+  "n": 70,
+  "label": "OUT"
+ },
+ {
+  "n": 71,
+  "label": "NOOP"
+ },
+ {
+  "n": 72,
+  "label": "NOOP"
+ },
+ {
+  "n": 73,
+  "label": "NOOP"
+ },
+ {
+  "n": 74,
+  "label": "NOOP"
+ },
+ {
+  "n": 75,
+  "label": "FIX"
+ },
+ {
+  "n": 76,
+  "label": "NOOP"
+ },
+ {
+  "n": 77,
+  "label": "IN"
+ },
+ {
+  "n": 78,
+  "label": "FIX"
+ },
+ {
+  "n": 79,
+  "label": "NOOP"
+ },
+ {
+  "n": 80,
+  "label": "NOOP"
+ },
+ {
+  "n": 81,
+  "label": "BREAK"
+ },
+ {
+  "n": 82,
+  "label": "IN"
+ },
+ {
+  "n": 83,
+  "label": "NOOP"
+ },
+ {
+  "n": 84,
+  "label": "NOOP"
+ },
+ {
+  "n": 85,
+  "label": "NOOP"
+ },
+ {
+  "n": 86,
+  "label": "NOOP"
+ },
+ {
+  "n": 87,
+  "label": "FIX"
+ },
+ {
+  "n": 88,
+  "label": "OUT"
+ },
+ {
+  "n": 89,
+  "label": "NOOP"
+ },
+ {
+  "n": 90,
+  "label": "FIX"
+ },
+ {
+  "n": 91,
+  "label": "FIX"
+ },
+ {
+  "n": 92,
+  "label": "BREAK"
+ },
+ {
+  "n": 93,
+  "label": "NOOP"
+ },
+ {
+  "n": 94,
+  "label": "OUT",
+  "note": "odd: child moved from this swing to 'another swing frame' beside it; treated as OUT for this one"
+ },
+ {
+  "n": 95,
+  "label": "OUT"
+ },
+ {
+  "n": 96,
+  "label": "NOOP"
+ },
+ {
+  "n": 97,
+  "label": "NOOP"
+ },
+ {
+  "n": 98,
+  "label": "FIX"
+ },
+ {
+  "n": 99,
+  "label": "IN"
+ },
+ {
+  "n": 100,
+  "label": "FIX"
+ },
+ {
+  "n": 101,
+  "label": "OUT"
+ },
+ {
+  "n": 102,
+  "label": "NOOP"
+ },
+ {
+  "n": 103,
+  "label": "NOOP"
+ },
+ {
+  "n": 104,
+  "label": "NOOP"
+ },
+ {
+  "n": 105,
+  "label": "NOOP"
+ },
+ {
+  "n": 106,
+  "label": "NOOP"
+ },
+ {
+  "n": 107,
+  "label": "NOOP"
+ },
+ {
+  "n": 108,
+  "label": "NOOP"
+ },
+ {
+  "n": 109,
+  "label": "BREAK"
+ },
+ {
+  "n": 110,
+  "label": "NOOP"
+ },
+ {
+  "n": 111,
+  "label": "FIX"
+ },
+ {
+  "n": 112,
+  "label": "NOOP"
+ },
+ {
+  "n": 113,
+  "label": "OUT"
+ },
+ {
+  "n": 114,
+  "label": "OUT"
+ },
+ {
+  "n": 115,
+  "label": "FIX"
+ },
+ {
+  "n": 116,
+  "label": "OUT"
+ },
+ {
+  "n": 117,
+  "label": "NOOP"
+ },
+ {
+  "n": 118,
+  "label": "NOOP"
+ },
+ {
+  "n": 119,
+  "label": "NOOP"
+ },
+ {
+  "n": 120,
+  "label": "NOOP"
+ },
+ {
+  "n": 121,
+  "label": "NOOP"
+ },
+ {
+  "n": 122,
+  "label": "NOOP"
+ },
+ {
+  "n": 123,
+  "label": "NOOP"
+ },
+ {
+  "n": 124,
+  "label": "OUT"
+ },
+ {
+  "n": 125,
+  "label": "OUT"
+ },
+ {
+  "n": 126,
+  "label": "NOOP"
+ },
+ {
+  "n": 127,
+  "label": "FIX"
+ },
+ {
+  "n": 128,
+  "label": "OUT"
+ },
+ {
+  "n": 129,
+  "label": "NOOP"
+ },
+ {
+  "n": 130,
+  "label": "FIX"
+ },
+ {
+  "n": 131,
+  "label": "NOOP"
+ },
+ {
+  "n": 132,
+  "label": "OUT"
+ },
+ {
+  "n": 133,
+  "label": "NOOP"
+ },
+ {
+  "n": 134,
+  "label": "IN"
+ },
+ {
+  "n": 135,
+  "label": "NOOP"
+ },
+ {
+  "n": 136,
+  "label": "FIX"
+ },
+ {
+  "n": 137,
+  "label": "FIX"
+ },
+ {
+  "n": 138,
+  "label": "IN"
+ },
+ {
+  "n": 139,
+  "label": "NOOP",
+  "note": "odd: unspecified bike rack, just chatting nearby; NOOP"
+ },
+ {
+  "n": 140,
+  "label": "FIX"
+ },
+ {
+  "n": 141,
+  "label": "NOOP"
+ },
+ {
+  "n": 142,
+  "label": "NOOP"
+ },
+ {
+  "n": 143,
+  "label": "NOOP"
+ },
+ {
+  "n": 144,
+  "label": "BREAK"
+ },
+ {
+  "n": 145,
+  "label": "OUT"
+ },
+ {
+  "n": 146,
+  "label": "BREAK"
+ },
+ {
+  "n": 147,
+  "label": "NOOP"
+ },
+ {
+  "n": 148,
+  "label": "NOOP"
+ },
+ {
+  "n": 149,
+  "label": "BREAK"
+ },
+ {
+  "n": 150,
+  "label": "FIX"
+ },
+ {
+  "n": 151,
+  "label": "NOOP"
+ },
+ {
+  "n": 152,
+  "label": "NOOP"
+ },
+ {
+  "n": 153,
+  "label": "IN"
+ },
+ {
+  "n": 154,
+  "label": "NOOP"
+ },
+ {
+  "n": 155,
+  "label": "NOOP"
+ },
+ {
+  "n": 156,
+  "label": "NOOP"
+ },
+ {
+  "n": 157,
+  "label": "OUT"
+ },
+ {
+  "n": 158,
+  "label": "IN"
+ },
+ {
+  "n": 159,
+  "label": "NOOP"
+ },
+ {
+  "n": 160,
+  "label": "FIX"
+ },
+ {
+  "n": 161,
+  "label": "IN"
+ },
+ {
+  "n": 162,
+  "label": "NOOP"
+ },
+ {
+  "n": 163,
+  "label": "FIX"
+ },
+ {
+  "n": 164,
+  "label": "NOOP"
+ },
+ {
+  "n": 165,
+  "label": "NOOP"
+ },
+ {
+  "n": 166,
+  "label": "OUT"
+ },
+ {
+  "n": 167,
+  "label": "NOOP"
+ },
+ {
+  "n": 168,
+  "label": "OUT"
+ },
+ {
+  "n": 169,
+  "label": "FIX"
+ },
+ {
+  "n": 170,
+  "label": "NOOP"
+ },
+ {
+  "n": 171,
+  "label": "FIX"
+ },
+ {
+  "n": 172,
+  "label": "OUT"
+ },
+ {
+  "n": 173,
+  "label": "NOOP"
+ },
+ {
+  "n": 174,
+  "label": "FIX"
+ },
+ {
+  "n": 175,
+  "label": "NOOP"
+ },
+ {
+  "n": 176,
+  "label": "NOOP"
+ },
+ {
+  "n": 177,
+  "label": "FIX"
+ },
+ {
+  "n": 178,
+  "label": "NOOP"
+ },
+ {
+  "n": 179,
+  "label": "BREAK"
+ },
+ {
+  "n": 180,
+  "label": "NOOP"
+ },
+ {
+  "n": 181,
+  "label": "BREAK"
+ },
+ {
+  "n": 182,
+  "label": "NOOP"
+ },
+ {
+  "n": 183,
+  "label": "BREAK"
+ },
+ {
+  "n": 184,
+  "label": "OUT"
+ },
+ {
+  "n": 185,
+  "label": "IN"
+ },
+ {
+  "n": 186,
+  "label": "NOOP"
+ },
+ {
+  "n": 187,
+  "label": "NOOP"
+ },
+ {
+  "n": 188,
+  "label": "OUT"
+ },
+ {
+  "n": 189,
+  "label": "IN"
+ },
+ {
+  "n": 190,
+  "label": "FIX"
+ },
+ {
+  "n": 191,
+  "label": "IN"
+ },
+ {
+  "n": 192,
+  "label": "OUT"
+ },
+ {
+  "n": 193,
+  "label": "NOOP"
+ },
+ {
+  "n": 194,
+  "label": "NOOP"
+ },
+ {
+  "n": 195,
+  "label": "IN"
+ },
+ {
+  "n": 196,
+  "label": "NOOP"
+ },
+ {
+  "n": 197,
+  "label": "NOOP"
+ },
+ {
+  "n": 198,
+  "label": "IN"
+ },
+ {
+  "n": 199,
+  "label": "NOOP"
+ },
+ {
+  "n": 200,
+  "label": "BREAK"
+ },
+ {
+  "n": 201,
+  "label": "IN"
+ },
+ {
+  "n": 202,
+  "label": "NOOP"
+ },
+ {
+  "n": 203,
+  "label": "FIX"
+ },
+ {
+  "n": 204,
+  "label": "OUT"
+ },
+ {
+  "n": 205,
+  "label": "NOOP"
+ },
+ {
+  "n": 206,
+  "label": "NOOP"
+ },
+ {
+  "n": 207,
+  "label": "FIX"
+ },
+ {
+  "n": 208,
+  "label": "IN"
+ },
+ {
+  "n": 209,
+  "label": "NOOP"
+ },
+ {
+  "n": 210,
+  "label": "FIX"
+ },
+ {
+  "n": 211,
+  "label": "NOOP"
+ },
+ {
+  "n": 212,
+  "label": "OUT"
+ },
+ {
+  "n": 213,
+  "label": "IN"
+ },
+ {
+  "n": 214,
+  "label": "IN"
+ },
+ {
+  "n": 215,
+  "label": "IN"
+ },
+ {
+  "n": 216,
+  "label": "FIX"
+ },
+ {
+  "n": 217,
+  "label": "NOOP"
+ },
+ {
+  "n": 218,
+  "label": "NOOP"
+ },
+ {
+  "n": 219,
+  "label": "NOOP"
+ },
+ {
+  "n": 220,
+  "label": "NOOP"
+ },
+ {
+  "n": 221,
+  "label": "BREAK"
+ },
+ {
+  "n": 222,
+  "label": "NOOP"
+ },
+ {
+  "n": 223,
+  "label": "NOOP"
+ },
+ {
+  "n": 224,
+  "label": "NOOP"
+ },
+ {
+  "n": 225,
+  "label": "NOOP"
+ },
+ {
+  "n": 226,
+  "label": "NOOP"
+ },
+ {
+  "n": 227,
+  "label": "BREAK"
+ },
+ {
+  "n": 228,
+  "label": "OUT"
+ },
+ {
+  "n": 229,
+  "label": "NOOP"
+ },
+ {
+  "n": 230,
+  "label": "NOOP"
+ },
+ {
+  "n": 231,
+  "label": "NOOP"
+ },
+ {
+  "n": 232,
+  "label": "IN"
+ },
+ {
+  "n": 233,
+  "label": "NOOP"
+ },
+ {
+  "n": 234,
+  "label": "BREAK"
+ },
+ {
+  "n": 235,
+  "label": "BREAK"
+ },
+ {
+  "n": 236,
+  "label": "NOOP"
+ },
+ {
+  "n": 237,
+  "label": "BREAK"
+ },
+ {
+  "n": 238,
+  "label": "BREAK"
+ },
+ {
+  "n": 239,
+  "label": "BREAK"
+ },
+ {
+  "n": 240,
+  "label": "NOOP"
+ },
+ {
+  "n": 241,
+  "label": "NOOP"
+ },
+ {
+  "n": 242,
+  "label": "IN"
+ },
+ {
+  "n": 243,
+  "label": "NOOP"
+ },
+ {
+  "n": 244,
+  "label": "NOOP"
+ },
+ {
+  "n": 245,
+  "label": "BREAK"
+ },
+ {
+  "n": 246,
+  "label": "BREAK"
+ },
+ {
+  "n": 247,
+  "label": "NOOP"
+ },
+ {
+  "n": 248,
+  "label": "OUT"
+ },
+ {
+  "n": 249,
+  "label": "NOOP"
+ },
+ {
+  "n": 250,
+  "label": "NOOP"
+ },
+ {
+  "n": 251,
+  "label": "FIX"
+ },
+ {
+  "n": 252,
+  "label": "FIX"
+ },
+ {
+  "n": 253,
+  "label": "IN"
+ },
+ {
+  "n": 254,
+  "label": "NOOP"
+ },
+ {
+  "n": 255,
+  "label": "NOOP"
+ },
+ {
+  "n": 256,
+  "label": "NOOP"
+ },
+ {
+  "n": 257,
+  "label": "OUT"
+ },
+ {
+  "n": 258,
+  "label": "BREAK"
+ },
+ {
+  "n": 259,
+  "label": "BREAK",
+  "note": "odd: reports the barrier is broken in two (state report); BREAK"
+ },
+ {
+  "n": 260,
+  "label": "NOOP"
+ },
+ {
+  "n": 261,
+  "label": "BREAK"
+ },
+ {
+  "n": 262,
+  "label": "FIX"
+ },
+ {
+  "n": 263,
+  "label": "NOOP"
+ },
+ {
+  "n": 264,
+  "label": "IN"
+ },
+ {
+  "n": 265,
+  "label": "IN"
+ },
+ {
+  "n": 266,
+  "label": "IN"
+ },
+ {
+  "n": 267,
+  "label": "OUT"
+ },
+ {
+  "n": 268,
+  "label": "FIX"
+ },
+ {
+  "n": 269,
+  "label": "NOOP"
+ },
+ {
+  "n": 270,
+  "label": "BREAK"
+ },
+ {
+  "n": 271,
+  "label": "NOOP"
+ },
+ {
+  "n": 272,
+  "label": "NOOP"
+ },
+ {
+  "n": 273,
+  "label": "IN"
+ },
+ {
+  "n": 274,
+  "label": "NOOP"
+ },
+ {
+  "n": 275,
+  "label": "NOOP"
+ },
+ {
+  "n": 276,
+  "label": "NOOP"
+ },
+ {
+  "n": 277,
+  "label": "FIX"
+ },
+ {
+  "n": 278,
+  "label": "NOOP"
+ },
+ {
+  "n": 279,
+  "label": "NOOP"
+ },
+ {
+  "n": 280,
+  "label": "NOOP"
+ },
+ {
+  "n": 281,
+  "label": "NOOP"
+ },
+ {
+  "n": 282,
+  "label": "IN"
+ },
+ {
+  "n": 283,
+  "label": "NOOP"
+ },
+ {
+  "n": 284,
+  "label": "NOOP"
+ },
+ {
+  "n": 285,
+  "label": "NOOP"
+ },
+ {
+  "n": 286,
+  "label": "OUT"
+ },
+ {
+  "n": 287,
+  "label": "NOOP"
+ },
+ {
+  "n": 288,
+  "label": "FIX"
+ },
+ {
+  "n": 289,
+  "label": "NOOP"
+ },
+ {
+  "n": 290,
+  "label": "OUT"
+ },
+ {
+  "n": 291,
+  "label": "BREAK"
+ },
+ {
+  "n": 292,
+  "label": "OUT"
+ },
+ {
+  "n": 293,
+  "label": "NOOP"
+ },
+ {
+  "n": 294,
+  "label": "NOOP"
+ },
+ {
+  "n": 295,
+  "label": "IN"
+ },
+ {
+  "n": 296,
+  "label": "OUT"
+ },
+ {
+  "n": 297,
+  "label": "NOOP"
+ },
+ {
+  "n": 298,
+  "label": "NOOP"
+ },
+ {
+  "n": 299,
+  "label": "NOOP"
+ },
+ {
+  "n": 300,
+  "label": "NOOP"
+ },
+ {
+  "n": 301,
+  "label": "BREAK"
+ },
+ {
+  "n": 302,
+  "label": "OUT"
+ },
+ {
+  "n": 303,
+  "label": "BREAK"
+ },
+ {
+  "n": 304,
+  "label": "IN"
+ },
+ {
+  "n": 305,
+  "label": "NOOP"
+ },
+ {
+  "n": 306,
+  "label": "IN"
+ },
+ {
+  "n": 307,
+  "label": "NOOP"
+ },
+ {
+  "n": 308,
+  "label": "NOOP"
+ },
+ {
+  "n": 309,
+  "label": "OUT"
+ },
+ {
+  "n": 310,
+  "label": "BREAK"
+ },
+ {
+  "n": 311,
+  "label": "NOOP"
+ },
+ {
+  "n": 312,
+  "label": "NOOP"
+ },
+ {
+  "n": 313,
+  "label": "BREAK"
+ },
+ {
+  "n": 314,
+  "label": "NOOP"
+ }
+]

@@ -26,6 +26,11 @@
 # Machine lines: L18B_LORA, L18B_RES (test=v2 / v1), L18B_PROBE, L18B_ITEM (v2), then L18B_CONFIG as the LAST line.
 #   Aggregate: python tools/aggregate_lab18b.py lab18b_*.log
 # ==============================================================================
+import os, sys, gc, time, math, random, json, hashlib
+from collections import Counter, defaultdict
+import numpy as np
+os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import transformers
@@ -55,7 +60,7 @@ EYE_ORDER = ("Q15", "Q3E")
 PROMPT_TMPL = '这句话："{s}"\n用一个词概括这句话描述的事件：'
 Q3E_TASK = "Identify which abstract event or state of the system this sentence describes"
 Q3E_TMPL = "Instruct: " + Q3E_TASK + "\nQuery:{s}"
-SENT_MAXLEN = 160  # [amendment] 128 in Lab 17; the natural-style test sentences reach 132 tokens with the Q3E prompt (no truncation, asserted)
+SENT_MAXLEN = 256  # [amendment] 128 in Lab 17, 160 in 18a; system-aware prompts and noised rows are longer (no truncation, asserted)
 FEAT_BATCH = 64
 LORA_R, LORA_ALPHA, LORA_DROPOUT = 16, 32, 0.05
 LORA_TARGETS = ("q_proj", "k_proj", "v_proj", "o_proj")
@@ -77,8 +82,8 @@ N_EXTRA = 12
 HARD_CATS = ("NEG", "OTHER", "TEMP", "HEDGE")
 USED_HARD = ("NEG", "OTHER", "TEMP")
 EXPECTED_RTRAIN_SHA256 = "ffede6eca9e2777a213c926c21b9b75981aad4fef50711b391c49d9149efeaf8"  # accepted: validator PASS, blind 416/420, 4 OTHER items clarified and re-checked
-EXPECTED_RTRAIN2_SHA256 = None  # set when reading_v2/train_groups_v2.json is accepted
-EXPECTED_RTEST2_SHA256 = None   # set when reading_v2/test_v2.json is accepted
+EXPECTED_RTRAIN2_SHA256 = "1d7f1c6fac0b39b7bae6ad7c81472986f97853c9dd33120441a5cd022b92942a"  # accepted: validator PASS, blind 419/420 (1 unclear OTHER_B clarified, re-checked)
+EXPECTED_RTEST2_SHA256 = "904a97b811942ef95efede95d367603364e3542a2ff2f6ac6737f4e3121f2de2"   # accepted: validator PASS, blind 1256/1256
 EXPECTED_RTEST_SHA256 = "49616f38581105d0c69c6e9b1509d8d763027fdb3d3b7ec199ea8a07d03c4c4a"   # accepted: validator PASS, blind 1256/1256 (one annotator row-shift re-checked 20/20)
 
 # (copied from Lab 15) classes
@@ -751,26 +756,34 @@ def train_lora(eye, tok, backbone, mods, rows, guard, seed, cell, noised=None, t
             guard.check(s, t)
         for s in texts:
             assert train_set is None or s in train_set, "LEAK: a non-training sentence in a LoRA batch"
-        h_all, _n = pool_last(tok, backbone, mt)
-        h, hn = h_all[:len(batch)], h_all[len(batch):]
+        # [pre-run amendment] two passes with separate padding, so the longer noised rows do not pad the whole batch:
+        # (1) clean rows: SupCon + CE, backward (frees the clean graph); (2) noised rows: consistency to the DETACHED
+        # clean features / distribution (stop-gradient on the clean side), backward. Gradients accumulate; one step.
+        opt.zero_grad()
+        h, _n = pool_last(tok, backbone, mt[:len(batch)])
         y = torch.tensor([rows["cls"][r] for r in batch], device=DEVICE)
         dvec = torch.tensor([dom_id[rows["dom"][r]] for r in batch], device=DEVICE)
         z = F.normalize(h, dim=-1)
         pos, excl = xdom_masks(y, dvec)
         loss = supcon_from_logits(z @ z.T / SUPCON_TAU, pos, excl) + F.cross_entropy(head(h), y)
         if nz:
-            hc = h[torch.tensor(nz, device=DEVICE)]
+            hc = h[torch.tensor(nz, device=DEVICE)].detach()
+            lp = F.log_softmax(head(hc), -1).detach()
+        loss.backward()
+        loss_v = float(loss.item())
+        if nz:
+            del h, z
+            hn, _n2 = pool_last(tok, backbone, mt[len(batch):])
             cons = (1 - F.cosine_similarity(hc, hn, dim=-1)).mean()
-            lp, lq = F.log_softmax(head(hc), -1), F.log_softmax(head(hn), -1)
+            lq = F.log_softmax(head(hn), -1)
             kl = 0.5 * (F.kl_div(lq, lp, log_target=True, reduction="batchmean")
                         + F.kl_div(lp, lq, log_target=True, reduction="batchmean"))
-            loss = loss + cons + kl
-        opt.zero_grad()
-        loss.backward()
+            (cons + kl).backward()
+            loss_v += float((cons + kl).item())
         torch.nn.utils.clip_grad_norm_(params, LORA_CLIP)
         opt.step()
         if step in (1, 50, 100, LORA_STEPS):
-            trace.append(f"{step}:{float(loss.item()):.4f}")
+            trace.append(f"{step}:{loss_v:.4f}")
     if DEVICE == "cuda":
         trace.append(f"maxmem_GiB:{torch.cuda.max_memory_allocated() / 2 ** 30:.1f}")
     for m in mods:
