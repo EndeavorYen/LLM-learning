@@ -89,6 +89,7 @@
 
 我們在 Stage 1 實驗中發掘出的 3 個後 Transformer 世代核心開放問題，已建立於 GitHub Issues 持續深入探索：
 - 🎯 **[Issue #25：B1 觸類旁通——把新領域的句子可靠地對到抽象概念](https://github.com/EndeavorYen/LLM-learning/issues/25)**（目前主線）
+- 🗺️ **[Issue #30：下一階段規劃（Lab 17 補強辨識 → Lab 18 測試領域正式考試）與方向盤點](https://github.com/EndeavorYen/LLM-learning/issues/30)**，完整內容見 [`docs/plan_b1_next_phase.md`](docs/plan_b1_next_phase.md)
 - 📌 **[Issue #1：無監督野生語料的「自動結構與意念對齊」](https://github.com/EndeavorYen/LLM-learning/issues/1)** *(Unsupervised Structural Alignment in the Wild)*
 - 📌 **[Issue #2：多層次意念的「動態顆粒度伸縮」](https://github.com/EndeavorYen/LLM-learning/issues/2)** *(Dynamic & Hierarchical Thought Granularity)*
 - 📌 **[Issue #3：超長聯想鏈的「腦波流形飄移與錨點校準」](https://github.com/EndeavorYen/LLM-learning/issues/3)** *(Latent Drift in Long-Horizon Thought Chains)*
