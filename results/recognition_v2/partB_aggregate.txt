@@ -1,0 +1,69 @@
+Lab 16 part B aggregate | logs: results/recognition_v2/partB_l16_B1.log, results/recognition_v2/partB_l16_B2.log
+  results/recognition_v2/partB_l16_B1.log: encs=Q15-prompt,BGE icl=0 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+  results/recognition_v2/partB_l16_B2.log: encs=Q7-prompt icl=0 script_sha=unavailable env=torch=2.11.0+cu130,transformers=5.21.0,device=cuda,gpu=NVIDIA_L4
+Accuracy = exact counts pooled over folds x seeds x draws; held-out = domains never used to train. NO decision.
+
+==============================================================================================================
+=== REGISTERED shape rule: ZERO-MLP 13-way and the part A best method (C-MLP, s=1, events 5-way) ===
+row                                    k=4     k=6     k=8    k=12    k=16    k=20    k=24      g1      g2   shape
+Q15-prompt ZERO-MLP-13               71.52   77.26   78.96   82.53   84.43   86.46   87.20    5.27    4.67   持續上升
+Q15-prompt C-MLP                     85.59   86.53   87.05   88.35   89.48   89.87   90.42    1.83    2.07   持續上升
+Q7-prompt ZERO-MLP-13                72.80   77.44   79.64   84.05   85.83   88.01   88.18    6.61    4.14   趨緩
+Q7-prompt C-MLP                      88.59   89.51   90.13   90.98   91.58   92.28   92.45    1.46    1.47   持續上升
+BGE ZERO-MLP-13                      69.29   76.61   80.57   83.72   85.42   86.96   87.98    7.11    4.26   趨緩
+BGE C-MLP                            82.01   84.30   84.98   86.61   87.69   88.54   88.76    2.31    2.15   持續上升
+
+--- descriptive below (not registered) ---
+
+=== ZERO-MLP 13-way on all held-out sentences (Lab 15's quantity) by number of training domains k ===
+encoder          k=4     k=6     k=8    k=12    k=16    k=20    k=24      g1      g2   shape
+Q15-prompt     71.52   77.26   78.96   82.53   84.43   86.46   87.20    5.27    4.67   持續上升
+Q7-prompt      72.80   77.44   79.64   84.05   85.83   88.01   88.18    6.61    4.14   趨緩
+BGE            69.29   76.61   80.57   83.72   85.42   86.96   87.98    7.11    4.26   趨緩
+
+=== event sentences 5-way with s=1 example per event type, by k (each method) ===
+--- ZERO-MLP ---
+  Q15-prompt     78.36   82.72   83.84   86.64   88.02   89.48   90.01    3.92    3.37   持續上升
+  Q7-prompt      79.87   82.36   85.30   88.77   89.76   91.92   91.59    6.41    2.81   趨緩
+  BGE            71.09   77.77   81.27   83.92   84.85   85.78   87.13    6.14    3.22   趨緩
+--- ZERO-FUNNEL ---
+  Q15-prompt     73.00   75.12   77.71   82.40   85.06   87.27   87.68    7.28    5.27   趨緩
+  Q7-prompt      74.13   74.74   79.48   85.28   85.44   87.39   87.09   10.54    1.81   飽和
+  BGE            66.83   73.31   75.77   80.71   84.00   85.45   86.28    7.40    5.58   持續上升
+--- RAW-NN ---
+  Q15-prompt     75.88   75.93   75.89   75.90   75.82   75.90   75.84   -0.03   -0.06   已飽和 (g1 <= 0)
+  Q7-prompt      76.10   76.13   76.12   76.23   76.24   76.27   76.26    0.10    0.03   趨緩
+  BGE            66.18   66.31   66.22   66.21   66.33   66.27   66.26   -0.10    0.04   已飽和 (g1 <= 0)
+--- MLP-NN ---
+  Q15-prompt     80.57   81.32   81.82   82.82   84.29   85.02   85.60    1.50    2.79   持續上升
+  Q7-prompt      83.61   84.36   85.61   86.87   87.58   88.80   88.97    2.51    2.10   持續上升
+  BGE            74.14   77.57   78.75   80.19   81.10   82.26   82.41    2.61    2.22   持續上升
+--- FUNNEL-NN ---
+  Q15-prompt     75.64   77.51   80.07   81.90   83.72   84.93   85.44    4.39    3.54   持續上升
+  Q7-prompt      80.34   81.35   82.98   85.31   85.40   87.07   87.20    3.96    1.89   趨緩
+  BGE            71.15   74.19   75.47   78.54   79.97   81.11   81.81    4.35    3.27   持續上升
+--- C-MLP ---
+  Q15-prompt     85.59   86.53   87.05   88.35   89.48   89.87   90.42    1.83    2.07   持續上升
+  Q7-prompt      88.59   89.51   90.13   90.98   91.58   92.28   92.45    1.46    1.47   持續上升
+  BGE            82.01   84.30   84.98   86.61   87.69   88.54   88.76    2.31    2.15   持續上升
+--- C-MLP-NN ---
+  Q15-prompt     80.99   81.68   81.94   82.64   83.51   84.13   84.56    0.96    1.93   持續上升
+  Q7-prompt      84.93   85.31   86.16   86.90   87.41   88.23   88.52    1.60    1.61   持續上升
+  BGE            75.59   78.42   78.69   80.25   81.09   82.37   82.80    1.83    2.55   持續上升
+--- C-FUNNEL-NN ---
+  Q15-prompt     77.15   78.82   81.03   82.48   83.76   84.97   85.67    3.66    3.18   持續上升
+  Q7-prompt      82.21   83.26   84.76   86.46   86.68   87.34   87.77    3.20    1.31   趨緩
+  BGE            70.45   74.48   75.99   78.69   79.76   81.34   81.78    4.20    3.10   趨緩
+
+=== held-out registered (old) vs extra (new) domains, k=12 and k=24 ===
+  Q15-prompt   k=12  ZERO-MLP-13 old  79.58 new  86.46 | ZERO-MLP  83.96/ 90.23 | ZERO-FUNNEL  80.06/ 85.52 | RAW-NN  75.62/ 76.27 | MLP-NN  79.47/ 87.28 | FUNNEL-NN  79.07/ 85.68 | C-MLP  86.30/ 91.08 | C-MLP-NN  79.39/ 86.97 | C-FUNNEL-NN  79.86/ 85.98
+  Q15-prompt   k=24  ZERO-MLP-13 old  85.62 new  89.31 | ZERO-MLP  89.18/ 91.12 | ZERO-FUNNEL  86.24/ 89.59 | RAW-NN  75.46/ 76.35 | MLP-NN  83.63/ 88.24 | FUNNEL-NN  83.17/ 88.46 | C-MLP  89.26/ 91.97 | C-MLP-NN  82.25/ 87.64 | C-FUNNEL-NN  83.42/ 88.66
+  Q7-prompt    k=12  ZERO-MLP-13 old  81.61 new  87.29 | ZERO-MLP  87.65/ 90.28 | ZERO-FUNNEL  85.21/ 85.38 | RAW-NN  76.00/ 76.54 | MLP-NN  85.93/ 88.13 | FUNNEL-NN  84.80/ 86.00 | C-MLP  91.16/ 90.74 | C-MLP-NN  85.48/ 88.81 | C-FUNNEL-NN  85.56/ 87.67
+  Q7-prompt    k=24  ZERO-MLP-13 old  87.45 new  89.17 | ZERO-MLP  92.69/ 90.12 | ZERO-FUNNEL  86.93/ 87.31 | RAW-NN  75.96/ 76.66 | MLP-NN  88.71/ 89.31 | FUNNEL-NN  86.81/ 87.74 | C-MLP  93.09/ 91.59 | C-MLP-NN  87.94/ 89.29 | C-FUNNEL-NN  86.90/ 88.93
+  BGE          k=12  ZERO-MLP-13 old  80.83 new  87.57 | ZERO-MLP  80.70/ 88.20 | ZERO-FUNNEL  79.20/ 82.72 | RAW-NN  68.41/ 63.28 | MLP-NN  78.37/ 82.61 | FUNNEL-NN  77.11/ 80.44 | C-MLP  84.92/ 88.87 | C-MLP-NN  78.70/ 82.31 | C-FUNNEL-NN  77.35/ 80.46
+  BGE          k=24  ZERO-MLP-13 old  86.41 new  90.07 | ZERO-MLP  85.31/ 89.57 | ZERO-FUNNEL  84.83/ 88.22 | RAW-NN  68.46/ 63.31 | MLP-NN  81.40/ 83.76 | FUNNEL-NN  80.28/ 83.86 | C-MLP  87.94/ 89.85 | C-MLP-NN  81.76/ 84.19 | C-FUNNEL-NN  80.26/ 83.81
+
+=== descriptive: least-squares line in log2(k) over k >= 6; k where it reaches 95% ===
+  Q15-prompt   ZERO-MLP-13 slope  5.18/doubling k95=   65.5 | ZERO-MLP    56.7 | ZERO-FUNNEL    47.2 | RAW-NN     inf | MLP-NN   453.3 | FUNNEL-NN   121.7 | C-MLP   113.5 | C-MLP-NN  3133.2 | C-FUNNEL-NN   167.7
+  Q7-prompt    ZERO-MLP-13 slope  5.69/doubling k95=   49.8 | ZERO-MLP    34.2 | ZERO-FUNNEL    48.1 | RAW-NN     inf | MLP-NN   138.4 | FUNNEL-NN   140.4 | C-MLP    74.6 | C-MLP-NN   417.2 | C-FUNNEL-NN   228.0
+  BGE          ZERO-MLP-13 slope  5.46/doubling k95=   54.8 | ZERO-MLP    82.3 | ZERO-FUNNEL    53.1 | RAW-NN     inf | MLP-NN   755.0 | FUNNEL-NN   228.3 | C-MLP   138.0 | C-MLP-NN   926.9 | C-FUNNEL-NN   260.4

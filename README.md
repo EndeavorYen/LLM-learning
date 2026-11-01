@@ -103,6 +103,6 @@
 | **Stage 1** | 白盒拆解 MiniMind 與後 Transformer 架構突圍 | Pretrain/SFT/LoRA/DPO + Diffusion/Block-Diffusion/意念雙腦 9 大實驗 | ✅ **已完成** |
 | **Stage 2** | 工業級預訓練模型微創嫁接與公開基準對決 | `Qwen2.5-0.5B` 嫁接 128D 意念腦 + 雙向 Block-Diffusion (`Full-Trinity 96% vs 29%`, `ARC +8%`) | ✅ **已完成** |
 | **稽核與驗證** | 從測試集開始重建可信的驗證流程 | 修正洩漏 / 截斷 / 不公平對照、事先登錄的類比與聯想測試 v2–v5、拆解實驗、狀態追蹤前導（[總結](docs/audit_findings.md)） | ✅ **已完成** |
-| **B1：觸類旁通** | 把新領域的句子可靠地對到抽象概念 | 句子 → 抽象事件 / 規律的跨領域辨識，目標單句 ≥ 95%，再回到新領域的多步推理測試 | 🔄 **進行中**：第一步診斷最好 83.7%（[結果](results/recognition_v1/README.md)），下一步增加訓練領域 |
+| **B1：觸類旁通** | 把新領域的句子可靠地對到抽象概念 | 句子 → 抽象事件 / 規律的跨領域辨識，目標單句 ≥ 95%，再回到新領域的多步推理測試 | 🔄 **進行中**：診斷最好 83.7%（[v1](results/recognition_v1/README.md)）；新領域給一個例子 92.7%（[v2](results/recognition_v2/README.md)），尚未達 95% |
 | **Stage 3** | 野生語料自監督意念對齊 & 內建極致知識密度 | 攻克 [Issue #1](https://github.com/EndeavorYen/LLM-learning/issues/1) & [Issue #4](https://github.com/EndeavorYen/LLM-learning/issues/4)：免人工標籤對比聚類 + 內建 $O(1)$ 稀疏微記憶槽（提升裸機密度、降低 Cost） | 🔜 **準備進入** |
 | **Stage 4** | 動態多節點思維鏈 & 流形錨點校準 | 攻克 [Issue #2](https://github.com/EndeavorYen/LLM-learning/issues/2) & [Issue #3](https://github.com/EndeavorYen/LLM-learning/issues/3)：多步數學/邏輯動態節點拆解 ($s_1 \to \dots \to s_k$) + 長鏈防飄移校準 | ⚪ 待開始 |

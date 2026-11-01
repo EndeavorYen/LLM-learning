@@ -39,13 +39,14 @@
 | Lab 13 拆解 | 差距來自 64 維壓縮，還是多步 vs 一步？ | **來自漏斗**：同一個跳躍改用原始 896 維特徵 91→96%；一步分類器在原始 896 維達 100%。多步 vs 一步沒有一致差異（這題第一句就決定答案）；沒有證據顯示 64 維比較穩 | #22、`results/space_steps_factorial` |
 | Lab 14 狀態追蹤（前導） | 需要依序推理的題目，多步能否泛化到更長、沒見過的組合？ | **見過的領域**：跳躍（狀態是唯一記憶）只用 1–4 步訓練，6–10 步 99.8%；一次讀完的 Transformer 48%、Qwen 讀整篇 32%。**新領域**：所有模型都卡在辨識句子（新領域句子辨識 41% / 漏斗 69%），符號版 100%。依登錄規則判為無效（Transformer 在見過領域的新組合只有 89%） | #23、`results/state_tracking_v1` |
 | **B1 辨識診斷**（Lab 15） | 新領域的句子能被認對 95% 嗎？（訓練領域內交叉驗證，7 種眼睛 × 5 種判斷） | **最好 83.7%，未達 95%**（bge-m3、1.5B、7B 配小網路三者相當）。眼睛變大沒有幫助；看過的領域越多越準（4→8→12 個：73→80→84%），但增幅變小。7B 不訓練直接答只有 58%。否定句、別的系統在變幾乎都認錯（7%、22%），訓練時加入其他領域的難題句可救回否定（97%），但一般句子掉約 5 分 | #25、`results/recognition_v1` |
+| **B1 新領域給例子 ＋ 成長曲線**（Lab 16） | 到新領域每種事件給一個例子，能認對嗎？多加領域，曲線長怎樣？ | **給例子最好 92.7%（不給 89.2%），+3.5 分，未達 95% 與 +5 分**。例子的用法是「校正這個領域的口音」（減去領域平均），不是「找最像的例子」（一個例子反而變差）。4 個領域＋例子 ≈ 12 個領域不給例子。剩下的錯誤四成是「進」「出」方向搞反；否定句仍幾乎全錯。7B 給 5 個例子 67.5→89.2%。加到 24 個領域：不給例子 88%（每加倍約 +4 分）、給例子 92.5%（每加倍約 +1.5 分） | #25、`results/recognition_v2` |
 
 ## 四、對照起源：目前知道什麼
 
 | 起源目標 | 狀態 | 證據 |
 | :--- | :--- | :--- |
 | A. 速度 | **未驗證**：原始倍數不成立，之後沒有重新量測 | #12 |
-| B1. 從文字形成概念（觸類旁通） | **尚未做到，是目前的瓶頸** | Lab 14：新領域的句子對不到抽象事件；Lab 13：漏斗壓縮在規律遷移上不如原始特徵；Lab 15：最好 83.7%，隨訓練領域數上升但趨緩，否定句幾乎全錯 |
+| B1. 從文字形成概念（觸類旁通） | **尚未做到，是目前的瓶頸** | Lab 14：新領域的句子對不到抽象事件；Lab 13：漏斗壓縮在規律遷移上不如原始特徵；Lab 15：最好 83.7%，隨訓練領域數上升但趨緩，否定句幾乎全錯；Lab 16：給一個例子（校正領域口音）到 92.7%，初始狀態句 98.4%，仍未達 95% |
 | B2. 在概念層思考 | **有證據支持** | v5：新領域 85%；Lab 14：見過的領域推到 10 步 99.8%，一步模型背答案、遇到新組合就錯 |
 | B3. 概念轉成文字 | **未驗證**：原始結果有洩漏 | #14 |
 | C. 知識密度 / 雙腦分流 | **不成立或未驗證** | Lab 08、09 重跑無差異；閘門門檻依據未檢查（#10） |
@@ -82,6 +83,7 @@
 | 空間 × 推理拆解 | `scripts/stage2_lab13_space_steps_factorial.py` | 同 v5 | `results/space_steps_factorial` |
 | 狀態追蹤前導 | `scripts/stage2_lab14_state_tracking.py` | `benchmarks/state_tracking_v1/` | `results/state_tracking_v1` |
 | B1 辨識診斷 | `scripts/stage2_lab15_recognition.py` | `benchmarks/state_tracking_v1/`（含 `hard_cases.json`）、同 v5 | `results/recognition_v1` |
+| B1 給例子 ＋ 成長曲線 | `scripts/stage2_lab16_anchor_recognition.py` | 同上 ＋ `extra_domains.json`（12 個新訓練領域） | `results/recognition_v2` |
 | 原始 Lab 重跑 | `scripts/stage1_lab04~09*.py`、`stage2_lab01~03*.py` | `benchmarks/` | `results/original_labs_rerun` |
 
-資料驗收工具：`tools/validate_analogy_v2.py`～`v5.py`、`tools/validate_state_tracking.py`；匯總工具：`tools/aggregate_v4.py`、`aggregate_v5.py`、`aggregate_lab13.py`、`aggregate_lab14.py`、`aggregate_lab15.py`。
+資料驗收工具：`tools/validate_analogy_v2.py`～`v5.py`、`tools/validate_state_tracking.py`；匯總工具：`tools/aggregate_v4.py`、`aggregate_v5.py`、`aggregate_lab13.py`、`aggregate_lab14.py`、`aggregate_lab15.py`、`aggregate_lab16.py`；新領域驗收：`tools/validate_extra_domains.py`。
