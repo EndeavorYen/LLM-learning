@@ -3,16 +3,18 @@ import json, random, sys
 from collections import Counter
 from pathlib import Path
 BENCH = Path(__file__).resolve().parents[1] / "benchmarks" / "state_tracking_v1"
-# usage: python tools/make_hard_blind_sample.py ITEMS_DIR KEY_PATH (the key must stay outside ITEMS_DIR)
+# usage: python tools/make_hard_blind_sample.py ITEMS_DIR KEY_PATH [--extra] (the key must stay outside ITEMS_DIR)
+# --extra (Lab 17): hard_cases_extra.json with the rules of extra_domains.json (all 144 sentences)
+EXTRA = "--extra" in sys.argv
 ITEMS_DIR, KEY = Path(sys.argv[1]), Path(sys.argv[2])
 assert ITEMS_DIR.resolve() not in KEY.resolve().parents, "key must be outside the items folder"
-SEED = 20261031 + 25
+SEED = 20261031 + 25 + (17 if EXTRA else 0)
 QUESTION = "只根据这句话判断：对上面说明的这个系统来说，发生了什么？请从 A–F 中选一项。"
 OPTIONS = {"A": "系统里的量增加一个单位", "B": "系统里的量减少一个单位", "C": "安全机制坏了",
            "D": "安全机制修好了", "E": "系统状态没有改变（与系统无关或没有发生）", "F": "无法确定是否发生"}
 ANSWER = {"IN": "A", "OUT": "B", "BREAK": "C", "FIX": "D", "NOOP": "E", "UNCERTAIN": "F"}
-t = json.loads((BENCH / "templates.json").read_text(encoding="utf-8"))
-h = json.loads((BENCH / "hard_cases.json").read_text(encoding="utf-8"))
+t = json.loads((BENCH / ("extra_domains.json" if EXTRA else "templates.json")).read_text(encoding="utf-8"))
+h = json.loads((BENCH / ("hard_cases_extra.json" if EXTRA else "hard_cases.json")).read_text(encoding="utf-8"))
 rules = {d["name"]: d["init"]["rules"] for d in t["domains"] if d["split"] == "train"}
 rows = [(dom["name"], it) for dom in h["domains"] for it in dom["items"]]
 rng = random.Random(SEED)

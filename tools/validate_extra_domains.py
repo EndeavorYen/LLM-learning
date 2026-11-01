@@ -11,6 +11,7 @@ the 24 registered domains + the extra ones together, so no extra string may repe
   X2  every extra domain has split "train" and exactly 7 / 7 / 6 / 6 / 6 IN / OUT / BREAK / FIX / NOOP paraphrases
       (the counts of every registered train domain, so per-domain class balance is unchanged);
   X3  no extra domain name equals or contains a registered domain name (or vice versa).
+  X4  (added for Lab 17) no test-domain name or test safeguard name occurs anywhere in the extra file.
 Exit status 1 on any error.
 """
 import hashlib
@@ -53,6 +54,12 @@ def main(argv):
         for r in reg_names:
             if r in nm or nm in r:
                 errs.append(f"X3 {nm}: overlaps the registered domain name {r}")
+    raw_extra = extra_path.read_text(encoding="utf-8")
+    for d in tpl["domains"]:
+        if d["split"] == "test":
+            for w in (d["name"], d["safeguard_name"]):
+                if w in raw_extra:
+                    errs.append(f"X4 test-split name '{w}' occurs in the extra file")
     combined = dict(tpl)
     combined["domains"] = tpl["domains"] + doms
     V.N_TRAIN_DOM = 16 + len(doms)          # the registered 16 + the extra ones; test stays 8

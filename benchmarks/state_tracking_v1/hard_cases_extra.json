@@ -1,0 +1,1081 @@
+{
+ "version": "state_tracking_v1_hard_extra",
+ "templates_sha256": "1bfd769efdf6dd3d61ded0e6aaff3eb70b394af2c266e2f02cd1ed9b598bca70",
+ "extra_domains_sha256": "f44dc28a2a2df593981c919949b47e13304a814cec4e960123564206190ca7cf",
+ "categories": {
+  "NEG": "否定句：字面上提到 IN / OUT / BREAK / FIX，但明说没有发生，系统状态不变；正确类别 NOOP。",
+  "OTHER": "别的系统：另一个同类系统（邻村的水塔、另一个停车场、另一只充电宝等）发生了 IN 或 OUT，与本系统无关；正确类别 NOOP。",
+  "TEMP": "时间标记或倒叙（就在刚才 / 几分钟前 / 在这之前 / 早在……之前）：事件确实发生了；正确类别为事件本身。",
+  "HEDGE": "不确定语气（好像 / 似乎 / 据说……但没人确认）：IN 或 BREAK 是否发生未经确认；不设正确类别，label 记为 UNCERTAIN，用来量信心是否下降。"
+ },
+ "domains": [
+  {
+   "name": "渡轮",
+   "items": [
+    {
+     "id": "渡轮-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "排在最前面的一辆货车等了很久，司机最后掉头回了家，并没有开上渡轮。"
+    },
+    {
+     "id": "渡轮-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "到了对岸，船员本打算先放一辆小货车下船，后来发现跳板没搭稳，车就一直停在甲板上没动。"
+    },
+    {
+     "id": "渡轮-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "海浪拍上了甲板，却没能弄坏限载感应器。"
+    },
+    {
+     "id": "渡轮-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "轮机长摆弄了一阵，限载感应器还是不响，并未修好。"
+    },
+    {
+     "id": "渡轮-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "隔壁泊位那艘大渡轮让一辆旅游大巴开上了它的甲板。"
+    },
+    {
+     "id": "渡轮-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "对岸另一家公司的渡轮靠了岸，从它船上开下来一辆冷藏车。"
+    },
+    {
+     "id": "渡轮-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，船员把一辆运木材的卡车引上了这艘渡轮的甲板。"
+    },
+    {
+     "id": "渡轮-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "早在开船铃响之前，一辆邮政车就已经从这艘渡轮上开回了码头。"
+    },
+    {
+     "id": "渡轮-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "几分钟前，限载感应器的接线被老鼠咬断，已经不会响了。"
+    },
+    {
+     "id": "渡轮-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "在这之前，修理工就已经换好了限载感应器烧坏的电线，它又能报警了。"
+    },
+    {
+     "id": "渡轮-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "码头上有人说好像看见一辆货车开上了这艘渡轮，但船员谁也没确认过。"
+    },
+    {
+     "id": "渡轮-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "据说限载感应器昨晚挨了雷击，可能已经不响了，可还没有人去试过。"
+    }
+   ]
+  },
+  {
+   "name": "图书借阅证",
+   "items": [
+    {
+     "id": "图书借阅证-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "持证人翻了翻一本游记，觉得没意思，最终并没有用这张证把它借走。"
+    },
+    {
+     "id": "图书借阅证-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "持证人本打算今天去还一本词典，后来下雨没出门，那本书仍搁在家里的书桌上。"
+    },
+    {
+     "id": "图书借阅证-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "图书馆的电脑重启了好几次，借阅限额系统却始终没出问题。"
+    },
+    {
+     "id": "图书借阅证-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "工程师远程调了一上午，借阅限额系统依然没能恢复。"
+    },
+    {
+     "id": "图书借阅证-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "同桌的小明用他自己的借阅证借走了一本漫画书。"
+    },
+    {
+     "id": "图书借阅证-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "隔壁阿姨把用她那张借阅证借的一本小说还给了图书馆。"
+    },
+    {
+     "id": "图书借阅证-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "几分钟前，持证人刚用这张证在借阅台借出了一本地图册。"
+    },
+    {
+     "id": "图书借阅证-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "就在刚才，持证人把用这张证借的一本诗集投进了还书箱。"
+    },
+    {
+     "id": "图书借阅证-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "早在开馆之前，借阅限额系统就因为一次断网停止运作了。"
+    },
+    {
+     "id": "图书借阅证-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "刚刚，馆员重新安装了借阅限额系统，它又能拦下超额借阅了。"
+    },
+    {
+     "id": "图书借阅证-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "据说持证人今天下午可能用这张证借走了一本画册，但还没有人查过借阅记录。"
+    },
+    {
+     "id": "图书借阅证-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "有读者抱怨借阅限额系统似乎卡住了，不过馆员还没去确认。"
+    }
+   ]
+  },
+  {
+   "name": "杠铃架",
+   "items": [
+    {
+     "id": "杠铃架-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "整个上午，没有人往挂片杆上挂过一片杠铃片。"
+    },
+    {
+     "id": "杠铃架-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "一位会员伸手想取下一片杠铃片，被教练拦住了，杠铃片仍挂在杆上没动。"
+    },
+    {
+     "id": "杠铃架-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "有人搬哑铃时撞了一下保险销，保险销并没有损坏，照样稳稳插着。"
+    },
+    {
+     "id": "杠铃架-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "维修师傅答应来换保险销，可直到闭店也没露面，保险销还是坏的。"
+    },
+    {
+     "id": "杠铃架-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "隔壁健身房的杠铃架上，有人挂上了一片杠铃片。"
+    },
+    {
+     "id": "杠铃架-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "角落里另一个杠铃架被人取走了一片杠铃片，这边的架子没人碰。"
+    },
+    {
+     "id": "杠铃架-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "刚刚有位大叔练完推举，往这个架子的挂片杆上挂了一片杠铃片。"
+    },
+    {
+     "id": "杠铃架-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "几分钟前，教练已经从这个杠铃架上卸走了一片杠铃片。"
+    },
+    {
+     "id": "杠铃架-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "在这之前，保险销已经被一个调皮的孩子拔走弄丢了。"
+    },
+    {
+     "id": "杠铃架-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "早在会员们进门之前，师傅就已经把坏掉的保险销换好了。"
+    },
+    {
+     "id": "杠铃架-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "好像有人往挂片杆上挂了一片杠铃片，可当时没人留意，也没人确认。"
+    },
+    {
+     "id": "杠铃架-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "据说保险销昨天被人撞松了，可能已经不管用，但还没有人去检查。"
+    }
+   ]
+  },
+  {
+   "name": "晾衣绳",
+   "items": [
+    {
+     "id": "晾衣绳-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "天阴沉沉的，妈妈洗好的一件棉袄并没有晾到绳上，一直放在盆里。"
+    },
+    {
+     "id": "晾衣绳-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "奶奶伸手想收下一件汗衫，摸着还潮乎乎的，就让它继续晾在绳上。"
+    },
+    {
+     "id": "晾衣绳-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "小狗围着折叠晾衣架又扑又咬，却没能把它弄坏。"
+    },
+    {
+     "id": "晾衣绳-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "爷爷翻遍了抽屉也没找到螺丝，折叠晾衣架至今未能修好。"
+    },
+    {
+     "id": "晾衣绳-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "邻居王婶在她家院子的晾衣绳上晾了一件格子衬衫。"
+    },
+    {
+     "id": "晾衣绳-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "楼上阳台的晾衣绳被人收走了一件毛背心，院子里这根绳没人动过。"
+    },
+    {
+     "id": "晾衣绳-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，姐姐把一件运动服挂上了院子里的晾衣绳。"
+    },
+    {
+     "id": "晾衣绳-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "早在午饭之前，奶奶就已经从绳上收走了一件棉马甲。"
+    },
+    {
+     "id": "晾衣绳-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "几分钟前，折叠晾衣架被倒车的电动车撞得散了架。"
+    },
+    {
+     "id": "晾衣绳-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "在这之前，爸爸已经把折叠晾衣架的断腿接好，架子又能撑开用了。"
+    },
+    {
+     "id": "晾衣绳-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "隔着窗户看不太清，奶奶似乎往绳上晾了一件衣服，但谁也说不准。"
+    },
+    {
+     "id": "晾衣绳-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "听孩子们说折叠晾衣架可能被风刮倒摔坏了，可大人还没去看过。"
+    }
+   ]
+  },
+  {
+   "name": "书架",
+   "items": [
+    {
+     "id": "书架-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "快递送来的一箱新书至今还堆在门口，并没有被搬上书架。"
+    },
+    {
+     "id": "书架-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "爸爸原打算把架上的一箱旧课本捐给学校，后来学校说不缺书，就没往下搬。"
+    },
+    {
+     "id": "书架-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "小孙子拿着螺丝刀对着限重蜂鸣器捣鼓了好一阵，却没能把它弄坏。"
+    },
+    {
+     "id": "书架-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "约好的电工始终未曾上门，限重蜂鸣器仍旧没人修理。"
+    },
+    {
+     "id": "书架-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "楼上王老师家的那个书架，今天被搬上去一箱新到的词典。"
+    },
+    {
+     "id": "书架-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "学校图书室里另一个书架上，管理员撤下了一箱过期的报刊。"
+    },
+    {
+     "id": "书架-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，妈妈把一箱刚买的童话书码上了书架。"
+    },
+    {
+     "id": "书架-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "几分钟前，小林刚从书架上取下一箱教辅，拿去送给了表妹。"
+    },
+    {
+     "id": "书架-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "早在搬家之前，限重蜂鸣器的喇叭就被摔裂，再也发不出声音了。"
+    },
+    {
+     "id": "书架-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "刚刚，爸爸给限重蜂鸣器换上了新电池，它又会尖声报警了。"
+    },
+    {
+     "id": "书架-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "书房里好像有人搬过东西，可能往书架上添了一箱书，但谁也没去确认。"
+    },
+    {
+     "id": "书架-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "据说限重蜂鸣器前几天受了潮，可能已经不响了，不过还没人试过。"
+    }
+   ]
+  },
+  {
+   "name": "蹦床",
+   "items": [
+    {
+     "id": "蹦床-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "一位小姑娘在蹦床边站了好一会儿，始终没敢爬上去。"
+    },
+    {
+     "id": "蹦床-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "教练想把蹦床上的一位小男孩抱下来休息，他死死抓着防护网，到底没下去。"
+    },
+    {
+     "id": "蹦床-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "几个大孩子使劲推搡入口计数闸，却没能把它弄坏。"
+    },
+    {
+     "id": "蹦床-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "维修员今天压根没来，入口计数闸依旧拦不住人。"
+    },
+    {
+     "id": "蹦床-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "隔壁游乐场的那张蹦床上又上去了一位穿背带裤的小朋友。"
+    },
+    {
+     "id": "蹦床-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "楼上儿童乐园那张蹦床上的一位小朋友被家长领走了。"
+    },
+    {
+     "id": "蹦床-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，一位戴虎头帽的小朋友已经爬上了蹦床。"
+    },
+    {
+     "id": "蹦床-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "在这之前，蹦床上的一位小女孩早就被奶奶叫下去吃点心了。"
+    },
+    {
+     "id": "蹦床-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "早在开门营业之前，入口计数闸的感应头就已经烧坏，失灵了。"
+    },
+    {
+     "id": "蹦床-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "几分钟前，技术员重启了入口计数闸，它又能把多出来的人拦住了。"
+    },
+    {
+     "id": "蹦床-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "好像有一位小朋友趁乱溜上了蹦床，但工作人员没看清，也没人确认。"
+    },
+    {
+     "id": "蹦床-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "有家长说入口计数闸似乎计错了数，可能已经失灵，不过还没人去查。"
+    }
+   ]
+  },
+  {
+   "name": "储钱罐",
+   "items": [
+    {
+     "id": "储钱罐-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "小明攥着一枚硬币在储钱罐前站了好久，最终没投进去，转身买了糖。"
+    },
+    {
+     "id": "储钱罐-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "小明本想从储钱罐里倒出一枚硬币去买弹珠，后来改了主意，罐子原封未动。"
+    },
+    {
+     "id": "储钱罐-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "小狗叼着储钱罐啃了好一会儿，却没能咬坏投币口挡片。"
+    },
+    {
+     "id": "储钱罐-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "爷爷说要修投币口挡片，可直到今天还没动手。"
+    },
+    {
+     "id": "储钱罐-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "表姐往她自己的储钱罐里投了一枚硬币。"
+    },
+    {
+     "id": "储钱罐-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "同桌从他家的储钱罐里倒出一枚硬币，买了块橡皮。"
+    },
+    {
+     "id": "储钱罐-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，奶奶已经替小明往储钱罐里塞进了一枚硬币。"
+    },
+    {
+     "id": "储钱罐-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "早在吃午饭之前，妹妹就从储钱罐里抠出了一枚硬币。"
+    },
+    {
+     "id": "储钱罐-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "几分钟前，投币口挡片被弟弟用尺子撬变了形，合不上了。"
+    },
+    {
+     "id": "储钱罐-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "刚刚，爸爸给投币口挡片换了根新弹簧，挡片又能稳稳合上了。"
+    },
+    {
+     "id": "储钱罐-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "妹妹似乎往储钱罐里丢了一枚硬币，可谁也没听见响声，也没人确认。"
+    },
+    {
+     "id": "储钱罐-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "听弟弟说投币口挡片好像卡住不动了，不过谁也没去看过。"
+    }
+   ]
+  },
+  {
+   "name": "花瓶",
+   "items": [
+    {
+     "id": "花瓶-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "女儿捧回一枝野菊，却放在了窗台上，未曾插进花瓶。"
+    },
+    {
+     "id": "花瓶-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "客人临走前想从花瓶里讨一枝玫瑰，主人没舍得拔给他。"
+    },
+    {
+     "id": "花瓶-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "小猫扑上来抓了抓瓶口限位圈，却没能把它扯松。"
+    },
+    {
+     "id": "花瓶-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "说好来修的花店师傅始终没露面，瓶口限位圈还是松垮垮的。"
+    },
+    {
+     "id": "花瓶-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "对门邻居家的那只花瓶里插进了一枝刚剪的蔷薇。"
+    },
+    {
+     "id": "花瓶-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "隔壁花店橱窗里那只大花瓶被店员抽走了一枝蝴蝶兰。"
+    },
+    {
+     "id": "花瓶-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，女儿把一枝沾着露水的小雏菊插进了花瓶。"
+    },
+    {
+     "id": "花瓶-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "早在客人到来之前，妈妈就已经从花瓶里抽掉了一枝开败的芍药。"
+    },
+    {
+     "id": "花瓶-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "在这之前，瓶口限位圈的卡扣就被热水烫软，整圈松脱了。"
+    },
+    {
+     "id": "花瓶-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "几分钟前，爸爸用新胶水把瓶口限位圈重新粘牢了。"
+    },
+    {
+     "id": "花瓶-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "好像有人往花瓶里插了一枝茉莉，可是谁也说不准，也没人去看过。"
+    },
+    {
+     "id": "花瓶-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "据女儿说，瓶口限位圈似乎有些松脱，但还没有人去检查过。"
+    }
+   ]
+  },
+  {
+   "name": "邮包",
+   "items": [
+    {
+     "id": "邮包-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "站长拿着一捆挂号信走过来，翻看了一下又拿回了办公室，并没有放进邮包。"
+    },
+    {
+     "id": "邮包-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "邮递员赶到村委会时大门紧锁，邮包里的一捆信却没能送出去。"
+    },
+    {
+     "id": "邮包-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "邮包在铁栅栏上蹭了好几下，加固缝线始终没有绷开。"
+    },
+    {
+     "id": "邮包-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "邮递员借来了针线，可忙到天黑也未曾动手缝补加固缝线。"
+    },
+    {
+     "id": "邮包-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "隔壁片区的邮递员往他自己的邮包里塞进了一捆信。"
+    },
+    {
+     "id": "邮包-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "另一位邮递员从他背着的邮包里取出一捆信，送进了卫生院。"
+    },
+    {
+     "id": "邮包-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "几分钟前，邮局柜台的大姐把一捆平信交给邮递员，他顺手放进了邮包。"
+    },
+    {
+     "id": "邮包-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "早在中午之前，邮递员就从邮包里掏出一捆信，送到了派出所。"
+    },
+    {
+     "id": "邮包-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "在这之前，邮包侧面的加固缝线就已经被雨伞的尖头挑开了。"
+    },
+    {
+     "id": "邮包-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "刚刚，邮局的老师傅用粗线把加固缝线重新缝结实了。"
+    },
+    {
+     "id": "邮包-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "似乎有人趁邮递员不在时往邮包里塞了一捆信，但谁也没有确认。"
+    },
+    {
+     "id": "邮包-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "据说邮包的加固缝线可能被狗咬开了，不过还没人仔细检查过。"
+    }
+   ]
+  },
+  {
+   "name": "手推车",
+   "items": [
+    {
+     "id": "手推车-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "园丁本想往车斗里再压一袋土，后来怕推不动，最终没有装。"
+    },
+    {
+     "id": "手推车-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "下了一场雨，工人们收工回家，手推车上连一袋土都没有卸。"
+    },
+    {
+     "id": "手推车-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "手推车狠狠撞上了路边的石墩，防翻支架却安然无恙，丝毫没有弯折。"
+    },
+    {
+     "id": "手推车-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "修车师傅来看了看防翻支架，说缺配件，未动手修理。"
+    },
+    {
+     "id": "手推车-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "旁边那辆蓝色的手推车上，帮工又码上了一袋土。"
+    },
+    {
+     "id": "手推车-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "隔壁工地的另一辆手推车卸下了一袋土。"
+    },
+    {
+     "id": "手推车-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，小王往这辆手推车的车斗里扔上了一袋草炭土。"
+    },
+    {
+     "id": "手推车-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "几分钟前，园丁已经从车斗里搬走一袋土，填进了花盆。"
+    },
+    {
+     "id": "手推车-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "早在推上坡之前，防翻支架的铆钉就已经崩掉，支架松垮垮地挂着。"
+    },
+    {
+     "id": "手推车-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "刚刚，老李用铁丝和焊枪把防翻支架重新固定牢了。"
+    },
+    {
+     "id": "手推车-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "好像有个工人路过时往车上丢了一袋土，但没人看清，也没人确认。"
+    },
+    {
+     "id": "手推车-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "听说防翻支架昨晚可能被人撬松了，不过谁也没去检查过。"
+    }
+   ]
+  },
+  {
+   "name": "课后托管班",
+   "items": [
+    {
+     "id": "课后托管班-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "一名男孩跟着妈妈来试听了一下午，最后并没有报名入班。"
+    },
+    {
+     "id": "课后托管班-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "李爸爸原打算这周让女儿退出托管班，后来改了主意，班里一名孩子也没少。"
+    },
+    {
+     "id": "课后托管班-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "前台的平板从桌上滑落，签到系统却照常运行，没有出故障。"
+    },
+    {
+     "id": "课后托管班-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "技术员说好今天上门，结果始终没来，签到系统仍旧瘫痪着。"
+    },
+    {
+     "id": "课后托管班-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "隔壁街道的另一家托管班今天招进了一名新学员。"
+    },
+    {
+     "id": "课后托管班-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "楼上另一家课后托管班有一名孩子办了退班。"
+    },
+    {
+     "id": "课后托管班-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，一位外婆领着外孙来办好了手续，这个托管班又收下了一名孩子。"
+    },
+    {
+     "id": "课后托管班-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "早在午饭之前，老师就已经给一名要转学的孩子办妥了退班。"
+    },
+    {
+     "id": "课后托管班-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "在这之前，签到系统就因为网线被扯断而彻底瘫痪了。"
+    },
+    {
+     "id": "课后托管班-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "几分钟前，信息老师刚把签到系统重启修复，登记功能恢复了。"
+    },
+    {
+     "id": "课后托管班-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "据说今天下午托管班又收了一名孩子，可老师们谁也说不清，没人确认。"
+    },
+    {
+     "id": "课后托管班-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "签到系统似乎卡死过一次，可能已经出了故障，但还没人去确认。"
+    }
+   ]
+  },
+  {
+   "name": "离心机",
+   "items": [
+    {
+     "id": "离心机-NEG-IN",
+     "category": "NEG",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "实习生拿着一管血样犹豫了一下，最终没有放进离心机。"
+    },
+    {
+     "id": "离心机-NEG-OUT",
+     "category": "NEG",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "导师想从转子里取出一管菌液，可离心机还在运转，舱盖打不开，没能取成。"
+    },
+    {
+     "id": "离心机-NEG-BREAK",
+     "category": "NEG",
+     "surface": "BREAK",
+     "label": "NOOP",
+     "text": "实验楼的电闸跳了一下，平衡保护锁却未受影响，依旧正常。"
+    },
+    {
+     "id": "离心机-NEG-FIX",
+     "category": "NEG",
+     "surface": "FIX",
+     "label": "NOOP",
+     "text": "设备科答应派人来修平衡保护锁，可直到下班也没有人来，锁仍是坏的。"
+    },
+    {
+     "id": "离心机-OTHER-IN",
+     "category": "OTHER",
+     "surface": "IN",
+     "label": "NOOP",
+     "text": "隔壁实验室的那台离心机里，有人放进了一管血样。"
+    },
+    {
+     "id": "离心机-OTHER-OUT",
+     "category": "OTHER",
+     "surface": "OUT",
+     "label": "NOOP",
+     "text": "楼下检验科另一台离心机里取出了一管血清。"
+    },
+    {
+     "id": "离心机-TEMP-IN",
+     "category": "TEMP",
+     "surface": "IN",
+     "label": "IN",
+     "text": "就在刚才，研究生往这台离心机的转子里插进了一管质粒提取液。"
+    },
+    {
+     "id": "离心机-TEMP-OUT",
+     "category": "TEMP",
+     "surface": "OUT",
+     "label": "OUT",
+     "text": "几分钟前，技术员已经从这台离心机里取走了一管上清液。"
+    },
+    {
+     "id": "离心机-TEMP-BREAK",
+     "category": "TEMP",
+     "surface": "BREAK",
+     "label": "BREAK",
+     "text": "早在开机之前，平衡保护锁的电路板就已经受潮烧坏了。"
+    },
+    {
+     "id": "离心机-TEMP-FIX",
+     "category": "TEMP",
+     "surface": "FIX",
+     "label": "FIX",
+     "text": "刚刚，工程师重新校准了平衡保护锁，它已恢复正常。"
+    },
+    {
+     "id": "离心机-HEDGE-IN",
+     "category": "HEDGE",
+     "surface": "IN",
+     "label": "UNCERTAIN",
+     "text": "有人说实习生可能往离心机里塞了一管样品，但谁都没确认过。"
+    },
+    {
+     "id": "离心机-HEDGE-BREAK",
+     "category": "HEDGE",
+     "surface": "BREAK",
+     "label": "UNCERTAIN",
+     "text": "平衡保护锁似乎有点不灵了，据说可能已经失效，可没人检查过。"
+    }
+   ]
+  }
+ ]
+}
